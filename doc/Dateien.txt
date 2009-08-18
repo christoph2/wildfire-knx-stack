@@ -1,0 +1,57 @@
+
+		Naming-Conventions für die Dateien
+		==================================
+		
+Link-Layer
+----------
+	knxll
+
+Network-Layer
+-------------
+	knxnl
+	
+Transport-Layer / Group-Oriented
+--------------------------------
+	knxtlg
+	
+Transport-Layer / Connected
+---------------------------
+	knxtlc
+	
+Application-Layer / Group-Oriented
+----------------------------------
+	knxalg
+
+Application-Layer / Management
+------------------------------
+	knxalm
+	
+Management-Server
+-----------------	
+- allgemeine Naming-Convention: knxXXXs (XXX = Server-Kürzel).
+- Unsorted: Phys-./Domain-Addr.,DevDescr.,Restart, 'GroupProperties'
+			sollten aufgrund ihrer Sonderstellung nicht 'ios' 
+			zugeschlagen werden, oder doch!!!???
+
+	knxios	- Interface-Object-Server.
+	knxmem	- Memory-Server (Hinweis: Funktionen, die hier verwendet werden sind
+				mitunter allgemeiner Natur ('Copy'/'Zero' etc.) und werden 
+				möglicherweise auch von miniOSEK verwendet; Utilitiy-Modul
+				erstellen, oder an AUTOSAR orientieren!!!).
+	knxacc	- Access-/Zugriffs-Kontrolle (check: 'knxauth' besser???). 
+	knxadc	- ADC-Wandler.
+	knxnwps	- Network-Parameter-Services.
+	knxlnk	- Link-Services.
+	
+		
+TPUART
+------
+	t.b.d.:	knxtpuart ???
+	
+Unsorted / Helper
+-----------------
+Application-Layer-Services: t.b.d.
+Table-Management
+LoadStateMachine
+RunStateMachine
+Timer

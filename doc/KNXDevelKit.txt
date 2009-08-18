@@ -1,0 +1,28 @@
+
+
+		KNX12-Developtment-Kit
+		======================
+		
+		Protokoll-Stack: Vollständiger KNX-/EIB-Protokollstack,
+		----------------
+			einschließlich Client-Bibliothek und KNX-IP, portiert
+			auf den HC12, Windows, GNU/Linux und BSD (mit Python-
+			Binding).
+		
+		miniUIP:	Minimalistischer UDP/IP-Stack f. NE64.
+		--------
+		
+		EVBs:	S12DP512,S12NE64 Umfang: t.b.d.
+		----
+
+		EIBasic:	EIBasic-Interpreter (Sprache: t.b.d) einschl. IDE,		
+		--------			
+			Programme können sowohl aus dem internen FLASH/EEPROM geladen
+			werden, als auch von seriellen (SPI/IIC) Speichern.
+			Varianten: 
+			- EIBasic/mini: Nur die nötigsten Funktionen, Single-Threaded.
+			- EIBasic/MT: Erweiterte Funktionen, Multi-Threaded.
+
+
+	Allgemeines: Abgestimmt auf die Zusammenarbeit mit miniOSEK.
+	------------			

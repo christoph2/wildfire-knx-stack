@@ -1,0 +1,197 @@
+
+Zum EIBasic-Projekt werden Fertiggeräte angeboten, mit
+Protokollstack und miniOSEK und Entwicklungsumgebung.
+	Varianten:
+	----------
+	- EIBasic/Eval: EVB mit reicher Aussstattung, (Sensoreingänge,
+		Relais, etc.) maßgeschneidert für HLK-Anwendungen.
+	- EIBaisc/Control: reines KNX-/EIB-Modul ohne I/Os, UP oder
+		DIN-Rail (1TE).		
+	- EIBasic/Module: Mini-Modul mit umfangreichen I/Os auf
+		Stiftleisten.
+
+Bezeichner: Gültige C-Bezeichner (Länge max. 32, [_A-Za-z]+[_A-Za-z0-9]*),
+-----------
+	Groß-/Klein-Schreibweise ist signifikant.
+
+Schlüsselworte:
+---------------
+Schlüsselworte müsssen groß geschrieben werden!!!
+
+Threads:
+-------
+
+	THREAD soundso @ 3 {
+
+	}
+	
+	Das '@'-Zeichen legt die Priorität des Threads fest,
+	ohne wird eine Standard-Priorität verwendet.
+	Zur Verwaltung von Threads wird intern eine
+	Prioritätswarteschlange verwendet.
+	Die maximale Anzahl der Threads ergibt sich aus
+	der Länge dieser Queue.
+
+
+Bibliotheken:
+-------------
+Bibliotheken können mit dem Schlüsselwort 'USE' in das Projekt
+eingebunden werden.
+
+Bibliotheks-Funktionen:
+-----------------------
+
+BIM-M13x
+========
+Debouncing
+----------
+	DebounceInit
+		void DebounceInit(DEBOUNCEKIT* kit, USHORT initvalue);
+	Debounce
+		void Debounce(USHORT sample, USHORT mask, DEBOUNCEKIT* kit,
+			USHORT debouncetime);
+Object-Handling
+---------------
+	TestAndCopyObject
+		BOOL TestAndCopyObject(USHORT objectNr, void* dst, BYTE len);
+	SetAndTransmitObject
+		BOOL SetAndTransmitObject(USHORT objectNr, void* src, BYTE len);
+	TestObject
+		BOOL TestObject(USHORT objectNr);
+	TransmitObject
+		BOOL TransmitObject(USHORT objectNr);
+	ReadObject
+		BOOL ReadObject(USHORT objectNr);
+	SetRAMFlags
+		BYTE SetRAMFlags(BYTE objectNr, BYTE flags);
+Timer
+-----
+	GetSystemTime
+		ULONG GetSystemTime(void);
+	TmInit
+		void TmInit (BYTE NumOfTimers);
+	TmStart
+		void TmStart(TIMER* pTimer, ULONG ticks);
+	TmAddStart
+		void TmAddStart(TIMER* pTimer, ULONG ticks);
+	TmIsExpired
+		BOOL TmIsExpired(TIMER* pTimer);
+	TmIsRunning
+		BOOL TmIsRunning(TIMER* pTimer);
+	TmStop
+		void TmStop(TIMER* pTimer);
+AD-Converter
+------------
+	ADCInit
+		void ADCInit(ADCSpeedModeType speed);
+	ADCShutdown
+		void ADCShutdown(void);
+	ADCRead
+		USHORT ADCRead(BYTE port, BYTE ADCcount);
+	ADCStop
+		void ADCStop(void);
+	ADCIsInterrupted
+		BOOL ADCIsInterrupted(void);
+	ADCResetInterrupted
+		void ADCResetInterrupted(void);
+	CalcPEIType
+		BYTE CalcPEIType(BYTE adval);
+Pulse-Width-Modulation
+----------------------
+	PWMInit
+		void PWMInit(PWMChannelType channel, PWMPolType mode,
+			PWMSpeedModeType speed);
+	PWMStop
+		void PWMStop(PWMChannelType channel);
+	PWMSetValue
+		void PWMSetValue(PWMChannelType channel, BYTE value);
+FT12
+----
+	FT12Init	
+		void FT12Init(USHORT TimeoutTime, BYTE len, BYTE* rcvBuffer,
+			BYTE* trmBuffer, BYTE baud, BYTE config);
+	FT12Send		
+		BOOL FT12Send(BYTE* src, BYTE len, BYTE* result);
+	FT12Get
+		BOOL FT12Get(BYTE* dst, BYTE* len);
+Handshake
+---------
+	HSInit
+		void HSInit(USHORT TimeoutTime, BYTE len, BYTE* rcvBuffer,
+			BYTE* trmBuffer, BYTE baud, BYTE config);
+	HSSetFrame
+		BOOL HSSetFrame(BYTE* src, BYTE len, BYTE* result);
+	HSGetFrame
+		BOOL HSGetFrame(BYTE* dst, BYTE* len);
+SPI
+---
+	SPIInit
+		void SPIInit(enum SPISpeed speed, BYTE CKPDAP, BOOL MSBFirst);
+	SPISend
+		BOOL SPISend(BYTE* pData, BYTE length);	// SPIExg
+Flash
+-----
+	FlashSegErase
+		BOOL FlashSegErase(ULONG dst);
+	FlashWrite
+		BOOL FlashWrite(ULONG dst, void* src, BYTE count);
+	FlashIsBlockBlank
+		BOOL FlashIsBlockBlank(BYTE* pVal, USHORT count);
+Parameter
+---------
+	ParamInitVal
+		BOOL ParamInitVal(BYTE* src, BYTE ValID, BYTE ValLength);
+	ParamReadVal
+		BOOL ParamReadVal(BYTE ValID, void* dst, BYTE len);
+Message
+-------
+	MsgCreate
+		MESSAGE* MsgCreate(void);
+	MsgDiscard
+		void MsgDiscard(MESSAGE* pMsg);
+	MsgGet
+		MESSAGE* MsgGet(MESSAGEQUEUE* pQueue);
+	MsgPost
+		void MsgPost(MESSAGE* pMsg, MESSAGEQUEUE* pQueue);
+	MsgUndoGet
+		void MsgUndoGet(MESSAGE* pMsg, MESSAGEQUEUE* pQueue);
+	MsgSwitchQueue
+		void MsgSwitchQueue(DYNMESSAGEQUEUE* dynq, MESSAGEQUEUE*
+			staticq);
+	MsgResetDynQueues
+		void MsgResetDynQueues(void);
+Utility
+-------
+	IsApplicationLoaded
+		BOOL IsApplicationLoaded(void);
+	GetPhysAddr
+		void GetPhysAddr(BYTE* dst);
+	GetSerialNumber
+		void GetSerialNumber(BYTE* dst);
+	ReadBCU2Adr100
+		BOOL ReadBCU2Adr100(BYTE offset, BYTE count, void* dst);
+	TriggerWatchDog
+		void TriggerWatchDog(void);
+Interrupts
+----------
+	IntRegister
+		void IntRegister(pIntFunc func, BYTE IntAddr);
+	IntUnregister
+		void IntUnregister(BYTE IntAddr);
+	IntResetAll
+		void IntResetAll(void);
+-----------------------------------
+
+
+erweiterte Funktionsblöcke:
+---------------------------
+	Regler (2-/3-Punkt, PID), IEC1131 beachten!
+	BasicStamp und BasicTiger "auswerten", Levi Fils Funktionsmodul,
+	Siemens Logo.
+	PWD (Pulsbreiten-Demodulator), IIC (1-Wire als Lib),
+	Pulse-Train-Generator (Pulsfolgen, z.B. Fernbedienungssender),
+	Pulse-Train-Receiver.
+	(Tabellen-)Interpolation (ganzzalig und FP), 
+	Fuzzy-Logic, Limiter 	(s. 'MIN'-/'MAX'-Opcodes), MAC.
+	
+	

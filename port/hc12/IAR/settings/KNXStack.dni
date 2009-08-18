@@ -1,0 +1,56 @@
+[StackPlugin]
+Enabled=1
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnHow=0
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[DisAssemblyWindow]
+NumStates=_ 1
+State 1=_ 1
+[ORTI-PLUGIN]
+ORTIFileName=C:\projekte\eOSEK\trunk\winLift_demo.ort
+ORTIAskFile=0
+ORTILogWarning=1
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[Breakpoints]
+Bp0=_ "Code" "{C:\projekte\KNXStack\trunk\stack\Transport.c}.22.1@1" 0 0 0 0 "" 0 ""
+Bp1=_ "Code" "{C:\projekte\KNXStack\trunk\stack\tpuart.c}.429.9@1" 0 0 0 0 "" 0 ""
+Bp2=_ "Code" "{C:\projekte\KNXStack\trunk\stack\Messaging.c}.95.9@1" 1 0 0 0 "" 0 ""
+Bp3=_ "Code" "{C:\projekte\KNXStack\trunk\stack\Messaging.c}.119.9@1" 1 0 0 0 "" 0 ""
+Bp4=_ "Code" "{C:\projekte\KNXStack\trunk\stack\Messaging.c}.130.13@1" 1 0 0 0 "" 0 ""
+Bp5=_ "Code" "{C:\projekte\KNXStack\trunk\stack\Messaging.c}.178.9@1" 0 0 0 0 "" 0 ""
+Bp6=_ "Code" "{C:\projekte\KNXStack\trunk\stack\Messaging.c}.196.5@1" 0 0 0 0 "" 0 ""
+Bp7=_ "Code" "{C:\projekte\KNXStack\trunk\stack\tpuart.c}.452.5@1" 0 0 0 0 "" 0 ""
+Bp8=_ "Code" "{C:\projekte\KNXStack\trunk\stack\ALG.c}.293.13@1" 1 0 0 0 "" 0 ""
+Bp9=_ "Code" "{C:\projekte\KNXStack\trunk\stack\StateMachineKNX.c}.412.27@1" 1 0 0 0 "" 0 ""
+Bp10=_ "Code" "{C:\projekte\KNXStack\trunk\stack\StateMachineKNX.c}.476.27@1" 1 0 0 0 "" 0 ""
+Bp11=_ "Code" "{C:\projekte\KNXStack\trunk\stack\ios.c}.80.5@1" 1 0 0 0 "" 0 ""
+Bp12=_ "Code" "{C:\projekte\KNXStack\trunk\stack\ALG.c}.152.17@1" 1 0 0 0 "" 0 ""
+Bp13=_ "Code" "{C:\projekte\KNXStack\trunk\stack\knx_disp.c}.31.1@1" 0 0 0 0 "" 0 ""
+Bp14=_ "Code" "{C:\projekte\KNXStack\trunk\stack\knx_disp.c}.31.1@1" 0 0 0 0 "" 0 ""
+Bp15=_ "Code" "{C:\projekte\KNXStack\trunk\stack\Messaging.c}.165.9@1" 1 0 0 0 "" 0 ""
+Bp16=_ "Code" "{C:\projekte\KNXStack\trunk\stack\StateMachineKNX.c}.747.9@1" 1 0 0 0 "" 0 ""
+Bp17=_ "Code" "{C:\projekte\KNXStack\trunk\stack\knx_tlc.c}.85.5@1" 1 0 0 0 "" 0 ""
+Count=18
+[Interrupts]
+Enabled=1
+[MemoryMap]
+Enabled=0
+Base=0
+UseAuto=0
+TypeViolation=1
+UnspecRange=1
+ActionState=1
+[TraceHelper]
+Enabled=1
+ShowSource=1

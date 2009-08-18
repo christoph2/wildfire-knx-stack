@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:s1="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://opcfoundation.org/webservices/OPCDA/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://technosoftware.com/OpcXml/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://technosoftware.com/OpcXml/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://opcfoundation.org/webservices/OPCDA/">
+      <s:element name="GetProperties">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="unbounded" name="ItemIDs" type="s0:ItemIdentifier" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="PropertyNames" type="s:QName" />
+          </s:sequence>
+          <s:attribute name="LocaleID" type="s:string" />
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+          <s:attribute name="RequestTimeout" type="s:dateTime" />
+          <s:attribute name="ItemPath" type="s:string" />
+          <s:attribute name="ReturnAllProperties" type="s:boolean" />
+          <s:attribute name="ReturnPropertyValues" type="s:boolean" />
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ItemIdentifier">
+        <s:attribute name="ItemPath" type="s:string" />
+        <s:attribute name="ItemName" type="s:string" />
+      </s:complexType>
+      <s:element name="GetPropertiesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetPropertiesResult" type="s0:ReplyBase" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="PropertyList" nillable="true" type="s0:PropertyReplyList" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="Errors" nillable="true" type="s0:OPCError" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ReplyBase">
+        <s:attribute name="RcvTime" type="s:dateTime" />
+        <s:attribute name="ReplyTime" type="s:dateTime" />
+        <s:attribute name="ClientRequestHandle" type="s:string" />
+        <s:attribute name="RevisedLocaleID" type="s:string" />
+        <s:attribute name="ServerState" type="s0:serverState" />
+      </s:complexType>
+      <s:simpleType name="serverState">
+        <s:restriction base="s:string">
+          <s:enumeration value="running" />
+          <s:enumeration value="failed" />
+          <s:enumeration value="noConfig" />
+          <s:enumeration value="suspended" />
+          <s:enumeration value="test" />
+          <s:enumeration value="commFault" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="PropertyReplyList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Properties" type="s0:ItemProperty" />
+        </s:sequence>
+        <s:attribute name="ItemPath" type="s:string" />
+        <s:attribute name="ItemName" type="s:string" />
+        <s:attribute name="ErrorID" type="s:QName" />
+      </s:complexType>
+      <s:complexType name="ItemProperty">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Value" nillable="true" />
+        </s:sequence>
+        <s:attribute name="Name" type="s:QName" />
+        <s:attribute name="Description" type="s:string" />
+        <s:attribute default="" name="ItemPath" type="s:string" use="optional" />
+        <s:attribute name="ItemName" type="s:string" />
+        <s:attribute name="ErrorID" type="s:QName" />
+        <s:attribute name="SuccessID" type="s:QName" />
+      </s:complexType>
+      <s:complexType name="OPCError">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Text" type="s:string" />
+        </s:sequence>
+        <s:attribute name="ID" type="s:QName" />
+      </s:complexType>
+      <s:element name="Subscribe">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Options" nillable="true" type="s0:RequestOptions" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="ItemList" type="s0:SubscribeRequestItemList" />
+          </s:sequence>
+          <s:attribute default="false" name="ReturnValuesOnReply" type="s:boolean" use="optional" />
+          <s:attribute name="SubscriptionPingRate" type="s:duration" />
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RequestOptions">
+        <s:attribute default="true" name="ReturnErrorText" type="s:boolean" use="optional" />
+        <s:attribute default="false" name="ReturnDiagnosticInfo" type="s:boolean" use="optional" />
+        <s:attribute default="true" name="ReturnItemTime" type="s:boolean" use="optional" />
+        <s:attribute default="false" name="ReturnItemName" type="s:boolean" use="optional" />
+        <s:attribute default="false" name="ReturnItemPath" type="s:boolean" use="optional" />
+        <s:attribute name="RequestTimeout" type="s:dateTime" />
+        <s:attribute name="ClientRequestHandle" type="s:string" />
+        <s:attribute name="LocaleID" type="s:string" />
+      </s:complexType>
+      <s:complexType name="SubscribeRequestItemList">
+        <s:complexContent mixed="false">
+          <s:extension base="s0:ItemRequestSpec">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="unbounded" name="Items" type="s0:SubscribeRequestItem" />
+            </s:sequence>
+            <s:attribute name="ItemListHandle" type="s:string" />
+            <s:attribute name="Deadband" type="s:double" />
+            <s:attribute name="RequestedSamplingRate" type="s:duration" />
+            <s:attribute default="false" name="EnableBuffering" type="s:boolean" use="optional" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ItemRequestSpec">
+        <s:attribute name="ItemPath" type="s:string" />
+        <s:attribute name="ReqType" type="s:QName" />
+      </s:complexType>
+      <s:complexType name="ReadRequestItemList">
+        <s:complexContent mixed="false">
+          <s:extension base="s0:ItemRequestSpec">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="unbounded" name="Items" type="s0:ReadRequestItem" />
+            </s:sequence>
+            <s:attribute name="MaxAge" type="s:duration" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ReadRequestItem">
+        <s:complexContent mixed="false">
+          <s:extension base="s0:RequestItem">
+            <s:attribute name="MaxAge" type="s:duration" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="RequestItem">
+        <s:complexContent mixed="false">
+          <s:extension base="s0:ItemRequestSpec">
+            <s:attribute name="ItemName" type="s:string" />
+            <s:attribute name="ClientItemHandle" type="s:string" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="SubscribeRequestItem">
+        <s:complexContent mixed="false">
+          <s:extension base="s0:RequestItem">
+            <s:attribute name="Deadband" type="s:double" />
+            <s:attribute name="RequestedSamplingRate" type="s:duration" />
+            <s:attribute default="false" name="EnableBuffering" type="s:boolean" use="optional" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="WriteRequestItemList">
+        <s:complexContent mixed="false">
+          <s:extension base="s0:ItemRequestSpec">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="unbounded" name="Items" type="s0:ItemValue" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ItemValue">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Value" nillable="true" />
+          <s:element minOccurs="0" maxOccurs="1" name="DiagnosticInfo" type="s:string" />
+        </s:sequence>
+        <s:attribute name="ItemPath" type="s:string" />
+        <s:attribute name="ItemName" type="s:string" />
+        <s:attribute name="ClientItemHandle" type="s:string" />
+        <s:attribute name="ValueType" type="s:QName" />
+        <s:attribute name="Timestamp" type="s:dateTime" />
+        <s:attribute name="Quality" type="s0:qualityStatus" />
+        <s:attribute name="LimitBits" type="s0:limitStatus" />
+        <s:attribute name="VendorBits" type="s:unsignedLong" />
+        <s:attribute name="ErrorID" type="s:QName" />
+        <s:attribute name="SuccessID" type="s:QName" />
+      </s:complexType>
+      <s:simpleType name="qualityStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="bad" />
+          <s:enumeration value="badConfigurationError" />
+          <s:enumeration value="badNotConnected" />
+          <s:enumeration value="badDeviceFailure" />
+          <s:enumeration value="badSensorFailure" />
+          <s:enumeration value="badLastKnownValue" />
+          <s:enumeration value="badCommFailure" />
+          <s:enumeration value="badOutOfService" />
+          <s:enumeration value="uncertain" />
+          <s:enumeration value="uncertainLastUsableValue" />
+          <s:enumeration value="uncertainSensorNotAccurate" />
+          <s:enumeration value="uncertainEUExceeded" />
+          <s:enumeration value="uncertainSubNormal" />
+          <s:enumeration value="good" />
+          <s:enumeration value="goodLocalOverride" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="limitStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="none" />
+          <s:enumeration value="low" />
+          <s:enumeration value="high" />
+          <s:enumeration value="constant" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="SubscribeItemValue">
+        <s:complexContent mixed="false">
+          <s:extension base="s0:ItemValue">
+            <s:attribute name="RevisedSamplingRate" type="s:duration" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="SubscribeReplyItemList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Items" nillable="true" type="s0:SubscribeItemValue" />
+        </s:sequence>
+        <s:attribute name="ItemListHandle" type="s:string" />
+        <s:attribute name="RevisedSamplingRate" type="s:duration" />
+      </s:complexType>
+      <s:element name="SubscribeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SubscribeResult" type="s0:ReplyBase" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="RItemList" nillable="true" type="s0:SubscribeReplyItemList" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="Errors" nillable="true" type="s0:OPCError" />
+          </s:sequence>
+          <s:attribute name="ServerSubHandle" type="s:string" />
+        </s:complexType>
+      </s:element>
+      <s:element name="SubscriptionPolledRefresh">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Options" nillable="true" type="s0:RequestOptions" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="ServerSubHandles" type="s:string" />
+          </s:sequence>
+          <s:attribute name="Holdtime" type="s:dateTime" />
+          <s:attribute name="Waittime" type="s:duration" />
+          <s:attribute default="false" name="ReturnAllItems" type="s:boolean" use="optional" />
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ReplyItemList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Items" nillable="true" type="s0:ItemValue" />
+        </s:sequence>
+        <s:attribute name="ItemListHandle" type="s:string" />
+      </s:complexType>
+      <s:element name="SubscriptionPolledRefreshResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SubscriptionPolledRefreshResult" type="s0:ReplyBase" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="InvalidServerSubHandles" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="RItemList" nillable="true" type="s0:ReplyItemList" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="Errors" nillable="true" type="s0:OPCError" />
+          </s:sequence>
+          <s:attribute name="DataBufferOverflow" type="s:boolean" />
+        </s:complexType>
+      </s:element>
+      <s:element name="SubscriptionCancel">
+        <s:complexType>
+          <s:attribute name="ServerSubHandle" type="s:string" />
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+        </s:complexType>
+      </s:element>
+      <s:element name="SubscriptionCancelResponse">
+        <s:complexType>
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ServerStatus">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="StatusInfo" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="VendorInfo" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SupportedLocaleIDs" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SupportedInterfaceVersions" type="s0:interfaceVersion" />
+        </s:sequence>
+        <s:attribute name="StartTime" type="s:dateTime" />
+        <s:attribute name="LastUpdateTime" type="s:dateTime" />
+        <s:attribute name="ProductVersion" type="s:string" />
+      </s:complexType>
+      <s:simpleType name="interfaceVersion">
+        <s:restriction base="s:string">
+          <s:enumeration value="XML_DA_Version_1_0" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="tristate">
+        <s:restriction base="s:string">
+          <s:enumeration value="no" />
+          <s:enumeration value="yes" />
+          <s:enumeration value="either" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="BrowseElement">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Properties" type="s0:ItemProperty" />
+        </s:sequence>
+        <s:attribute name="Name" type="s:string" />
+        <s:attribute default="" name="ItemPath" type="s:string" use="optional" />
+        <s:attribute name="ItemName" type="s:string" />
+        <s:attribute name="IsItem" type="s:boolean" />
+        <s:attribute name="HasChildren" type="s:boolean" />
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:import namespace="http://opcfoundation.org/webservices/OPCDA/" />
+      <s:element name="GetStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LocaleID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ClientRequestHandle" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatusResult" type="s0:ReplyBase" />
+            <s:element minOccurs="0" maxOccurs="1" name="Status" type="s0:ServerStatus" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Browse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LocaleID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ItemPath" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ItemName" nillable="true" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ContinuationPoint" nillable="true" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="PropertyNames" type="s:QName" />
+          </s:sequence>
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+          <s:attribute name="RequestTimeout" type="s:dateTime" />
+          <s:attribute name="MaxElementsReturned" type="s:int" />
+          <s:attribute name="HasChildrenMask" type="s0:tristate" />
+          <s:attribute name="IsItemMask" type="s0:tristate" />
+          <s:attribute name="ElementNameFilter" type="s:string" />
+          <s:attribute name="VendorFilter" type="s:string" />
+          <s:attribute name="ReturnAllProperties" type="s:boolean" />
+          <s:attribute name="ReturnPropertyValues" type="s:boolean" />
+        </s:complexType>
+      </s:element>
+      <s:element name="BrowseResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BrowseResult" type="s0:ReplyBase" />
+            <s:element minOccurs="1" maxOccurs="1" name="ContinuationPoint" nillable="true" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="Element" nillable="true" type="s0:BrowseElement" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="Errors" nillable="true" type="s0:OPCError" />
+          </s:sequence>
+          <s:attribute name="MoreElements" type="s:boolean" />
+        </s:complexType>
+      </s:element>
+      <s:element name="Read">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Options" nillable="true" type="s0:RequestOptions" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="ItemList" type="s0:ReadRequestItemList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReadResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ReadResult" type="s0:ReplyBase" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="ItemValues" nillable="true" type="s0:ReplyItemList" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="Errors" nillable="true" type="s0:OPCError" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Write">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Options" nillable="true" type="s0:RequestOptions" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="ItemList" type="s0:WriteRequestItemList" />
+          </s:sequence>
+          <s:attribute name="ReturnItemVal" type="s:boolean" />
+        </s:complexType>
+      </s:element>
+      <s:element name="WriteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="WriteResult" type="s0:ReplyBase" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="ItemValues" nillable="true" type="s0:ReplyItemList" />
+            <s:element minOccurs="0" maxOccurs="unbounded" name="Errors" nillable="true" type="s0:OPCError" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </types>
+  <message name="GetPropertiesSoapIn">
+    <part name="parameters" element="s0:GetProperties" />
+  </message>
+  <message name="GetPropertiesSoapOut">
+    <part name="parameters" element="s0:GetPropertiesResponse" />
+  </message>
+  <message name="SubscribeSoapIn">
+    <part name="parameters" element="s0:Subscribe" />
+  </message>
+  <message name="SubscribeSoapOut">
+    <part name="parameters" element="s0:SubscribeResponse" />
+  </message>
+  <message name="SubscriptionPolledRefreshSoapIn">
+    <part name="parameters" element="s0:SubscriptionPolledRefresh" />
+  </message>
+  <message name="SubscriptionPolledRefreshSoapOut">
+    <part name="parameters" element="s0:SubscriptionPolledRefreshResponse" />
+  </message>
+  <message name="SubscriptionCancelSoapIn">
+    <part name="parameters" element="s0:SubscriptionCancel" />
+  </message>
+  <message name="SubscriptionCancelSoapOut">
+    <part name="parameters" element="s0:SubscriptionCancelResponse" />
+  </message>
+  <message name="GetStatusSoapIn">
+    <part name="parameters" element="s1:GetStatus" />
+  </message>
+  <message name="GetStatusSoapOut">
+    <part name="parameters" element="s1:GetStatusResponse" />
+  </message>
+  <message name="BrowseSoapIn">
+    <part name="parameters" element="s1:Browse" />
+  </message>
+  <message name="BrowseSoapOut">
+    <part name="parameters" element="s1:BrowseResponse" />
+  </message>
+  <message name="ReadSoapIn">
+    <part name="parameters" element="s1:Read" />
+  </message>
+  <message name="ReadSoapOut">
+    <part name="parameters" element="s1:ReadResponse" />
+  </message>
+  <message name="WriteSoapIn">
+    <part name="parameters" element="s1:Write" />
+  </message>
+  <message name="WriteSoapOut">
+    <part name="parameters" element="s1:WriteResponse" />
+  </message>
+  <portType name="OpcXmlDaSrvSoap">
+    <operation name="GetProperties">
+      <input message="tns:GetPropertiesSoapIn" />
+      <output message="tns:GetPropertiesSoapOut" />
+    </operation>
+    <operation name="Subscribe">
+      <input message="tns:SubscribeSoapIn" />
+      <output message="tns:SubscribeSoapOut" />
+    </operation>
+    <operation name="SubscriptionPolledRefresh">
+      <input message="tns:SubscriptionPolledRefreshSoapIn" />
+      <output message="tns:SubscriptionPolledRefreshSoapOut" />
+    </operation>
+    <operation name="SubscriptionCancel">
+      <input message="tns:SubscriptionCancelSoapIn" />
+      <output message="tns:SubscriptionCancelSoapOut" />
+    </operation>
+    <operation name="GetStatus">
+      <input message="tns:GetStatusSoapIn" />
+      <output message="tns:GetStatusSoapOut" />
+    </operation>
+    <operation name="Browse">
+      <input message="tns:BrowseSoapIn" />
+      <output message="tns:BrowseSoapOut" />
+    </operation>
+    <operation name="Read">
+      <input message="tns:ReadSoapIn" />
+      <output message="tns:ReadSoapOut" />
+    </operation>
+    <operation name="Write">
+      <input message="tns:WriteSoapIn" />
+      <output message="tns:WriteSoapOut" />
+    </operation>
+  </portType>
+  <portType name="OpcXmlDaSrvHttpGet" />
+  <portType name="OpcXmlDaSrvHttpPost" />
+  <binding name="OpcXmlDaSrvSoap" type="tns:OpcXmlDaSrvSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <operation name="GetProperties">
+      <soap:operation soapAction="http://opcfoundation.org/webservices/OPCDA/GetProperties" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="Subscribe">
+      <soap:operation soapAction="http://opcfoundation.org/webservices/OPCDA/Subscribe" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="SubscriptionPolledRefresh">
+      <soap:operation soapAction="http://opcfoundation.org/webservices/OPCDA/SubscriptionPolledRefresh" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="SubscriptionCancel">
+      <soap:operation soapAction="http://opcfoundation.org/webservices/OPCDA/SubscriptionCancel" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="GetStatus">
+      <soap:operation soapAction="http://tempuri.org/GetStatus" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="Browse">
+      <soap:operation soapAction="http://tempuri.org/Browse" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="Read">
+      <soap:operation soapAction="http://tempuri.org/Read" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="Write">
+      <soap:operation soapAction="http://tempuri.org/Write" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <binding name="OpcXmlDaSrvHttpGet" type="tns:OpcXmlDaSrvHttpGet">
+    <http:binding verb="GET" />
+  </binding>
+  <binding name="OpcXmlDaSrvHttpPost" type="tns:OpcXmlDaSrvHttpPost">
+    <http:binding verb="POST" />
+  </binding>
+  <service name="OpcXmlDaSrv">
+    <port name="OpcXmlDaSrvSoap" binding="tns:OpcXmlDaSrvSoap">
+      <soap:address location="http://80.254.186.217/KEP_Sim/OpcDaGateway.asmx" />
+    </port>
+    <port name="OpcXmlDaSrvHttpGet" binding="tns:OpcXmlDaSrvHttpGet">
+      <http:address location="http://80.254.186.217/KEP_Sim/OpcDaGateway.asmx" />
+    </port>
+    <port name="OpcXmlDaSrvHttpPost" binding="tns:OpcXmlDaSrvHttpPost">
+      <http:address location="http://80.254.186.217/KEP_Sim/OpcDaGateway.asmx" />
+    </port>
+  </service>
+</definitions>

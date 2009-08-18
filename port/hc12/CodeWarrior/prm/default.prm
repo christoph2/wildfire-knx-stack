@@ -1,0 +1,20 @@
+/* This is a generic Prm File 
+   If it does not fit your needs, you may adapt it or choose an another one 
+   in the linker preference panel */
+   
+NAMES END
+   
+SECTIONS 
+    MY_RAM = READ_WRITE  0x1000 TO 0x1FFF;
+    MY_ROM = READ_ONLY   0xC000 TO 0xFEFF;
+
+
+PLACEMENT
+    DEFAULT_ROM  INTO  MY_ROM;
+    DEFAULT_RAM  INTO  MY_RAM;
+END
+
+STACKSIZE  0x600
+
+VECTOR 0 _Startup /* set reset vector on _Startup */
+

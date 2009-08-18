@@ -1,0 +1,74 @@
+//===================================================
+//
+// IAR EMBEDDED WORKBENCH TUTORIAL
+// Macro package for CSPY debugger to simulate
+// Fibonacchi data input.
+//
+// Copyright 200 IAR Systems. All rights reserved.
+//
+// $Revision: 1.4 $
+//
+//===================================================
+
+__var _fileHandle;
+
+execUserSetup()
+{
+  __message "execUserSetup() called\n";
+
+  // Open the text file for ASCII reading
+  // Put in the appropriate path to the InputData.txt file
+
+/*
+  _fileHandle = __openFile( "$TOOLKIT_DIR$\\tutor\\InputData.txt", "r" );
+  if( !_fileHandle )
+  {
+    __message "could not open file" ;
+  }
+*/
+}
+
+
+Access()
+{
+  __message "Access() called\n";
+
+  // In this tutorial we read the fib values from a file
+
+  __var _fibValue;
+
+  if( 0 == __readFile ( _fileHandle, &_fibValue ) )
+  {
+    SCI0DRL = _fibValue;
+  }
+  else
+  {
+    __message "error reading value from file";
+  }
+
+  __message "SCI0DRL = 0x", _fibValue:%X,"\n";
+}
+
+
+execUserReset()
+{
+  __message "execUserReset() called\n";
+
+/*
+  if( _fileHandle )
+  {
+    __resetFile( _fileHandle );
+  }
+*/
+}
+
+
+execUserExit()
+{
+  __message "execUserExit() called\n";
+
+/*
+  __closeFile( _fileHandle );
+*/
+}
+

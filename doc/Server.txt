@@ -1,0 +1,43 @@
+
+                        KONNEX/EIB-Objekt-Server
+                        ========================
+
+- Physical-Address-Server:
+--------------------------
+    Handles A_PhysicalAddress_Read,A_PhysicalAddress_Write, 
+    A_PhysicalAddressSerialNumber_Write Services on Broadcast-Communication-Relationships
+    (s. 3/3/7,3/5,3/3/2).
+
+- AD-Converter-Value-Server:
+----------------------------
+    A_ADC_Read-Service (s. 3/3/7).
+
+- BAU-Memory-Access-Server:
+---------------------------
+    Handles A_Memory_Read,A_Memory_Write and A_MemoryBit_Write (optional) Services.
+    Basic Element of Network-Management-Sever(s. 3/3/7, 3/5).
+
+- External-Memory-Access-Server:
+--------------------------------
+    Handles A_UserMemoryRead,A_UserMemoryWrite and A_UserMemoryBit_Write Services (s 3/3/7).
+    
+- Information Server about the Manufacturer of the External User Application:
+-----------------------------------------------------------------------------
+    A_UserManufacturerInfo_Read-Service (s. 3/3/7).
+    
+- Mask-Version and Mask-Type-Server:
+------------------------------------
+    A_DeviceDescriptorRead-Service (s. 3/3/7).
+    
+- BAU-Restart-Server:
+---------------------
+    A_Restart-Service (s. 3/3/7).
+    
+- Property-(Interface-Object)-Server:
+-------------------------------------
+    Handles A_PropertyDescriptionRead,A_PropertyValue_Read and A_PropertyValue_Write Services
+    (s. 3/3/7,3/4/1). Local Management Server, no internal user application involved.
+    
+- Service-Information-Server:
+-----------------------------
+    A_Service_Information_Indication_Write-Service (s. 3/3/7).

@@ -1,0 +1,14 @@
+STATUS_REQ:
+	10 49 49 16		; Function-Code #9 ==> REQ_STATUS
+
+STATUS_IND:
+	10 8B 8B 16		; Function-Code #B ==> RESPOND_STATUS
+	
+	
+// SPANNUNGS-WIEDERKEHR:
+========================
+BCU-Sendet:
+
+0xFF
+
+10 C0 C0 16		; SEND_RESET

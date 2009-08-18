@@ -1,0 +1,42 @@
+
+Facts
+-----
+	- Kompakte [,aufgeräumte] 'Cleanroom'-Implementation (Footprint: 
+	  ??? Bytes RAM, ???? Bytes ROM, Metrowerks-Compiler).
+	- KONNEX-Zertifiziert.
+	- Oriertierung [Orientiert] an den Automotive-Standards 
+		OSEK/VDX,AUTOSAR und MISRA-C.
+	- Abgestimmt auf die Zusammenarbeit mit miniOSEK.
+	- Umfangreiche Gerätetreibeer-Bibliothek.
+	- GPLed [QPLed] für nicht kommerzielle Zwecke, ermöglicht eine
+		Evaluierung ohne Einschränkungen, sowie den kostenfreien
+		Einsatz für Ausbildungs- und Hobby-Zwecke,
+		???  Site-Lizenzen pro Microcontroller
+	
+Einsatzgebiete (Targets/Targeting):
+---------------
+- Leistungsfähige Microcontroller zur Realisierung komplexer KNX/EIB-Projekte.
+
+
+Produkt			Lizenzkosten	ext. Support/Updates (p.A.)
+-------------------------------------------------------------------
+miniOSEK		2.000,-				400,-
+SupaDupaStack		8.000,-				1.600,-
+
+
+"
+Per CPU-Type License:
+---------------------
+Valid for any number of end-products using a single processor type (e.g 68HC12, 683xx, ARM7, 80x86 etc.), for any
+number of units, for life.
+Includes free updates, phone and e-mail support for one year for two users.
+"
+
+Product			Price				Support/Year		 %
+==================================================================================
+µC/OS-II		22.000,-		4.400,-				20
+µC/TCP-IP		43.750,-		8.750,-				20
+Bundle-I		64.800,-		12.960,-			20
+Bundle-II		77.200,-		15.440,-			20
+Bundle-III		103.920,-		20.784,-			20
+Bundle-IV		111.920,-		22.384,-			20

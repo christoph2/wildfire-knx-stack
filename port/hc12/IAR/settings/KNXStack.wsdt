@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>KNXStack/Debug</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>200</Column0><Column1>15</Column1><Column2>19</Column2><Column3>1307876</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Find-in-Files</Factory></Window></Windows></PreferedWindows><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>715</ColumnWidth1><ColumnWidth2>321</ColumnWidth2><ColumnWidth3>61</ColumnWidth3></Build>
+      <Find-in-Files>
+        
+        
+        
+      <ColumnWidth0>440</ColumnWidth0><ColumnWidth1>62</ColumnWidth1><ColumnWidth2>754</ColumnWidth2></Find-in-Files>
+    <TerminalIO/><CodeCoveragePlugin/><Profiling><Enabled>1</Enabled></Profiling><SourceBrowser/><Tool-Output/><CodeCoverage><Enabled>1</Enabled></CodeCoverage></Static>
+    <Windows>
+      
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-3657-28012</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>KNXStack</ExpandedNode><ExpandedNode>KNXStack/Output</ExpandedNode><ExpandedNode>KNXStack/sys_objs.c</ExpandedNode></NodeDict></Session>
+          </Tab>
+        <Tab><Identity>TabID-28657-2168</Identity><TabName>Source Browser</TabName><Factory>SourceBrowser</Factory><Session><TypeFilter>-1</TypeFilter><FileFilter>1</FileFilter></Session></Tab></Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1><Tabs><Tab><Identity>TabID-24164-1628</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab><Tab><Identity>TabID-20820-8855</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab></Tabs><SelectedTab>1</SelectedTab></Wnd1></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\projekte\KNXStack\trunk\stack\Address.h</Filename><XPos>0</XPos><YPos>56</YPos><SelStart>2617</SelStart><SelEnd>2617</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\projekte\KNXStack\trunk\stack\APCI.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>379</SelStart><SelEnd>379</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\projekte\KNXStack\trunk\stack\Application.h</Filename><XPos>0</XPos><YPos>19</YPos><SelStart>4915</SelStart><SelEnd>4915</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\projekte\KNXStack\trunk\stack\Messaging.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>4436</SelStart><SelEnd>4436</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\projekte\KNXStack\trunk\stack\knx_disp.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>359</SelStart><SelEnd>359</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\projekte\KNXStack\trunk\stack\ios.h</Filename><XPos>0</XPos><YPos>188</YPos><SelStart>8164</SelStart><SelEnd>8164</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\projekte\KNXStack\trunk\stack\ios.c</Filename><XPos>0</XPos><YPos>228</YPos><SelStart>8753</SelStart><SelEnd>8753</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\projekte\KNXStack\trunk\stack\Appl.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>552</SelStart><SelEnd>552</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\projekte\KNXStack\trunk\stack\Appl.c</Filename><XPos>0</XPos><YPos>96</YPos><SelStart>3691</SelStart><SelEnd>3691</SelEnd></Tab><ActiveTab>8</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\projekte\KNXStack\trunk\stack\sys_objs.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\projekte\KNXStack\trunk\stack\KNXDefs.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-0037ba70><key>iaridepm1</key></Toolbar-0037ba70></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>672</Bottom><Right>271</Right><x>-2</x><y>-2</y><xscreen>82</xscreen><yscreen>70</yscreen><sizeHorzCX>64213</sizeHorzCX><sizeHorzCY>76586</sizeHorzCY><sizeVertCX>213782</sizeVertCX><sizeVertCY>737418</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1279</Right><x>-2</x><y>-2</y><xscreen>1281</xscreen><yscreen>200</yscreen><sizeHorzCX>1003132</sizeHorzCX><sizeHorzCY>218818</sizeHorzCY><sizeVertCX>156617</sizeVertCX><sizeVertCY>218818</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

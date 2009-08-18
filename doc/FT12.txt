@@ -1,0 +1,90 @@
+
+						FT1.2-Protokoll (speziell BCU2)
+						===============================
+
+- FT1.2 ist definiert in: IEC 870-5-1/2 bzw. DIN 19244.
+- Der Initiator heist 'primary station', der Empfänger 'secondary station'.
+- Schnittstellen-Parameter [19200|9000]-E-8-1
+- Transfer-Parameter:
+		EXCHANGE_TIMEOUT 	Timeout-Zeit, in der ein 		ca. 510 Bits (53ms bzw. 26,5ms)
+							SEND/CONFIRM oder REQUEST/
+							RESPOND abgeschlossen sein muß.
+
+		REPEAT_LIMIT 		Anzahl der Übertragungs-		3
+							Wiederholungen im Falle eines
+							Übertragungs-Fehlers.
+
+		LINE_IDLE_TIMEOUT 	Maximal-Zeit zwischen zwei		ca.33 Bits (3,4ms bzw. 1.7ms)
+							Zeichen, minimale Ruhezeit
+							bevor ein Fehler erkannt wird.
+
+- CHECKSUM ist die 8-Bit-Summe (sum modulo 256 ) aller Benutzer-Datenbytes, also CONTROL FIELD
+  und LINK USER DATA, sie ist demnach bei Rahmen fester Länge identisch mit dem CONTROL FIELD
+
+- Wenn ein Übertragungs-Fehler entdeckt wird, gilt LINE_IDLE_TIMEOUT als mimale
+  Wartezeit zwischen zwei Rahmen.
+- Die Fehler-Überprüfung beinhaltet folgende Punkt:  
+	- Übertragungsfehler auf Bit-Ebene (übernimmt i.a. die Schnitstelle).
+
+	- Das vorgesehene Start-Zeichen (bei Rahmen variabler Länge auch am Ende des Frame-Headers).
+	- Die Rahmen-Prüfsumme (Rahmen fester Länge: Gleichheit von CONTROL FIELD und CHECKSUM).
+	- Das korrekte Ende-Zeichen.	
+	- Timeout-Bedingung.
+	- Bei Rahmen variabler Länge zusätzlich noch:
+		- Die Identität der beiden Längen-Bytes.
+		- Die Anzahl der empfangenen Zeichen ist gleich	L + 6.	
+		
+	
+
+- Rahmen mit fester Länge:
+	START 				0x10
+	CONTROL FIELD
+	CHECKSUM
+	END 				0x16
+	
+- Rahmen mit variabler Länge:
+	START				0x68
+	length L			(2..23)
+	length L
+	START				0x68
+	CONTROL FIELD
+	LINK USER DATA
+	END					0x16
+	
+- Rahmen-Format einzelene Zeichen:
+	nur
+	
+	ACK					0xe5
+	
+	ist spezifiziert (die BCU sendet allerdings 0xff nach einem Reset).
+	
+		CONTROL FIELD von der primären Station
+		======================================		
+		
+		7 	6 		5 	4 	3    2    1    0
+		DIR PRM = 1 FCB FCV  Function code
+		
+		DIR (physical transmission Direction)	1 = BAU an externes Gerät.
+												0 = externes Gerät an BAU.
+
+		PRM (primary Message)					1 = Nachricht von der primären Stattion.
+		
+		FCB (frame count bit)					wird bei aufeinanderfolgenden
+												SEND/CONFIRMs getoggelt, im Fall von
+												Übertragungsfehlern Rahmen mit dem
+												gleichen FCB erneut übertragen.
+												
+		FCV (frame count bit valid)				das FCB ist in Funktion.
+		
+		Funktionscodes:
+		===============
+		Code	Name			Funktion				FCV		Format	pos. Conf.	neg. Conf.
+		0x00	SEND_RESET		Reset of remote link	0		fest	ACK-Byte	nichts/
+																					NACK
+		0x03	SEND_UDAT		Benutzerdaten.			1		var.	ACK-Byte	nichts/
+																					NACK
+		0x09	REQ_STATUS		Verbindungsstatus anfr.	0		fest	RESP_STATUS	nichts/
+																					NACK
+																				
+																				
+																				

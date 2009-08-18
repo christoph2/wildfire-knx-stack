@@ -1,0 +1,34 @@
+
+KNX-DCF77-Empfänger Deluxe
+==========================
+- Hardwarebasis: HCS12NE64.
+- DCF77-Aktiv-Empfänger 
+	(optionaler Antennen-	Anschluss 
+	über eine mitgelieferte 
+	RS485 (oder differenzielle
+	Leitungstreiber)-Platine 
+	==> beliebige	Kabellänge).
+- Parametrierbare Alarme (t.b.d),
+	Idealerweise log. verknüpfbar
+	mit anderen Schalttelegrammen,
+	ansonsten EIN/AUS/UM.
+- Notlauf via PCF8583 (check), 
+  SetTime möglich(?).
+- Ausgabe-Möglichkeiten: EIB, 
+	EIB/IP, NTP.
+- DHCP-Client, AutoIP.
+- Seriennummer via 1-Wire.	
+- mehrere Gruppen-Addressen 
+  für Zeit und Datum,
+  Notlauf (z.B. DCF-Sync),
+  Sommer-/Winter-Zeit.
+- Parametrierbar sowohl über
+ 	den Bus als auch IP.
+- Hilfsspannung erforderlich.
+	
+- Paramater: Ausgabe-Kanal,
+	Sende-Frequenz (pro Kanal),
+	IP-Adresse, NTP-Parameter 
+	(z.B. Port), Time-Offset,
+	Sommer-/Winter-Zeit-Flag
+	periodisch senden.

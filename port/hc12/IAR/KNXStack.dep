@@ -1,0 +1,1499 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\Debug\List\ALG.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\Network.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\knx_disp.r12</file>
+      <file>$PROJ_DIR$\Debug\List\ooc.i</file>
+      <file>$PROJ_DIR$\Debug\Obj\knx_tlc.r12</file>
+      <file>$PROJ_DIR$\..\..\..\stack\APCI.h</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dlhcs12nfn.r12</file>
+      <file>$PROJ_DIR$\..\..\..\stack\timer.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\Messaging.pbi</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\csProjects\trunk\autosar\Compiler.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\Network.r12</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\yvals.h</file>
+      <file>$PROJ_DIR$\Debug\List\sys_objs.lst</file>
+      <file>$PROJ_DIR$\Debug\List\tpuart.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\tpuart.pbi</file>
+      <file>$PROJ_DIR$\..\..\..\stack\KNXConv.h</file>
+      <file>$PROJ_DIR$\Debug\List\tpuart.s12</file>
+      <file>$PROJ_DIR$\Debug\List\BABCU2.i</file>
+      <file>$PROJ_DIR$\Debug\List\StateMachineKNX.lst</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\DLib_Defaults.h</file>
+      <file>$PROJ_DIR$\Debug\List\ALM.lst</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\csProjects\trunk\autosar\Std_Macros.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\KNXNwps.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\KNXConv.pbi</file>
+      <file>$PROJ_DIR$\..\..\..\stack\knx_disp.h</file>
+      <file>$PROJ_DIR$\Debug\List\Messaging.lst</file>
+      <file>$PROJ_DIR$\Debug\List\timer.lst</file>
+      <file>$PROJ_DIR$\..\..\..\stack\rsm.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\stdarg.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\AIL.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\DLib_Threads.h</file>
+      <file>$PROJ_DIR$\Debug\List\Network.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\AIL.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\timer.r12</file>
+      <file>$PROJ_DIR$\Debug\List\sys_objs.s12</file>
+      <file>$PROJ_DIR$\Debug\List\StateMachineKNX.i</file>
+      <file>$PROJ_DIR$\Debug\List\Memory.i</file>
+      <file>$PROJ_DIR$\Debug\Obj\Address.r12</file>
+      <file>$PROJ_DIR$\Debug\List\Appl.s12</file>
+      <file>$PROJ_DIR$\Debug\Obj\Memory.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\AIL.i</file>
+      <file>$PROJ_DIR$\Debug\List\tpuart.i</file>
+      <file>$PROJ_DIR$\Debug\Obj\Appl.r12</file>
+      <file>$PROJ_DIR$\Debug\Obj\ios.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\BABCU2.r12</file>
+      <file>$PROJ_DIR$\Debug\Obj\ALG.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\Appl.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\ALM.s12</file>
+      <file>$PROJ_DIR$\Debug\Obj\ios.r12</file>
+      <file>$PROJ_DIR$\Debug\List\knx_tlg.s12</file>
+      <file>$PROJ_DIR$\Debug\Obj\lsm.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\knx_tlc.s12</file>
+      <file>$PROJ_DIR$\..\..\..\stack\KNXDefs.h</file>
+      <file>$PROJ_DIR$\Debug\List\rsm.i</file>
+      <file>$PROJ_DIR$\..\..\..\stack\EMI_IMI2.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\xencoding_limits.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\eOSEK\trunk\autosar\Compiler.h</file>
+      <file>$PROJ_DIR$\Debug\List\Memory.lst</file>
+      <file>$PROJ_DIR$\Debug\List\Address.s12</file>
+      <file>$PROJ_DIR$\Debug\Obj\ALG.r12</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Messaging.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\ios.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\sys_objs.h</file>
+      <file>$PROJ_DIR$\Debug\List\sys_objs.i</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Memory.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\rsm.r12</file>
+      <file>$PROJ_DIR$\Debug\List\Appl.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\sys_objs.r12</file>
+      <file>$PROJ_DIR$\Debug\List\lsm.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\Transport.r12</file>
+      <file>$PROJ_DIR$\..\..\..\stack\knx_imi.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\Memory.r12</file>
+      <file>$PROJ_DIR$\Debug\Obj\knx_tlv.r12</file>
+      <file>$PROJ_DIR$\Debug\Obj\BABCU2.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\ooc.s12</file>
+      <file>$PROJ_DIR$\Debug\Obj\StateMachineKNX.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\ooc.lst</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\stdint.h</file>
+      <file>$PROJ_DIR$\Debug\List\knx_tlg.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\tpuart.r12</file>
+      <file>$PROJ_DIR$\Debug\Obj\knx_disp.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\Utl.lst</file>
+      <file>$PROJ_DIR$\Debug\List\timer.s12</file>
+      <file>$PROJ_DIR$\Debug\Obj\ooc.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\ALG.s12</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\csProjects\trunk\autosar\Platform_Types.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\csProjects\trunk\autosar\CPU_Primitives.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\lsm.r12</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\stdlib.h</file>
+      <file>$PROJ_DIR$\Debug\List\Address.lst</file>
+      <file>$PROJ_DIR$\Debug\List\BABCU2.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\StateMachineKNX.r12</file>
+      <file>$PROJ_DIR$\Debug\List\Utl.s12</file>
+      <file>$PROJ_DIR$\Debug\List\KNXConv.lst</file>
+      <file>$PROJ_DIR$\Debug\List\lsm.i</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\eOSEK\trunk\autosar\Std_Types.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Address.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\assert.h</file>
+      <file>$PROJ_DIR$\Debug\List\timer.i</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\ysizet.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\KNXNwps.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\KNXNwps.lst</file>
+      <file>$PROJ_DIR$\Debug\List\AIL.lst</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\csProjects\trunk\autosar\Std_Types.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\KNXNwps.r12</file>
+      <file>$PROJ_DIR$\Debug\List\ios.lst</file>
+      <file>$PROJ_DIR$\Debug\List\StateMachineKNX.s12</file>
+      <file>$PROJ_DIR$\Debug\List\Address.i</file>
+      <file>$PROJ_DIR$\Debug\Obj\Address.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\Transport.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\Messaging.i</file>
+      <file>$PROJ_DIR$\Debug\List\ios.i</file>
+      <file>$PROJ_DIR$\..\..\..\stack\lsm.h</file>
+      <file>$PROJ_DIR$\Debug\List\knx_disp.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\Messaging.r12</file>
+      <file>$PROJ_DIR$\Debug\List\KNXNwps.s12</file>
+      <file>$PROJ_DIR$\Debug\List\Transport.s12</file>
+      <file>$PROJ_DIR$\Debug\Obj\ooc.r12</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Application.h</file>
+      <file>$PROJ_DIR$\Debug\List\knx_tlc.i</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Network.h</file>
+      <file>$PROJ_DIR$\Debug\List\Messaging.s12</file>
+      <file>$PROJ_DIR$\Debug\Obj\rsm.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$PROJ_DIR$\Debug\List\ALG.i</file>
+      <file>$PROJ_DIR$\Debug\List\Network.i</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\DLib_Product.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\csProjects\trunk\common\include\Utl.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\knx_tlc.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\Utl.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\Utl.i</file>
+      <file>$PROJ_DIR$\Debug\Obj\knx_tlv.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\ALM.pbi</file>
+      <file>$PROJ_DIR$\Debug\Exe\KNXStack.d12</file>
+      <file>$PROJ_DIR$\Debug\List\rsm.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\ALM.r12</file>
+      <file>$PROJ_DIR$\Debug\Obj\knx_tlg.r12</file>
+      <file>$PROJ_DIR$\Debug\List\Appl.i</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Transport.c</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\eOSEK\trunk\autosar\Platform_Types.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Appl.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\timer.pbi</file>
+      <file>$TOOLKIT_DIR$\config\lnkmc9s12dp256b.xcl</file>
+      <file>$PROJ_DIR$\..\..\..\stack\StateMachineKNX.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\Utl.r12</file>
+      <file>$PROJ_DIR$\Debug\List\KNXNwps.i</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dlhcs12nfn.h</file>
+      <file>$PROJ_DIR$\Debug\List\ios.s12</file>
+      <file>$PROJ_DIR$\Debug\List\AIL.s12</file>
+      <file>$PROJ_DIR$\Debug\Obj\sys_objs.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\ALM.i</file>
+      <file>$PROJ_DIR$\..\..\..\stack\tpuart.h</file>
+      <file>$PROJ_DIR$\Debug\List\knx_disp.s12</file>
+      <file>$PROJ_DIR$\..\..\..\stack\knx_tlv.c</file>
+      <file>$PROJ_DIR$\Debug\List\KNXStack.map</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Transport.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\KNXStack.pbd</file>
+      <file>$PROJ_DIR$\Debug\List\KNXConv.s12</file>
+      <file>$PROJ_DIR$\Debug\List\Memory.s12</file>
+      <file>$PROJ_DIR$\Debug\List\knx_tlc.lst</file>
+      <file>$PROJ_DIR$\Debug\List\knx_tlg.i</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Appl.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\BABCU2.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\ios.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\knx_disp.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\knx_tlc.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\knx_tlg.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\KNXConv.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\KNXNwps.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\lsm.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Memory.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Messaging.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Network.c</file>
+      <file>$PROJ_DIR$\..\..\..\ooc.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\rsm.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\StateMachineKNX.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\sys_objs.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\timer.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\tpuart.c</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\csProjects\trunk\common\src\Utl.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Address.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\ALM.c</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\stdio.h</file>
+      <file>$PROJ_DIR$\Debug\List\rsm.s12</file>
+      <file>$PROJ_DIR$\Debug\List\knx_disp.i</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\stdbool.h</file>
+      <file>$PROJ_DIR$\Debug\List\KNXConv.i</file>
+      <file>$PROJ_DIR$\Debug\Obj\KNXConv.r12</file>
+      <file>$PROJ_DIR$\Debug\List\lsm.s12</file>
+      <file>$PROJ_DIR$\Debug\List\BABCU2.s12</file>
+      <file>$PROJ_DIR$\Debug\List\Transport.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\AIL.r12</file>
+      <file>$PROJ_DIR$\Debug\Obj\knx_tlg.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\Network.s12</file>
+      <file>$PROJ_DIR$\..\..\..\stack\ALG.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\AIL.c</file>
+    </outputs>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 133 154</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\KNXStack.d12</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 154</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 142 191 59 135 37 42 44 187 104 71 114 10 91 144 48 2 4 136 87 117 65 67 33 79 6</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\Transport.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 69 116 190</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 109</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 155 96 52 95 139 56 15 64 60 54 143 7 24</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 155 96 52 95 139 56 15 64 60 54 143 7 24</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\knx_tlv.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 72</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 131</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 155 96 52 95 139 56 15 64 60 54 143 7 24</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Obj\KNXStack.pbd</name>
+      <inputs>
+        <tool>
+          <name>BILINK</name>
+          <file> 32 45 132 108 46 73 23 100 39 8 1 75 129 43 80 128 192 50 83 122 149 141 14</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\Appl.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 42 137 38 66</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 46</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 140 96 52 103 21 85 9 70 15 64 120 60 24 61</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 140 96 52 103 21 85 9 70 15 64 120 60 24 61</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\BABCU2.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 44 17 189 90</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 73</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 151 103 21 85 9 24 52 70 60 96 15 64 120 155 143 7 118 61 112 5 140 29</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 151 103 21 85 9 24 52 70 60 96 15 64 120 155 143 7 118 61 112 5 140 29</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\ios.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 48 111 147 105</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 61 96 52 103 21 85 9 70 15 64 60 140 120 24 62 112 118 155 143 7 5</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 61 96 52 103 21 85 9 70 15 64 60 140 120 24 62 112 118 155 143 7 5</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\knx_disp.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 2 184 152 113</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 80</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 24 52 103 21 85 9 70 60 96 15 64</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 24 52 103 21 85 9 70 60 96 15 64</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\knx_tlc.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 4 119 51 159</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 128</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 155 96 52 103 21 85 9 70 15 64 60 143 7 24</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 155 96 52 103 21 85 9 70 15 64 60 143 7 24</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\knx_tlg.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 136 160 49 78</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 192</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 155 96 52 103 21 85 9 70 15 64 60 143 7 24</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 155 96 52 103 21 85 9 70 15 64 60 143 7 24</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\KNXConv.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 187 186 157 93</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 23</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 15 52 103 21 85 9 70</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 15 52 103 21 85 9 70</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\KNXNwps.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 104 145 115 101</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 100</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 22 52 103 21 85 9 70 61 96 15 64 60</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 22 52 103 21 85 9 70 61 96 15 64 60</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\lsm.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 87 94 188 68</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 50</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 112 52 103 21 85 9 70</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 112 52 103 21 85 9 70</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\Memory.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 71 36 158 57</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 39</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 64 103 21 85 9</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 64 103 21 85 9</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\Messaging.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 114 110 121 25</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 8</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 60 52 103 21 85 9 70 96 15 64</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 60 52 103 21 85 9 70 96 15 64</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\Network.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 10 125 193 31</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 1</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 120 60 52 103 21 85 9 70 96 15 64 24</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 120 60 52 103 21 85 9 70 96 15 64 24</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\ooc.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 117 3 74 76</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 83</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 88 11 19 146 126 55 30 99 28 97</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 88 11 19 126 55 30 99 28 97</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\rsm.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 65 53 183 134</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 122</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 27 52 103 21 85 9 70</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 27 52 103 21 85 9 70</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\StateMachineKNX.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 91 35 106 18</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 75</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 155 96 52 103 21 85 9 70 15 64 60 143 7 24</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 155 96 52 103 21 85 9 70 15 64 60 143 7 24</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\sys_objs.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 67 63 34 12</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 149</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 62 52 103 21 85 9 70 112 140 96 15 64 120 60 24 61</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 62 52 103 21 85 9 70 112 140 96 15 64 120 60 24 61</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\timer.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 33 98 82 26</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 141</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 7 103 21 85 9</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 7 103 21 85 9</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\tpuart.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 79 41 16 13</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 182 11 19 146 126 55 30 99 151 103 21 85 77 185 9 24 52 70 60 96 15 64</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 182 11 19 126 55 30 99 151 103 21 85 77 185 9 24 52 70 60 96 15 64</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\csProjects\trunk\common\src\Utl.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 144 130 92 81</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 129</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 127 103 21 85 9 86 123</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 127 103 21 85 9 86 123</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\Address.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 37 107 58 89</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 108</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 96 52 103 21 85 9 70 15 64</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 96 52 103 21 85 9 70 15 64</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\ALM.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 135 150 47 20</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 132</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 118 60 52 103 21 85 9 70 96 15 64 155 143 7 24 61 112 5 140 120</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 118 60 52 103 21 85 9 70 96 15 64 155 143 7 24 61 112 5 140 120</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\ALG.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 59 124 84 0</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 45</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 118 60 52 103 21 85 9 70 96 15 64 155 143 7 24 61 112 5 140 120</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 118 60 52 103 21 85 9 70 96 15 64 155 143 7 24 61 112 5 140 120</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\AIL.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 191 40 148 102</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 32</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 29 52 103 21 85 9 70 118 60 96 15 64 155 143 7 24 61 112 5 140 120</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 29 52 103 21 85 9 70 118 60 96 15 64 155 143 7 24 61 112 5 140 120</file>
+        </tool>
+      </inputs>
+    </file>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs>
+      <file>$PROJ_DIR$\..\..\..\stack\APCI.h</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dlhcs12nfn.r12</file>
+      <file>$PROJ_DIR$\..\..\..\stack\timer.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\csProjects\trunk\autosar\Compiler.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\yvals.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\KNXConv.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\DLib_Defaults.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\csProjects\trunk\autosar\Std_Macros.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\KNXNwps.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\knx_disp.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\rsm.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\stdarg.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\AIL.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\DLib_Threads.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\KNXDefs.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\EMI_IMI2.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\xencoding_limits.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\eOSEK\trunk\autosar\Compiler.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Messaging.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\ios.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\sys_objs.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Memory.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\knx_imi.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\stdint.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\csProjects\trunk\autosar\Platform_Types.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\stdlib.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\eOSEK\trunk\autosar\Std_Types.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Address.h</file>
+      <file>$PROJ_DIR$\Release\Obj\Network.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\assert.h</file>
+      <file>$PROJ_DIR$\Release\Obj\Messaging.r12</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\ysizet.h</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\csProjects\trunk\autosar\Std_Types.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\lsm.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Application.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Network.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\DLib_Product.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Transport.c</file>
+      <file>$PROJ_DIR$\..\..\..\..\..\eOSEK\trunk\autosar\Platform_Types.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Appl.h</file>
+      <file>$TOOLKIT_DIR$\config\lnkmc9s12dp256b.xcl</file>
+      <file>$PROJ_DIR$\Release\Obj\BABCU2.pbi</file>
+      <file>$PROJ_DIR$\..\..\..\stack\StateMachineKNX.h</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dlhcs12nfn.h</file>
+      <file>$PROJ_DIR$\Release\Obj\knx_tlg.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\knx_disp.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\Network.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\knx_tlc.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\Messaging.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\knx_tlc.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\StateMachineKNX.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\ios.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\rsm.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\ALG.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\KNXNwps.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\KNXConv.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\KNXStack.pbd</file>
+      <file>$PROJ_DIR$\Release\Obj\AIL.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\ALG.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\Memory.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\Address.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\timer.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\sys_objs.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\ooc.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\timer.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\Transport.r12</file>
+      <file>$PROJ_DIR$\Release\List\KNXStack.map</file>
+      <file>$PROJ_DIR$\Release\Obj\KNXNwps.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\tpuart.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\Memory.r12</file>
+      <file>$PROJ_DIR$\Release\Exe\KNXStack.elf</file>
+      <file>$PROJ_DIR$\Release\Obj\StateMachineKNX.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\tpuart.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\KNXConv.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\BABCU2.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\ooc.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\Transport.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\ALM.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\lsm.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\knx_tlg.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\sys_objs.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\knx_disp.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\Address.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\lsm.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\AIL.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\Appl.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\ios.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\ALM.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\Appl.r12</file>
+      <file>$PROJ_DIR$\Release\Obj\rsm.pbi</file>
+      <file>$PROJ_DIR$\..\..\..\stack\tpuart.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Transport.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Appl.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\BABCU2.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\ios.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\knx_disp.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\knx_tlc.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\knx_tlg.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\KNXConv.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\KNXNwps.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\lsm.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Memory.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Messaging.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Network.c</file>
+      <file>$PROJ_DIR$\..\..\..\ooc.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\rsm.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\StateMachineKNX.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\sys_objs.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\timer.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\tpuart.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\Address.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\ALM.c</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\stdio.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\stdbool.h</file>
+      <file>$PROJ_DIR$\..\..\..\stack\ALG.c</file>
+      <file>$PROJ_DIR$\..\..\..\stack\AIL.c</file>
+    </outputs>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 70 66</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\Transport.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 65</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 76</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 91 27 14 26 38 17 5 21 18 15 42 2</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 27 14 26 38 17 5 21 18 15 42 2</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Release\Obj\KNXStack.pbd</name>
+      <inputs>
+        <tool>
+          <name>BILINK</name>
+          <file> 57 58 87 60 85 41 73 54 59 48 28 71 86 45 47 44 83 63 89 62 64 72</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Release\Exe\KNXStack.elf</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 66</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 40 84 53 77 82 88 74 55 67 69 30 46 50 51 81 49 79 78 75 52 80 61 68 1</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\Appl.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 88</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 85</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 39 27 14 32 7 24 3 22 5 21 35 18 9 19</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 39 27 14 22 5 21 35 18 9 19</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\BABCU2.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 74</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 41</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 90 32 7 24 3 9 14 22 18 27 5 21 35 91 42 2 34 19 33 0 39 12</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 90 9 14 22 18 27 5 21 35 91 42 2 34 19 33 0 39 12</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\ios.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 51</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 86</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 19 27 14 32 7 24 3 22 5 21 18 39 35 9 20 33 34 91 42 2 0</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 19 27 14 22 5 21 18 39 35 9 20 33 34 91 42 2 0</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\knx_disp.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 81</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 45</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 9 14 32 7 24 3 22 18 27 5 21</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 9 14 22 18 27 5 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\knx_tlc.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 49</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 47</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 91 27 14 32 7 24 3 22 5 21 18 42 2 9</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 27 14 22 5 21 18 42 2 9</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\knx_tlg.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 79</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 44</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 91 27 14 32 7 24 3 22 5 21 18 42 2 9</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 27 14 22 5 21 18 42 2 9</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\KNXConv.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 55</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 73</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 5 14 32 7 24 3 22</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 5 14 22</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\KNXNwps.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 67</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 54</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 8 14 32 7 24 3 22 19 27 5 21 18</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 8 14 22 19 27 5 21 18</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\lsm.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 78</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 83</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 33 14 32 7 24 3 22</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 33 14 22</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\Memory.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 69</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 59</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 21 32 7 24 3</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\Messaging.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 30</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 48</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 18 14 32 7 24 3 22 27 5 21</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 18 14 22 27 5 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\Network.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 46</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 28</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 35 18 14 32 7 24 3 22 27 5 21 9</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 35 18 14 22 27 5 21 9</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\ooc.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 75</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 63</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 25 4 6 43 36 16 13 31 11 29</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 25 4 6 36 16 13 31 11 29</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\rsm.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 52</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 89</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 10 14 32 7 24 3 22</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 10 14 22</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\StateMachineKNX.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 50</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 71</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 91 27 14 32 7 24 3 22 5 21 18 42 2 9</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 27 14 22 5 21 18 42 2 9</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\sys_objs.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 80</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 62</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 20 14 32 7 24 3 22 33 39 27 5 21 35 18 9 19</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 20 14 22 33 39 27 5 21 35 18 9 19</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\timer.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 61</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 64</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 2 32 7 24 3</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 2</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\tpuart.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 68</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 72</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 112 4 6 43 36 16 13 31 90 32 7 24 23 113 3 9 14 22 18 27 5 21</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 112 4 6 36 16 13 31 90 9 14 22 18 27 5 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\Address.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 82</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 60</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 27 14 32 7 24 3 22 5 21</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 27 14 22 5 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\ALM.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 77</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 87</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 34 18 14 32 7 24 3 22 27 5 21 91 42 2 9 19 33 0 39 35</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 34 18 14 22 27 5 21 91 42 2 9 19 33 0 39 35</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\ALG.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 53</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 58</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 34 18 14 32 7 24 3 22 27 5 21 91 42 2 9 19 33 0 39 35</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 34 18 14 22 27 5 21 91 42 2 9 19 33 0 39 35</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\stack\AIL.c</name>
+      <outputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 84</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 57</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC6812</name>
+          <file> 12 14 32 7 24 3 22 34 18 27 5 21 91 42 2 9 19 33 0 39 35</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 12 14 22 34 18 27 5 21 91 42 2 9 19 33 0 39 35</file>
+        </tool>
+      </inputs>
+    </file>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+
