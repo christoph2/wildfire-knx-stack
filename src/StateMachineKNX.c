@@ -33,7 +33,7 @@
 
 static KNX_TlcStateType KNXTlc_State;
 
-static KNX_MSG_T _StoredMsg;     /* Client-only. */
+static Knx_MessageType _StoredMsg;     /* Client-only. */
 
 static void StartConnectionTimeoutTimer(void);
 static void RestartConnectionTimeoutTimer(void);

@@ -16,7 +16,7 @@ static const KNXLayerServiceFunctionType TLG_Services[]={
 };
 
 static const KNXLayerServicesType TLG_ServiceTable[]={
-    KNX_TLG_SERVICES,5,TLG_Services
+    {KNX_TLG_SERVICES,5,TLG_Services}
 };
 
 void TLG_Task(void)
@@ -29,22 +29,22 @@ void TLG_Task(void)
 **  Services from Network-Layer.
 **
 */
-static void Disp_N_DataGroupInd(void) 
+static void Disp_N_DataGroupInd(void)
 {
     MSG_ScratchBuffer->service=T_DATA_GROUP_IND;
-    (void)MSG_Post(MSG_ScratchBuffer);          
+    (void)MSG_Post(MSG_ScratchBuffer);
 }
 
-static void Disp_N_DataGroupCon(void) 
+static void Disp_N_DataGroupCon(void)
 {
     MSG_ScratchBuffer->service=T_DATA_GROUP_CON;
-    (void)MSG_Post(MSG_ScratchBuffer);          
+    (void)MSG_Post(MSG_ScratchBuffer);
 }
 
-static void Disp_N_PollDataCon(void) 
+static void Disp_N_PollDataCon(void)
 {
     MSG_ScratchBuffer->service=T_POLL_DATA_CON;
-    (void)MSG_Post(MSG_ScratchBuffer);                             
+    (void)MSG_Post(MSG_ScratchBuffer);
 }
 
 /*
@@ -52,14 +52,14 @@ static void Disp_N_PollDataCon(void)
 **  Services from Application-Layer.
 **
 */
-static void Disp_T_DataGroupReq(void) 
+static void Disp_T_DataGroupReq(void)
 {
     MSG_SetTPCI(MSG_ScratchBuffer,TPCI_UDT);
     MSG_ScratchBuffer->service=N_DATA_GROUP_REQ;
     (void)MSG_Post(MSG_ScratchBuffer);
 }
 
-static void Disp_T_PollDataReq(void) 
+static void Disp_T_PollDataReq(void)
 {
     /* todo: Implementieren!!! */
 }

@@ -4,7 +4,6 @@
 **
 */
 
-void ios_test(void);
 
 /*
 **
@@ -33,7 +32,7 @@ void ios_test(void);
 #include "Appl.h"
 #include "sys_objs.h"
 #include "Application.h"
- 
+
 const uint8 KNX_PDT_LEN_TAB[32]={0,1,1,2,2,2,3,3,4,4,4,8,10,3,5,0,0,1,2,3,4,5,6,7,8,9,10,0,0,0,0,0};
 
 #define OBJECT_READ_ALLOWED(o)      (((((o)->access_level & 0xf0)>>4)>=DEV_Current_Accesslevel) ? TRUE : FALSE)
@@ -44,13 +43,13 @@ const uint8 KNX_PDT_LEN_TAB[32]={0,1,1,2,2,2,3,3,4,4,4,8,10,3,5,0,0,1,2,3,4,5,6,
 
 #define GET_TYPE_LEN(t) KNX_PDT_LEN_TAB[(t)]
 
-#define IS_PROPERTY_WRITEABLE(p)    ((GET_PROPERTY_CONTROL(p) & 0x04)==0x04) ? TRUE : FALSE
-#define IS_PROP_CTL_VALID(p)        ((GET_PROPERTY_CONTROL(p) & 0x03)!=0x02) ? TRUE : FALSE
-#define IS_ARRAY_VARIABLE(p)        ((GET_PROPERTY_CONTROL(p) & 0x03)==0x03) ? TRUE : FALSE
+#define IS_PROPERTY_WRITEABLE(p)    (((GET_PROPERTY_CONTROL(p) & 0x04)==0x04) ? TRUE : FALSE)
+#define IS_PROP_CTL_VALID(p)        (((GET_PROPERTY_CONTROL(p) & 0x03)!=0x02) ? TRUE : FALSE)
+#define IS_ARRAY_VARIABLE(p)        (((GET_PROPERTY_CONTROL(p) & 0x03)==0x03) ? TRUE : FALSE)
 
 /* todo: Überprüfen, ob tatsächlich Funktions-Pointer. */
-#define IS_POINTER_TO_FUNC(p)       (((GET_PROPERTY_CONTROL(p) & 0x03)==0x01) && \
-                                        ((p)->property_func==0x01)) ? TRUE : FALSE
+#define IS_POINTER_TO_FUNC(p)       ((((GET_PROPERTY_CONTROL(p) & 0x03)==0x01) && \
+                                        ((p)->property_func==0x01)) ? TRUE : FALSE)
 /* todo: sinnvolle Namen f[r 'GET_NUM_ELEMS' und 'GET_START_INDEX' !!! */
 #define GET_START_INDEX(m)          ((*(uint16*)&(m)->num_elems) & 0x0fff)  /* todo: !!! TESTEN !!! */
 #define GET_NUM_ELEMS(m)            (((m)->num_elems)>>4)                   /* todo: !!! TESTEN !!! */
@@ -62,9 +61,9 @@ const uint8 KNX_PDT_LEN_TAB[32]={0,1,1,2,2,2,3,3,4,4,4,8,10,3,5,0,0,1,2,3,4,5,6,
 #define PH_PTR_TO_ARRAY             ((uint8)0x03)
 
 typedef void(*PROPERTY_FUNC)(PMSG_Buffer pBuffer,boolean write);
+void ios_test(void);
 
-
-void IOS_Dispatch(PMSG_Buffer pBuffer,uint8 service,boolean connected)
+void IOS_Dispatch(const PMSG_Buffer pBuffer,uint8 service,boolean connected)
 {
     uint8 data[MAX_PROP_DATA_LEN];   /* *** NUR ZUM EXPERIMENTIEREN *** */
     KNX_PropertyFrameRefType pmsg;
@@ -86,150 +85,146 @@ void IOS_Dispatch(PMSG_Buffer pBuffer,uint8 service,boolean connected)
 /*
 **      1. object exists?
 */
-    pobj=IOS_GetInterfaceObjectByIndex(pmsg->obj_id); 
+    pobj=IOS_GetInterfaceObjectByIndex(pmsg->obj_id);
     if (pobj==(Knx_InterfaceObjectType*)NULL) {   /* check: Was ist mit DescRead??? */
         /* 'Object does not exist'. */
                 goto empty_answer;
-    }   
+    }
 
-        if (service==IOS_PROP_DESC_READ) {
+    if (service==IOS_PROP_DESC_READ) {
 
-                if (pmsg->prop_id==0) {
-                        pprop=IOS_GetPropertyByIndex(pobj,pmsg->num_elems);
-                } else {
-                        pprop=IOS_FindProperty(pobj,pmsg->prop_id);
-                }
-
-                if (pprop==(Knx_PropertyType*)NULL) {
-    /* 'Property does not exist'.   *** Funktioniert so nicht *** */
-    /*          A_PropertyDescription_Read_Res_NoData */
-                        goto empty_answer;
-                }
-
-                source=ADR_GetPhysAddr();
-                dest=MSG_GetSourceAddress(pBuffer);   /*    pmsg->source; // check: ist das nicht zu umständlich!!! */
-                
-                A_PropertyDescription_Read_Res(pBuffer,source,dest,pmsg->obj_id,pprop->property_id,
-                        pmsg->num_elems,GET_PROPERTY_TYPE(pprop),
-                        1/* todo: Nr of Elements ermitteln!!!*/,pobj->access_level);
-
-                return;
+        if (pmsg->prop_id==0) {
+            pprop=IOS_GetPropertyByIndex(pobj,pmsg->num_elems);
+        } else {
+            pprop=IOS_FindProperty(pobj,pmsg->prop_id);
         }
-
-        num_elems=GET_NUM_ELEMS(pmsg);
-        if (num_elems==0) {
-                /* Bei einer Anzahl von 0 Elementen erübrigt sich der Rest... */
-                goto empty_answer;
-        }
-
-        start_index=GET_START_INDEX(pmsg);
-/*
-**      2. access to object allowed?
-*/
-        if (service==IOS_PROP_READ) {
-                if (!OBJECT_READ_ALLOWED(pobj)) {
-                        /* 'Read-Access denied'. */
-                        goto empty_answer;
-                }
-        }
-
-        if (service==IOS_PROP_WRITE) {
-                if (!OBJECT_WRITE_ALLOWED(pobj)) {
-                        /* 'Write-Access denied'. */
-                        goto empty_answer;
-                }
-        }
-
-/*
-**      3. property exists?
-*/
-        pprop=IOS_FindProperty(pobj,pmsg->prop_id);             
 
         if (pprop==(Knx_PropertyType*)NULL) {
-                /* 'Property does not exist'. */
-                goto empty_answer;
+            /* 'Property does not exist'.   *** Funktioniert so nicht *** */
+            /*          A_PropertyDescription_Read_Res_NoData */
+            goto empty_answer;
         }
 
-        if (!IS_PROP_CTL_VALID(pprop)) {                
-                /* dieses Mal liegt der Fehler am Anwender: Ungültige Codierung (Array=1,Ptr=0). */
-                goto invalid;
-        }
+        source=ADR_GetPhysAddr();
+        dest=MSG_GetSourceAddress(pBuffer);   /*    pmsg->source; // check: ist das nicht zu umständlich!!! */
 
-        if (((start_index!=0) || (num_elems>1)) && (!IS_ARRAY_VARIABLE(pprop))) {
-                /* Nur Array-Variablen können einen Index>0 oder eine Anzahl>1 haben. */
-                goto empty_answer;
-        }
-
-        ctl=GET_PROPERTY_CONTROL(pprop);
-        type=GET_PROPERTY_TYPE(pprop);
-        type_len=GET_TYPE_LEN(type);
-
-        if (service==IOS_PROP_READ) {
-                /* todo: Lesezugriff implementieren. */
-                if (type==KNX_PDT_CONTROL) {
-                        /* Load-/Run-Controls erfahren eine Sonderbehandlung. */
-                        if ((!IS_POINTER_TO_FUNC(pprop)) || (pprop->property_var==/*(ADDR_T)*/(uint16)NULL)) {
-                                goto invalid;   /* ungültige Property-Kodierung oder NULL-Pointer. */
-                        }
-                        pf=(PROPERTY_FUNC)pprop->property_var;
-                        pf(pBuffer,FALSE);
-                } else if (type_len>0) {
-                        switch (GET_PROPERTY_CONTROL(pprop) & 0x03) {
-                                case PH_VALUE_INPLACE:
-                                        CopyMem((void*)data,(void*)&pprop->property_var,type_len);
-                                        break;
-                                case PH_PTR_TO_VAL_FN:
-                                        if (pprop->property_func==0x00) {
-                                                CopyMem((void*)data,(void*)pprop->property_var,type_len);
-                                        } else {
-
-                                        }
-                                        break;
-                                case PH_PTR_TO_ARRAY:
-                                        /* testen, ob genug Platz. */
-
-                                        break;
-                        }
-                }  else {
-                        /* Reservierte Data-Types ignorieren. */
-                        goto empty_answer;
-                }
-        } else if (service==IOS_PROP_WRITE) {
-                /* todo: Schreibzugriff implementieren. */
-/*
-**      4. access to property allowed(R/W)?
-*/
-                if (!IS_PROPERTY_WRITEABLE(pprop)) {
-                        goto empty_answer;
-                }               
-
-                if (type==KNX_PDT_CONTROL) {
-                        /* Load-/Run-Controls erfahren eine Sonderbehandlung. */
-                } else if (type_len>0) {
-
-                }  else {
-                        /* Reservierte Data-Types ignorieren. */
-                        goto empty_answer;
-                }
-
-        } else {
-                goto invalid;   /* ungültiger Service-Code wurde übergeben. */
-        }       
-
+        A_PropertyDescription_Read_Res(pBuffer,source,dest,pmsg->obj_id,pprop->property_id,
+                pmsg->num_elems,GET_PROPERTY_TYPE(pprop),
+                1/* todo: Nr of Elements ermitteln!!!*/,pobj->access_level);
         return;
+    }
+
+    num_elems=GET_NUM_ELEMS(pmsg);
+    if (num_elems==0) {
+        /* Bei einer Anzahl von 0 Elementen erübrigt sich der Rest... */
+        goto empty_answer;
+    }
+
+    start_index=GET_START_INDEX(pmsg);
+/*
+**  2. access to object allowed?
+*/
+    if (service==IOS_PROP_READ) {
+        if (!OBJECT_READ_ALLOWED(pobj)) {
+            /* 'Read-Access denied'. */
+            goto empty_answer;
+        }
+    }
+
+    if (service==IOS_PROP_WRITE) {
+        if (!OBJECT_WRITE_ALLOWED(pobj)) {
+            /* 'Write-Access denied'. */
+            goto empty_answer;
+        }
+    }
+
+/*
+**  3. property exists?
+*/
+    pprop=IOS_FindProperty(pobj,pmsg->prop_id);
+
+    if (pprop==(Knx_PropertyType*)NULL) {
+        /* 'Property does not exist'. */
+        goto empty_answer;
+    }
+
+    if (!IS_PROP_CTL_VALID(pprop)) {
+        /* dieses Mal liegt der Fehler am Anwender: Ungültige Codierung (Array=1,Ptr=0). */
+        goto invalid;
+    }
+
+    if (((start_index!=0) || (num_elems>1)) && (!IS_ARRAY_VARIABLE(pprop))) {
+        /* Nur Array-Variablen können einen Index>0 oder eine Anzahl>1 haben. */
+        goto empty_answer;
+    }
+
+    ctl=GET_PROPERTY_CONTROL(pprop);
+    type=GET_PROPERTY_TYPE(pprop);
+    type_len=GET_TYPE_LEN(type);
+
+    if (service==IOS_PROP_READ) {
+        /* todo: Lesezugriff implementieren. */
+        if (type==KNX_PDT_CONTROL) {
+            /* Load-/Run-Controls erfahren eine Sonderbehandlung. */
+            if ((!IS_POINTER_TO_FUNC(pprop)) || (pprop->property_var==/*(ADDR_T)*/(uint16)NULL)) {
+                goto invalid;   /* ungültige Property-Kodierung oder NULL-Pointer. */
+            }
+            pf=(PROPERTY_FUNC)pprop->property_var;
+            pf(pBuffer,FALSE);
+        } else if (type_len>0) {
+            switch (GET_PROPERTY_CONTROL(pprop) & 0x03) {
+                case PH_VALUE_INPLACE:
+                    CopyMem((void*)data,(void*)&pprop->property_var,type_len);
+                    break;
+                case PH_PTR_TO_VAL_FN:
+                    if (pprop->property_func==0x00) {
+                        CopyMem((void*)data,(void*)pprop->property_var,type_len);
+                    } else {
+                    }
+                    break;
+                case PH_PTR_TO_ARRAY:
+                    /* testen, ob genug Platz. */
+                    break;
+                default:
+                    ASSERT(FALSE);
+            }
+        }  else {
+            /* Reservierte Data-Types ignorieren. */
+            goto empty_answer;
+        }
+    } else if (service==IOS_PROP_WRITE) {
+        /* todo: Schreibzugriff implementieren. */
+/*
+**  4. access to property allowed(R/W)?
+*/
+        if (!IS_PROPERTY_WRITEABLE(pprop)) {
+            goto empty_answer;
+        }
+        if (type==KNX_PDT_CONTROL) {
+            /* Load-/Run-Controls erfahren eine Sonderbehandlung. */
+        } else if (type_len>0) {
+        }  else {
+            /* Reservierte Data-Types ignorieren. */
+            goto empty_answer;
+        }
+    } else {
+        goto invalid;   /* ungültiger Service-Code wurde übergeben. */
+    }
+    return;
 
 pr_desc_empty:  /* Property-Description ohne Daten. */
-        source=ADR_GetPhysAddr();
-        dest=MSG_GetSourceAddress(pBuffer);       /* pmsg->source; // check: ist das nicht zu umständlich??? */
-        A_PropertyDescription_Read_Res_NoData(pBuffer,source,dest,pmsg->obj_id,pmsg->prop_id,pmsg->num_elems);
-        return;
+    source=ADR_GetPhysAddr();
+    dest=MSG_GetSourceAddress(pBuffer);       /* pmsg->source; // check: ist das nicht zu umständlich??? */
+    A_PropertyDescription_Read_Res_NoData(pBuffer,source,dest,pmsg->obj_id,pmsg->prop_id,pmsg->num_elems);
+    return;
 
 empty_answer:   /* Property-Read ohne Daten. */
-/*      A_PropertyValue_Read_Res_NoData */
-        return;
+/*  A_PropertyValue_Read_Res_NoData */
+    return;
+
 invalid:
-        MSG_ReleaseBuffer(pBuffer);
-        return;
+    (void)MSG_ReleaseBuffer(pBuffer);
+    return;
 }
 
 Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_index)
@@ -269,7 +264,7 @@ Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_inde
 */
 
 Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const * pobj,uint16 prop_id)    /* todo: Binäre Suche!? */
-{   
+{
     uint8_least idx;
     Knx_PropertyType const * pprop=(Knx_PropertyType const *)NULL;
 
@@ -335,7 +330,7 @@ void ios_test(void)
 //        - the EIB-Objectcount is set to 00h
 //        - all keys are set to FFFFFFFFh
 
-        
+
         KNX_AddressType addr;
 
         addr[0]=0xff;
@@ -344,7 +339,7 @@ void ios_test(void)
         //  Set Physical-Address to 0xFFFF.
         ADR_SetPhysAddr(addr);
     }
-        
+
 */
 
 /*

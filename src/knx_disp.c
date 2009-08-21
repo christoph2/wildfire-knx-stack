@@ -13,7 +13,7 @@ PMSG_Buffer MSG_ScratchBuffer;   /* MSG_ScratchBuffer */
 void KNXDispDispatchLayer(const uint8 LayerID,const KNXLayerServicesType *ServiceTable)
 {
     uint8 entry;
-    
+
     do {
         MSG_ScratchBuffer=MSG_Get(LayerID);
 
@@ -23,8 +23,8 @@ void KNXDispDispatchLayer(const uint8 LayerID,const KNXLayerServicesType *Servic
                 /* todo: _ASSERT() Function-Pointer!=NULL !!! */
                 ServiceTable->Functions[entry]();
             } else {
-                MSG_ReleaseBuffer(MSG_ScratchBuffer);     /* Release invalid Message - todo: Error-Handling!? */
+                (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);     /* Release invalid Message - todo: Error-Handling!? */
             }
         }
-    } while (MSG_ScratchBuffer!=(PMSG_Buffer)NULL);                
+    } while (MSG_ScratchBuffer!=(PMSG_Buffer)NULL);
 }

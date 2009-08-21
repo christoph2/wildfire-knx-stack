@@ -13,7 +13,7 @@
 boolean U_TestObject(uint16 objectNr)
 {
     uint8 flags;
-    
+
     if (!U_GetRAMFlags(objectNr,&flags)) {
         return FALSE;
     } else {
@@ -31,7 +31,7 @@ boolean U_TestAndGetObject(uint16 objectNr,void* dst)
         return FALSE;
     } else {
 /*      AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type); */
-        U_GetObject(objectNr,dst);  /* todo: 'AL_GetObject()' verwenden!!! */
+        (void)U_GetObject(objectNr,dst);  /* todo: 'AL_GetObject()' verwenden!!! */
         return TRUE;
     }
 }
@@ -41,8 +41,9 @@ boolean U_TestAndGetObject(uint16 objectNr,void* dst)
 */
 boolean U_GetObject(uint16 objectNr,void* dst)
 {
-    if (objectNr<AL_GetNumCommObjs() && LSM_IsAppLoaded()) {
-        CopyRAM(dst,AL_GetObjectDataPointer(objectNr),AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type)); /* CopyMem() verwenden!!! */
+    if ((objectNr<AL_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
+        CopyRAM(dst,AL_GetObjectDataPointer(objectNr),
+                AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type)); /* CopyMem() verwenden!!! */
         return TRUE;
     } else {
         return FALSE;
@@ -52,13 +53,13 @@ boolean U_GetObject(uint16 objectNr,void* dst)
 boolean U_TransmitObject(uint16 objectNr)
 {
     /* todo: Objekt-Nr. prüfen!? */
-    
+
     if (AL_IsObjectTransmitting(objectNr)) {
         return FALSE;
-    } else {    
+    } else {
         AL_SetRAMFlags(objectNr,KNX_OBJ_TRANSMIT_REQ);
         return TRUE;
-    }        
+    }
 }
 
 boolean U_SetAndTransmitObject(uint16 objectNr,void* src)
@@ -78,7 +79,7 @@ boolean U_SetAndTransmitObject(uint16 objectNr,void* src)
 
 boolean U_SetObject(uint16 objectNr,void* src)
 {
-    if (objectNr<AL_GetNumCommObjs() && LSM_IsAppLoaded()) {
+    if ((objectNr<AL_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
         CopyRAM(AL_GetObjectDataPointer(objectNr),src,AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type)); /* CopyMem() verwenden!!! */
         return TRUE;
     } else {
@@ -94,14 +95,14 @@ boolean U_ReadObject(uint16 objectNr)
         } else {
             AL_SetRAMFlags(objectNr,KNX_OBJ_DATA_REQUEST);
             return TRUE;
-        }        
+        }
    } else {
         return FALSE;
    }
 }
 
 boolean U_GetRAMFlags(uint16 objectNr,uint8 *flags)
-{   
+{
     if (objectNr<AL_GetNumCommObjs() && LSM_IsAppLoaded()) {
         *flags=AL_GetRAMFlags(objectNr);
         return TRUE;
@@ -111,30 +112,32 @@ boolean U_GetRAMFlags(uint16 objectNr,uint8 *flags)
 
 uint8 U_SetRAMFlags(uint16 objectNr,uint8 flags)
 {
-    uint8 value,mask,tmp;
-    
-    if (objectNr<AL_GetNumCommObjs() && LSM_IsAppLoaded()) {
-        value=(flags & 0x0f);        
+    uint8 value;
+    uint8 mask;
+    uint8 tmp=(uint8)0x00;
+
+    if ((objectNr<AL_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
+        value=(flags & 0x0f);
         mask=(flags & 0xf0)>>4;
 /*        tmp=APP_RAMFlags[objectNr>>1];    */
         tmp=AL_GetRAMFlagPointer()[objectNr>>1];
-        
-        if ((objectNr % 2)==0) {
-            tmp&=0x0f;
+
+        if ((objectNr % (uint16)2)==(uint16)0) {
+            tmp&=(uint8)0x0f;
         } else {
-            tmp=(tmp & 0xf0)>>4;            
+            tmp=(tmp & (uint8)0xf0)>>4;
         }
-                
+
         tmp=(mask | tmp) ^ (mask & ~value);
 
-        if ((objectNr % 2)==1) {
+        if ((objectNr % (uint16)2)==(uint16)1) {
 /*            APP_RAMFlags[objectNr>>1]&=(0x0f | (tmp<<4)); */
             AL_GetRAMFlagPointer()[objectNr>>1]&=(0x0f | (tmp<<4));
         } else {
 /*            APP_RAMFlags[objectNr>>1]&=(0xf0 | tmp);  */
             AL_GetRAMFlagPointer()[objectNr>>1]&=(0xf0 | tmp);
         }
-        
+
     }
-    return tmp;    
+    return tmp;
 }

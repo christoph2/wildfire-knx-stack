@@ -15,7 +15,7 @@
     -----------------------------
     The following parameters influence the behaviour of Data Link Layer and are
     required inside Data Link Layer in order to operate correctly:
-    
+
     - Individual Address:    unique Individual Address of this device
     - address table:         address table with the group address(es) of this device
     - nak_retry:             defines the number of retries in case of a NAK response
@@ -38,7 +38,7 @@
 typedef enum tagKNX_BusStateType {
     E_BUSSTATE_OK,
     E_BUSSTATE_BUSOFF,
-    E_BUSSTATE_SAVING   // evtl.    
+    E_BUSSTATE_SAVING   // evtl.
 } KNX_BusStateType;
 
 void BusStateHandler(KNX_BusStateType); // System-defininierte Handler (s. 'TRANSMITTING), User-Callback möglich;
@@ -75,7 +75,7 @@ static const KNXLayerServiceFunctionType LL_Services[]={
 };
 
 static const KNXLayerServicesType LL_ServiceTable[]={
-    KNX_LL_SERVICES,2,LL_Services    
+    {KNX_LL_SERVICES,2,LL_Services}
 };
 
 
@@ -209,15 +209,15 @@ void TPTest(void)
                 for (b=0;b<len;b++) {
                     decode(T1[b]);
                 }
-                cnt++;            
-                break;            
+                cnt++;
+                break;
             case 2:
                 len=sizeof(T2);
 
                 for (b=0;b<len;b++) {
                     decode(T2[b]);
                 }
-                cnt++;            
+                cnt++;
                 break;
             default:
                 cnt=0;
@@ -235,14 +235,14 @@ void TPTest(void)
 
 /*
 **
-** todo: Tabledriven Statemachine!!! 
+** todo: Tabledriven Statemachine!!!
 **
 */
 void decode(uint8 b)             /* Wird vom RX-Interrupt-Handler aufgerufen. */
 {
         uint8 state;
-        
-        boolean stop;        
+
+        boolean stop;
 
         TpuartRcvBuf[RcvIdx++]=b;       /* todo: Länge auf Overflow testen (TPSR_ERROR)!!! */
 
@@ -253,7 +253,7 @@ void decode(uint8 b)             /* Wird vom RX-Interrupt-Handler aufgerufen. */
 ////////////////////////////////////////
 ////////////////////////////////////////
 ////////////////////////////////////////
-*/                  
+*/
                 if ((b & 0x13)==DATA_SERVICE_MASK) {
                         StartTimeout();         /* todo: nicht pauschal starten,  */
                                                 /* nur bei Mehrbyte-Telegrammen. */
@@ -278,10 +278,10 @@ void decode(uint8 b)             /* Wird vom RX-Interrupt-Handler aufgerufen. */
                         } else {        /* Fehlerhaftes Byte. */
                                 rcvState=TPSR_WAIT;     /* auf gültigen Service warten. */
                                 rcvService=SERVICE_NONE;
-#if !defined(__HIWARE__)                                
+#if !defined(__HIWARE__)
 /*    printf("0x%02x\tERROR\n",b); */
-#endif                                
-                        }               
+#endif
+                        }
                 } else if ((b==IACK_IND) || (b==INACK_IND) || (b==IBUSY_IND)) { /* todo: IAcks 'ODER'-verkünpt in eine Zeile. */
                         rcvState=TPSR_WAIT;     /* auf nächsten Service warten. */
                         rcvService=SERVICE_IACK;
@@ -302,13 +302,13 @@ void decode(uint8 b)             /* Wird vom RX-Interrupt-Handler aufgerufen. */
                                 rcvService=SERVICE_NONE;
 #if !defined(__HIWARE__)
 /*    printf("0x%02x\tERROR\n",b); */
-#endif                                
+#endif
                         }
                 }
-/*                
+/*
 ////////////////////////////////////////
 ////////////////////////////////////////
-////////////////////////////////////////                
+////////////////////////////////////////
 */
 
                         break;
@@ -319,25 +319,25 @@ void decode(uint8 b)             /* Wird vom RX-Interrupt-Handler aufgerufen. */
                             /* if (!PassthroughEveryTelegramm()) // RouteEvery */
 
                             dest_addr=btohs(*(uint16*)&TpuartRcvBuf[3]);
-                                                        
-                            if ((TpuartRcvBuf[5] & atMULTICAST)) {                            
+
+                            if ((TpuartRcvBuf[5] & atMULTICAST)) {
                                 addressed=ADR_IsAddressed(dest_addr,&tsap);
                             } else {
                                 addressed=ADR_IsOwnPhysicalAddr(dest_addr);
                             }
-                            
+
                             if (addressed) {
                                 PH_AckInformation_req(ACK_ADDRESSED);
                             }
-                                                        
+
                             RcvLen=(b & 0x0f)+2;    /* todo: begrenzen. */
                             rcvState=TPSR_DATA_CONT2;
                         }
                         break;
-                case TPSR_DATA_CONT2:                   
+                case TPSR_DATA_CONT2:
                         if ((--RcvLen)==0x00) { /* O.K., komplettes Telegramm empfangen. */
                                 Checksum^=0xff;
-                                
+
                                 if ((Checksum==TpuartRcvBuf[RcvIdx-1])) { /* Prüfsumme korrekt? */
                                     if (addressed) {
                                         /* OK, der Protokoll-Stack kann das Telegramm übernehmen. */
@@ -348,8 +348,8 @@ void decode(uint8 b)             /* Wird vom RX-Interrupt-Handler aufgerufen. */
                                             pBuffer->sap=tsap;
                                             pBuffer->len=RcvLen=(TpuartRcvBuf[5] & 0x0f)+7;  /* 8 mit Prüfsumme!!! */
                                                                                             /* todo: Konstante od. Makro statt 5!!! */
-                                            CopyRAM((void*)pBuffer->msg,(void*)TpuartRcvBuf,RcvLen);                                                                                                
-                                            (void)MSG_Post(pBuffer);           
+                                            CopyRAM((void*)pBuffer->msg,(void*)TpuartRcvBuf,RcvLen);
+                                            (void)MSG_Post(pBuffer);
                                         } else {
                                             stop=TRUE;
                                             /* Fehler-Behandlung. */
@@ -357,9 +357,9 @@ void decode(uint8 b)             /* Wird vom RX-Interrupt-Handler aufgerufen. */
                                     }
 
                                 } else {
-#if !defined(__HIWARE__)              
+#if !defined(__HIWARE__)
 /*    printf("\n*** CHECKSUM-ERROR ***\n"); */   /* nein. */
-#endif                                        
+#endif
                                 }
 
                                 rcvService=SERVICE_DATA;
@@ -403,15 +403,15 @@ void DBG_DUMP(PMSG_Buffer ptr)
     uint8 i/*,chk*/;
 #if     !defined(__HIWARE__)
     for (i=0;i<ptr->len;i++) {
-        
+
 /*        printf("%02X ",ptr->msg[i]);  */
-        
+
         if (i==6) {
 /*            printf("["); */
         }
     }
 /*    printf("]\t%02X\n",CalculateChecksum(ptr)); */
-#endif    
+#endif
 }
 
 void PH_AckInformation_req(uint8 flags)
@@ -445,11 +445,11 @@ static void Disp_L_DataReq(void)
     MSG_ScratchBuffer->msg[0] |= 0x30;        /* fixed one bit + repeated. */
     MSG_ScratchBuffer->msg[0] &= (~(uint8)3);  /* clear two LSBs. */
     /**/
-                    
+
     chk=CalculateChecksum(MSG_ScratchBuffer);
-    
+
     (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
-    DBG_DUMP(MSG_ScratchBuffer);    
+    DBG_DUMP(MSG_ScratchBuffer);
 }
 
 static void Disp_L_PollDataReq(void)
@@ -467,6 +467,6 @@ uint8 CalculateChecksum(PMSG_Buffer ptr)
     for (i=0;i<ptr->len;i++) {
         chk^=ptr->msg[i];
     }
-    
+
     return chk;
 }

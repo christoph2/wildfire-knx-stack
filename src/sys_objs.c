@@ -46,7 +46,7 @@
 #endif
 */
 
-typedef uint16 ADDR_T;
+typedef SizeType ADDR_T;
 
 const Knx_PropertyType Knx_DeviceProperties[]=
 {
@@ -67,14 +67,14 @@ const Knx_PropertyType Knx_AddrTabProperties[]=
 {
 {KNX_PID_OBJECT_TYPE,MAKE_PROP_CTL(PROP_RO,PROP_NO_ARR,PROP_VALUE,KNX_PDT_UNSIGNED_INT),PROP_NO_FUNC,(const void*)KNX_OT_ADDRESSTABLE_OBJECT},
 {KNX_PID_LOAD_STATE_CONTROL,MAKE_PROP_CTL(PROP_RW,PROP_NO_ARR,PROP_PTR,KNX_PDT_CONTROL),PROP_FUNC,(const void*)&KNX_SystemLSC[KNX_LSC_GRAT]},
-{KNX_PID_TABLE_REFERENCE,MAKE_PROP_CTL(PROP_RO,PROP_NO_ARR,PROP_PTR,KNX_PDT_UNSIGNED_INT),PROP_NO_FUNC,(const void*)&APP_AddressTable/*__PHYS_EEPROM_START*/},
+{KNX_PID_TABLE_REFERENCE,MAKE_PROP_CTL(PROP_RO,PROP_NO_ARR,PROP_PTR,KNX_PDT_UNSIGNED_INT),PROP_NO_FUNC,(const void*)APP_AddressTable/*__PHYS_EEPROM_START*/},
 };
 
 const Knx_PropertyType Knx_AssocTabProperties[]=
 {
 {KNX_PID_OBJECT_TYPE,MAKE_PROP_CTL(PROP_RO,PROP_NO_ARR,PROP_VALUE,KNX_PDT_UNSIGNED_INT),PROP_NO_FUNC,(const void*)KNX_OT_ASSOCIATIONTABLE_OBJECT},
 {KNX_PID_LOAD_STATE_CONTROL,MAKE_PROP_CTL(PROP_RW,PROP_NO_ARR,PROP_PTR,KNX_PDT_CONTROL),PROP_FUNC,(const void*)&KNX_SystemLSC[KNX_LSC_GROAT]},
-{KNX_PID_TABLE_REFERENCE,MAKE_PROP_CTL(PROP_RO,PROP_NO_ARR,PROP_PTR,KNX_PDT_UNSIGNED_INT),PROP_NO_FUNC,(const void*)&APP_AssociationTable},
+{KNX_PID_TABLE_REFERENCE,MAKE_PROP_CTL(PROP_RO,PROP_NO_ARR,PROP_PTR,KNX_PDT_UNSIGNED_INT),PROP_NO_FUNC,(const void*)APP_AssociationTable},
 };
 
 const Knx_PropertyType Knx_AppPrgProperties[]=
@@ -90,25 +90,25 @@ const Knx_PropertyType Knx_AppPrgProperties[]=
 /* Hinweis: wo ist eigentlich die ObjectID ??? */
 const Knx_InterfaceObjectType Knx_IO_Device={
     MAKE_OBJ_ACCESS(BCU20_PRIVILEGE_NO,BCU20_PRIVILEGE_CONFIGURATION),
-    sizeof(Knx_DeviceProperties)/sizeof(Knx_PropertyType),  /* todo: SIZEOF_ARRAY-Makro !!! */
+    SIZEOF_ARRAY(Knx_DeviceProperties),
     Knx_DeviceProperties
 };
 
 const Knx_InterfaceObjectType Knx_IO_AddrTable={
     MAKE_OBJ_ACCESS(BCU20_PRIVILEGE_NO,BCU20_PRIVILEGE_SERVICE),
-    sizeof(Knx_AddrTabProperties)/sizeof(Knx_PropertyType),
+    SIZEOF_ARRAY(Knx_AddrTabProperties),
     Knx_AddrTabProperties
 };
 
 const Knx_InterfaceObjectType Knx_IO_AssocTable={
     MAKE_OBJ_ACCESS(BCU20_PRIVILEGE_NO,BCU20_PRIVILEGE_SERVICE),
-    sizeof(Knx_AssocTabProperties)/sizeof(Knx_PropertyType),
+    SIZEOF_ARRAY(Knx_AssocTabProperties),
     Knx_AssocTabProperties
 };
-    
+
 const Knx_InterfaceObjectType Knx_IO_AppPrg={
     MAKE_OBJ_ACCESS(BCU20_PRIVILEGE_NO,BCU20_PRIVILEGE_CONFIGURATION),
-    sizeof(Knx_AppPrgProperties)/sizeof(Knx_PropertyType),
+    SIZEOF_ARRAY(Knx_AppPrgProperties),
     Knx_AppPrgProperties
 };
 
@@ -121,7 +121,7 @@ Knx_InterfaceObjectType const * const Knx_SystemInterfaceObjs[]=   /* Hinweis: l
     &Knx_IO_AppPrg
 };
 
-const uint8 Knx_SystemInterfaceObjCount=sizeof(Knx_SystemInterfaceObjs)/(sizeof(Knx_InterfaceObjectType*));
+const uint8 Knx_SystemInterfaceObjCount=SIZEOF_ARRAY(Knx_SystemInterfaceObjs);
 
 /*
 #if     defined(__HIWARE__)
@@ -131,5 +131,5 @@ const uint8 Knx_SystemInterfaceObjCount=sizeof(Knx_SystemInterfaceObjs)/(sizeof(
 #if     defined(_MSC_VER)
         #pragma data_seg(pop)
 #endif
-        
+
 */

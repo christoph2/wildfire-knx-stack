@@ -65,13 +65,13 @@ static const KNXLayerServiceFunctionType NL_Services[]={
 };
 
 static const KNXLayerServicesType NL_ServiceTable[]={
-    KNX_NL_SERVICES,8,NL_Services    
+    {KNX_NL_SERVICES,8,NL_Services}
 };
 
 
 void NL_Task(void)
 {
-    KNXDispDispatchLayer(TASK_NL_ID,NL_ServiceTable); 
+    KNXDispDispatchLayer(TASK_NL_ID,NL_ServiceTable);
 }
 
 void NL_Init(void)
@@ -85,36 +85,36 @@ void NL_Init(void)
 **
 */
 
-static void Disp_L_DataInd(void) 
+static void Disp_L_DataInd(void)
 {
     if ((MSG_GetMessagePtr(MSG_ScratchBuffer)->ncpi & 0x80)==0x80) { /* Hinweis: zu umständlich, vereinfachen!!! */
-        if (ADR_IsBroadcastAddress(MSG_GetMessagePtr(MSG_ScratchBuffer)->dest)) {
+        if (ADR_IsBroadcastAddress(MSG_GetMessagePtr(MSG_ScratchBuffer)->dest)) { /* check: 'always avaluates to FALSE' !!! */
             /* Broadcast-Communication. */
             MSG_ScratchBuffer->service=N_DATA_BROADCAST_IND;
-            (void)MSG_Post(MSG_ScratchBuffer);                        
+            (void)MSG_Post(MSG_ScratchBuffer);
         } else {
             /* Multicast-Communication. */
             MSG_ScratchBuffer->service=N_DATA_GROUP_IND;
-            (void)MSG_Post(MSG_ScratchBuffer);                            
+            (void)MSG_Post(MSG_ScratchBuffer);
         }
     } else {
         /* Individual-Adressing. */
         MSG_ScratchBuffer->service=N_DATA_INDIVIDUAL_IND;
-        (void)MSG_Post(MSG_ScratchBuffer);                        
+        (void)MSG_Post(MSG_ScratchBuffer);
     }
 }
 
-static void Disp_L_DataCon(void) 
+static void Disp_L_DataCon(void)
 {
     /* todo: Implementieren!!! */
 }
 
-static void Disp_L_BusmonInd(void) 
+static void Disp_L_BusmonInd(void)
 {
     /* todo: Implementieren!!! */
 }
 
-static void Disp_L_PollDataCon(void) 
+static void Disp_L_PollDataCon(void)
 {
     /* todo: Implementieren!!! */
 }
@@ -125,12 +125,12 @@ static void Disp_L_PollDataCon(void)
 **  Services from Transport-Layer.
 **
 */
-static void Disp_N_DataBroadcastReq(void) 
+static void Disp_N_DataBroadcastReq(void)
 {
     MSG_SetAddressType(MSG_ScratchBuffer,atMULTICAST);
     MSG_SetRoutingCount(MSG_ScratchBuffer);
-    MSG_ScratchBuffer->service=L_DATA_REQ;                    
-    (void)MSG_Post(MSG_ScratchBuffer);                
+    MSG_ScratchBuffer->service=L_DATA_REQ;
+    (void)MSG_Post(MSG_ScratchBuffer);
 }
 
 static void Disp_N_DataIndividualReq(void)
@@ -141,7 +141,7 @@ static void Disp_N_DataIndividualReq(void)
     (void)MSG_Post(MSG_ScratchBuffer);
 }
 
-static void Disp_N_DataGroupReq(void) 
+static void Disp_N_DataGroupReq(void)
 {
     MSG_SetAddressType(MSG_ScratchBuffer,atMULTICAST);
     MSG_SetRoutingCount(MSG_ScratchBuffer);
@@ -149,13 +149,13 @@ static void Disp_N_DataGroupReq(void)
     (void)MSG_Post(MSG_ScratchBuffer);
 }
 
-static void Disp_N_PollDataReq(void) 
+static void Disp_N_PollDataReq(void)
 {
     /* todo: Implementieren!!! */
 }
 
 void NL_CheckRoutingCount(PMSG_Buffer pBuffer)
-{   
+{
     if (MSG_GetRoutingCount(pBuffer)==MSG_NO_ROUTING_CTRL) {
         MSG_SetRoutingCtrl(pBuffer,TRUE);
     } else {

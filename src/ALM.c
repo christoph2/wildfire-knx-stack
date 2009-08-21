@@ -90,7 +90,7 @@ static const KNXLayerServiceFunctionType ALM_Services[]={
 };
 
 static const KNXLayerServicesType ALM_ServiceTable[]={
-    KNX_ALM_SERVICES,10,ALM_Services    
+    {KNX_ALM_SERVICES,10,ALM_Services}
 };
 
 
@@ -106,17 +106,17 @@ void ALM_Task(void)
 **
 */
 
-static void Disp_T_ConnectInd(void) 
+static void Disp_T_ConnectInd(void)
 {
     (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);    /* bis auf weiteres löschen. */
 }
 
-static void Disp_T_DisconnectInd(void) 
+static void Disp_T_DisconnectInd(void)
 {
     (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);    /* bis auf weiteres löschen. */
 }
 
-static void Disp_T_DataConnectedInd(void) 
+static void Disp_T_DataConnectedInd(void)
 {
 /* todo: ACPI auswerten und an den entsprechenden Management-Server weiterleiten. */
     uint8 apci_type=AL_GetAPCIType(MSG_GetMessagePtr(MSG_ScratchBuffer));
@@ -129,7 +129,7 @@ static void Disp_T_DataConnectedInd(void)
             break;
         case apciESCAPE:
             /* todo: genauen APCI ermitteln. */
-            break;                                               
+            break;
         case apciADC_READ:
             break;
         case apciRESTART:
@@ -141,40 +141,40 @@ static void Disp_T_DataConnectedInd(void)
             (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);    /* Ungültige Message löschen. */
             break;
     }
-                                   
+
     (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);    /* bis auf weiteres Alle löschen (Notbehelf !!??). */
 }
 
-static void Disp_T_DataBroadcastInd(void) 
+static void Disp_T_DataBroadcastInd(void)
 {
     uint8 apci_type=AL_GetAPCIType(MSG_GetMessagePtr(MSG_ScratchBuffer));
-    Knx_AddressType addr;    
+    Knx_AddressType addr;
 
     switch (apci_type) {
         case apciINDIVIDUAL_ADDRESS_WRITE:
             if (ADR_InProgrammingMode()) {  /* todo: nur wenn in 'PID_SERVICE_CONTROL' aktiviert!!! */
-                AL_GetAPDUData(MSG_GetMessagePtr(MSG_ScratchBuffer),APDU_PHYS_ADDR,(uint8*)&addr,2);   /* todo: !!! TESTEN !!! */                                
+                AL_GetAPDUData(MSG_GetMessagePtr(MSG_ScratchBuffer),APDU_PHYS_ADDR,(uint8*)&addr,2);   /* todo: !!! TESTEN !!! */
 /*                                addr[0]=AL_GetAPDUDataByte(pmsg,APDU_PHYS_ADDR); */
 /*                                addr[1]=AL_GetAPDUDataByte(pmsg,APDU_PHYS_ADDR+1); */
                 ADR_SetPhysAddr(addr);
             }
-            (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);                            
+            (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
             break;
         case apciINDIVIDUAL_ADDRESS_READ:
             if (ADR_InProgrammingMode()) {
                 addr=ADR_GetPhysAddr(); /* todo: !!! TESTEN !!! */
                 (void)MSG_ClearBuffer(MSG_ScratchBuffer);
-                A_IndividualAddress_Read_Res(MSG_ScratchBuffer,addr);                                    
+                A_IndividualAddress_Read_Res(MSG_ScratchBuffer,addr);
             }
             break;
         case apciESCAPE:
             break;
         default:
-            break;                            
-    }    
+            break;
+    }
 }
 
-static void Disp_T_DataIndividualInd(void) 
+static void Disp_T_DataIndividualInd(void)
 {
     uint8 apci_type=AL_GetAPCIType(MSG_GetMessagePtr(MSG_ScratchBuffer));
 
@@ -188,35 +188,35 @@ static void Disp_T_DataIndividualInd(void)
                 break;
             case A_PROPERTYDESCRIPTION_READ:
                 IOS_Dispatch(MSG_ScratchBuffer,IOS_PROP_DESC_READ,FALSE);
-                break;                                
+                break;
             default:
                 (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);      /* ungültige Message löschen. */
-                break;                                
+                break;
         }
     }
 }
 
-static void Disp_T_ConnectCon(void) 
-{
-    (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);    /* bis auf weiteres löschen. */             
-}
-
-static void Disp_T_DisconnectCon(void) 
-{
-    (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);    /* bis auf weiteres löschen. */             
-}
-
-static void Disp_T_DataConnectedCon(void) 
+static void Disp_T_ConnectCon(void)
 {
     (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);    /* bis auf weiteres löschen. */
 }
 
-static void Disp_T_DataBroadcastCon(void) 
+static void Disp_T_DisconnectCon(void)
 {
     (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);    /* bis auf weiteres löschen. */
 }
 
-static void Disp_T_DataIndividualCon(void) 
+static void Disp_T_DataConnectedCon(void)
+{
+    (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);    /* bis auf weiteres löschen. */
+}
+
+static void Disp_T_DataBroadcastCon(void)
+{
+    (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);    /* bis auf weiteres löschen. */
+}
+
+static void Disp_T_DataIndividualCon(void)
 {
     (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);    /* bis auf weiteres löschen. */
 }
@@ -244,14 +244,14 @@ uint8 AL_GetAPDUDataByte(const KNX_StandardFrameRefType pmsg,uint8 offset)
 {
         /* todo: evtl. Fehlerprüfung '_ASSERT(offset<=14);'. */
     offset=MIN(offset,MAX_ADPU_LEN-1);
-        
-    return pmsg->data[offset]; 
+
+    return pmsg->data[offset];
 }
 
 void AL_SetAPDUDataByte(const KNX_StandardFrameRefType pmsg,uint8 offset,const uint8 value)
 {
     offset=MIN(offset,MAX_ADPU_LEN-1);
-                
+
     pmsg->data[offset]=value;
 }
 
@@ -288,18 +288,18 @@ void AL_SetAPDUData(const KNX_StandardFrameRefType pmsg,uint8 offset,uint8 *data
 
 void A_Broadcast_Req(PMSG_Buffer pBuffer,Knx_AddressType source,uint16 apci,uint8 *data,uint8 len)
 {
-    
+
     len=MIN(len,MAX_ADPU_LEN);
 
     (void)MSG_ClearBuffer(pBuffer);   /* check: Besser vor Ort!? */
-    
+
     MSG_SetAPCI(pBuffer,apci);
     MSG_SetSourceAddress(pBuffer,source);
     MSG_SetPriority(pBuffer,KNX_OBJ_PRIO_SYSTEM);
     MSG_SetLen(pBuffer,8+len);
     AL_SetAPDUData(MSG_GetMessagePtr(pBuffer),0,data,len);  /* check: evtl. überflüssig??? */
     pBuffer->service=T_DATA_BROADCAST_REQ;
-    
+
     (void)MSG_Post(pBuffer);
 }
 
@@ -321,12 +321,12 @@ void A_IndividualAddress_Write_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Kn
 {
 /*    uint8 data[2]; */
 
-/*    
+/*
 **    data[0]=newaddress[0];  // todo: SetAPDUData()
 **    data[1]=newaddress[1];
 **    A_Broadcast_Req(pBuffer,source,A_PHYSICALADDRESS_WRITE,(uint8*)data,2);
-*/    
-    A_Broadcast_Req(pBuffer,source,A_PHYSICALADDRESS_WRITE,(uint8*)source,2);    
+*/
+    A_Broadcast_Req(pBuffer,source,A_PHYSICALADDRESS_WRITE,(uint8*)&source,2);
 }
 
 /*
@@ -337,8 +337,8 @@ void A_IndividualAddressSerialNumber_Read_Res(PMSG_Buffer pBuffer,Knx_AddressTyp
         Knx_AddressType domain_addr)
 {
     AL_SetAPDUData(MSG_GetMessagePtr(pBuffer),0,serial_number,sizeof(Knx_SerialNumberType));
-    AL_SetAPDUData(MSG_GetMessagePtr(pBuffer),6,(uint8*)domain_addr,sizeof(Knx_AddressType));    
-    
+    AL_SetAPDUData(MSG_GetMessagePtr(pBuffer),6,(uint8*)&domain_addr,sizeof(Knx_AddressType));
+
     A_Broadcast_Req(pBuffer,source,A_PHYSICALADDRESSSERIALNUMBER_RESPONSE,
     (uint8*)NULL,10);    /* todo: Übeprüfen wg. data==NULL u. len>0!!! */
 }
@@ -346,7 +346,7 @@ void A_IndividualAddressSerialNumber_Read_Res(PMSG_Buffer pBuffer,Knx_AddressTyp
 void A_IndividualAddressSerialNumber_Read_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_SerialNumberType serial_number)
 {
     AL_SetAPDUData(MSG_GetMessagePtr(pBuffer),0,serial_number,sizeof(Knx_SerialNumberType));
-    
+
     A_Broadcast_Req(pBuffer,source,A_PHYSICALADDRESSSERIALNUMBER_READ,
     (uint8*)NULL,6);
 }
@@ -356,8 +356,8 @@ void A_IndividualAddressSerialNumber_Write_Req(PMSG_Buffer pBuffer,Knx_AddressTy
         Knx_AddressType new_addr)
 {
     AL_SetAPDUData(MSG_GetMessagePtr(pBuffer),0,serial_number,sizeof(Knx_SerialNumberType));
-    AL_SetAPDUData(MSG_GetMessagePtr(pBuffer),6,(uint8*)new_addr,sizeof(Knx_AddressType));    
-    
+    AL_SetAPDUData(MSG_GetMessagePtr(pBuffer),6,(uint8*)&new_addr,sizeof(Knx_AddressType));
+
     A_Broadcast_Req(pBuffer,source,A_PHYSICALADDRESSSERIALNUMBER_WRITE,
     (uint8*)NULL,12);
 }
@@ -370,10 +370,10 @@ void A_IndividualAddressSerialNumber_Write_Req(PMSG_Buffer pBuffer,Knx_AddressTy
 void A_ServiceInformation_Indication_Write_Req(PMSG_Buffer pBuffer,Knx_AddressType source,uint8 info)
 {
     uint8 data[3];
-    
+
     data[0]=info;   /* PID_DEVICE_CONTROL des Device-Objects versenden, falls in PID_SERVICE_CONTROL aktiviert. */
     data[1]=data[2]=0x00;   /* reserved. */
-    
+
     A_Broadcast_Req(pBuffer,source,A_SERVICEINFORMATION_INDICATION_WRITE,(uint8*)data,3);
 }
 
@@ -394,12 +394,12 @@ void A_DomainAddress_Read_Req(PMSG_Buffer pBuffer,Knx_AddressType source)
 void A_DomainAddress_Write_req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType domain_ddress)
 {
     uint8 data[2];
-    
+
 /*    data[0]=domain_ddress[0];  // todo: SetAPDUData() */
 /*    data[1]=domain_ddress[1]; */
 
     *(uint16*)data[0]=domain_ddress;  /* todo: !!! TESTEN !!! und 'SetAPDUData()' verwenden! */
-    
+
     A_Broadcast_Req(pBuffer,source,A_DOMAINADDRESS_WRITE,(uint8*)data,2);
 }
 
@@ -410,12 +410,12 @@ void A_DomainAddressSelective_Read_req(PMSG_Buffer pBuffer,Knx_AddressType sourc
 
     *(uint16*)data[0]=domain_ddress;  /* todo: !!! TESTEN !!! */
     *(uint16*)data[2]=start_address;
-/*    
+/*
     data[0]=domain_ddress[0];
     data[1]=domain_ddress[1];
     data[2]=start_address[0];
     data[3]=start_address[1];
-*/    
+*/
     data[4]=range;
 
     A_Broadcast_Req(pBuffer,source,A_DOMAINADDRESSSELECTIVE_READ,(uint8*)data,5);
@@ -431,11 +431,11 @@ void A_DomainAddressSelective_Read_req(PMSG_Buffer pBuffer,Knx_AddressType sourc
 
 void A_Individual_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest,uint16 apci,uint8 *data,uint8 len)
 {
-    
+
     len=MIN(len,MAX_ADPU_LEN);
 
     (void)MSG_ClearBuffer(pBuffer);
-    
+
     MSG_SetAPCI(pBuffer,apci);
     MSG_SetSourceAddress(pBuffer,source);
     MSG_SetDestAddress(pBuffer,dest);
@@ -443,7 +443,7 @@ void A_Individual_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType
     MSG_SetLen(pBuffer,8+len);
     AL_SetAPDUData(MSG_GetMessagePtr(pBuffer),0,data,len);  /* check: evtl. überflüssig??? */
     pBuffer->service=T_DATA_INDIVIDUAL_REQ;
-    
+
     (void)MSG_Post(pBuffer);
 }
 
@@ -470,7 +470,7 @@ void A_PropertyValue_Read_Res(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_Add
         uint8 prop_id,uint8 nr_of_elem,uint16 start_index,uint8 *data) /* Hinweis: es fehlt die Daten-Länge!!! */
 {
     AL_SetPropertyHeader(pBuffer,obj_index,prop_id,nr_of_elem,start_index);
-        
+
 /* Data-Offset = 4 */
 /* A_PROPERTYVALUE_RESPONSE */
 }

@@ -7,6 +7,15 @@
 **
 */
 
+#if 0
+#pragma message "Compiling " __FILE__ "..."
+#define DO_PRAGMA(x) _Pragma (#x)
+#define TODO(x) DO_PRAGMA(message ("TODO - " #x))
+
+TODO(Remember to fix this)
+#endif
+
+
 #include "Appl.h"
 
 uint8 DEV_GetHopCount(void);
@@ -33,12 +42,12 @@ const uint8 KNX_DEV_ORDER_INFO[10]={0x0a,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02
 #if defined(_MSC_VER)
     #pragma data_seg(push, ".__EEPROM")
     #pragma pack(push,1)
-#endif  
+#endif
 
 
 #if defined(__HIWARE__)
     #pragma CONST_SEG        EEPROM
-#endif  
+#endif
 
 /*
 // BIM13X-Application-Information-Block.
@@ -93,7 +102,7 @@ START_ADDRESS_TABLE(APP_NUM_OF_COM_OBJS)
 
     IMPLEMENT_GROUP_ADDR(0x0901)	/* todo: Makro 'MAKE_GROUP_ADDR(main.middle,sub)'. */
     IMPLEMENT_GROUP_ADDR(0x5100)
-    IMPLEMENT_GROUP_ADDR(0x5101)    
+    IMPLEMENT_GROUP_ADDR(0x5101)
 END_ADDRESS_TABLE()
 
 
@@ -102,7 +111,7 @@ START_ASSOCIATION_TABLE(5)      /* todo: 'NumAssocs' oder so... */
     IMPLEMENT_ASSOCIATION(0x0201)
     IMPLEMENT_ASSOCIATION(0x0302)
     IMPLEMENT_ASSOCIATION(0x0403)
-    IMPLEMENT_ASSOCIATION(0x0504)                
+    IMPLEMENT_ASSOCIATION(0x0504)
 END_ASSOCIATION_TABLE()
 
 
@@ -135,7 +144,7 @@ const uint8 KNX_SystemInterfaceObjCount=sizeof(KNX_SystemInterfaceObjs)/(sizeof(
 /*
 KNX_INTERFACE_OBJ Knx_IO_AddrTable={
     MAKE_OBJ_ACCESS(BCU20_PRIVILEGE_NO,BCU20_PRIVILEGE_SERVICE),
-    sizeof(Knx_AddrTabProperties)/sizeof(KNX_PROPERTY),
+    SIZEOF_ARRAY(Knx_AddrTabProperties),
     KNX_AddrTabProperties
 };
 */
@@ -143,10 +152,10 @@ KNX_INTERFACE_OBJ Knx_IO_AddrTable={
 #define START_USER_INTERFACE_OBJECTS()
 
 #define START_IMPLEMENT_USER_INTERFACE_OBJECT(objName,objType,objAccess0,objAccess1)    \
-Knx_PropertyType KNX_PROPS_##objName[];                                          \
-Knx_InterfaceObjectType KNX_UIO_##objName={                                       \
-    MAKE_OBJ_ACCESS((objAccess0),(objAccess1)),                                 \
-    0,                                                                      \
+Knx_PropertyType *KNX_PROPS_##objName;                                                  \
+Knx_InterfaceObjectType KNX_UIO_##objName={                                             \
+    MAKE_OBJ_ACCESS((objAccess0),(objAccess1)),                                         \
+    0,                                                                                  \
     NULL
 
 /*
@@ -154,7 +163,7 @@ Knx_InterfaceObjectType KNX_UIO_##objName={                                     
 ** KNX_PROPERTY KNX_AssocTabProperties[]={
 ** {KNX_PID_OBJECT_TYPE,MAKE_PROP_CTL(PROP_RO,PROP_NO_ARR,PROP_VALUE,KNX_PDT_UNSIGNED_INT),PROP_NO_FUNC,(ADDR_T)KNX_OT_ASSOCIATIONTABLE_OBJECT},
 */
-    
+
 
 #define END_IMPLEMENT_USER_INTERFACE_OBJECT()    \
     };
@@ -171,7 +180,7 @@ Knx_InterfaceObjectType KNX_UIO_##objName={                                     
 
 
 #define KNX_IMPLEMENT_USER_INTERFACE_OBJECTS
-Knx_InterfaceObjectType* Knx_UserInterfaceObjs[]=
+const Knx_InterfaceObjectType ** Knx_UserInterfaceObjs=
 {
 NULL
 };
@@ -200,7 +209,10 @@ END_OBJECT_TABLE()
 
 const uint8 Knx_UserInterfaceObjCount=0; /* sizeof(KNX_UserInterfaceObjs)/(sizeof(KNX_INTERFACE_OBJ*)); */
 
-const Knx_InterfaceObjectType** Knx_UserInterfaceObjPtr=Knx_UserInterfaceObjs;
+/* Knx_InterfaceObjectType ** Knx_UserInterfaceObjPtr=(Knx_InterfaceObjectType ** )Knx_UserInterfaceObjs; */
+
+const Knx_InterfaceObjectType **Knx_UserInterfaceObjPtr=(const Knx_InterfaceObjectType **)&Knx_UserInterfaceObjs;
+
 
 /*********************************************************************
 **********************************************************************
@@ -214,6 +226,9 @@ const uint32 KNX_DEV_ACCESS_KEYTABLE[3]; /* check: uint8? */
 **      EEPROm-Header included werden.
 */
 
+
+
+
 #if     defined(__HIWARE__)
         #pragma CONST_SEG DEFAULT
 #endif
@@ -223,25 +238,25 @@ const uint32 KNX_DEV_ACCESS_KEYTABLE[3]; /* check: uint8? */
         #pragma data_seg(pop)
 #endif
 
-const /*ADDR_T*/ uint16 __LOG_EEPROM_START=0x100;
-const /*ADDR_T*/ uint16 __PHYS_EEPROM_START=(uint16)&DEV_EEPROM_HEADER;
+uint8 const * const __LOG_EEPROM_START=(uint8*)0x0100;
+uint8 const * const __PHYS_EEPROM_START=(const uint8*)&DEV_EEPROM_HEADER;
 
 void DEV_Init(void)
 {
 /*
     KNX_USER_OBJ_DESCR descr;
-    
+
     IOS_GetUserObjTable(&descr);
 
 //    KNX_UserObjDescr 0 setzen, falls 0xffff,0xff.
     if ((descr.obj_ptr==(ADDR_T)~0) && (descr.obj_count==(uint8)0xff)) {
         descr.obj_ptr=(ADDR_T)0;
         descr.obj_count=(uint8)0;
-        IOS_SetUserObjTable(descr);        
+        IOS_SetUserObjTable(descr);
     }
     // APP_Init();
     // UserInit();
-*/    
+*/
 }
 
 uint8 DEV_GetHopCount(void)
