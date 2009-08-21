@@ -1,0 +1,8 @@
+//  Metrowerks HC12, -si2 -spN2 -spF4, 
+//  Standard lint options
+
+au-misra1.lnt
+co-mwhc12.lnt
+
+options.lnt  -si2 -spN2 -spF4
+

@@ -14,7 +14,7 @@
 
 extern const uint8 KNX_DEV_FIRMWARE_REV;
 
-extern const uint8 KNX_DEV_EEPROM_HEADER[];
+extern const uint8 DEV_EEPROM_HEADER[0x16];
 
 extern const Knx_SerialNumberType KNX_DEV_SERIAL_NUM;
 extern const uint8 KNX_DEV_ORDER_INFO[10];  /* todo: Name !!! */
@@ -22,8 +22,8 @@ extern const uint8 KNX_DEV_ORDER_INFO[10];  /* todo: Name !!! */
 extern const Knx_PollGroupSettingType KNX_DEV_POLLGROUP_SETTINGS;
 extern const uint32 KNX_DEV_ACCESS_KEYTABLE[3]; /* todo: Name !!! */
 
-extern const /*ADDR_T*/ uint16 __LOG_EEPROM_START;
-extern const /*ADDT_T*/ uint16 __PHYS_EEPROM_START;
+extern uint8 const * const __LOG_EEPROM_START;
+extern uint8 const * const __PHYS_EEPROM_START;
 
 extern const uint8 Knx_UserInterfaceObjCount;  /* check: in Hinblick auf die Zukunft besser 'uint16'??? */
 extern const Knx_InterfaceObjectType** Knx_UserInterfaceObjPtr;

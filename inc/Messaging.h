@@ -30,17 +30,17 @@
 #define TPCI_INVALID        ((uint8)0xbf)
 #define APCI_INVALID        ((uint16)0x3FF)
 
-#define TASK_FREE_ID        ((uint8)0)       /* Free message buffers. */
-#define TASK_LL_ID          ((uint8)1)       /* Link-Layer. */
-#define TASK_NL_ID          ((uint8)2)       /* Network-Layer. */
-#define TASK_TL_ID          ((uint8)3)       /* Transport-Layer/Multicast. */
-#define TASK_TC_ID          ((uint8)4)       /* Transport-Layer/Multicast&one-to-one. */
-#define TASK_LC_ID          ((uint8)5)       /* Transport-Layer/Local. */
-#define TASK_AL_ID          ((uint8)6)       /* Application-Layer/Group-Oriented. */
-#define TASK_MG_ID          ((uint8)7)       /* Application-Layer/Managment. */
-#define TASK_PM_ID          ((uint8)8)       /* PEI-System. */
-#define TASK_US_ID          ((uint8)9)       /* User. */
-#define TASK_INVALID_ID     ((uint8)0xff)    /* Invalid Queue. */
+#define TASK_FREE_ID        ((uint8)0)       /* Free message buffers.                   */
+#define TASK_LL_ID          ((uint8)1)       /* Link-Layer.                             */
+#define TASK_NL_ID          ((uint8)2)       /* Network-Layer.                          */
+#define TASK_TL_ID          ((uint8)3)       /* Transport-Layer/Multicast.              */
+#define TASK_TC_ID          ((uint8)4)       /* Transport-Layer/Multicast&one-to-one.   */
+#define TASK_LC_ID          ((uint8)5)       /* Transport-Layer/Local.                  */
+#define TASK_AL_ID          ((uint8)6)       /* Application-Layer/Group-Oriented.       */
+#define TASK_MG_ID          ((uint8)7)       /* Application-Layer/Managment.            */
+#define TASK_PM_ID          ((uint8)8)       /* PEI-System.                             */
+#define TASK_US_ID          ((uint8)9)       /* User.                                   */
+#define TASK_INVALID_ID     ((uint8)0xff)    /* Invalid Queue.                          */
 
 /* todo: Support f. Extended-Frames!!! */
 #define MSG_LEN             ((uint8)22)
@@ -48,7 +48,7 @@
 #define MAX_PROP_DATA_LEN   ((uint8)10)
 
 
-typedef uint8 KNX_MSG_T[MSG_LEN];    /* todo: extended Frames berücksichtigen!!! */
+typedef uint8 Knx_MessageType[MSG_LEN];    /* todo: extended Frames berücksichtigen!!! */
                                     /* KNX_MessageType (ist das geglückt???). */
 
 typedef struct tagMSG_Buffer {  /* check: macht es Sinn, die Puffer-Nr. mitzuführen??? */
@@ -56,7 +56,7 @@ typedef struct tagMSG_Buffer {  /* check: macht es Sinn, die Puffer-Nr. mitzufüh
     uint8 len;
     KNXServiceTypeType service;
     uint8 sap;
-    KNX_MSG_T msg;
+    Knx_MessageType msg;
 } MSG_Buffer,* PMSG_Buffer;      /* KNX_MessageBufferType    (hier ist 'KNX_MessageType' sinnvoll!!!). */
 
 typedef struct tagKNX_StandardFrameType {
@@ -72,10 +72,10 @@ typedef struct tagKNX_StandardFrameType {
 typedef struct tagKNX_PropertyFrameType {
     uint8 ctrl;
     uint8 source[2];
-    uint8 dest[2];        
+    uint8 dest[2];
     uint8 ncpi;                      /* check: richtiger Name??? */
     uint8 tpci;                      /*      "                               " */
-    uint8 apci;      
+    uint8 apci;
     uint8 obj_id;
     uint8 prop_id;
     uint8 num_elems;
@@ -86,7 +86,7 @@ typedef struct tagKNX_PropertyFrameType {
 typedef struct tagKNX_PollingFrameType {
     uint8 ctrl;
     uint8 source[2];
-    uint8 poll_addr[2];          
+    uint8 poll_addr[2];
     uint8 num_slots;
     uint8 slot[MAX_ADPU_LEN];
 } KNX_PollingFrameType,*KNX_PollingFrameRefType;  /* KNX_PollingFrameType */
@@ -121,7 +121,7 @@ void MSG_RedirectToUser(uint8 layer);    /* U_MS_Switch */
 #define MSG_SetDestAddress(pBuffer,addr)    (*(uint16*)&MSG_GetMessagePtr((pBuffer))->dest=htobs((addr)))
 
 #define MSG_GetPriority(pBuffer)            ((KNX_PriorityType)(MSG_GetMessagePtr((pBuffer))->ctrl & 0x0C)>>2)
-#define MSG_SetPriority(pBuffer,priority)   (MSG_GetMessagePtr((pBuffer))->ctrl|= (((priority) & 0x03)<<2)) 
+#define MSG_SetPriority(pBuffer,priority)   (MSG_GetMessagePtr((pBuffer))->ctrl|= (((priority) & 0x03)<<2))
 
 /* check: Daf-Type, DestionationAddressType??? */
 #define MSG_GetAddressType(pBuffer)         ((uint8)MSG_GetMessagePtr((pBuffer))->ncpi & 0x80)
@@ -145,13 +145,13 @@ void MSG_RedirectToUser(uint8 layer);    /* U_MS_Switch */
 
 
 void MSG_SetLen(PMSG_Buffer pBuffer,uint8 len);
-uint8 MSG_GetLen(PMSG_Buffer pBuffer);
+uint8 MSG_GetLen(const PMSG_Buffer pBuffer);
 
-uint8 MSG_GetRoutingCount(PMSG_Buffer pBuffer);
+uint8 MSG_GetRoutingCount(const PMSG_Buffer pBuffer);
 void MSG_SetRoutingCount(PMSG_Buffer pBuffer);
 
 void MSG_SetRoutingCtrl(PMSG_Buffer pBuffer,boolean on);
-boolean MSG_GetRoutingCtrl(PMSG_Buffer pBuffer);
+boolean MSG_GetRoutingCtrl(const PMSG_Buffer pBuffer);
 
 /* void MSG_SetHopCount(PMSG_Buffer pBuffer,uint8 hop_count); */
 /* void MSG_GetHopCount(PMSG_Buffer pBuffer,uint8 *hop_count); */

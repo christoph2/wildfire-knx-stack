@@ -27,7 +27,7 @@ typedef struct tagKnx_PropertyType {
     uint8 property_id;
     uint8 property_ctrl;
     uint8 property_func;
-    const void* property_var;  
+    void const * const property_var;
 } Knx_PropertyType;
 
 typedef struct tagKNX_InterfaceObjectType {
@@ -66,9 +66,9 @@ Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_inde
 Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const* pobj,uint16 prop_id);
 Knx_PropertyType const * IOS_GetPropertyByIndex(Knx_InterfaceObjectType const* pobj,uint16 prop_index);
 
-void IOS_Dispatch(PMSG_Buffer pBuffer,uint8 service,boolean connected);
+void IOS_Dispatch(const PMSG_Buffer pBuffer,uint8 service,boolean connected);
 
-/* 
+/*
 ** void IOS_SetUserObjTable(KNX_USER_OBJ_DESCR descr);
 ** void IOS_GetUserObjTable(KNX_USER_OBJ_DESCR *pdescr);
 **
@@ -133,18 +133,18 @@ void IOS_Dispatch(PMSG_Buffer pBuffer,uint8 service,boolean connected);
 
 #define KNX_PDT_CONTROL                 ((uint8)0x00)
 #define KNX_PDT_CHAR                    ((uint8)0x01)
-#define KNX_PDT_UNSIGNED_CHAR           ((uint8)0x02) 
+#define KNX_PDT_UNSIGNED_CHAR           ((uint8)0x02)
 #define KNX_PDT_INT                     ((uint8)0x03)
-#define KNX_PDT_UNSIGNED_INT            ((uint8)0x04) 
-#define KNX_PDT_KNX_FLOAT               ((uint8)0x05) 
-#define KNX_PDT_DATE                    ((uint8)0x06) 
-#define KNX_PDT_TIME                    ((uint8)0x07) 
-#define KNX_PDT_LONG                    ((uint8)0x08) 
-#define KNX_PDT_UNSIGNED_LONG           ((uint8)0x09) 
-#define KNX_PDT_FLOAT                   ((uint8)0x0A) 
-#define KNX_PDT_DOUBLE                  ((uint8)0x0B) 
-#define KNX_PDT_CHAR_BLOCK              ((uint8)0x0C) 
-#define KNX_PDT_POLL_GROUP_SETTINGS     ((uint8)0x0D) 
+#define KNX_PDT_UNSIGNED_INT            ((uint8)0x04)
+#define KNX_PDT_KNX_FLOAT               ((uint8)0x05)
+#define KNX_PDT_DATE                    ((uint8)0x06)
+#define KNX_PDT_TIME                    ((uint8)0x07)
+#define KNX_PDT_LONG                    ((uint8)0x08)
+#define KNX_PDT_UNSIGNED_LONG           ((uint8)0x09)
+#define KNX_PDT_FLOAT                   ((uint8)0x0A)
+#define KNX_PDT_DOUBLE                  ((uint8)0x0B)
+#define KNX_PDT_CHAR_BLOCK              ((uint8)0x0C)
+#define KNX_PDT_POLL_GROUP_SETTINGS     ((uint8)0x0D)
 #define KNX_PDT_SHORT_CHAR_BLOCK        ((uint8)0x0E)
 /* 0x0f */
 /*0x10 */

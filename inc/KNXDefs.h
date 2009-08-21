@@ -28,10 +28,10 @@ typedef struct tagKNX_CommObjDescriptorType {
     uint8 DataPtr,Config,Type;
 } KNX_CommObjDescriptorType;
 
-typedef enum tagKNX_DafType {
+typedef enum tagKnx_DafType {
     atINDIVIDUAL=0x00,
     atMULTICAST=0x80
-} KNX_DafType;  /* check: nicht so ganz geglückt... */
+} Knx_DafType;  /* check: nicht so ganz geglückt... */
                 /* (aber würde sich mit KNX_AddressType beissen...) */
 typedef enum tagKNX_FrameTypeType {
     ftExtended=0x00,
@@ -46,8 +46,8 @@ typedef enum tagKNX_ObjectType {
 
 typedef uint8 KNX_PriorityType;  /* check: evtl. 'enum'??? */
 
-/* 
-**  START: LAYER-Dispatching-Functions. 
+/*
+**  START: LAYER-Dispatching-Functions.
 */
 typedef void (*KNXLayerServiceFunctionType)(void);
 
@@ -58,12 +58,12 @@ typedef struct tagKNXServiceEntryType {
 
 
 typedef struct tagKNXLayerServicesType {
-    uint8 LayerOffset;    
+    uint8 LayerOffset;
     uint8 NumServices;
     const KNXLayerServiceFunctionType *Functions;
 } KNXLayerServicesType;
-/* 
-**  END: LAYER-Dispatching-Functions. 
+/*
+**  END: LAYER-Dispatching-Functions.
 */
 
 
@@ -112,14 +112,14 @@ NoRouting,Parameter,Force,
 #define KNX_OBJ_PRIO_NORMAL             ((uint8)1)
 #define KNX_OBJ_PRIO_LOW                ((uint8)3)
 
-/*    
+/*
     Transmission Priorities
     =======================
     11 = low operational priority
     10 = high operational priority
     01 = alarm priority
     00 = system priority
-*/    
+*/
         /*
         ** Hinweis: im KNX-App-Layer ist von URGENT statt ALARM die Rede
         ** und 'NORMAL' statt 'HIGH'.
