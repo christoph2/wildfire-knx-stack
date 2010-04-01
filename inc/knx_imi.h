@@ -1,3 +1,26 @@
+/*
+ *   KONNEX/EIB-Protocol-Stack.
+ *
+ *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *                                       cpu12.gems@googlemail.com>
+ *
+ *   All Rights Reserved
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+*/
 #if !defined(__KNX_IMI_H)
 #define __KNX_IMI_H
 
@@ -87,68 +110,5 @@ typedef enum tagKNXServiceTypeType {
     
 } KNXServiceTypeType;
 
-/*
-
-    SCHL*PK*:
-    =========
-
-    L_DATA_req          = 0x11,
-    L_POLLDATA_req      = 0x13,
-    L_SYS_BROADCAST_req = 0x17,
-    L_DATA_send         = 0x1f,
-
-    N_DATA_req          = 0x21,
-    N_GROUP_DATA_req    = 0x22,
-    N_POLLDATA_req      = 0x23,
-    L_POLLDATA_con      = 0x25,
-    L_SYS_BROADCAST_con = 0x26,
-    N_SYS_BROADCAST_req = 0x27,
-    L_SYS_BROADCAST_ind = 0x28,
-    L_DATA_ind          = 0x29,
-    L_BUSMON_ind        = 0x2b,
-    N_BROADCAST_req     = 0x2c, 
-    L_DATA_con          = 0x2e,
- 
-    T_GROUP_DATA_req    = 0x32,
-    T_POLLDATA_req      = 0x33,
-    N_POLLDATA_con      = 0x35,
-    N_GROUP_DATA_ind    = 0x3a,
-    N_GROUP_DATA_con    = 0x3e,
-
-    T_DATA_req          = 0x41,
-    T_CONNECT_req       = 0x43,
-    T_DISCONNECT_req    = 0x44,
-    N_SYS_BROADCAST_con = 0x45,
-    T_SYS_BROADCAST_req = 0x47,
-    N_SYS_BROADCAST_ind = 0x48,
-    N_DATA_ind          = 0x49,
-    T_DATA_UNACK_req    = 0x4A,
-    T_BROADCAST_req     = 0x4c,
-    N_BROADCAST_ind     = 0x4d,
-    N_DATA_con          = 0x4e,
-    N_BROADCAST_con     = 0x4f,
-  
-    A_GROUP_DATA_req    = 0x72,
-    T_POLLDATA_con      = 0x75,
-    T_GROUP_DATA_ind    = 0x7a,
-    T_GROUP_DATA_con    = 0x7e,
-  
-    T_CONNECT_ind       = 0x85,
-    T_CONNECT_con       = 0x86,
-    T_DISCONNECT_ind    = 0x87,
-    T_DISCONNECT_con    = 0x88,
-    T_DATA_ind          = 0x89,
-    T_BUSMON_ind        = 0x8b,
-    T_BROADCAST_ind     = 0x8d,
-    T_DATA_con          = 0x8e,
-    T_BROADCAST_con     = 0x8f,
-
-    T_DATA_UNACK_ind    = 0x94,
-    T_SYS_BROADCAST_con = 0x95,
-    T_SYS_BROADCAST_ind = 0x98,
-    T_DATA_UNACK_con    = 0x9C,
-
-    TM_TIMER_TL         = 0xc1
-*/
-
 #endif /* __KNX_IMI_H */
+

@@ -1,21 +1,31 @@
 /*
-**
-**	check:	Zyklischer Timer - wieso nicht???
-**			Wenn Zyklische Timer, dann über einen Cycle-/Duty-Mechanismus
-**			nachdenken ==> Soft-PWM für Stellantriebe, dadurch darf aber
-**			die allgemeine Verwendbarkeit nicht erschwert werden!!!
-**			(eine 'SetDuty()' Funktion genügt).
-**			Eine Struktur an Parameter könnte effizienter sein!!??
-**
+ *   KONNEX/EIB-Protocol-Stack.
+ *
+ *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *                                       cpu12.gems@googlemail.com>
+ *
+ *   All Rights Reserved
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
 */
 
 /*
 **	todo: Einstellbare Tickrate: [1|10]ms (Vieleicht auch 100???).
 */
 
-/*
-** todo: Hardware-Timer wie in miniOSEK unterstützen!!!
-*/
 
 #include "timer.h"
 
@@ -29,7 +39,7 @@ DWORD TickerThreadID;
 #define DISABLE_ALL_INTERRUPTS()
 #define ENABLE_ALL_INTERRUPTS()
 
-static TM_TimerType KNX_Timer[TM_NUM_TIMERS];	/*  todo: Sinnvoller Name!!! */
+static TM_TimerType KNX_Timer[TM_NUM_TIMERS];
 static TM_TickType TM_SysMsCounter;
 static TM_TickType TM_SysSecondCounter;
 
@@ -88,8 +98,8 @@ boolean TM_IsExpired(uint8 timer)
     if (timer<TM_NUM_TIMERS) {
         DISABLE_ALL_INTERRUPTS();
         state=KNX_Timer[timer].state;
-        KNX_Timer[timer].state&=(~TM_STATE_EXPIRED);	/* check: muss|darf das sein!!?? */
-                                                        /* 'TM_STATE_STOPPED' setzen!!?? */
+        KNX_Timer[timer].state&=(~TM_STATE_EXPIRED);
+                                                    
         ENABLE_ALL_INTERRUPTS();														
             return ((state & TM_STATE_EXPIRED)==TM_STATE_EXPIRED);
     } else {

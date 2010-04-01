@@ -1,9 +1,29 @@
+/*
+ *   KONNEX/EIB-Protocol-Stack.
+ *
+ *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *                                       cpu12.gems@googlemail.com>
+ *
+ *   All Rights Reserved
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+*/
 #if !defined(__KNX_DEFS_H)
 #define __KNX_DEFS_H
 
-/*
-**  Hinweis: alle Definitionen/Deklarationen können eigentlich auf andere Module verteilt werden...
-*/
 
 /* #include "target.h" */
 /* todo: ins Target-Verzeichnis!!! */
@@ -31,8 +51,8 @@ typedef struct tagKNX_CommObjDescriptorType {
 typedef enum tagKnx_DafType {
     atINDIVIDUAL=0x00,
     atMULTICAST=0x80
-} Knx_DafType;  /* check: nicht so ganz geglückt... */
-                /* (aber würde sich mit KNX_AddressType beissen...) */
+} Knx_DafType;  
+
 typedef enum tagKNX_FrameTypeType {
     ftExtended=0x00,
     ftStandard=0x80,
@@ -142,8 +162,6 @@ NoRouting,Parameter,Force,
 #define KNX_OBJ_TRANSMITTING            ((uint8)0x02)
 #define KNX_OBJ_TRANSMIT_REQ            ((uint8)0x03)
 
-/*  Zugriffsrechte BCU2.0    - Hinweis: 'BCU20_' ist nicht so glücklich!!! (irgendetwas mit 'KNX_PRIVILEDGE_???' ist besser!!! */
-/*  Hinweis: gehört zum 'Access'-Server ('KNXAcc.c') */
 #define BCU20_PRIVILEGE_CONFIGURATION   ((uint8)0)
 #define BCU20_PRIVILEGE_SERVICE         ((uint8)1)
 #define BCU20_PRIVILEGE_USER            ((uint8)2)

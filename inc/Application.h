@@ -1,3 +1,26 @@
+/*
+ *   KONNEX/EIB-Protocol-Stack.
+ *
+ *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *                                       cpu12.gems@googlemail.com>
+ *
+ *   All Rights Reserved
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+*/
 #if !defined(__APPLICATION_H)
 #define __APPLICATION_H
 
@@ -11,9 +34,9 @@
 #include "APCI.h"
 #include "Appl.h"
 
-extern const uint8 KNX_OBJ_LEN_TAB[];    /* check: ist die Bezeichnung O.K.??? */
+extern const uint8 KNX_OBJ_LEN_TAB[];
 
-extern const  uint8 APP_CommObjTab[];   /* todo: make 'static' !!! */
+extern const  uint8 APP_CommObjTab[];
 
 extern uint8 DEV_Device_Control;
 extern uint8 DEV_Current_Accesslevel;
@@ -48,7 +71,7 @@ uint8 *AL_GetRAMFlagPointer(void);
 void AL_UpdateAssociatedASAPs(PMSG_Buffer pBuffer,uint8 testFlags);
 
 
-void DEV_SetVerifyMode(boolean on);        /* check: oder vieleicht ein 'SET'/'RESET'-Pärchen (PreProc!) ??? */
+void DEV_SetVerifyMode(boolean on);
 void DEV_ChkOwnPhysAddrRcvd(boolean on);   /*        prefix 'ALM_'??? */
 void DEV_PhysAddrWriteEnable(boolean on);
 
@@ -114,3 +137,4 @@ void A_PropertyDescription_Read_Req(PMSG_Buffer pBuffer,Knx_AddressType source,K
         uint8 prop_id,uint8 prop_index);
 
 #endif  /* __APPLICATION_H */
+

@@ -1,11 +1,26 @@
-
 /*
-**  todo: 'END_USER_EEPROM' (dananch folgen auf dem Bus 'unsichbare' Bereiche: Seriennummer,Load-/Run-Controls,Pollgroup etc.).
-**                                          Hinweis: Seriennummer ist eine 'IMP_'!!! bzw. 'USR_'-Funktion!!!
+ *   KONNEX/EIB-Protocol-Stack.
+ *
+ *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *                                       cpu12.gems@googlemail.com>
+ *
+ *   All Rights Reserved
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
 */
-
-/*  todo: 'Vernünftigere' Namen für die Tabellen finden!!! */
-/*  Hinweis: der Tabellen-'Kram' gehört nach 'Application'!!! */
 
 #if !defined(__ADDRESS_H)
 #define __ADDRESS_H
@@ -70,8 +85,8 @@ boolean ADR_InProgrammingMode(void);
 #define ADR_GrATBasePtr()               (uint16*)((uint8*)&APP_AddressTable+3)
 #define ADR_GrOATBasePtr()              (uint16*)((uint8*)&APP_AssociationTable+1)
 
-#define ADR_GetGroupAddress(n)          (btohs(*(uint16*)(ADR_GrATBasePtr()+((n)-1))))  /* check: -1 ??? */
-#define ADR_GetAssoc(n)                 (btohs(*(uint16*)(ADR_GrOATBasePtr()+(n))))  /* todo: Sinnvoller Name!!! */
+#define ADR_GetGroupAddress(n)          (btohs(*(uint16*)(ADR_GrATBasePtr()+((n)-1))))
+#define ADR_GetAssoc(n)                 (btohs(*(uint16*)(ADR_GrOATBasePtr()+(n))))
 
 boolean ADR_IsAddressed(Knx_AddressType searched_addr,uint8 *tsap);
 boolean ADR_IsOwnPhysicalAddr(Knx_AddressType addr);

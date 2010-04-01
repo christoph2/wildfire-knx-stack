@@ -1,13 +1,28 @@
+/*
+ *   KONNEX/EIB-Protocol-Stack.
+ *
+ *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *                                       cpu12.gems@googlemail.com>
+ *
+ *   All Rights Reserved
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+*/
 #if !defined(__MESSAGING_H)
 #define __MESSAGING_H
-
-/*
-**  Hinweis: es wäre _sehr_ sinnvoll, wenn Puffer auf ohne 'MSG_ClearBuffer'  benutzbar wären!!!
-*/
-
-/*
-**  todo: Konstanten für der einzelnen Felder der Message!!!
-*/
 
 /*
 **  todo: Get-Funktionen überarbeiten (Wert zurückliefern,statt Pointer-Übergabe).
@@ -63,9 +78,9 @@ typedef struct tagKNX_StandardFrameType {
     uint8 ctrl;
     uint8 source[2];
     uint8 dest[2];
-    uint8 ncpi;                      /* check: richtiger Name??? */
-    uint8 tpci;                      /*      "                               " */
-    uint8 apci;                      /*      "                               " */
+    uint8 ncpi;
+    uint8 tpci;
+    uint8 apci;
     uint8 data[MAX_ADPU_LEN];
 } KNX_StandardFrameType,*KNX_StandardFrameRefType;    /* KNX_StandardFrameType */
 
@@ -73,8 +88,8 @@ typedef struct tagKNX_PropertyFrameType {
     uint8 ctrl;
     uint8 source[2];
     uint8 dest[2];
-    uint8 ncpi;                      /* check: richtiger Name??? */
-    uint8 tpci;                      /*      "                               " */
+    uint8 ncpi;
+    uint8 tpci;
     uint8 apci;
     uint8 obj_id;
     uint8 prop_id;
@@ -157,3 +172,4 @@ boolean MSG_GetRoutingCtrl(const PMSG_Buffer pBuffer);
 /* void MSG_GetHopCount(PMSG_Buffer pBuffer,uint8 *hop_count); */
 
 #endif /*__MESSAGING_H */
+
