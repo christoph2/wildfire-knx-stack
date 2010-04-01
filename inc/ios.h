@@ -184,5 +184,4 @@ void IOS_Dispatch(const PMSG_Buffer pBuffer,uint8 service,boolean connected);
 #define FUNCTION_FLAG                           0x40
 */
 
-
 #endif  /* __IOS_H */

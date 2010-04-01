@@ -48,12 +48,12 @@ void TLC_Task(void)
 }
 
 /*
-//
-//  Hinweis: __ConnectionAddress braucht nicht initialisiert werden, macht auch keinen Sinn,
-//      denn wenn im Zusatand CLOSED ein T_CONNECT_REQ empfangen wird, wird der korrekte Zustand
-//      eingenommen, egal, ob CONN_ADDR gleich oder ungleich SRC_ADDR.
-//
-//
+**
+**  Hinweis: __ConnectionAddress braucht nicht initialisiert werden, macht auch keinen Sinn,
+**  denn wenn im Zusatand CLOSED ein T_CONNECT_REQ empfangen wird, wird der korrekte Zustand
+**      eingenommen, egal, ob CONN_ADDR gleich oder ungleich SRC_ADDR.
+**
+**
 */
 
 void TL_Init(void)  /* check: zwischen TLC_ und TLG_ Init unterscheiden??? */
