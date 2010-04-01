@@ -1,9 +1,0 @@
--	Den Preis für die einfache und reibungslose Installation von
- 	KNX/EIB-Anlagen zahlen die Entwickler; Hersteller von 
- 	KNX/EIB-Kompomenten können einen grossen Teil davon auf 
- 	ein Systemhaus abwälzen.
- 	
- 	
-- meine Aktivitäten zentrieren sich allgmein um 
-	Konnex/EIB-Entwicklungen, nicht notwendigerweise
-	um die eigenen Produkte.

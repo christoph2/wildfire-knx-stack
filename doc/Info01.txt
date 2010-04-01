@@ -1,6 +1,0 @@
-
-Der Protokoll-Stack kann Standalone oder durch seine spezielle Auslegung 
-in Verbindung mit einem  OSEK/VDX-konformen Betriebssystem-Kern, wie zum
-Beispiel unserem miniOSEK, verwendet werden.
-Durch letztere Möglichkeit ermöglicht es, komplexe Anwendungen
-effizient und elegant zu entwickeln.
