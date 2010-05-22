@@ -22,10 +22,6 @@
  *
 */
 
-/*
-**	todo: Einstellbare Tickrate: [1|10]ms (Vieleicht auch 100???).
-*/
-
 
 #include "timer.h"
 
@@ -35,7 +31,6 @@ HANDLE hTickerThread;
 DWORD TickerThreadID;
 */
 
-/* todo: ins Target-Verzeichnis!!! */
 #define DISABLE_ALL_INTERRUPTS()
 #define ENABLE_ALL_INTERRUPTS()
 
@@ -47,22 +42,19 @@ void TM_Init(void)
 {
     uint8_least idx;
 	
-    TM_SysMsCounter=TM_SysSecondCounter=0UL;
+    TM_SysMsCounter=TM_SysSecondCounter=(uint32)0UL;
 	
     DISABLE_ALL_INTERRUPTS();
-    for (idx=0;idx<TM_NUM_TIMERS;idx++) {
-        KNX_Timer[idx].expire_counter=0UL;
+    for (idx=(uint8)0;idx<TM_NUM_TIMERS;idx++) {
+        KNX_Timer[idx].expire_counter=(uint32)0UL;
         KNX_Timer[idx].state=TM_STATE_STOPPED;
         KNX_Timer[idx].base=TM_BASE_MS;
     }
     ENABLE_ALL_INTERRUPTS();
-	/* check: Hardware-Timer starten??? */
 }
 
 boolean TM_Start(uint8 timer,TM_BaseType base,TM_TickType ticks)
 {
-/* check: Timer-Restart eigentlich besser!!?? */
-
     if (timer<TM_NUM_TIMERS) {
         if (!(KNX_Timer[timer].state & TM_STATE_RUNNING)) {	
             DISABLE_ALL_INTERRUPTS();
@@ -148,19 +140,16 @@ TM_TickType TM_GetSystemTime(TM_BaseType base)
 }
 
 /*
-void TM_Delay(TM_TickType ms)  // check: Wie optimal integrieren?
+void TM_Delay(TM_TickType ms
 {
 
 }
 
-//
-//	Hinweis: 'TM_DelayHMS' steht nur in Verbindung mit miniOSEK zu Verfügung!!!
-//
 void TM_DelayHMS(WORD H,WORD M,WORD S)
 {
 	TM_TickType delay_time,end_time;
 	
-	delay_time=((TM_TickType)H*60*60)+((TM_TickType)M*60)+((TM_TickType)S);	// in Sekunden!!!
+	delay_time=((TM_TickType)H*60*60)+((TM_TickType)M*60)+((TM_TickType)S);	// in Seconds !!!
 	
 	end_time=delay_time+TM_SysSecondCounter;
 	
@@ -168,7 +157,7 @@ void TM_DelayHMS(WORD H,WORD M,WORD S)
 }
 */
 
-void TM_SecondCallback(void)	/* Hinweis: Konfigurations-abhängig!!! */
+void TM_SecondCallback(void)
 {
 
 }
@@ -182,22 +171,22 @@ void TM_SystemTimeHandler(void)
 	
     TM_SysMsCounter++;
 
-    if ((TM_SysMsCounter % 1000UL)==0UL) {
+    if ((TM_SysMsCounter % (uint32)1000UL)==(uint32)0UL) {
         TM_SysSecondCounter++;
         SecondChanged=TRUE;
-        TM_SecondCallback();	/* Hinweis: wenn konfiguriert!!! */	
+        TM_SecondCallback();
     }
 	
-    for (idx=0;idx<TM_NUM_TIMERS;idx++) { 
+    for (idx=(uint8)0;idx<TM_NUM_TIMERS;idx++) { 
         tm=&KNX_Timer[idx];
 
         if ((tm->state & TM_STATE_RUNNING)==TM_STATE_RUNNING) {
             if (tm->base==TM_BASE_MS) {
-                if (--tm->expire_counter==0UL) {
+                if (--tm->expire_counter==(uint32)0UL) {
                     tm->state=TM_STATE_EXPIRED;
                 }
             } else if (tm->base==TM_BASE_SEC) {
-                if ((SecondChanged==TRUE) && (--tm->expire_counter==0UL)) {
+                if ((SecondChanged==TRUE) && (--tm->expire_counter==(uint32)0UL)) {
                     tm->state=TM_STATE_EXPIRED;
                 }
             }
@@ -248,37 +237,4 @@ DWORD WINAPI MSTickerThread(LPVOID *lpThreadParm)
 }
 */
 
-/*
-void TimerTest(void)
-{
-        int t;
-        boolean elapsed;
-
-        hTickerThread=CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)MSTickerThread,0,0,&TickerThreadID);  
-
-        TM_Init();
-        TM_Start(0,TM_RESOLUTION_ONE_SEC,TM_MODE_PERIODIC,5);
-        TM_Start(1,TM_RESOLUTION_ONE_MS,TM_MODE_PERIODIC,1500);
-        TM_Start(4,TM_RESOLUTION_ONE_MS,TM_MODE_ONE_SHOT,380);
-        
-        while (1) {
-                // TM_Ticker_Callback();
-                t=TM_Elapsed(0,&elapsed);
-                if (elapsed==TRUE) {
-                        printf("Timer #0\n");
-                }
-
-                t=TM_Elapsed(1,&elapsed);
-                if (elapsed==TRUE) {
-                        printf("Timer #1\n");
-                }
-
-                t=TM_Elapsed(4,&elapsed);
-                if (elapsed==TRUE) {
-                        printf("Timer #4\n");
-                }
-        }
-
-}
-*/
 

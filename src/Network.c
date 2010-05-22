@@ -25,24 +25,6 @@
 
 void NL_CheckRoutingCount(PMSG_Buffer pBuffer);
 
-/*
-**  todo: define-Switch 'strict' (oder so...) der bei Managment-Telegrammen auf die Priorität 'SYSTEM' prüft.
-**   Diese Option ließe sich noch auf andere Bereiche ausweiten (check: auf welche?).
-*/
-
-
-/*
-**  Telegramme, die mit einem Routing-Count von 0..6 empfangen werden, werden grundsätzlich mit dem
-**  Routing-Count 6 (bzw. EEPROM-Parameter) beantwortet, im Falle von 7 ist die Antwort ebenfalls 7.
-*/
-
-/*
-** todo: Bit #1 des Control-Fields als 'ROUTING_CTRL' verwenden.
-**       'No-Routing-Ctrl' betrifft hierbei den Network-Layer: Der Routing-Count wurde vom
-**       Anwender festgelegt (s.o.), kann z.B. bei DAA (Distributed Address Asignment)
-**       aber auch '0' sein (Subnet only).
-*/
-
 
 /*
 **  Flags im Control-Field:
@@ -53,19 +35,8 @@ void NL_CheckRoutingCount(PMSG_Buffer pBuffer);
 **  ERROR-Flag ist Bit #0.
 */
 
-/*
-**  todo: auf irgendeinem Layer für Broadcast_reqs die Dest.-Adresse auf '0000' setzen!!!
-*/
-
-
-/*
-**  Hinweis: Der Link-Layer Parameter 'ack_request', wenn auf 'FALSE' gesetzt, verhindert
-**           eine Telegramm-Wiederholung, falls das entsprechende Telegramm von keinem
-**           Busteilnehmer ackknowledged wird!!!
-*/
-
-#define CONF_OK     0x00
-#define CONF_ERROR  0x01
+#define CONF_OK     ((uint8)0x00)
+#define CONF_ERROR  ((uint8)0x01)
 
 
 static void Disp_N_DataIndividualReq(void),Disp_N_DataGroupReq(void),Disp_N_PollDataReq(void);
@@ -87,7 +58,7 @@ static const KNXLayerServiceFunctionType NL_Services[]={
 };
 
 static const KNXLayerServicesType NL_ServiceTable[]={
-    {KNX_NL_SERVICES,8,NL_Services}
+    {KNX_NL_SERVICES,(uint8)8,NL_Services}
 };
 
 
@@ -109,8 +80,8 @@ void NL_Init(void)
 
 static void Disp_L_DataInd(void)
 {
-    if ((MSG_GetMessagePtr(MSG_ScratchBuffer)->ncpi & 0x80)==0x80) { /* Hinweis: zu umständlich, vereinfachen!!! */
-        if (ADR_IsBroadcastAddress(MSG_GetMessagePtr(MSG_ScratchBuffer)->dest)) { /* check: 'always avaluates to FALSE' !!! */
+    if ((MSG_GetMessagePtr(MSG_ScratchBuffer)->ncpi & (uint8)0x80)==(uint8)0x80) {
+        if (ADR_IsBroadcastAddress(MSG_GetMessagePtr(MSG_ScratchBuffer)->dest)) {
             /* Broadcast-Communication. */
             MSG_ScratchBuffer->service=N_DATA_BROADCAST_IND;
             (void)MSG_Post(MSG_ScratchBuffer);
@@ -128,17 +99,17 @@ static void Disp_L_DataInd(void)
 
 static void Disp_L_DataCon(void)
 {
-    /* todo: Implementieren!!! */
+    /* todo: Implement!! */
 }
 
 static void Disp_L_BusmonInd(void)
 {
-    /* todo: Implementieren!!! */
+    /* todo: Implement!!! */
 }
 
 static void Disp_L_PollDataCon(void)
 {
-    /* todo: Implementieren!!! */
+    /* todo: Implement!!! */
 }
 
 
@@ -173,7 +144,7 @@ static void Disp_N_DataGroupReq(void)
 
 static void Disp_N_PollDataReq(void)
 {
-    /* todo: Implementieren!!! */
+    /* todo: Implement!!! */
 }
 
 void NL_CheckRoutingCount(PMSG_Buffer pBuffer)
@@ -184,3 +155,4 @@ void NL_CheckRoutingCount(PMSG_Buffer pBuffer)
         MSG_SetRoutingCtrl(pBuffer,FALSE);
     }
 }
+

@@ -142,13 +142,7 @@ void IOS_Dispatch(const PMSG_Buffer pBuffer,uint8 service,boolean connected);
 #define KNX_PID_POLL_CYCLE              ((uint8)53)
 
 /* Extension: */
-#define KNX_PID_SYSTEM_OBJECT_EXTENSION ((uint8)(0xfe))  /*
-                                                        ** Pseudeo-Property, um System-Objekte erweitern zu können.
-                                                        ** Hinweis: '0xff' kann nicht verwendet werden, da dieser
-                                                        ** Wert unter LTE-HEE eine Escape-Funktion f. private
-                                                        ** Properties hat (check: macht das was aus? die 'echte'
-                                                        ** 'Private PropertyID' kommt im Telegramm hinterher?)
-                                                        */
+#define KNX_PID_SYSTEM_OBJECT_EXTENSION ((uint8)(0xfe))
 
 /*
 **  Property Data Types Identifiers.

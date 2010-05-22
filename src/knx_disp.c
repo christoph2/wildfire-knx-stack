@@ -39,8 +39,9 @@ void KNXDispDispatchLayer(const uint8 LayerID,const KNXLayerServicesType *Servic
                 /* todo: _ASSERT() Function-Pointer!=NULL !!! */
                 ServiceTable->Functions[entry]();
             } else {
-                (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);     /* Release invalid Message - todo: Error-Handling!? */
+                (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
             }
         }
     } while (MSG_ScratchBuffer!=(PMSG_Buffer)NULL);
 }
+

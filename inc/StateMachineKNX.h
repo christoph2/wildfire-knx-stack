@@ -40,7 +40,7 @@ typedef enum {
     tlcTIMEOUT_CON,tlcTIMEOUT_ACK,tlcUNDEFINED
 } KNX_TlcEventType;
 
-#define TL_STYLE        3           /* [1,2,3] - Transport-Layer-Styles gem. KNX-Handbuch 3/3/4. */
+#define TL_STYLE       ((uint8)3)           /* [1,2,3] - Transport-Layer-Styles gem. KNX-Handbuch 3/3/4. */
                                   
 typedef void (*KNX_TlcActionFuncType)(void);
 

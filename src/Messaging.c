@@ -21,16 +21,10 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
 */
-/*
-**
-**              todo: MSG_CopyMessage()-Funktion!!!
-**
-*/
-
 
 #include "Messaging.h"
 
-#define HOP_COUNT   6   /* todo: !!!PARAMETER!!! (Funktion 'DMO_' ???) */
+#define HOP_COUNT   ((uint8)6)
 
 /* check: 'static' ??? */
 PMSG_Buffer GetBufferAddress(uint8 buf_num);
@@ -63,7 +57,7 @@ uint8 GetBufferNumber(const PMSG_Buffer buffer)
     PMSG_Buffer tmp_buf;
     uint8 idx;
 
-    for (idx=0;idx<MSG_NUM_BUFFERS;idx++) {
+    for (idx=(uint8)0;idx<MSG_NUM_BUFFERS;idx++) {
         tmp_buf=&MSG_Buffers[idx];
 
         if (tmp_buf==buffer) {
@@ -73,6 +67,7 @@ uint8 GetBufferNumber(const PMSG_Buffer buffer)
 
     return MSG_INVALID_BUFFER;
 }
+
 
 void ClearMessageBuffer(uint8 buf_num)
 {
@@ -91,7 +86,7 @@ void ClearMessageBuffer(uint8 buf_num)
     ZeroRAM(pb,(uint16)sizeof(MSG_Buffer)-(uint16)1);
 }
 
-static uint16 AllocCount=0,ReleaseCount=0;
+static uint16 AllocCount=(uint16)0,ReleaseCount=(uint16)0;
 
 PMSG_Buffer MSG_AllocateBuffer(void)
 {
@@ -146,7 +141,7 @@ boolean MSG_ReleaseBuffer(PMSG_Buffer ptr)
 
     MSG_Queues[TASK_FREE_ID]=buf_num;
     MSG_Buffers[buf_num].next=old_fp;
-    ClearMessageBuffer(buf_num);    /* jetzt noch löschen. */
+    ClearMessageBuffer(buf_num)
 
     ptr=(PMSG_Buffer)NULL;  /* invalidate Buffer. */
     ENABLE_ALL_INTERRUPTS();
@@ -209,11 +204,10 @@ PMSG_Buffer MSG_Get(uint8 task)
         return (PMSG_Buffer)NULL;   /* no message for task. */
     }
 
-    /* Hinweis: das ausklinken ist anscheinend nicht ganz korrekt!!! */
     if (MSG_Buffers[qp].next!=MSG_QUEUE_EMPTY) {
         MSG_Queues[task]=MSG_Buffers[qp].next;
         MSG_Buffers[qp].next=MSG_NO_NEXT;   /* unlink Message-Buffer. */
-    } else {  /* Nur eine einzelne Message. */
+    } else {
         MSG_Queues[task]=MSG_QUEUE_EMPTY;
     }
 /*     */
@@ -224,19 +218,19 @@ void MSG_Init(void)
 {
     uint8 t;
 
-    for (t=0;t<MSG_NUM_BUFFERS;t++) {
+    for (t=(uint8)0;t<MSG_NUM_BUFFERS;t++) {
         ClearMessageBuffer(t);
     }
 
-    MSG_Queues[TASK_FREE_ID]=0x00;          /* Die erste Queue enthält die Freelist. */
+    MSG_Queues[TASK_FREE_ID]=(uint8)0x00;       /* the first Queue contains the Freelist. */
 
-    for (t=0;t<=MSG_NUM_BUFFERS;t++) {         /* Freelist einrichten. */
-        MSG_Buffers[t].next=t+1;
+    for (t=(uint8)0;t<=MSG_NUM_BUFFERS;t++) {	/* Setup Freelist. */
+        MSG_Buffers[t].next=t+(uint8)1;
     }
 
     MSG_Buffers[MSG_NUM_BUFFERS-1].next=MSG_NO_NEXT;
 
-    for (t=1;t<MSG_NUM_TASKS;t++) {                     /* alle anderen Queues sind anfänglich leer. */
+    for (t=(uint8)1;t<MSG_NUM_TASKS;t++) {
         MSG_Queues[t]=MSG_QUEUE_EMPTY;
     }
 }
@@ -244,16 +238,14 @@ void MSG_Init(void)
 void MSG_SetLen(PMSG_Buffer pBuffer,uint8 len)
 {
     pBuffer->len=len;
-    MSG_GetMessagePtr(pBuffer)->ncpi |= ((len-7) & 0x0f);
+    MSG_GetMessagePtr(pBuffer)->ncpi |= ((len-(uint8)7) & (uint8)0x0f);
 }
 
-uint8 MSG_GetLen(const PMSG_Buffer pBuffer)    /* Hinweis: Das ist die Telegramm-Länge, nicht die LSDU-Länge!!! */
-                                        /* todo: ALS MAKRO IMPLEMENTIEREN!!! */
+uint8 MSG_GetLen(const PMSG_Buffer pBuffer)
 {
     return pBuffer->len;
 }
 
-/* todo: 'HopCount(Type)' ist eigentlich richtig, 'RoutingCount' muss weg!!! */
 /*
 void MSG_SetHopCount(PMSG_Buffer pBuffer,uint8 hop_count)
 {
@@ -262,31 +254,31 @@ void MSG_SetHopCount(PMSG_Buffer pBuffer,uint8 hop_count)
 
 void MSG_GetHopCount(PMSG_Buffer pBuffer,uint8 *hop_count)
 {
-    *hop_count=((MSG_GetMessagePtr(pBuffer)->ncpi) & 0x70)>>4;   // todo: überprüfen!!!
+    *hop_count=((MSG_GetMessagePtr(pBuffer)->ncpi) & 0x70)>>4;
 }
 */
 
 
-void MSG_SetRoutingCount(PMSG_Buffer pBuffer)   /* todo: besser ist 'MSG_SetFixedRoutingCount' oder MSG_ForceRoutingCount() ??? */
+void MSG_SetRoutingCount(PMSG_Buffer pBuffer)
 {
     uint8 ctrl,hop_count;
 
     ctrl=MSG_GetMessagePtr(pBuffer)->ctrl;
 
-    if ((ctrl & 0x02)==0x02) {  /* todo: Set- und GetRoutingControl() verwenden. */
+    if ((ctrl & (uint8)0x02)==(uint8)0x02) {
         hop_count=MSG_NO_ROUTING_CTRL;
-        ctrl&=~0x02;
+        ctrl&=~(uint8)0x02;
         MSG_GetMessagePtr(pBuffer)->ctrl=ctrl;
     } else {
-        hop_count=HOP_COUNT;    /* todo: EEPROM-Parameter (Hinweis: fals nicht initialisiert (0xff) = 6). */
+        hop_count=HOP_COUNT;
     }
 
-    MSG_GetMessagePtr(pBuffer)->ncpi|=((hop_count & 0x07)<<4);
+    MSG_GetMessagePtr(pBuffer)->ncpi|=((hop_count & (uint8)0x07)<<4);
 }
 
-uint8 MSG_GetRoutingCount(const PMSG_Buffer pBuffer)                  /* todo: ALS MAKRO IMPLEMENTIEREN!!! */
+uint8 MSG_GetRoutingCount(const PMSG_Buffer pBuffer)
 {
-    return ((MSG_GetMessagePtr(pBuffer)->ncpi) & 0x70)>>4;
+    return ((MSG_GetMessagePtr(pBuffer)->ncpi) & (uint8)0x70)>>4;
 }
 
 
@@ -294,19 +286,19 @@ void MSG_SetRoutingCtrl(PMSG_Buffer pBuffer,boolean on)
 {
     uint8 r;
 
-    (on==TRUE) ? (r=0x02) : (r=0x00);
+    (on==TRUE) ? (r=(uint8)0x02) : (r=(uint8)0x00);
     MSG_GetMessagePtr(pBuffer)->ctrl|=r;
 }
 
 /*
-boolean MSG_GetRoutingCtrl(const PMSG_Buffer pBuffer)               // todo: ALS MAKRO IMPLEMENTIEREN!!!
+boolean MSG_GetRoutingCtrl(const PMSG_Buffer pBuffer)
 {
     return ((MSG_GetMessagePtr(pBuffer)->ctrl & 0x02)==0x02);
 }
 */
 
 /*
-uint8 MSG_GetLSDULen(PMSG_Buffer pBuffer)    // check: ist 'LSDU' richtig???
+uint8 MSG_GetLSDULen(PMSG_Buffer pBuffer)
 {
     return MSG_GetMessagePtr(pBuffer)->ncpi & 0x0f;
 }
@@ -316,3 +308,4 @@ void MSG_SetLSDULen(PMSG_Buffer pBuffer,uint8 len_lsdu)
     MSG_GetMessagePtr(pBuffer)->ncpi=(len_lsdu & 0x0f);
 }
 */
+

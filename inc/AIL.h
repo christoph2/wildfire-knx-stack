@@ -75,5 +75,5 @@ U_testCObj              This function returns the setting of the update-flag of 
 U_transmitRequest       This macro initiates the transmission of an objectvalue via the bus.
 */
 
-
 #endif /* __AIL_H */
+

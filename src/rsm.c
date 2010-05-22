@@ -70,3 +70,4 @@ typedef enum tagRSM_Event {
     RSM_EVENT_STOP,
     RSM_EVENT_LAST
 } RSM_Event;
+

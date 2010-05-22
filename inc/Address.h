@@ -70,18 +70,15 @@ const uint8 APP_CommObjTab[]={      \
 #define IMPLEMENT_COMMOBJ(dp,config,type)    (dp),(config),(type),
 
 
-/* check: oder besser 'PHYS_(GROUP_)ADDR_TO_WORD' ??? */
-#define MAKE_PHYS_ADDR(a,b,c)   ((((a) & 0x0f) << 12) | (((b) & 0x0f) << 8) | ((c) & 0xff))
-#define MAKE_GROUP_ADDR(a,b,c)  ((((a) & 0x1f) << 11) | (((b) & 0x07) << 8) | ((c) & 0xff))
+#define MAKE_PHYS_ADDR(a,b,c)   ((((a) & (uint8)0x0f) << 12) | (((b) & (uint8)0x0f) << 8) | ((c) & (uint8)0xff))
+#define MAKE_GROUP_ADDR(a,b,c)  ((((a) & (uint8)0x1f) << 11) | (((b) & (uint8)0x07) << 8) | ((c) & (uint8)0xff))
 
 boolean ADR_InProgrammingMode(void);
 
 #define ADR_GrATLength()                ((uint8)APP_AddressTable[0])
 #define ADR_GrOATLength()               ((uint8)APP_AssociationTable[0])
 
-/* 
-** check: zwischen 'Base' und 'Entry' Pointer unterscheiden (Base um die Tabellen 'static' zu machen) ???
-*/
+
 #define ADR_GrATBasePtr()               (uint16*)((uint8*)&APP_AddressTable+3)
 #define ADR_GrOATBasePtr()              (uint16*)((uint8*)&APP_AssociationTable+1)
 

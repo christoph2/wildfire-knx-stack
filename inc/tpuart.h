@@ -35,23 +35,23 @@ typedef enum tagTPUART_RCV_STATE {
         TPSR_WAIT_RESET_IND,
         TPSR_WAIT_IACK,
         TPSR_WAIT,
-        TPSR_DATA_CONT1,        /* bis zum Längen-Byte... */
-        TPSR_DATA_CONT2,        /* ...und den Rest. */
+        TPSR_DATA_CONT1,
+        TPSR_DATA_CONT2,
 /*      TSR_DATA_END, */
         TPSR_LONG_DATA,
-        TPSR_LONG_DATA_CONT1,   /* bis zum Längen-Byte... */
-        TPSR_LONG_DATA_CONT2,   /* ...und den Rest. */
+        TPSR_LONG_DATA_CONT1,
+        TPSR_LONG_DATA_CONT2,
 /*      TSR_LONG_DATA_END, */
         TPSR_POLL_DATA,
         TPSR_POLL_DATA_CONT,
 /*      TSR_POLL_DATA_END, */
         TPSR_IACK_SRV,
         TPSR_CTRL_SRV
-} TPUART_RCV_STATE;	/* todo: TPUART_ReceiveStateType */
+} TPUART_RCV_STATE;
 
 typedef enum tagTPUART_RCV_SERVICE {
         SERVICE_NONE,SERVICE_DATA,SERVICE_IACK,SERVICE_CONTROL
-} TPUART_RCV_SERVICE;	/* todo: TPUART_ReceiveServiceType (Name???) */
+} TPUART_RCV_SERVICE;
 
 /*
 **    7 6 5 4 3  2  1 0

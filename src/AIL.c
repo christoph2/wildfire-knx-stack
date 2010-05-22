@@ -30,6 +30,7 @@
 
 #include "AIL.h"
 
+
 boolean U_TestObject(uint16 objectNr)
 {
     uint8 flags;
@@ -37,33 +38,28 @@ boolean U_TestObject(uint16 objectNr)
     if (!U_GetRAMFlags(objectNr,&flags)) {
         return FALSE;
     } else {
-        (void)U_SetRAMFlags(objectNr,KNX_RESET_FLG_UPDATED);  /* Hinweis: 'SetRAMFlags' beibehalten, aber für interne */
-                                                                /* Zwecke optimierte 'SET/RESET'-Funktionen verwenden. */
-/* AL_SetRAMFlags(objectNr,flags); */
-
+        (void)U_SetRAMFlags(objectNr,KNX_RESET_FLG_UPDATED); 
         return ((flags & KNX_OBJ_UPDATED)==KNX_OBJ_UPDATED);
     }
 }
+
 
 boolean U_TestAndGetObject(uint16 objectNr,void* dst)
 {
     if (!U_TestObject(objectNr)) {
         return FALSE;
     } else {
-/*      AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type); */
-        (void)U_GetObject(objectNr,dst);  /* todo: 'AL_GetObject()' verwenden!!! */
+        (void)U_GetObject(objectNr,dst);
         return TRUE;
     }
 }
 
-/*
-**  todo: AL_Get/Set-Object implementieren (ohne Return-Values).
-*/
+
 boolean U_GetObject(uint16 objectNr,void* dst)
 {
     if ((objectNr<AL_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
         CopyRAM(dst,AL_GetObjectDataPointer(objectNr),
-                AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type)); /* CopyMem() verwenden!!! */
+                AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type)); /* use CopyMem()!!! */
         return TRUE;
     } else {
         return FALSE;
@@ -72,7 +68,7 @@ boolean U_GetObject(uint16 objectNr,void* dst)
 
 boolean U_TransmitObject(uint16 objectNr)
 {
-    /* todo: Objekt-Nr. prüfen!? */
+    /* todo: check 'objectNr'? */
 
     if (AL_IsObjectTransmitting(objectNr)) {
         return FALSE;
@@ -84,7 +80,6 @@ boolean U_TransmitObject(uint16 objectNr)
 
 boolean U_SetAndTransmitObject(uint16 objectNr,void* src)
 {
-    /* todo: Zunächst Testen, ob das Objekt bereits gesendet wird!? */
     if (!U_SetObject(objectNr,src)) {
         return FALSE;
     }
@@ -100,7 +95,7 @@ boolean U_SetAndTransmitObject(uint16 objectNr,void* src)
 boolean U_SetObject(uint16 objectNr,void* src)
 {
     if ((objectNr<AL_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
-        CopyRAM(AL_GetObjectDataPointer(objectNr),src,AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type)); /* CopyMem() verwenden!!! */
+        CopyRAM(AL_GetObjectDataPointer(objectNr),src,AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type)); /* use CopyMem()!!! */
         return TRUE;
     } else {
         return FALSE;
@@ -137,8 +132,8 @@ uint8 U_SetRAMFlags(uint16 objectNr,uint8 flags)
     uint8 tmp=(uint8)0x00;
 
     if ((objectNr<AL_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
-        value=(flags & 0x0f);
-        mask=(flags & 0xf0)>>4;
+        value=(flags & (uint8)0x0f);
+        mask=(flags & (uint8)0xf0)>>(uint8)4;
 /*        tmp=APP_RAMFlags[objectNr>>1];    */
         tmp=AL_GetRAMFlagPointer()[objectNr>>1];
 
@@ -161,3 +156,4 @@ uint8 U_SetRAMFlags(uint16 objectNr,uint8 flags)
     }
     return tmp;
 }
+

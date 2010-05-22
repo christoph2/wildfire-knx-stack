@@ -24,17 +24,15 @@
 #include "lsm.h"
 
 /*
-// States der Load-State-Machines.
 
-
+// States.
 #define KNX_LSM_STATE_UNLOADED    0   // no data loaded.
 #define KNX_LSM_STATE_LOADED      1   // data loaded.
 #define KNX_LSM_STATE_LOADING     2   // load process is active.
 #define KNX_LSM_STATE_ERROR       3   // error in data detected.
 
 
-// Events der Load-State-Machines.
-
+// Events.
 #define KNX_LSM_EVENT_NO_OPERATION    0     // nothing to do.
 #define KNX_LSM_EVENT_START_LOAD      1     // the statemachine is change in to Loading.
 #define KNX_LSM_EVENT_LOAD_COMPLETE   2     // the statemachine is change in to Loaded.
@@ -107,8 +105,8 @@ static const uint8 LS_Table[4][5]={
 
 typedef uint8 LoadEventType[10];
 
-#define LE_EVENT    ((uint8)0)  /* Das erste Byte enthält das Event. */
-#define LE_SUBCODE  ((uint8)1)  /* Das zweite den Subcode (nur Event '3', Segment Allocation/Information Records). */
+#define LE_EVENT    ((uint8)0)
+#define LE_SUBCODE  ((uint8)1)
 
 
 /*
@@ -163,7 +161,7 @@ boolean LSM_IsGrOATLoaded(void)    /* Assoc-Table. */
 
 void LSM_Init(void)
 {
-    /* todo: System-Load-Controls auf 'UNLOADED' setzen falls == '0xff'. */
+
 }
 
 void LSM_Dispatch(uint8 *record,/*LSM_State*/uint8 *ls_var)
@@ -201,7 +199,7 @@ void LSM_Test(void)
                 LSM_Dispatch(app_rec,&app_lsc);
         }
 */
-    for (i=0;i<KNX_NUM_SYS_LSCS;i++) {
+    for (i=(uint8)0;i<KNX_NUM_SYS_LSCS;i++) {
         KNX_SystemLSC[i]=LSM_STATE_LOADED;
     }
 }

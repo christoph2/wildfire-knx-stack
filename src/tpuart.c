@@ -39,42 +39,30 @@
 */
 
 /*
-    Hinweis: Der BusState-Handler kann nur verwendet werden, wenn die 'RESET'- und
-    evtl. die 'SAVE'- Anschlüsse der TPUART mit der MCU verbunden sind.
-
-    Hinweis: die Transition in den 'Busoff'-/'Saving'-State muss Objekte mit
-    dem Status 'TRANSMITTING' auf 'IDLE_ERROR' setzen, um Blockaden zu vermeiden.
-
-    Hinweis: 'TEMPERATURE_WARNING' führt (vorübergehend) zu 'BUSOFF'.
-
 typedef enum tagKNX_BusStateType {
     E_BUSSTATE_OK,
     E_BUSSTATE_BUSOFF,
-    E_BUSSTATE_SAVING   // evtl.
+    E_BUSSTATE_SAVING
 } KNX_BusStateType;
 
-void BusStateHandler(KNX_BusStateType); // System-defininierte Handler (s. 'TRANSMITTING), User-Callback möglich;
-                                        // ausserdem wird von hieraus 'UserSave' aufgerufen.
+void BusStateHandler(KNX_BusStateType);
+                                       
 KNX_BusStateType PH_GetBusState(void);
 */
 
-/*  Check: Macht eine Funktion 'PH_IsTransmitting() ' Sinn (Prüfen, ob bereits ein Telegramm gesendet wird)??? */
-
-/* todo: die Sache mit 'printf' elegant lösen!!! */
-
 #if !defined(__HIWARE__)
-#include <stdio.h>  /* wg. printf(); todo: durch DEBUG_PRINT() ersetzen. */
+#include <stdio.h>
 #endif
 
 #include "tpuart.h"
 #include "Messaging.h"
 #include "Memory.h"
 
-#define ACK_INFORMATION 0x10
+#define ACK_INFORMATION ((uint8)0x10)
 
-#define ACK_ADDRESSED   0x01
-#define ACK_BUSY        0x02
-#define ACK_NACK        0x04
+#define ACK_ADDRESSED   ((uint8)0x01)
+#define ACK_BUSY        ((uint8)0x02)
+#define ACK_NACK        ((uint8)0x04)
 
 static void Disp_L_DataReq(void),Disp_L_PollDataReq(void);
 
@@ -90,29 +78,6 @@ static const KNXLayerServicesType LL_ServiceTable[]={
     {KNX_LL_SERVICES,2,LL_Services}
 };
 
-
-/*
-**
-**  todo: Mechanismus zur Erkennung von Übertragungsfehlern (SCI/COM), wg. INACK!!!
-**
-*/
-
-/*
-**  wichtiger Hinweis zum Senden: die TPUART sendet empfangene Telegramme unmittelbar an den Host-Controller,
-**      ein zuvor initiierter Sendevorgang _muss_ unbedingt pausiert werden, kann aber nach dem Empfang fortgesetzt
-**      werden (Kontext-Switch).
-*/
-
-
-/*
-**  todo: Prüfung auf Adressierung und Busy-Zustand ('IMP_IsBusy()').
-*/
-
-/*
-**  todo: Getrennte Struktur f. Busmonitor-Timestamps (BuffAddr,TimeStamp),
-**          sowie Funktion 'uint16 LL_GetTimeStamp(pBuffer); bedingte Kompilierung.
-**
-*/
 
 
 /*
@@ -146,33 +111,34 @@ static const KNXLayerServicesType LL_ServiceTable[]={
 /* const uint8 T1[]={0xb0,0x11,0x64,0x11,0x01,0x64,0x03,0xd8,0x00,0x00,0x06,0x93}; */
     /* A_PropertyDescriptionRead(). */
 
-const uint8 T0[]={0xbc,0x11,0x64,0x11,0x01,0x60,0x80,0xc6};
+const uint8 T0[]={
+	(uint8)0xbc,(uint8)0x11,(uint8)0x64,(uint8)0x11,(uint8)0x01,(uint8)0x60,(uint8)0x80,(uint8)0xc6
+};
     /* T_Connect (01.01.100 ==> 01.01.001). */
 
-const uint8 T1[]={0xbc,0x11,0x64,0x11,0x01,0x67,0x42,0x84,0x01,0x80,0xaa,0xbb,0xcc,0xdd,0x06};
+const uint8 T1[]={
+	(uint8)0xbc,(uint8)0x11,(uint8)0x64,(uint8)0x11,(uint8)0x01,(uint8)0x67,(uint8)0x42,(uint8)0x84,
+	(uint8)0x01,(uint8)0x80,(uint8)0xaa,(uint8)0xbb,(uint8)0xcc,(uint8)0xdd,(uint8)0x06
+};
     /* A_MemoryWrite */
 
-const uint8 T2[]={0xbc,0x11,0x64,0x11,0x01,0x60,0x81,0xc7};
+const uint8 T2[]={
+	(uint8)0xbc,(uint8)0x11,(uint8)0x64,(uint8)0x11,(uint8)0x01,(uint8)0x60,(uint8)0x81,(uint8)0xc7
+};
     /* T_Disconnect (01.01.100 ==> 01.01.001). */
 
 
-/*
-** todo: alle Variablen, die von der TPUART-StateMachine verwendent werden,
-**       in einer Struktur zusammenfassen, dadurch sind mehrere
-**       Instatanzen des LinkLayer-Treibers möglich!
-*/
-
-TPUART_RCV_STATE rcvState;      /* Empfangs-State-Machine. */
+TPUART_RCV_STATE rcvState;
 TPUART_RCV_SERVICE rcvService;
 
-uint8 RcvLen;    /* Anzahl der Bytes, die hinterher kommen (todo: in 'BytesFollowing' umbenennen). */
-uint8 RcvIdx;    /* Buffer-Pointer. */
-uint8 Checksum;  /* Berechnete Prüfsumme. */
+uint8 RcvLen;
+uint8 RcvIdx;
+uint8 Checksum;
 uint8 tsap;
 Knx_AddressType dest_addr;
 boolean addressed;
 
-uint8 TpuartRcvBuf[BUF_LEN];     /* todo: Daten-Struktur mit Länge und Service (struct TPUART_BUFFER). */
+uint8 TpuartRcvBuf[BUF_LEN];
 
 PMSG_Buffer pBuffer;
 
@@ -191,14 +157,11 @@ void OnTimeout(void);           /* Callback. */
 void TPUARTInit(void)
 {
         rcvState=TPSR_WAIT_RESET_IND;
-        RcvLen=RcvIdx=0x00;
-        AckService=0x00;
+        RcvLen=RcvIdx=(uint8)0x00;
+        AckService=(uint8)0x00;
         rcvService=SERVICE_NONE;
         ZeroRAM(TpuartRcvBuf,BUF_LEN);
-/*      TPUARTSendReset(); */
-/*      wait 50ms (Timeout danach ??!!). */
-/*      StartTimeout(); */
-        rcvState=TPSR_WAIT;     /* auf gültigen Service warten. */
+        rcvState=TPSR_WAIT;
 }
 
 void TPTest(void)
@@ -207,32 +170,32 @@ void TPTest(void)
         static int cnt;
 
         switch (cnt) {
-            case 0:
+            case (uint8)0:
                 len=sizeof(T0);
 
-                for (b=0;b<len;b++) {
+                for (b=(uint8)0;b<len;b++) {
                     decode(T0[b]);
                 }
                 cnt++;
                 break;
-            case 1:
+            case (uint8)1:
                 len=sizeof(T1);
 
-                for (b=0;b<len;b++) {
+                for (b=(uint8)0;b<len;b++) {
                     decode(T1[b]);
                 }
                 cnt++;
                 break;
-            case 2:
+            case (uint8)2:
                 len=sizeof(T2);
 
-                for (b=0;b<len;b++) {
+                for (b=(uint8)0;b<len;b++) {
                     decode(T2[b]);
                 }
                 cnt++;
                 break;
             default:
-                cnt=0;
+                cnt=(uint8)0;
                 break;
         }
 
@@ -245,13 +208,13 @@ void TPTest(void)
 */
 }
 
-void decode(uint8 b)             /* Wird vom RX-Interrupt-Handler aufgerufen. */
+void decode(uint8 b)
 {
         uint8 state;
 
         boolean stop;
 
-        TpuartRcvBuf[RcvIdx++]=b;       /* todo: Länge auf Overflow testen (TPSR_ERROR)!!! */
+        TpuartRcvBuf[RcvIdx++]=b;
 
         switch (rcvState) {
                 case TPSR_WAIT:
@@ -261,51 +224,49 @@ void decode(uint8 b)             /* Wird vom RX-Interrupt-Handler aufgerufen. */
 ////////////////////////////////////////
 ////////////////////////////////////////
 */
-                if ((b & 0x13)==DATA_SERVICE_MASK) {
-                        StartTimeout();         /* todo: nicht pauschal starten,  */
-                                                /* nur bei Mehrbyte-Telegrammen. */
+                if ((b & (uint8)0x13)==DATA_SERVICE_MASK) {
+                        StartTimeout();
 
 /*                      prio=(b & PRIO_MASK)>>2; */
 
 /*                      repeated=((~b) & REPEATED_MASK)>>5;     // 1 ==> not repeated. */
-                    /* todo: 'repeated' nicht so ohne weiteres übergehen!!! */
 
 /*                      rcvService=SERVICE_DATA; */
 
-                        if ((b & 0xd0)==L_DATA_IND_MASK) {
-                                RcvLen=5;       /* zunächst fünf Bytes bis zum Längen-Byte einlesen. */
-                                tsap=0x00;  /* 0xFE */
+                        if ((b & (uint8)0xd0)==L_DATA_IND_MASK) {
+                                RcvLen=(uint8)5;
+                                tsap=(uint8)0x00;  /* 0xFE */
                                 Checksum=b;
                                 rcvState=TPSR_DATA_CONT1;
-                        } else if ((b & 0xd0)==L_LONG_DATA_IND_MASK) {  /* todo: !!! TESTEN !!! */
+                        } else if ((b & (uint8)0xd0)==L_LONG_DATA_IND_MASK) {
 /*                              rcvState=TPSR_LONG_DATA; */
                                 rcvState=TPSR_WAIT;
-                        } else if ((b & 0xff)==L_POLL_DATA_IND_MASK) {
+                        } else if ((b & (uint8)0xff)==L_POLL_DATA_IND_MASK) {
                                 rcvState=TPSR_POLL_DATA;
-                        } else {        /* Fehlerhaftes Byte. */
-                                rcvState=TPSR_WAIT;     /* auf gültigen Service warten. */
+                        } else {        /* Errornous Byte. */
+                                rcvState=TPSR_WAIT;     /* wait for valid Service. */
                                 rcvService=SERVICE_NONE;
 #if !defined(__HIWARE__)
 /*    printf("0x%02x\tERROR\n",b); */
 #endif
                         }
-                } else if ((b==IACK_IND) || (b==INACK_IND) || (b==IBUSY_IND)) { /* todo: IAcks 'ODER'-verkünpt in eine Zeile. */
-                        rcvState=TPSR_WAIT;     /* auf nächsten Service warten. */
+                } else if ((b==IACK_IND) || (b==INACK_IND) || (b==IBUSY_IND)) {
+                        rcvState=TPSR_WAIT;     /* wait for next Service. */
                         rcvService=SERVICE_IACK;
-                        RcvIdx=0;
+                        RcvIdx=(uint8)0;
                         AckService=b;
-                } else if ((b & 0x03)==0x03) {
-                        rcvState=TPSR_WAIT;     /* auf nächsten Service warten. */
+                } else if ((b & (uint8)0x03)==(uint8)0x03) {
+                        rcvState=TPSR_WAIT;     /* wait for next Service. */
                         rcvService=SERVICE_CONTROL;
-                        RcvIdx=0;
+                        RcvIdx=(uint8)0;
                         if (b==RESET_IND) {
 
-                        } else if ((b & 0x7f)==0x0b) {
+                        } else if ((b & (uint8)0x7f)==(uint8)0x0b) {
 
-                        } else if ((b & 0x07)==0x07) {
+                        } else if ((b & (uint8)0x07)==(uint8)0x07) {
 
-                                state=(b & 0xf8)>>3;
-                        } else {        /* Fehlerhaftes Byte. */
+                                state=(b & (uint8)0xf8)>>3;
+                        } else {        /* Errornous Byte. */
                                 rcvService=SERVICE_NONE;
 #if !defined(__HIWARE__)
 /*    printf("0x%02x\tERROR\n",b); */
@@ -321,8 +282,7 @@ void decode(uint8 b)             /* Wird vom RX-Interrupt-Handler aufgerufen. */
                         break;
                 case TPSR_DATA_CONT1:
                         Checksum^=b;
-                        if ((--RcvLen)==0x00) { /* Längenbyte erreicht. */
-                            /* todo: BUSY-Handling. */
+                        if ((--RcvLen)==(uint8)0x00) { 
                             /* if (!PassthroughEveryTelegramm()) // RouteEvery */
 
                             dest_addr=btohs(*(uint16*)&TpuartRcvBuf[3]);
@@ -337,41 +297,39 @@ void decode(uint8 b)             /* Wird vom RX-Interrupt-Handler aufgerufen. */
                                 PH_AckInformation_req(ACK_ADDRESSED);
                             }
 
-                            RcvLen=(b & 0x0f)+2;    /* todo: begrenzen. */
+                            RcvLen=(b & (uint8)0x0f)+2;    /* todo: Limit. */
                             rcvState=TPSR_DATA_CONT2;
                         }
                         break;
                 case TPSR_DATA_CONT2:
-                        if ((--RcvLen)==0x00) { /* O.K., komplettes Telegramm empfangen. */
-                                Checksum^=0xff;
+                        if ((--RcvLen)==(uint8)0x00) { /* O.K., complete Telegram receeived. */
+                                Checksum^=(uint8)0xff;
 
-                                if ((Checksum==TpuartRcvBuf[RcvIdx-1])) { /* Prüfsumme korrekt? */
+                                if ((Checksum==TpuartRcvBuf[RcvIdx-(uint8)1])) { /* Checksum valid? */
                                     if (addressed) {
-                                        /* OK, der Protokoll-Stack kann das Telegramm übernehmen. */
                                         pBuffer=MSG_AllocateBuffer();
                                         if (pBuffer!=(PMSG_Buffer)NULL) {
-                                            /* todo: Message-Buffer fühlen. */
                                             pBuffer->service=L_DATA_IND;
                                             pBuffer->sap=tsap;
-                                            pBuffer->len=RcvLen=(TpuartRcvBuf[5] & 0x0f)+7;  /* 8 mit Prüfsumme!!! */
-                                                                                            /* todo: Konstante od. Makro statt 5!!! */
+                                            pBuffer->len=RcvLen=(TpuartRcvBuf[5] & (uint8)0x0f)+(uint8)7;
+                                                                                           
                                             CopyRAM((void*)pBuffer->msg,(void*)TpuartRcvBuf,RcvLen);
                                             (void)MSG_Post(pBuffer);
                                         } else {
                                             stop=TRUE;
-                                            /* Fehler-Behandlung. */
+                                            /* todo: Error-Handling. */
                                         }
                                     }
 
                                 } else {
 #if !defined(__HIWARE__)
-/*    printf("\n*** CHECKSUM-ERROR ***\n"); */   /* nein. */
+/*    printf("\n*** CHECKSUM-ERROR ***\n"); */ 
 #endif
                                 }
 
                                 rcvService=SERVICE_DATA;
-                                rcvState=TPSR_WAIT;     /* ... und von vorne. */
-                                RcvIdx=0;
+                                rcvState=TPSR_WAIT;
+                                RcvIdx=(uint8)0;
                         } else {
                                 Checksum^=b;
                         }
@@ -402,18 +360,18 @@ void StopTimeout(void)
 void OnTimeout(void)            /* Callback. */
 {
 /*      Differenzieren: z.B.: 'TPSR_WAIT_RESET_IND'. */
-        rcvState=TPSR_WAIT;     /* wieder in den Warte-Zustand. */
+        rcvState=TPSR_WAIT;
 }
 
 void DBG_DUMP(PMSG_Buffer ptr)
 {
     uint8 i/*,chk*/;
 #if     !defined(__HIWARE__)
-    for (i=0;i<ptr->len;i++) {
+    for (i=(uint8)0;i<ptr->len;i++) {
 
 /*        printf("%02X ",ptr->msg[i]);  */
 
-        if (i==6) {
+        if (i==(uint8)6) {
 /*            printf("["); */
         }
     }
@@ -426,11 +384,6 @@ void PH_AckInformation_req(uint8 flags)
 /* PutSCI(ACK_INFORMATION | flags); */
 }
 
-/*
-**
-** Hinweis: diese Funktionen sind unabhängig von der TPUART - trennen !!!
-**
-*/
 void LL_Task(void)
 {
         KNXDispDispatchLayer(TASK_LL_ID,LL_ServiceTable);
@@ -449,7 +402,7 @@ static void Disp_L_DataReq(void)
     MSG_SetFrameType(MSG_ScratchBuffer,ftStandard);
 
     /* PREPARE_CONTROL_FIELD() */
-    MSG_ScratchBuffer->msg[0] |= 0x30;        /* fixed one bit + repeated. */
+    MSG_ScratchBuffer->msg[0] |= (uint8)0x30;        /* fixed one bit + repeated. */
     MSG_ScratchBuffer->msg[0] &= (~(uint8)3);  /* clear two LSBs. */
     /**/
 
@@ -461,19 +414,19 @@ static void Disp_L_DataReq(void)
 
 static void Disp_L_PollDataReq(void)
 {
-    /* todo: Implementieren!!! */
+    /* todo: Implement!!! */
     MSG_SetFrameType(MSG_ScratchBuffer,ftPolling);
-    /* todo: ebenfalls 'präparieren'!!! */
 }
 
 uint8 CalculateChecksum(PMSG_Buffer ptr)
 {
-    uint8 chk=0xff;
+    uint8 chk=(uint8)0xff;
     uint8 i;
 
-    for (i=0;i<ptr->len;i++) {
+    for (i=(uint8)0;i<ptr->len;i++) {
         chk^=ptr->msg[i];
     }
 
     return chk;
 }
+

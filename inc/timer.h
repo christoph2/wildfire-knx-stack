@@ -32,7 +32,7 @@ void TimerTest(void);
 #define	TM_TIMER_TLC_CON_TIMEOUT	((uint8)0)
 #define	TM_TIMER_TLC_ACK_TIMEOUT	((uint8)1)
 
-#define TM_NUM_TIMERS   5	/* Hinweis: Projekt-abhängig!!! */
+#define TM_NUM_TIMERS   ((uint8)5)
 
 #if TM_NUM_TIMERS<3
     #error "ERROR: Number of Timers must be at least two!!!"

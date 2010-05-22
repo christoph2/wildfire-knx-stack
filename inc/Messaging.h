@@ -24,11 +24,6 @@
 #if !defined(__MESSAGING_H)
 #define __MESSAGING_H
 
-/*
-**  todo: Get-Funktionen überarbeiten (Wert zurückliefern,statt Pointer-Übergabe).
-**
-**
-*/
 
 #include "KNXDefs.h"
 #include "Address.h"
@@ -63,16 +58,15 @@
 #define MAX_PROP_DATA_LEN   ((uint8)10)
 
 
-typedef uint8 Knx_MessageType[MSG_LEN];    /* todo: extended Frames berücksichtigen!!! */
-                                    /* KNX_MessageType (ist das geglückt???). */
+typedef uint8 Knx_MessageType[MSG_LEN]
 
-typedef struct tagMSG_Buffer {  /* check: macht es Sinn, die Puffer-Nr. mitzuführen??? */
+typedef struct tagMSG_Buffer {
     uint8 next;
     uint8 len;
     KNXServiceTypeType service;
     uint8 sap;
     Knx_MessageType msg;
-} MSG_Buffer,* PMSG_Buffer;      /* KNX_MessageBufferType    (hier ist 'KNX_MessageType' sinnvoll!!!). */
+} MSG_Buffer,* PMSG_Buffer;
 
 typedef struct tagKNX_StandardFrameType {
     uint8 ctrl;
@@ -127,36 +121,36 @@ void MSG_RedirectToUser(uint8 layer);    /* U_MS_Switch */
 #define MSG_GetPollingFramePtr(pBuffer)     ((KNX_PollingFrameRefType)(pBuffer)->msg)
 
 /**************/
-#define MSG_GetFrameType(pBuffer)           ((KNX_FrameTypeType)(MSG_GetMessagePtr((pBuffer))->ctrl) & 0xc0))
-#define MSG_SetFrameType(pBuffer,type)      (MSG_GetMessagePtr((pBuffer))->ctrl|=((type) & 0xc0))
+#define MSG_GetFrameType(pBuffer)           ((KNX_FrameTypeType)(MSG_GetMessagePtr((pBuffer))->ctrl) & (uint8)0xc0)
+#define MSG_SetFrameType(pBuffer,type)      (MSG_GetMessagePtr((pBuffer))->ctrl|=((type) & (uint8)0xc0))
 
 #define MSG_GetSourceAddress(pBuffer)       ((Knx_AddressType)btohs(*(uint16*)&MSG_GetMessagePtr((pBuffer))->source))
 #define MSG_GetDestAddress(pBuffer)         ((Knx_AddressType)btohs(*(uint16*)&MSG_GetMessagePtr((pBuffer))->dest))
 #define MSG_SetSourceAddress(pBuffer,addr)  (*(uint16*)&MSG_GetMessagePtr((pBuffer))->source=htobs((addr)))
 #define MSG_SetDestAddress(pBuffer,addr)    (*(uint16*)&MSG_GetMessagePtr((pBuffer))->dest=htobs((addr)))
 
-#define MSG_GetPriority(pBuffer)            ((KNX_PriorityType)(MSG_GetMessagePtr((pBuffer))->ctrl & 0x0C)>>2)
-#define MSG_SetPriority(pBuffer,priority)   (MSG_GetMessagePtr((pBuffer))->ctrl|= (((priority) & 0x03)<<2))
+#define MSG_GetPriority(pBuffer)            ((KNX_PriorityType)(MSG_GetMessagePtr((pBuffer))->ctrl & (uint8)0x0C)>>2)
+#define MSG_SetPriority(pBuffer,priority)   (MSG_GetMessagePtr((pBuffer))->ctrl|= (((priority) & (uint8)0x03)<<2))
 
 /* check: Daf-Type, DestionationAddressType??? */
-#define MSG_GetAddressType(pBuffer)         ((uint8)MSG_GetMessagePtr((pBuffer))->ncpi & 0x80)
-#define MSG_SetAddressType(pBuffer,at)      (MSG_GetMessagePtr((pBuffer))->ncpi |= ((at) & 0x80))
+#define MSG_GetAddressType(pBuffer)         ((uint8)MSG_GetMessagePtr((pBuffer))->ncpi & (uint8)0x80)
+#define MSG_SetAddressType(pBuffer,at)      (MSG_GetMessagePtr((pBuffer))->ncpi |= ((at) & (uint8)0x80))
 
 /* check: ist 'LSDU' richtig??? */
-#define MSG_GetLSDULen(pBuffer)             (MSG_GetMessagePtr((pBuffer))->ncpi & 0x0f)
-#define MSG_SetLSDULen(pBuffer,len_lsdu)    (MSG_GetMessagePtr((pBuffer))->ncpi=((len_lsdu) & 0x0f))
+#define MSG_GetLSDULen(pBuffer)             (MSG_GetMessagePtr((pBuffer))->ncpi & (uint8)0x0f)
+#define MSG_SetLSDULen(pBuffer,len_lsdu)    (MSG_GetMessagePtr((pBuffer))->ncpi=((len_lsdu) & (uint8)0x0f))
 
 #define MSG_GetTPCI(pBuffer)                ((uint8)MSG_GetMessagePtr((pBuffer))->tpci)
-#define MSG_SetTPCI(pBuffer,tp)             (MSG_GetMessagePtr((pBuffer))->tpci|=(tp))   /* todo: !!!TESTEN!!! */
+#define MSG_SetTPCI(pBuffer,tp)             (MSG_GetMessagePtr((pBuffer))->tpci|=(tp))
 
-#define MSG_GetSeqNo(pBuffer)               ((uint8)((MSG_GetMessagePtr((pBuffer))->tpci) & 0x3c) >> 2)
-#define MSG_SetSeqNo(pBuffer,SeqNo)         (MSG_GetMessagePtr((pBuffer))->tpci|=(((SeqNo) & 0x0f) << 2))
+#define MSG_GetSeqNo(pBuffer)               ((uint8)((MSG_GetMessagePtr((pBuffer))->tpci) & (uint8)0x3c) >> 2)
+#define MSG_SetSeqNo(pBuffer,SeqNo)         (MSG_GetMessagePtr((pBuffer))->tpci|=(((SeqNo) & (uint8)0x0f) << 2))
 
 /* check: geht 'GetAPCI' nicht effizienter??? */
 #define MSG_GetAPCI(pBuffer)                ((uint16)(MSG_GetMessagePtr((pBuffer))->tpci << 8) | (MSG_GetMessagePtr((pBuffer))->apci))
 #define MSG_SetAPCI(pBuffer,apci)           (*(uint16*)&(pBuffer)->msg[6]=htobs((apci)))
 
-#define MSG_GetIAK(pBuffer)                 ((uint8)MSG_GetMessagePtr((pBuffer))->ctrl & 0x01)
+#define MSG_GetIAK(pBuffer)                 ((uint8)MSG_GetMessagePtr((pBuffer))->ctrl & (uint8)0x01)
 
 
 void MSG_SetLen(PMSG_Buffer pBuffer,uint8 len);

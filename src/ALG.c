@@ -123,13 +123,9 @@ Incoming T_Group_Data_ind :
 
 static uint8 APP_RAMFlags[(APP_NUM_OF_COM_OBJS + 1) / 2 ];
 
-/* todo: Segment-Type-Handling [RAM|EEPROM (relativ zu EE-Start)]!!! */
 uint8 APP_ObjectData[APP_OBJECT_DATA_SIZE];
 
-static uint8 ALG_NumQueuedGroupMessages; /* Hinweis: static ist nicht so günstig, da der Wert vom Link-Layer */
-                                         /* dekrementiert werden muss, oder aber entsprechende 'INC/DEC'-Funktionen. */
-                                         /* Dekrementiert wird nach der entsprechenden '_Conf'-Message!!! */
-
+static uint8 ALG_NumQueuedGroupMessages;
 
 void ALG_Task(void)
 {
@@ -147,8 +143,7 @@ static void Disp_T_DataGroupInd(void)
 
     apci=AL_GetAPCIType(MSG_GetMessagePtr(MSG_ScratchBuffer));
 
-    if (LSM_IsGrOATLoaded()) {  /* Testen, ob die Assoc-Tab geladen wurde */
-                                /* Hinweis: eigentlich muss auch die Anwendung (CommsTab) geladen sein! */
+    if (LSM_IsGrOATLoaded()) { 
         switch (apci) {
             case apciGROUP_VALUE_WRITE:
                 /* When the Application Layer of a device receives an A_GroupValue_Write-Service, it searches the */
@@ -193,21 +188,15 @@ static void Disp_T_PollDataCon(void)
 **
 */
 
-/*
-**
-**  Hinweis: diese Funktionen existieren in Abhängigkeit vom User-Layer ("Messages to User"),
-**           der User-Layer kommuniziert ansonsten über die RAM-Flags mit dem Application-Layer!!!
-**
-*/
 
 static void Disp_A_DataGroupReq(void)
 {
-    /* todo: implementieren */
+    /* todo: Implement!! */
 }
 
 static void Disp_A_PollDataReq(void)
 {
-    /* todo: implementieren */
+    /* todo: Implement!! */
 }
 
 /*****************************************************************************************************************/
@@ -225,13 +214,9 @@ void A_GroupValue_Read_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_Addres
     MSG_SetSourceAddress(pBuffer,source);
     MSG_SetDestAddress(pBuffer,dest);
     MSG_SetPriority(pBuffer,prio);
-    MSG_SetLen(pBuffer,8);
+    MSG_SetLen(pBuffer,(uint8)8);
 
     pBuffer->service=T_DATA_GROUP_REQ;
-/*
-** check: 'A_DATA_GROUP_REQ', Service wäre dann 'U_ValueRead_Req' mit 'sap'-Parameter!?
-** Hinweis: 'U_ValueRead_Req' ist ein Service des external User-Layers!!!
-*/
 
     (void)MSG_Post(pBuffer);
 }
@@ -242,7 +227,7 @@ void A_GroupValue_Write_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_Addre
     MSG_SetSourceAddress(pBuffer,source);
     MSG_SetDestAddress(pBuffer,dest);
     MSG_SetPriority(pBuffer,prio);
-    MSG_SetLen(pBuffer,8);  /* todo: +len (begrenzen!!!). */
+    MSG_SetLen(pBuffer,8);
 
     pBuffer->service=T_DATA_GROUP_REQ;
 
@@ -257,15 +242,15 @@ void ALG_PollCycle(void)
     uint16 assoc;
     KNX_PriorityType prio;
 
-    if (!LSM_IsGrOATLoaded()) {  /* Association-Table must be 'LOADED' - check: eigentlich auch das Anwendungs-Prg. wg. CommsTab!!?? */
+    if (!LSM_IsGrOATLoaded()) {  /* Association-Table must be 'LOADED'. */
         return;
     }
 
-    if (ALG_NumQueuedGroupMessages!=0) {
+    if (ALG_NumQueuedGroupMessages!=(uint8)0) {
         return;
     }
 
-    for (idx=0;idx<AL_GetNumCommObjs();idx++) {
+    for (idx=(uint8)0;idx<AL_GetNumCommObjs();idx++) {
         flags=AL_GetRAMFlags(idx);
 
         if ((flags & KNX_OBJ_TRANSMIT_REQ)==KNX_OBJ_TRANSMIT_REQ) {
@@ -282,8 +267,8 @@ void ALG_PollCycle(void)
                 continue;
             }
 
-            if (HIBYTE(assoc)>=ADR_GrATLength()) {   /* todo: 'INVALID_/UNUSED_TSAP'-Handling!!! */
-                /* TSAP not exists. */
+            if (HIBYTE(assoc)>=ADR_GrATLength()) {   /* todo: handle 'INVALID_/UNUSED_TSAP'!!! */
+                /* TSAP does not exist. */
                 AL_SetRAMFlags(idx,KNX_OBJ_IDLE_ERROR);
                 continue;
             }
@@ -295,21 +280,20 @@ void ALG_PollCycle(void)
             }
             pBuffer->sap=idx;
             source=ADR_GetPhysAddr();
-            dest=ADR_GetGroupAddress(HIBYTE(assoc));  /* Gruppen-Adresse lesen. */
+            dest=ADR_GetGroupAddress(HIBYTE(assoc));
             prio=AL_GetObjPriority(idx);
 
             if ((flags & KNX_OBJ_DATA_REQUEST)==KNX_OBJ_DATA_REQUEST) {
                 A_GroupValue_Read_Req(pBuffer,source,dest,prio);
 
             } else {
-                /* check: 'WriteShort-Req' für <7 Bit??? */
-                A_GroupValue_Write_Req(pBuffer,source,dest,prio,NULL,0);
+                /* todo: 'WriteShort-Req' for lens <7 Bit!!!  */
+                A_GroupValue_Write_Req(pBuffer,source,dest,prio,NULL,(uint8)0);
                 /* WRITE_req */
 
             }
-/*            ALG_NumQueuedGroupMessages++;   // todo: Fkt. verwenden (check: ALG_NumPendingTxMessages). */
             AL_SetRAMFlags(idx,KNX_OBJ_TRANSMITTING);
-            return; /* Max. eine Message pro Cycle. */
+            return; 
         }
     }
 }
@@ -317,7 +301,7 @@ void ALG_PollCycle(void)
 /*
 void AL_SetAPDUShortData(const KNX_StandardFrameRefType pmsg,uint8 data,uint8 nbits)
 {
-    if (nbits>6) {  // wenn das wegfällt, als Makro implementieren.
+    if (nbits>6) {
         return;
     }
 
@@ -328,7 +312,6 @@ void AL_SetAPDUShortData(const KNX_StandardFrameRefType pmsg,uint8 data,uint8 nb
 uint8 *AL_GetObjectDataPointer(uint8 objectNr)
 {
     if (objectNr<AL_GetNumCommObjs()) {
-        /* todo: Segment-Type-Handling [RAM|EEPROM]!!! */
         return (uint8*)&APP_ObjectData[AL_GetCommObjDescr(objectNr)->DataPtr];
     } else {
         return (uint8*)NULL;
@@ -338,10 +321,10 @@ uint8 *AL_GetObjectDataPointer(uint8 objectNr)
 
 void AL_SetRAMFlags(uint16 objectNr,uint8 flags)
 {
-    if ((objectNr % 2)==1) {
-        APP_RAMFlags[objectNr>>1]=((flags & 0x0f)<<4);
+    if ((objectNr % (uint8)2)==(uint8)1) {
+        APP_RAMFlags[objectNr>>1]=((flags & (uint8)0x0f)<<4);
     } else {
-        APP_RAMFlags[objectNr>>1]=(flags & 0x0f);
+        APP_RAMFlags[objectNr>>1]=(flags & (unit8)0x0f);
     }
 }
 
@@ -352,10 +335,10 @@ uint8 AL_GetRAMFlags(uint16 objectNr)
 
     b=APP_RAMFlags[objectNr>>1];
 
-    if ((objectNr % 2)==1) {
-        return ((b & 0xf0)>>4);
+    if ((objectNr % (uint8)2)==1) {
+        return ((b & (uint8)0xf0)>>4);
     } else {
-        return ((b & 0x0f));
+        return ((b & (uint8)0x0f));
     }
 }
 
@@ -366,10 +349,7 @@ uint8 *AL_GetRAMFlagPointer(void)
 }
 
 
-/*
-** Hinweis: In der erweiterten KNX-RF AssocTab wird 'KNX_INVALID_TSAP' verwendet,
-**          um die phys. Adresse mit Seriennummern zu verknüpfen!!!
-*/
+
 void AL_UpdateAssociatedASAPs(PMSG_Buffer pBuffer,uint8 testFlags)
 {
     uint16 ca,*ap=ADR_GrOATBasePtr();
@@ -377,8 +357,7 @@ void AL_UpdateAssociatedASAPs(PMSG_Buffer pBuffer,uint8 testFlags)
     uint8 numAssocs=ADR_GrOATLength();
     uint8 len_lsdu,len_obj;
 
-    if ((pBuffer->sap==KNX_INVALID_TSAP) || (pBuffer->sap==KNX_UNUSED_TSAP)) {  /* Hinweis: für 'NOTFOUND' ist eigentlich nur */
-                                                                                /* '0xfe' (KNX_UNUSED_TSAP') vorgesehen. */
+    if ((pBuffer->sap==KNX_INVALID_TSAP) || (pBuffer->sap==KNX_UNUSED_TSAP)) 
         return;
     }
 
@@ -392,21 +371,19 @@ void AL_UpdateAssociatedASAPs(PMSG_Buffer pBuffer,uint8 testFlags)
 /*                if (AL_ObjWriteEnabled(AL_GetCommObjDescr(asap)->Config)) */
                     len_lsdu=MSG_GetLSDULen(pBuffer);
                     len_obj=AL_GetObjLen(AL_GetCommObjDescr(asap)->Type);
-                    if (len_lsdu-1!=len_obj) {
+                    if (len_lsdu-(uint8)1!=len_obj) {
                         continue;
                     }
-                    if (len_lsdu>=2) {
+                    if (len_lsdu>=(uint8)2) {
                         /* Normal-Data. */
-                        if (len_obj==1) {
-                            /* todo: EEPROM berücksichtigen!!! */
+                        if (len_obj==(uint8)1) {
                             *AL_GetObjectDataPointer(asap)=AL_GetAPDUDataByte(MSG_GetMessagePtr(pBuffer),0)
                                 & KNX_AL_SHORT_DATA_MASK[AL_GetCommObjDescr(asap)->Type];
                         } else {
-                            CopyRAM(AL_GetObjectDataPointer(asap),MSG_GetMessagePtr(pBuffer)->data,len_obj); /* CopyMem() verwenden!!! */
+                            CopyRAM(AL_GetObjectDataPointer(asap),MSG_GetMessagePtr(pBuffer)->data,len_obj); /* use CopyMem() !!! */
                         }
-                    } else if (len_lsdu==1) {
+                    } else if (len_lsdu==(uint8)1) {
                         /* Short-Data. */
-                        /* todo: EEPROM berücksichtigen!!! */
                         *AL_GetObjectDataPointer(asap)=AL_GetAPDUShortData(MSG_GetMessagePtr(pBuffer),AL_GetCommObjDescr(asap)->Type);
                     } else {
                         /* 'len_lsdu==0' ==> Error in Telegram. */
@@ -414,7 +391,7 @@ void AL_UpdateAssociatedASAPs(PMSG_Buffer pBuffer,uint8 testFlags)
                     }
                 }
                 AL_SetRAMFlags(asap,(KNX_OBJ_UPDATED | KNX_OBJ_IDLE_OK));
-                /* Hinweis: an dieser Stelle 'A_Event_ind'-Generierung (Wie?: t.b.d.) */
+                /* todo: generate 'A_Event_ind'? */
             }
         }
     }

@@ -28,23 +28,6 @@
 **
 **/
 
-
-/*
-**  Hinweis: Der Zusatnd 'CONNECTING' kann nur von der Client-Bibliothek eingenommen werden!!!
-*/
-
-/*
-**  check: Flag 'bTimeout' für Events wie A0a und A6.
-*/
-
-
-/*
-**  todo: Verify-Mode.
-**        "If set to 1, verify mode is enabled. If the verify mode is enabled during "
-**        "a TL connection, the system answers each reveived A_Memory_Write with an "
-**        "A_Memory_Response automatically."
-**        "Verfiy mode is automatically disabled when the TL connection is finished. (e.g. T_Disconnect)."
-*/        
  
 
 #include "Transport.h"
@@ -66,8 +49,6 @@ static void A8b(void),A9(void),A10(void),A11(void),A12(void),A13(void),A14(void)
 void T_Disconnect_Ind(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest);
 void T_Disconnect_Con(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest);
 
-/*  todo: 'KNX_TLC_STYLE' statt 'TL_STYLE'!!! */
-/*  todo:   'KNX_Tlc_Actions' statt 'Actions' bzw. besserer Name!!! */
                          
 #if TL_STYLE==3                                                         /* Transport-Layer-Statemachine-Style #3 */
 static const KNX_TlcActionListType Actions[]={
@@ -279,10 +260,10 @@ void T_Disconnect_Ind(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType
     MSG_SetSourceAddress(pBuffer,source);
     MSG_SetDestAddress(pBuffer,dest);
     
-    MSG_GetMessagePtr(pBuffer)->ctrl=0xb0;  /* short-cuts... */
-    MSG_GetMessagePtr(pBuffer)->ncpi=0x60;
+    MSG_GetMessagePtr(pBuffer)->ctrl=(uint8)0xB0;  /* short-cuts... */
+    MSG_GetMessagePtr(pBuffer)->ncpi=(uint8)0x60;
 
-    MSG_SetLen(pBuffer,7);
+    MSG_SetLen(pBuffer,(uint8)7);
     pBuffer->service=T_DISCONNECT_IND;
     
     (void)MSG_Post(pBuffer);
@@ -295,10 +276,10 @@ void T_Disconnect_Con(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType
     MSG_SetSourceAddress(pBuffer,source);
     MSG_SetDestAddress(pBuffer,dest);
 
-    MSG_GetMessagePtr(pBuffer)->ctrl=0xb0;  /* short-cuts... */
-    MSG_GetMessagePtr(pBuffer)->ncpi=0x60;
+    MSG_GetMessagePtr(pBuffer)->ctrl=(uint8)0xb0;  /* short-cuts... */
+    MSG_GetMessagePtr(pBuffer)->ncpi=(uint8)0x60;
     
-    MSG_SetLen(pBuffer,7);
+    MSG_SetLen(pBuffer,(uint8)7);
     pBuffer->service=T_DISCONNECT_CON;
     
     (void)MSG_Post(pBuffer);
@@ -333,7 +314,7 @@ static void StopAcknowledgementTimeoutTimer(void)
 static void A0(void)
 {
     /* do nothing. */
-    if (MSG_ScratchBuffer!=(PMSG_Buffer)NULL) {  /* eventuell MSG-Buffer freigeben. */
+    if (MSG_ScratchBuffer!=(PMSG_Buffer)NULL) {
         (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
     }
 }
@@ -357,13 +338,13 @@ static void A2(void){
 
 /*      Send a N_Data_Individual.req with T_ACK_PDU, priority = SYSTEM, destination = */
 /*      connection_address, sequence =SeqNoRcv to the network layer (remote device).  */
-    pBuffer=MSG_AllocateBuffer();       /* neuen Puffer anfordern - check: wieso??? */
+    pBuffer=MSG_AllocateBuffer();
 
     if (pBuffer!=(PMSG_Buffer)NULL) {
         T_Ack_Req(pBuffer,ADR_GetPhysAddr(),KNXTlcGetConnectionAddress(),KNXTlcGetSequenceNumberReceived());        
         KNXTlcSetSequenceNumberReceived(KNXTlcGetSequenceNumberReceived()+1);
     } else {
-        /* Fehlerbehandlung. */
+        /* Errorhandling. */
     }
 
 /*      Send the received buffer as a T_Data_Connected.ind to the user. */
@@ -400,7 +381,7 @@ static void A4(void)
     RestartConnectionTimeoutTimer();
 }
 
-static void A5(void)   /* Hinweis: wird nur benötigt, wenn Messages to the User unterstützt werden!!! */
+static void A5(void)
 {   
 /*      Send a T_Disconnect.ind to the user. */
     (void)MSG_ClearBuffer(MSG_ScratchBuffer);
@@ -418,21 +399,21 @@ static void A6(void)
 **      destination = connection_address, sequence = 0 to the network layer (remote device).
 */
 
-    pBuffer=MSG_AllocateBuffer();       /* neuen Puffer anfordern. */
+    pBuffer=MSG_AllocateBuffer();
 
     if (pBuffer!=(PMSG_Buffer)NULL) {
         T_Disconnect_Req(pBuffer,ADR_GetPhysAddr(),KNXTlcGetConnectionAddress());
     } else {
-        /* Fehlerbehandlung. */
+        /* Errorhandling. */
     }
 
 /* Send a T_Disconnect.ind to the user. */
     if (MSG_ScratchBuffer==(PMSG_Buffer)NULL) {
-        MSG_ScratchBuffer=MSG_AllocateBuffer();  /* Im Falle eines Timeouts existiert kein Puffer. */
+        MSG_ScratchBuffer=MSG_AllocateBuffer();
     } else {
         (void)MSG_ClearBuffer(MSG_ScratchBuffer);
     }
-    T_Disconnect_Ind(MSG_ScratchBuffer,ADR_GetPhysAddr(),KNXTlcGetConnectionAddress());  /* check: Stimmen die Adressen??? */
+    T_Disconnect_Ind(MSG_ScratchBuffer,ADR_GetPhysAddr(),KNXTlcGetConnectionAddress());
 
     StopAcknowledgementTimeoutTimer();
     StopConnectionTimeoutTimer();
@@ -448,7 +429,7 @@ static void A7(void)   /* Nur local-user (Client only). */
 
     StoreMessage();
 
-/*    MSG_ScratchBuffer->service=T_DATA_CONNECTED_REQ; // geht das so??? oder doch besser eine Funktion (SeqNoSend !!!) */
+/*    MSG_ScratchBuffer->service=T_DATA_CONNECTED_REQ; */
     MSG_ScratchBuffer->service=N_DATA_INDIVIDUAL_REQ;
     MSG_SetSeqNo(MSG_ScratchBuffer,KNXTlcGetSequenceNumberSend());
     (void)MSG_Post(MSG_ScratchBuffer);
@@ -459,51 +440,44 @@ static void A7(void)   /* Nur local-user (Client only). */
     RestartConnectionTimeoutTimer();
 }
 
-static void A8(void)  /* Nur local-user (Client only). */
-/*
-**
-** Dieser Event bedeuted, das das vorherige Telegramm korrekt geACKt wurde, also einen 'T_DATA_CONNECTED.CON' an den User.
-*/
+static void A8(void)  /* only local-user (Client only). */
 {
     StopAcknowledgementTimeoutTimer();
-    KNXTlcSetSequenceNumberSend(KNXTlcGetSequenceNumberSend()+1);
+    KNXTlcSetSequenceNumberSend(KNXTlcGetSequenceNumberSend()+(uint8)1);
 
     RestoreMessage();        
 
 /*      Send the stored buffer as a T_Data_Connected.con with cleared errorbits, */
 /*      connection number = 0 to the user. */
 
-/*  Hinweis: mit 'errorbits' ist das Bit #0 des Control-Fields gemeint (wieso Plural???). */
-
 /* dest: connection_addr, sequence=SeqNoSend. */
 
     RestartConnectionTimeoutTimer();
 }
 
-static void A8b(void)        /* Nur local-user (Client only). */
-						/* Hinweis: nicht referenziert!!! */
+static void A8b(void)        /* only local-user (Client only). */
 {
-    (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);    /* Puffer freigeben, da dieser Event keine Message erzeugt. */
+    (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
     StopAcknowledgementTimeoutTimer();
     KNXTlcSetSequenceNumberSend(KNXTlcGetSequenceNumberSend()+1);    
     RestartConnectionTimeoutTimer();
 }
 
-static void A9(void)  /* Nur local-user (Client only). */
+static void A9(void)  /* only local-user (Client only). */
 { 
     if (MSG_ScratchBuffer==(PMSG_Buffer)NULL) {
-        MSG_ScratchBuffer=MSG_AllocateBuffer();  /* Im Falle eines Timeouts existiert kein Puffer. */
+        MSG_ScratchBuffer=MSG_AllocateBuffer();
     } else {
         (void)MSG_ClearBuffer(MSG_ScratchBuffer);
     }
 
 /*  Send the stored message as a N_Data_Individual.req to the network layer (remote device). */
     RestoreMessage();
-    MSG_SetSeqNo(MSG_ScratchBuffer,KNXTlcGetSequenceNumberSend());   /* check: korrekt??? */
+    MSG_SetSeqNo(MSG_ScratchBuffer,KNXTlcGetSequenceNumberSend());
     MSG_ScratchBuffer->service=N_DATA_INDIVIDUAL_REQ;
     (void)MSG_Post(MSG_ScratchBuffer);
     
-    KNXTlcSetRepetitionCount(KNXTlcGetRepetitionCount()+1);
+    KNXTlcSetRepetitionCount(KNXTlcGetRepetitionCount()+(uint8)1);
     
     StartAcknowledgementTimeoutTimer();
     RestartConnectionTimeoutTimer();
@@ -525,12 +499,11 @@ static void A10(void)  /* GO AWAY!!! */
 }
 
 static void A11(void)  /* (Client only???) */
-                        /* Hinweis: verwendet keinen Message-Buffer!!! */
 {
 /* Store event back and handle after next event. Don’t change order of T_Data_Connected.req events. */
 
 
-    (void)MSG_Post(MSG_ScratchBuffer);   /* push-bask event (check: funktioniert das so?) */
+    (void)MSG_Post(MSG_ScratchBuffer);   /* push-bask event. */
 }
 
 static void A12(void)  /* (Client only.) */
@@ -553,7 +526,7 @@ void A13(void)  /* Nur local-user (Client only). */
     (void)MSG_Post(MSG_ScratchBuffer);             
 }
 
-static void A14(void)    /* Nur local-user (Client only). */
+static void A14(void)    /* only local-user (Client only). */
 {
 /*      Send a N_Data_Individual.req with T_DISCONNECT_REQ_PDU, priority = SYSTEM, */
 /*      destination = connection_address, sequence = 0 to the network layer (remote device). */
@@ -565,7 +538,6 @@ static void A14(void)    /* Nur local-user (Client only). */
 }
 
 static void A14b(void)  /* wie A14, nur ohne T_DISCONNECT_CON to user. */
-                        /* Hinweis: nicht referenziert!!! */
 {
 /*      Send a N_Data_Individual.req with T_DISCONNECT_REQ_PDU, priority = SYSTEM, */
 /*      destination = connection_address, sequence = 0 to the network layer (remote device). */
@@ -574,7 +546,7 @@ static void A14b(void)  /* wie A14, nur ohne T_DISCONNECT_CON to user. */
         StopConnectionTimeoutTimer();
 }
 
-static void A15(void)   /* Nur local-user (Client only). */
+static void A15(void)   /* only local-user (Client only). */
 {
 /*      Send a T_Disconnect.con to the management user */
 
@@ -611,14 +583,13 @@ static uint8 EventDisconnectInd(void)
 static uint8 EventDataConnectedInd(void)
 {
     uint8 event_num;
-    /* todo: die 'if'-Anweisungen checken!!! */
     if (KNXTlcGetSourceAddress()==KNXTlcGetConnectionAddress()) {
         if (KNXTlcGetSequenceNumberOfPDU()==KNXTlcGetSequenceNumberReceived()) {
             event_num=(uint8)4;
-        } else if (KNXTlcGetSequenceNumberOfPDU()==((KNXTlcGetSequenceNumberReceived()-1)&0x0f)) {
+        } else if (KNXTlcGetSequenceNumberOfPDU()==((KNXTlcGetSequenceNumberReceived()-(uint8)1) & (uint8)0x0f)) {
             event_num=(uint8)5;                        
-        } else if ((KNXTlcGetSequenceNumberOfPDU()!=KNXTlcGetSequenceNumberReceived()-1) 
-            && (KNXTlcGetSequenceNumberOfPDU()!=((KNXTlcGetSequenceNumberReceived()-1)&0x0f))) {
+        } else if ((KNXTlcGetSequenceNumberOfPDU()!=KNXTlcGetSequenceNumberReceived()-(uint8)1) 
+            && (KNXTlcGetSequenceNumberOfPDU()!=((KNXTlcGetSequenceNumberReceived()-(uint8)1) & (uint8)0x0f))) {
             event_num=(uint8)6;
         } else {
             event_num=(uint8)27;
@@ -785,7 +756,6 @@ void TL_StateMachine(KNX_TlcEventType event)
                 }
                 break;
             case tlcDATA_CONNECTED_IND:
-              /* todo: die 'if'-Anweisungen checken!!! */
                 if (KNXTlcGetSourceAddress()==KNXTlcGetConnectionAddress()) {
                     if (KNXTlcGetSequenceNumberOfPDU()==KNXTlcGetSequenceNumberReceived()) {
                         event_num=(uint8)4;
@@ -830,7 +800,7 @@ void TL_StateMachine(KNX_TlcEventType event)
 
 /*
 **
-**  !!! IMPLEMENTIEREN !!!
+**  !!! IMPLEMENT !!!
 **
 */
             case tlcCONNECT_REQ:         /* Client-only. */
@@ -883,13 +853,13 @@ void TL_StateMachine(KNX_TlcEventType event)
 
                 
             case tlcUNDEFINED:
-            default:        /* !!! Schwerwiegender Fehler !!! */
+            default:        /* !!! Fatal Error !!! */
                 event_num=(uint8)27;
                 break;
         }
 #endif
         action=Actions[event_num].Action[KNXTlcGetState()];
-/* '__tlState' auf Gültigkeit prüfen (darf nur bei Style #3 'CONNECTING' sein)!!! */
         KNXTlcSetState(action.Next);
         action.Function();
 }
+

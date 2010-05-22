@@ -42,7 +42,7 @@ extern uint8 DEV_Device_Control;
 extern uint8 DEV_Current_Accesslevel;
 extern uint8 DEV_SystemState;
 
-#define AL_GetCommObjDescr(objectNumber)    ((KNX_CommObjDescriptorType*)((uint8*)APP_CommObjTab+2)+(objectNumber))
+#define AL_GetCommObjDescr(objectNumber)    ((KNX_CommObjDescriptorType*)((uint8*)APP_CommObjTab+(uint8)2)+(objectNumber))
 #define AL_GetNumCommObjs()                 ((uint8)APP_CommObjTab[0])
 
 uint8* AL_GetObjectDataPointer(uint8 objectNr);
@@ -54,15 +54,15 @@ uint8* AL_GetObjectDataPointer(uint8 objectNr);
 #define AL_ObjResponseEnabled(f)            AL_ObjCheckEnabled((f),(KNX_OBJ_COMM_ENABLE|KNX_OBJ_WRITE_ENABLE|KNX_OBJ_UPDATE_ENABLE))
 #define AL_ObjWriteEnabled(f)               AL_ObjCheckEnabled((f),(KNX_OBJ_COMM_ENABLE|KNX_OBJ_WRITE_ENABLE))
 
-#define AL_GetTransmissionStatus(objectNr)  (AL_GetRAMFlags((objectNr)) & 0x03)
+#define AL_GetTransmissionStatus(objectNr)  (AL_GetRAMFlags((objectNr)) & (uint8)0x03)
 #define AL_IsObjectTransmitting(objectNr)   ((AL_GetTransmissionStatus((objectNr)) & KNX_OBJ_TRANSMIT_REQ)==KNX_OBJ_TRANSMIT_REQ)
 #define AL_IsObjectBusy(objectNr)           (AL_IsObjectTransmitting((objectNr)))
 
-#define AL_GetObjLen(o)                     (KNX_OBJ_LEN_TAB[((o) & 0x3f)])
-#define AL_GetObjPriority(objectNr)         ((KNX_PriorityType)(AL_GetCommObjDescr((objectNr))->Config) & 0x03)
+#define AL_GetObjLen(o)                     (KNX_OBJ_LEN_TAB[((o) & (uint8)0x3f)])
+#define AL_GetObjPriority(objectNr)         ((KNX_PriorityType)(AL_GetCommObjDescr((objectNr))->Config) & (uint8)0x03)
 
-#define AL_GetAPDUShortData(pmsg,nbits)     ((uint8)(pmsg)->apci & (uint8)KNX_AL_SHORT_DATA_MASK[(nbits)-1])
-#define AL_SetAPDUShortData(pmsg,data,nbits)    ((pmsg)->apci=((pmsg)->apci & (uint8)~0x3f) | ((data) & KNX_AL_SHORT_DATA_MASK[(nbits)-1]))
+#define AL_GetAPDUShortData(pmsg,nbits)     ((uint8)(pmsg)->apci & (uint8)KNX_AL_SHORT_DATA_MASK[(nbits)-(uint8)1])
+#define AL_SetAPDUShortData(pmsg,data,nbits)    ((pmsg)->apci=((pmsg)->apci & ~(uint8)0x3f) | ((data) & KNX_AL_SHORT_DATA_MASK[(nbits)-(uint8)1]))
 
 void AL_SetRAMFlags(uint16 objectNr,uint8 flags);
 uint8 AL_GetRAMFlags(uint16 objectNr);
@@ -72,7 +72,7 @@ void AL_UpdateAssociatedASAPs(PMSG_Buffer pBuffer,uint8 testFlags);
 
 
 void DEV_SetVerifyMode(boolean on);
-void DEV_ChkOwnPhysAddrRcvd(boolean on);   /*        prefix 'ALM_'??? */
+void DEV_ChkOwnPhysAddrRcvd(boolean on);
 void DEV_PhysAddrWriteEnable(boolean on);
 
 void ALG_Task(void);
@@ -88,8 +88,6 @@ void AL_GetAPDUData(const KNX_StandardFrameRefType pmsg,uint8 offset,uint8 *data
 void AL_SetAPDUData(const KNX_StandardFrameRefType pmsg,uint8 offset,uint8 *data,uint8 len);
 uint8 AL_GetAPDUDataByte(const KNX_StandardFrameRefType pmsg,uint8 offset);
 void AL_SetAPDUDataByte(const KNX_StandardFrameRefType pmsg,uint8 offset,const uint8 value);
-
-/* todo: Funktionen: AL_GetAPDULen(),AL_SetAPDULen(). - check: wirklich??? */
 
 /*
 **  Application-Layer-Services.

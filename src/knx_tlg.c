@@ -84,5 +84,6 @@ static void Disp_T_DataGroupReq(void)
 
 static void Disp_T_PollDataReq(void)
 {
-    /* todo: Implementieren!!! */
+    /* todo: Implement!!! */
 }
+

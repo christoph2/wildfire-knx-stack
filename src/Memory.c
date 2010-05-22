@@ -22,14 +22,6 @@
  *
 */
 
-/*
-**  todo: Benutzer-Callbacks f. Memory-Read()/-Write(), um bspw. BCU-RAM emulieren zu können.
-**      Hinweis:        'MEM_'-Prefixe sind besser!!!
-**                              Die RAM-Routinen sind im Gegensatz zu den EEPROM-Routinen Plattform-unabhängig!!!
-**
-**  todo: aus Effizienz-Gründen 'SetByte' implementieren.
-*/
-
 #include "Memory.h"
 
 /*
@@ -47,7 +39,7 @@ uint8 UserLowRAM[0x23];
 
 MemoryControlBlock MCBs[NUM_MCBs]=
 {
-        {0x00BD,&UserLowRAM,0x23,mtRAM,0x00},
+        {(uint16)0x00BDU,&UserLowRAM,(uint8)0x23,mtRAM,(uint8)0x00},
 };
 
 void MM_ClearMCBs(void)
@@ -55,25 +47,18 @@ void MM_ClearMCBs(void)
         ZeroRAM(MCBs,sizeof(MemoryControlBlock)*NUM_MCBs);
 }
 
-/*
-** EIB-Adresse in Target-Adresse übersetzen.
-**
-**      check: Fehler-Behandlung bei den folgenden beiden Funktionen!!!
-*/
+
 uint16 MM_MapAddressToTarget(uint16 Address)
 {
-        return  0xffff;
+        return (uint16)0xffffU;
 }
 
-/*
-** Target-Adresse in EIB-Adresse übersetzen.
-*/
+
 uint16 MM_MapAddressFromTarget(uint16 Address)
 {
-        return  0xffff;
+        return (uint16)0xffffU;
 }
 
-/* check: Überflüssig?! */
 /*
 int MM_SetByte(uint16 Address,uint8 value)
 {
@@ -83,43 +68,6 @@ int MM_SetByte(uint16 Address,uint8 value)
 int MM_GetByte(uint16 Address,uint8 *value)
 {
         return 1;
-}
-*/
-
-/*
-**      todo: die folgenden Funktionen sollten in ???RAM umbenannt werden.
-**                      ausserdem Funktionen implementieren, die RAM und EEPROM transparent handeln,
-**                      wobei 'Comp' lediglich ein Synonym darstellt.
-*/
-
-/*
-void FillMem(void *p,uint8 b,uint16 len)
-{
-    uint8 *bp=(uint8*)p;
-    
-    while (len--) {
-        *bp++=b;
-    }
-}
-
-void CopyMem(void *d,void *s,uint16 len)
-{
-    uint8 *bd=(uint8*)d;
-    uint8 *bs=(uint8*)s;
-    
-    while (len--) {
-        *bd++=*bs++;
-    }
-}
-
-
-void ZeroMem(void *p,uint16 len)
-{
-    uint8 *bp=(uint8*)p;
-    
-    while (len--) {
-        *bp++=(uint8)0;
-    }
 }
 */
 
@@ -164,3 +112,4 @@ void ZeroRAM(void *p,uint16 len)
         *bp++=(uint8)0;
     }
 }
+

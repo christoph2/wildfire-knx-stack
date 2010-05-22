@@ -54,10 +54,6 @@ typedef enum tagAPCI_TypeType {
 } APCI_TypeType;
 
 
-    /*
-    **  Die einzelnen APCIs. (todo: Namen überprüfen 'INDIV' statt 'PHYS')
-    */
-
 /*
 **  Group-Services. 
 */

@@ -26,15 +26,6 @@
 void NWPS_Dispatch(PMSG_Buffer pBuffer,uint8 service/*,boolean connected*/);
 
 /*
-Hinweis: In Supplement S08 "Distributed Address Assignment" wird ein 'A_NetworkParameter_Write.req'
-         als AddressRegistration verwendet.
-*/
-
-/* Hinweis: Versand via 'T_Data_Broadcast' oder 'T_Data_Individual'. */
-
-/* Hinweis: eine 'saubere' Implementation leitet die Requests an den Property-Server weiter!!! */
-
-/*
 · check the usage of a Group Address (Group Address Check)
     object_type: 1 (Group Address Table)
     PID: 23 (List of group addresses)
@@ -104,14 +95,12 @@ boolean NWPS_GetSerialNumber(PMSG_Buffer pBuffer);
 
 static NWPSFunctions NWPSReadFunctions[]={
     {KNX_OT_ADDRESSTABLE_OBJECT,KNX_OT_ADDRESSTABLE_OBJECT,KNX_PID_GROUP_ADDRESS_LIST,NWPS_GroupAddressCheck},
-    {50,50000,KNX_PID_OBJECT_TYPE,NWPS_FunctionalBlockScan},
+    {(uint8)50,(uint16)50000,KNX_PID_OBJECT_TYPE,NWPS_FunctionalBlockScan},
     {KNX_OT_DEVICE_OBJECT,KNX_OT_DEVICE_OBJECT,KNX_PID_SERIAL_NUMBER,NWPS_GetSerialNumber}
 };
 
 
 /* A_NetworkParameter_Read.req(hop_count_type, parameter_type, priority, test_info); */
-
-/* Hinweis: nicht 'uint8' sondern '???ServiceType'!!! */
 
 void NWPS_Dispatch(PMSG_Buffer pBuffer,uint8 service/*,boolean connected*/)
 {
@@ -121,17 +110,17 @@ void NWPS_Dispatch(PMSG_Buffer pBuffer,uint8 service/*,boolean connected*/)
     
     pmsg=MSG_GetMessagePtr(pBuffer);
 
-    objectType=btohs((uint16)pmsg->data[0]);  /* todo: besser Konstanten verwenden!!! */
+    objectType=btohs((uint16)pmsg->data[0]);
     Pid=pmsg->data[2];
 
-    len=MSG_GetLSDULen(pBuffer);    /* todo: GetAPDULen() */
+    len=MSG_GetLSDULen(pBuffer);
 
     if (service==NWPS_READ) {
 
     } else if (service==NWPS_WRITE) {
 
     } else {
-        (void)MSG_ReleaseBuffer(pBuffer);     /* Invalid Service. */
+        (void)MSG_ReleaseBuffer(pBuffer);
     }                                        
 }
 
@@ -149,3 +138,4 @@ boolean NWPS_GetSerialNumber(PMSG_Buffer pBuffer)
 {
     return TRUE;
 }
+

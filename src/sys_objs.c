@@ -23,11 +23,6 @@
 */
 #include "sys_objs.h"
 
-/*
-**      Hinweis: die System-Objekte gehören zur Masken-Version!!!
-*/
-
-
 
 /*
 ** Supplement S08 "Distributed Address Assignment", ein 'A_NetworkParameter_Write.req' wird
@@ -56,7 +51,6 @@
 #endif
 
 //DEFAULT_ROM EEPROM
-//      todo: korrektes Segment ermitteln!!!
 #if     defined(__HIWARE__)
         #pragma CONST_SEG        DEFAULT_ROM
 #endif
@@ -149,3 +143,4 @@ const uint8 Knx_SystemInterfaceObjCount=SIZEOF_ARRAY(Knx_SystemInterfaceObjs);
 #endif
 
 */
+

@@ -22,21 +22,6 @@
  *
 */
 
-/*!
- *
- *  (Adress-)Tabellen-Managment, Programmier-Modus etc.
- *
- */
-
-/*
-**  check: wie wärs mit 'IMP_' für Implementations-abhängige Sachen.
-*/
-
-/*
-**  Hinweis: Im KNX-Handbuch werden Adressen und Tabellen als Resources bezeichnet.
-**           KNX-RF verwendet zusätzlich eine Tabelle mit Seriennummern (je 6 Bytes),
-**           ausserdem eine erweiterte Assoziations-Tabelle die die Seriennummer-Nummer enthält.
-*/
 
 #include "Address.h"
 
@@ -62,9 +47,9 @@ static const uint8 KNX_OBJTYPESIZE[16]={ // Hinweis: auch als 'KNX_OBJ_LEN_TAB' 
 */
 
 /*
-**  todo: User- bzw. Project-Supplied, da Hardwareabhängig!!!
+**  todo: this Fkt. is hardware-dependent !!!
 */
-boolean ADR_InProgrammingMode(void)    /* todo: als Makro-Equivalent zu 'IMP_InProgrammingMode'!!! */
+boolean ADR_InProgrammingMode(void)
 {
     return TRUE;
 }
@@ -73,21 +58,11 @@ boolean ADR_InProgrammingMode(void)    /* todo: als Makro-Equivalent zu 'IMP_InP
 **
 */
 
-/*
- *
- * todo: automatischer Reggressions-Test:
- *       Adress-Tabelle zufälliger Länge mit zufälligen Adressen füllen,
- *       jeweils den gesamten Adressraum prüfen, Binärsuche mit Linear-
- *       Suche abgleichen!!!
- *
- */
-boolean ADR_IsAddressed(Knx_AddressType searched_addr,uint8 *tsap)  /* todo: Broadcasts ('0/0/0') sind immer 'TRUE'!!! */
-                                                                    /*       außerdem muss der Ladezustand der Adresstabelle berücksichtigt werden!!! */
-                                                                    /* (wobei Broadcast auch ohne Adress-Tabelle funktionieren!!!) */
-                                                                    /* todo: adaptive Binärsuche!!! */
-{
-    /* check: In welcher Byte-Order arbeiten??? */
-    
+boolean ADR_IsAddressed(Knx_AddressType searched_addr,uint8 *tsap)
+                                                                  
+                                                                  
+                                                                  
+{   
     uint8 len;
     uint16 mid;
     sint16 left,right;
@@ -95,7 +70,7 @@ boolean ADR_IsAddressed(Knx_AddressType searched_addr,uint8 *tsap)  /* todo: Bro
     uint16 ca,*ap;
 
     ack=FALSE;
-    *tsap=KNX_INVALID_TSAP;  /* Hinweis: für 'NOTFOUND' ist eigentlich '0xfe' (KNX_UNUSED_TSAP) vorgesehen. */
+    *tsap=KNX_INVALID_TSAP;
 
     if (ADR_IsBroadcastAddress(searched_addr)) {
         return TRUE;
@@ -106,19 +81,19 @@ boolean ADR_IsAddressed(Knx_AddressType searched_addr,uint8 *tsap)  /* todo: Bro
     if (len>(uint8)1) {
         ap=ADR_GrATBasePtr();
 
-        left=0;
-        right=len-1;
+        left=(sint16)0;
+        right=len-(sint16)1;
         do {
             mid=(uint16)(left+right)>>1;
             ca=btohs(*(ap+mid));
             if (searched_addr==ca) {
-                *tsap=mid+1;
+                *tsap=mid+(uint16)1;
                 ack=TRUE;
                 break;
             } else if (searched_addr<ca) {
-                right=mid-1;
+                right=(sint16)(mid-(uint16)1);
             } else {
-                left=mid+1;
+                left=(sint16)(mid+(uint16)1);
             }
         } while (left<=right);
     } else if (len==(uint8)0) {
@@ -132,32 +107,28 @@ boolean ADR_IsAddressed(Knx_AddressType searched_addr,uint8 *tsap)  /* todo: Bro
 
 Knx_AddressType ADR_GetPhysAddr(void)
 {
-    return btohs(*(uint16*)&APP_AddressTable[1]); /* todo: als Makro!!! */
+    return btohs(*(uint16*)&APP_AddressTable[1]);
 }
 
 void ADR_SetPhysAddr(Knx_AddressType addr) 
 {
-    *(uint16*)APP_AddressTable[1]=htobs(addr);    /* todo: Memory-Server verwenden!!! */
+    *(uint16*)APP_AddressTable[1]=htobs(addr);    /* todo: use Memory-Server!!! */
 }
 
-void ADR_GetSerialNumber(Knx_SerialNumberType serial_number) /* Hinweis: Implementations-Abhängig!!! */
-                                                            /* kommt darauf an, kann beim Start ins EEPROM kopiert werden, dann nicht. */
+void ADR_GetSerialNumber(Knx_SerialNumberType serial_number)
 {
 /*CopyMem((uint8*)serial_number,(uint8*)DEV_SERIAL_NUM,sizeof(KNX_SerialNumberType)); */
 }
 
-boolean ADR_IsOwnPhysicalAddr(Knx_AddressType addr)     /* todo: als Makro!!! */
+boolean ADR_IsOwnPhysicalAddr(Knx_AddressType addr)     /* todo: Macro!!! */
 {
     return (ADR_GetPhysAddr()==addr);
 }
 
-
 /*
-
-todo:   mit MAKEWORD() Words generieren und subtrahieren.
-
 int CompareAddresses(Knx_AddressType a1,Knx_AddressType a2)   // addrcmp
 {
     // a1==a2 ==> return 0  - a1<a2 ==> return -1   -   a1>a2   ==> return 1
 }
 */
+

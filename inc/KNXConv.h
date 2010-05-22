@@ -26,7 +26,7 @@
 
 #include "KNXDefs.h"
 
-uint16 LongToDPT9(sint32 value); /* todo: double!!! */
+uint16 LongToDPT9(sint32 value);
 uint16 FloatToDPT9(float value);
 float DPT9ToFloat(uint16 value);
 sint32 DPT9ToLong(uint16 value);

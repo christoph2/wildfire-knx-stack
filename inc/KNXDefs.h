@@ -49,22 +49,22 @@ typedef struct tagKNX_CommObjDescriptorType {
 } KNX_CommObjDescriptorType;
 
 typedef enum tagKnx_DafType {
-    atINDIVIDUAL=0x00,
-    atMULTICAST=0x80
+    atINDIVIDUAL=((uint8)0x00),
+    atMULTICAST=((uint8)0x80)
 } Knx_DafType;  
 
 typedef enum tagKNX_FrameTypeType {
-    ftExtended=0x00,
-    ftStandard=0x80,
-    ftPolling=0xC0
+    ftExtended=((uint8)0x00),
+    ftStandard=((uint8)0x80),
+    ftPolling=((uint8)0xC0)
 } KNX_FrameTypeType;
 
 typedef enum tagKNX_ObjectType {
     otUINT1,otUINT2,otUINT3,otUINT4,otUINT5,otUINT6,otUINT7,
-    otUINT8,otUINT16,otBYTE3,otFLOAT,otDATA6,otDOUBLE,otDATA10,otMAXDATA,otVARDATA  /* Hinweis: 'VARDATA' ist nicht mehr korrekt!!! */
+    otUINT8,otUINT16,otBYTE3,otFLOAT,otDATA6,otDOUBLE,otDATA10,otMAXDATA,otVARDATA
 } KNX_ObjectType;    /* Type-Byte / Object-Descriptor. */
 
-typedef uint8 KNX_PriorityType;  /* check: evtl. 'enum'??? */
+typedef uint8 KNX_PriorityType;
 
 /*
 **  START: LAYER-Dispatching-Functions.
@@ -122,7 +122,7 @@ NoRouting,Parameter,Force,
 #define KNX_OBJ_EEPROM_VALUE            ((uint8)0x20)    /* Objektwert steht im EEPROM (statt im RAM). */
 #define KNX_OBJ_WRITE_ENABLE            ((uint8)0x10)    /* Objektwert kann über den Bus geschrieben werden. */
 #define KNX_OBJ_READ_ENABLE             ((uint8)0x08)    /* Objektwert kann über den Bus gelesen werden. */
-#define KNX_OBJ_COMM_ENABLE             ((uint8)0x04)    /* "Hauptschalter" f. die Kommunikation. */
+#define KNX_OBJ_COMM_ENABLE             ((uint8)0x04)    /* "Mainswitch" for Communikation. */
 
     /*
     **  Config-Byte / Priorities.
@@ -140,23 +140,18 @@ NoRouting,Parameter,Force,
     01 = alarm priority
     00 = system priority
 */
-        /*
-        ** Hinweis: im KNX-App-Layer ist von URGENT statt ALARM die Rede
-        ** und 'NORMAL' statt 'HIGH'.
-        */
 
-    /*
-    ** Comm-Flags.
-    */
-
+/*
+** Comm-Flags.
+*/
 
 #define KNX_OBJ_UPDATED                 ((uint8)0x08)
 #define KNX_OBJ_DATA_REQUEST            ((uint8)0x04)
 
-    /*
-    ** Transmission-Status
-    */
 
+/*
+** Transmission-Status
+*/
 #define KNX_OBJ_IDLE_OK                 ((uint8)0x00)
 #define KNX_OBJ_IDLE_ERROR              ((uint8)0x01)
 #define KNX_OBJ_TRANSMITTING            ((uint8)0x02)
@@ -167,8 +162,8 @@ NoRouting,Parameter,Force,
 #define BCU20_PRIVILEGE_USER            ((uint8)2)
 #define BCU20_PRIVILEGE_NO              ((uint8)3)
 
-/*  Hinweis: gehört zum Transport-Layer!!! */
-#define KNX_UNUSED_TSAP                 ((uint8)0x0fe)   /* weg!!! */
+
+#define KNX_UNUSED_TSAP                 ((uint8)0x0fe)   /* ???!!! */
 #define KNX_INVALID_TSAP                ((uint8)0x00)   /* '0xff' */
 
 #endif  /* __KNX_DEFS_H */

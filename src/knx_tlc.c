@@ -52,9 +52,6 @@ static const KNXLayerServicesType TLC_ServiceTable[]={
 
 void TLC_Task(void)
 {
-/*
-**    check: Timeout-Handling vor oder nach dem Dispatcher???
-*/
 	if (TM_IsExpired(TM_TIMER_TLC_CON_TIMEOUT)) {
 		TL_StateMachine(tlcTIMEOUT_CON);
 	}
@@ -66,16 +63,8 @@ void TLC_Task(void)
         KNXDispDispatchLayer(TASK_TC_ID,TLC_ServiceTable);
 }
 
-/*
-**
-**  Hinweis: __ConnectionAddress braucht nicht initialisiert werden, macht auch keinen Sinn,
-**  denn wenn im Zusatand CLOSED ein T_CONNECT_REQ empfangen wird, wird der korrekte Zustand
-**      eingenommen, egal, ob CONN_ADDR gleich oder ungleich SRC_ADDR.
-**
-**
-*/
 
-void TL_Init(void)  /* check: zwischen TLC_ und TLG_ Init unterscheiden??? */
+void TL_Init(void)
 {
     KNXTlcSetSequenceNumberSend((uint8)0);
     KNXTlcSetSequenceNumberReceived((uint8)0);
@@ -102,11 +91,10 @@ static void Disp_N_Data_IndividualInd(void)
 
     KNXTlcSetSourceAddress(MSG_GetSourceAddress(MSG_ScratchBuffer)); /* todo: !!! TESTEN !!! */
 
-    tpci=MSG_GetTPCI(MSG_ScratchBuffer) & 0xc0;  /* check: muss das so sein oder kann */
-                                                            /* 'MSG_GetTPCI()' entsprechend angepasst werden??? */
+    tpci=MSG_GetTPCI(MSG_ScratchBuffer) & (uint8)0xc0;                                                 
     switch (tpci) {
         case TPCI_UDT:   /* Unnumbered Data (1:1-Connection-Less). */
-            MSG_ScratchBuffer->service=T_DATA_INDIVIDUAL_IND;  /* todo: Überprüfen!!! */
+            MSG_ScratchBuffer->service=T_DATA_INDIVIDUAL_IND;
             (void)MSG_Post(MSG_ScratchBuffer);
             break;
         case TPCI_NDT:   /* Numbered Data (T_DATA_CONNECTED_REQ_PDU, 1:1-Connection-Oriented). */
@@ -123,11 +111,11 @@ static void Disp_N_Data_IndividualInd(void)
                 /* T_DISCONNECT_IND */
                 TL_StateMachine((KNX_TlcEventType)tlcDISCONNECT_IND);
             } else {
-                (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);      /* ungültige Message löschen. */
+                (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
             }
             break;
         case TPCI_NCD:   /* Numbered Control (TACK|TNACK). */
-            tpci=MSG_GetTPCI(MSG_ScratchBuffer) & 0xC3;  /* 0x03 */
+            tpci=MSG_GetTPCI(MSG_ScratchBuffer) & (uint8)0xC3;  /* 0x03 */
             KNXTlcSetSequenceNumberOfPDU(MSG_GetSeqNo(MSG_ScratchBuffer));
 
             if (tpci==T_ACK_PDU) {
@@ -135,7 +123,7 @@ static void Disp_N_Data_IndividualInd(void)
             } else if (tpci==T_NAK_PDU) {
                 TL_StateMachine((KNX_TlcEventType)tlcNAK_IND);
             } else {
-                (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);      /* ungültige Message löschen. */
+                (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
             }
             break;
         default:
@@ -151,7 +139,7 @@ static void Disp_N_DataBroadcastInd(void)
 
 static void Disp_N_DataIndividualCon(void)
 {
-    /* todo: Implementieren !!! */
+    /* todo: Implement !!! */
 }
 
 static void Disp_N_DataBroadcast_Con(void)
@@ -206,16 +194,13 @@ static void Disp_T_DataBroadcastReq(void)
 /********************************************************************/
 /********************************************************************/
 
-/*
-**  todo: die Client-Versionen müssen die State-Machine verwenden!!!
-*/
 void T_Connect_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest)
 {
     MSG_SetTPCI(pBuffer,T_CONNECT_REQ_PDU);
     MSG_SetSourceAddress(pBuffer,source);
     MSG_SetDestAddress(pBuffer,dest);
     MSG_SetPriority(pBuffer,KNX_OBJ_PRIO_SYSTEM);
-    MSG_SetLen(pBuffer,7);
+    MSG_SetLen(pBuffer,(uint8)7);
     pBuffer->service=N_DATA_INDIVIDUAL_REQ; /* T_CONNECT_REQ; */
 
     (void)MSG_Post(pBuffer);
@@ -235,7 +220,7 @@ void T_Disconnect_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType
 
 void T_Ack_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest,uint8 SeqNo)
 {
-    MSG_SetTPCI(pBuffer,T_ACK_PDU | ((SeqNo & 0x0f)<<2));
+    MSG_SetTPCI(pBuffer,T_ACK_PDU | ((SeqNo & (uint8)0x0f)<<2));
     MSG_SetSourceAddress(pBuffer,source);
     MSG_SetDestAddress(pBuffer,dest);
     MSG_SetPriority(pBuffer,KNX_OBJ_PRIO_SYSTEM);
@@ -247,7 +232,7 @@ void T_Ack_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest,u
 
 void T_Nak_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest,uint8 SeqNo)
 {
-    MSG_SetTPCI(pBuffer,T_NAK_PDU | ((SeqNo & 0x0f)<<2));
+    MSG_SetTPCI(pBuffer,T_NAK_PDU | ((SeqNo & (uint8)0x0f)<<2));
     MSG_SetSourceAddress(pBuffer,source);
     MSG_SetDestAddress(pBuffer,dest);
     MSG_SetPriority(pBuffer,KNX_OBJ_PRIO_SYSTEM);
@@ -314,3 +299,4 @@ void KNXTlcSetConnectionAddress(Knx_AddressType ConnectionAddress)
 {
     KNXTlc_ConnectionAddress=ConnectionAddress;
 }
+
