@@ -171,11 +171,11 @@ void IOS_Dispatch(const PMSG_Buffer pBuffer,uint8 service,boolean connected)
         } else if (type_len>0) {
             switch (GET_PROPERTY_CONTROL(pprop) & (uint8)0x03) {
                 case PH_VALUE_INPLACE:
-                    CopyMem((void*)data,(void*)&pprop->property_var,type_len);
+                    Utl_MemCopy((void*)data,(void*)&pprop->property_var,type_len);
                     break;
                 case PH_PTR_TO_VAL_FN:
                     if (pprop->property_func==(uint8)0x00) {
-                        CopyMem((void*)data,(void*)pprop->property_var,type_len);
+                        Utl_MemCopy((void*)data,(void*)pprop->property_var,type_len);
                     } else {
                     }
                     break;

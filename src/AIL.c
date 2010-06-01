@@ -58,8 +58,8 @@ boolean U_TestAndGetObject(uint16 objectNr,void* dst)
 boolean U_GetObject(uint16 objectNr,void* dst)
 {
     if ((objectNr<AL_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
-        CopyRAM(dst,AL_GetObjectDataPointer(objectNr),
-                AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type)); /* use CopyMem()!!! */
+        Utl_MemCopy(dst,AL_GetObjectDataPointer(objectNr),
+                AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type));
         return TRUE;
     } else {
         return FALSE;
@@ -95,7 +95,7 @@ boolean U_SetAndTransmitObject(uint16 objectNr,void* src)
 boolean U_SetObject(uint16 objectNr,void* src)
 {
     if ((objectNr<AL_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
-        CopyRAM(AL_GetObjectDataPointer(objectNr),src,AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type)); /* use CopyMem()!!! */
+        Utl_MemCopy(AL_GetObjectDataPointer(objectNr),src,AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type));
         return TRUE;
     } else {
         return FALSE;

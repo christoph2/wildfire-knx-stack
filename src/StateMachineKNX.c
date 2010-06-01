@@ -31,7 +31,6 @@
  
 
 #include "Transport.h"
-#include "Memory.h"
 
 static KNX_TlcStateType KNXTlc_State;
 
@@ -241,8 +240,8 @@ void TLConnennectionOriented()
 }
 */
 
-#define StoreMessage()  CopyRAM(_StoredMsg,MSG_ScratchBuffer->msg,MSG_LEN)
-#define RestoreMessage()  CopyRAM(MSG_ScratchBuffer->msg,_StoredMsg,MSG_LEN)
+#define StoreMessage()  Utl_MemCopy(_StoredMsg,MSG_ScratchBuffer->msg,MSG_LEN)
+#define RestoreMessage()  Utl_MemCopy(MSG_ScratchBuffer->msg,_StoredMsg,MSG_LEN)
 
 KNX_TlcStateType KNXTlcGetState(void)
 {

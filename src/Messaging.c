@@ -83,7 +83,7 @@ void ClearMessageBuffer(uint8 buf_num)
     pb=(uint8*)ptr;
     pb++;
 
-    ZeroRAM(pb,(uint16)sizeof(MSG_Buffer)-(uint16)1);
+    Utl_MemSet(pb,'\0',(uint16)sizeof(MSG_Buffer)-(uint16)1);
 }
 
 static uint16 AllocCount=(uint16)0,ReleaseCount=(uint16)0;
@@ -159,7 +159,7 @@ boolean MSG_ClearBuffer(PMSG_Buffer ptr)
     pb=(uint8*)ptr;
     pb++;
 
-    ZeroRAM(pb,sizeof(MSG_Buffer)-1);
+    Utl_MemSet(pb,'\0',sizeof(MSG_Buffer)-1);
 
     return TRUE;
 }

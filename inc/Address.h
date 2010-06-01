@@ -27,7 +27,6 @@
 
 #include "KNXDefs.h"
 #include "KNXConv.h"
-#include "Memory.h"
 
 extern const uint8 APP_AddressTable[];
 extern const uint8 APP_AssociationTable[];

@@ -26,7 +26,6 @@
 
 #include "Messaging.h"
 #include "KNXConv.h"
-#include "Memory.h"
 #include "Address.h"
 #include "Transport.h"
 #include "ios.h"

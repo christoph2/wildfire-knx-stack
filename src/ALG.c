@@ -381,7 +381,7 @@ void AL_UpdateAssociatedASAPs(PMSG_Buffer pBuffer,uint8 testFlags)
                             *AL_GetObjectDataPointer(asap)=AL_GetAPDUDataByte(MSG_GetMessagePtr(pBuffer),0)
                                 & KNX_AL_SHORT_DATA_MASK[AL_GetCommObjDescr(asap)->Type];
                         } else {
-                            CopyRAM(AL_GetObjectDataPointer(asap),MSG_GetMessagePtr(pBuffer)->data,len_obj); /* use CopyMem() !!! */
+                            Utl_MemCopy(AL_GetObjectDataPointer(asap),MSG_GetMessagePtr(pBuffer)->data,len_obj);
                         }
                     } else if (len_lsdu==(uint8)1) {
                         /* Short-Data. */

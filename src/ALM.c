@@ -252,7 +252,7 @@ void AL_GetAPDUData(const KNX_StandardFrameRefType pmsg,uint8 offset,uint8 *data
     len=MIN(len,MAX_ADPU_LEN-offset);
 
     if (len>(uint8)0 && (data!=(uint8*)NULL)) {
-        CopyRAM(data,(uint8*)pmsg->data+offset,len);
+        Utl_MemCopy(data,(uint8*)pmsg->data+offset,len);
     }
 }
 
@@ -262,7 +262,7 @@ void AL_SetAPDUData(const KNX_StandardFrameRefType pmsg,uint8 offset,uint8 *data
     len=MIN(len,MAX_ADPU_LEN-offset);
 
     if ((len>(uint8)0) && (data!=(uint8*)NULL)) {
-        CopyRAM((uint8*)pmsg->data+offset,data,len);
+        Utl_MemCopy((uint8*)pmsg->data+offset,data,len);
     }
 }
 

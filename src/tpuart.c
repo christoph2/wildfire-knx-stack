@@ -56,7 +56,6 @@ KNX_BusStateType PH_GetBusState(void);
 
 #include "tpuart.h"
 #include "Messaging.h"
-#include "Memory.h"
 
 #define ACK_INFORMATION ((uint8)0x10)
 
@@ -160,7 +159,7 @@ void TPUARTInit(void)
         RcvLen=RcvIdx=(uint8)0x00;
         AckService=(uint8)0x00;
         rcvService=SERVICE_NONE;
-        ZeroRAM(TpuartRcvBuf,BUF_LEN);
+        Utl_MemSet(TpuartRcvBuf,'\0',BUF_LEN);
         rcvState=TPSR_WAIT;
 }
 
@@ -313,7 +312,7 @@ void decode(uint8 b)
                                             pBuffer->sap=tsap;
                                             pBuffer->len=RcvLen=(TpuartRcvBuf[5] & (uint8)0x0f)+(uint8)7;
                                                                                            
-                                            CopyRAM((void*)pBuffer->msg,(void*)TpuartRcvBuf,RcvLen);
+                                            Utl_MemCopy((void*)pBuffer->msg,(void*)TpuartRcvBuf,RcvLen);
                                             (void)MSG_Post(pBuffer);
                                         } else {
                                             stop=TRUE;
