@@ -324,7 +324,7 @@ void AL_SetRAMFlags(uint16 objectNr,uint8 flags)
     if ((objectNr % (uint8)2)==(uint8)1) {
         APP_RAMFlags[objectNr>>1]=((flags & (uint8)0x0f)<<4);
     } else {
-        APP_RAMFlags[objectNr>>1]=(flags & (unit8)0x0f);
+        APP_RAMFlags[objectNr>>1]=(flags & (uint8)0x0f);
     }
 }
 
@@ -357,10 +357,11 @@ void AL_UpdateAssociatedASAPs(PMSG_Buffer pBuffer,uint8 testFlags)
     uint8 numAssocs=ADR_GrOATLength();
     uint8 len_lsdu,len_obj;
 
-    if ((pBuffer->sap==KNX_INVALID_TSAP) || (pBuffer->sap==KNX_UNUSED_TSAP)) 
+    
+    if ((pBuffer->sap==KNX_INVALID_TSAP) || (pBuffer->sap==KNX_UNUSED_TSAP)) {
         return;
     }
-
+    
     while (numAssocs--) {
         ca=btohs(*ap++);
         if (HIBYTE(ca)==pBuffer->sap) {

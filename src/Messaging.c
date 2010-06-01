@@ -141,7 +141,7 @@ boolean MSG_ReleaseBuffer(PMSG_Buffer ptr)
 
     MSG_Queues[TASK_FREE_ID]=buf_num;
     MSG_Buffers[buf_num].next=old_fp;
-    ClearMessageBuffer(buf_num)
+    ClearMessageBuffer(buf_num);
 
     ptr=(PMSG_Buffer)NULL;  /* invalidate Buffer. */
     ENABLE_ALL_INTERRUPTS();

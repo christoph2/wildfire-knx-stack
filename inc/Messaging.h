@@ -58,7 +58,7 @@
 #define MAX_PROP_DATA_LEN   ((uint8)10)
 
 
-typedef uint8 Knx_MessageType[MSG_LEN]
+typedef uint8 Knx_MessageType[MSG_LEN];
 
 typedef struct tagMSG_Buffer {
     uint8 next;

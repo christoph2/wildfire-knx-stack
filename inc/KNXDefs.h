@@ -25,15 +25,13 @@
 #define __KNX_DEFS_H
 
 
-/* #include "target.h" */
-/* todo: ins Target-Verzeichnis!!! */
 #define KNX_BIG_ENDIAN
 
 #define DISABLE_ALL_INTERRUPTS()
 #define ENABLE_ALL_INTERRUPTS()
 
-#include <Std_Types.h>
-/* #include "emi_imi2.h" */
+#include "Std_Types.h"
+#include "Utl.h"
 #include "knx_imi.h"
 
 typedef uint16 Knx_AddressType;
@@ -162,9 +160,8 @@ NoRouting,Parameter,Force,
 #define BCU20_PRIVILEGE_USER            ((uint8)2)
 #define BCU20_PRIVILEGE_NO              ((uint8)3)
 
-
-#define KNX_UNUSED_TSAP                 ((uint8)0x0fe)   /* ???!!! */
-#define KNX_INVALID_TSAP                ((uint8)0x00)   /* '0xff' */
+#define KNX_UNUSED_TSAP                 ((uint8)0xfe)
+#define KNX_INVALID_TSAP                ((uint8)0x00)
 
 #endif  /* __KNX_DEFS_H */
 

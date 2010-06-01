@@ -75,28 +75,28 @@ typedef struct
 
 
 /*static*/ const uint8 DEV_EEPROM_HEADER[0x16]={
-    0xff,   /* OptionReg (HC05 EEPROM Option Register). */
-    0x00,   /* ManData (2 Bytes). */
+    0xff,   /* OptionReg (HC05 EEPROM Option Register).			*/
+    0x00,   /* ManData (2 Bytes).	*/
     0x00,
-    0x00,   /* Manufacturer (2 Bytes).
+    0x00,   /* Manufacturer (2 Bytes).	*/
     0x00,
-    0x00,   /* DevTyp (2 Bytes). */
+    0x00,   /* DevTyp (2 Bytes).	*/
     0x00,
-    0x00,   /* Version. */
-    0xff,   /* CheckLimit. */
-    0x00,   /* PEI_Type expected. */
-    0x00,   /* SyncRate. (t.b.d). */
-    0x00,   /* PortCDDR. */
-    0x00,   /* PortADDR. */
-    0xff,   /* RunError (A flag is set if the corresponding bit = 0). */
-    0x60,   /* RouteCnt (Bits #6-#4). */
-    0x63,   /* MxRstCnt. */
-    0xE7,   /* ConfigDes.
+    0x00,   /* Version.	    */
+    0xff,   /* CheckLimit.  */
+    0x00,   /* PEI_Type expected.	*/
+    0x00,   /* SyncRate. (t.b.d).	*/
+    0x00,   /* PortCDDR.    */
+    0x00,   /* PortADDR.    */
+    0xff,   /* RunError (A flag is set if the corresponding bit = 0).	*/
+    0x60,   /* RouteCnt (Bits #6-#4).	*/
+    0x63,   /* MxRstCnt.    */
+    0xE7,   /* ConfigDes.   */
     0x00,   /* AssocTabPtr. */
     0x00,   /* CommsTabPtr. */
     0x00,   /* UserInitPtr. */
-    0x00,   /* UserPrgPtr. */
-    0x00    /* UsrSavPtr. */
+    0x00,   /* UserPrgPtr.  */
+    0x00    /* UsrSavPtr.   */
 };
 
 START_ADDRESS_TABLE(APP_NUM_OF_COM_OBJS)
@@ -172,16 +172,20 @@ Knx_InterfaceObjectType KNX_UIO_##objName={                                     
 
 
 #define KNX_IMPLEMENT_USER_INTERFACE_OBJECTS
-const Knx_InterfaceObjectType ** Knx_UserInterfaceObjs=
-{
-NULL
+#if 1
+const Knx_InterfaceObjectType ** Knx_UserInterfaceObjs={
+(Knx_InterfaceObjectType const **) NULL
 };
+#endif
 
 
 /**************/
+
+#if 0
 START_USER_INTERFACE_OBJECTS()
     END_IMPLEMENT_USER_INTERFACE_OBJECT()
 END_USER_INTERFACE_OBJECTS()
+#endif
 
 /*
 START_OBJECT_TABLE()
