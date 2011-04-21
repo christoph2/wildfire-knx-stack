@@ -46,12 +46,12 @@ typedef enum tagKNX_BusStateType {
 } KNX_BusStateType;
 
 void BusStateHandler(KNX_BusStateType);
-                                       
+
 KNX_BusStateType PH_GetBusState(void);
 */
 
 #if !defined(__HIWARE__)
-#include <stdio.h>
+/* #include <stdio.h> */
 #endif
 
 #include "tpuart.h"
@@ -111,18 +111,18 @@ static const KNXLayerServicesType LL_ServiceTable[]={
     /* A_PropertyDescriptionRead(). */
 
 const uint8 T0[]={
-	(uint8)0xbc,(uint8)0x11,(uint8)0x64,(uint8)0x11,(uint8)0x01,(uint8)0x60,(uint8)0x80,(uint8)0xc6
+   (uint8)0xbc,(uint8)0x11,(uint8)0x64,(uint8)0x11,(uint8)0x01,(uint8)0x60,(uint8)0x80,(uint8)0xc6
 };
     /* T_Connect (01.01.100 ==> 01.01.001). */
 
 const uint8 T1[]={
-	(uint8)0xbc,(uint8)0x11,(uint8)0x64,(uint8)0x11,(uint8)0x01,(uint8)0x67,(uint8)0x42,(uint8)0x84,
-	(uint8)0x01,(uint8)0x80,(uint8)0xaa,(uint8)0xbb,(uint8)0xcc,(uint8)0xdd,(uint8)0x06
+   (uint8)0xbc,(uint8)0x11,(uint8)0x64,(uint8)0x11,(uint8)0x01,(uint8)0x67,(uint8)0x42,(uint8)0x84,
+   (uint8)0x01,(uint8)0x80,(uint8)0xaa,(uint8)0xbb,(uint8)0xcc,(uint8)0xdd,(uint8)0x06
 };
     /* A_MemoryWrite */
 
 const uint8 T2[]={
-	(uint8)0xbc,(uint8)0x11,(uint8)0x64,(uint8)0x11,(uint8)0x01,(uint8)0x60,(uint8)0x81,(uint8)0xc7
+   (uint8)0xbc,(uint8)0x11,(uint8)0x64,(uint8)0x11,(uint8)0x01,(uint8)0x60,(uint8)0x81,(uint8)0xc7
 };
     /* T_Disconnect (01.01.100 ==> 01.01.001). */
 
@@ -159,7 +159,7 @@ void TPUARTInit(void)
         RcvLen=RcvIdx=(uint8)0x00;
         AckService=(uint8)0x00;
         rcvService=SERVICE_NONE;
-        Utl_MemSet(TpuartRcvBuf,'\0',BUF_LEN);
+        Utl_MemSet(TpuartRcvBuf,0,BUF_LEN);
         rcvState=TPSR_WAIT;
 }
 
@@ -281,7 +281,7 @@ void decode(uint8 b)
                         break;
                 case TPSR_DATA_CONT1:
                         Checksum^=b;
-                        if ((--RcvLen)==(uint8)0x00) { 
+                        if ((--RcvLen)==(uint8)0x00) {
                             /* if (!PassthroughEveryTelegramm()) // RouteEvery */
 
                             dest_addr=btohs(*(uint16*)&TpuartRcvBuf[3]);
@@ -311,7 +311,7 @@ void decode(uint8 b)
                                             pBuffer->service=L_DATA_IND;
                                             pBuffer->sap=tsap;
                                             pBuffer->len=RcvLen=(TpuartRcvBuf[5] & (uint8)0x0f)+(uint8)7;
-                                                                                           
+
                                             Utl_MemCopy((void*)pBuffer->msg,(void*)TpuartRcvBuf,RcvLen);
                                             (void)MSG_Post(pBuffer);
                                         } else {
@@ -322,7 +322,7 @@ void decode(uint8 b)
 
                                 } else {
 #if !defined(__HIWARE__)
-/*    printf("\n*** CHECKSUM-ERROR ***\n"); */ 
+/*    printf("\n*** CHECKSUM-ERROR ***\n"); */
 #endif
                                 }
 

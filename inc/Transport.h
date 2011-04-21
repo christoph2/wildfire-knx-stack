@@ -58,20 +58,20 @@ void T_Ack_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest,u
 void T_Nak_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest,uint8 SeqNo);
 
 /* 'knx_tlc.h' !!! */
-uint8 KNXTlcGetSequenceNumberSend(void);
-uint8 KNXTlcGetSequenceNumberReceived(void);
-uint8 KNXTlcGetRepetitionCount(void);
-uint8 KNXTlcGetSequenceNumberOfPDU(void);
-Knx_AddressType KNXTlcGetSourceAddress(void);
-Knx_AddressType KNXTlcGetConnectionAddress(void);
+uint8 KNXTlc_GetSequenceNumberSend(void);
+uint8 KNXTlc_GetSequenceNumberReceived(void);
+uint8 KNXTlc_GetRepetitionCount(void);
+uint8 KNXTlc_GetSequenceNumberOfPDU(void);
+Knx_AddressType KNXTlc_GetSourceAddress(void);
+Knx_AddressType KNXTlc_GetConnectionAddress(void);
 
 
-void KNXTlcSetSequenceNumberSend(uint8 SequenceNumberSend);
-void KNXTlcSetSequenceNumberReceived(uint8 SequenceNumberReceived);
-void KNXTlcSetRepetitionCount(uint8 RepetitionCount);
-void KNXTlcSetSequenceNumberOfPDU(uint8 SequenceNumberOfPDU);
-void KNXTlcSetSourceAddress(Knx_AddressType SourceAddress);
-void KNXTlcSetConnectionAddress(Knx_AddressType ConnectionAddress);
+void KNXTlc_SetSequenceNumberSend(uint8 SequenceNumberSend);
+void KNXTlc_SetSequenceNumberReceived(uint8 SequenceNumberReceived);
+void KNXTlc_SetRepetitionCount(uint8 RepetitionCount);
+void KNXTlc_SetSequenceNumberOfPDU(uint8 SequenceNumberOfPDU);
+void KNXTlc_SetSourceAddress(Knx_AddressType SourceAddress);
+void KNXTlc_SetConnectionAddress(Knx_AddressType ConnectionAddress);
 
 #endif  /* __TRANSPORT_H */
 

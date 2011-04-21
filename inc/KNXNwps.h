@@ -20,7 +20,8 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
-*/#if !defined(__KNXNWPS_H)
+*/
+#if !defined(__KNXNWPS_H)
 #define __KNXNWPS_H
 
 #include "KNXDefs.h"

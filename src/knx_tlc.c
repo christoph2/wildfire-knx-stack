@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <chris@konnex-tools.de,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -53,11 +53,11 @@ static const KNXLayerServicesType TLC_ServiceTable[]={
 void TLC_Task(void)
 {
 	if (TM_IsExpired(TM_TIMER_TLC_CON_TIMEOUT)) {
-		TL_StateMachine(tlcTIMEOUT_CON);
+		KNXTlc_StateMachine(tlcTIMEOUT_CON);
 	}
 
 	if (TM_IsExpired(TM_TIMER_TLC_ACK_TIMEOUT)) {
-		TL_StateMachine(tlcTIMEOUT_ACK);
+		KNXTlc_StateMachine(tlcTIMEOUT_ACK);
 	}
 
         KNXDispDispatchLayer(TASK_TC_ID,TLC_ServiceTable);
@@ -66,12 +66,12 @@ void TLC_Task(void)
 
 void TL_Init(void)
 {
-    KNXTlcSetSequenceNumberSend((uint8)0);
-    KNXTlcSetSequenceNumberReceived((uint8)0);
-    KNXTlcSetRepetitionCount((uint8)0);
-    KNXTlcSetSequenceNumberOfPDU((uint8)0);
+    KNXTlc_SetSequenceNumberSend((uint8)0);
+    KNXTlc_SetSequenceNumberReceived((uint8)0);
+    KNXTlc_SetRepetitionCount((uint8)0);
+    KNXTlc_SetSequenceNumberOfPDU((uint8)0);
 
-    KNXTlcSetState(CLOSED);
+    KNXTlc_SetState(CLOSED);
 }
 
 
@@ -89,39 +89,39 @@ static void Disp_N_Data_IndividualInd(void)
 {
     uint8 tpci;
 
-    KNXTlcSetSourceAddress(MSG_GetSourceAddress(MSG_ScratchBuffer)); /* todo: !!! TESTEN !!! */
+    KNXTlc_SetSourceAddress(MSG_GetSourceAddress(MSG_ScratchBuffer)); /* todo: !!! TESTEN !!! */
 
-    tpci=MSG_GetTPCI(MSG_ScratchBuffer) & (uint8)0xc0;                                                 
+    tpci=MSG_GetTPCI(MSG_ScratchBuffer) & (uint8)0xc0;
     switch (tpci) {
         case TPCI_UDT:   /* Unnumbered Data (1:1-Connection-Less). */
             MSG_ScratchBuffer->service=T_DATA_INDIVIDUAL_IND;
             (void)MSG_Post(MSG_ScratchBuffer);
             break;
         case TPCI_NDT:   /* Numbered Data (T_DATA_CONNECTED_REQ_PDU, 1:1-Connection-Oriented). */
-            KNXTlcSetSequenceNumberOfPDU(MSG_GetSeqNo(MSG_ScratchBuffer));
-            TL_StateMachine((KNX_TlcEventType)tlcDATA_CONNECTED_IND);
+            KNXTlc_SetSequenceNumberOfPDU(MSG_GetSeqNo(MSG_ScratchBuffer));
+            KNXTlc_StateMachine((KNX_TlcEventType)tlcDATA_CONNECTED_IND);
             break;
         case TPCI_UCD:   /* Unnumbered Control. (CONNECT|DISCONNECT). */
             tpci=MSG_GetTPCI(MSG_ScratchBuffer);
 
             if (tpci==T_CONNECT_REQ_PDU) {
                 /* T_CONNECT_IND */
-                TL_StateMachine((KNX_TlcEventType)tlcCONNECT_IND);
+                KNXTlc_StateMachine((KNX_TlcEventType)tlcCONNECT_IND);
             } else if (tpci==T_DISCONNECT_REQ_PDU) {
                 /* T_DISCONNECT_IND */
-                TL_StateMachine((KNX_TlcEventType)tlcDISCONNECT_IND);
+                KNXTlc_StateMachine((KNX_TlcEventType)tlcDISCONNECT_IND);
             } else {
                 (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
             }
             break;
         case TPCI_NCD:   /* Numbered Control (TACK|TNACK). */
             tpci=MSG_GetTPCI(MSG_ScratchBuffer) & (uint8)0xC3;  /* 0x03 */
-            KNXTlcSetSequenceNumberOfPDU(MSG_GetSeqNo(MSG_ScratchBuffer));
+            KNXTlc_SetSequenceNumberOfPDU(MSG_GetSeqNo(MSG_ScratchBuffer));
 
             if (tpci==T_ACK_PDU) {
-                TL_StateMachine((KNX_TlcEventType)tlcACK_IND);
+                KNXTlc_StateMachine((KNX_TlcEventType)tlcACK_IND);
             } else if (tpci==T_NAK_PDU) {
-                TL_StateMachine((KNX_TlcEventType)tlcNAK_IND);
+                KNXTlc_StateMachine((KNX_TlcEventType)tlcNAK_IND);
             } else {
                 (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
             }
@@ -243,60 +243,60 @@ void T_Nak_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest,u
 }
 
 
-uint8 KNXTlcGetSequenceNumberSend(void)
+uint8 KNXTlc_GetSequenceNumberSend(void)
 {
     return KNXTlc_SequenceNumberSend;
 }
-uint8 KNXTlcGetSequenceNumberReceived(void)
+uint8 KNXTlc_GetSequenceNumberReceived(void)
 {
     return KNXTlc_SequenceNumberReceived;
 }
 
-uint8 KNXTlcGetRepetitionCount(void)
+uint8 KNXTlc_GetRepetitionCount(void)
 {
     return KNXTlc_RepetitionCount;
 }
 
-uint8 KNXTlcGetSequenceNumberOfPDU(void)
+uint8 KNXTlc_GetSequenceNumberOfPDU(void)
 {
     return KNXTlc_SequenceNumberOfPDU;
 }
 
-Knx_AddressType KNXTlcGetSourceAddress(void)
+Knx_AddressType KNXTlc_GetSourceAddress(void)
 {
     return KNXTlc_SourceAddress;
 }
 
-Knx_AddressType KNXTlcGetConnectionAddress(void)
+Knx_AddressType KNXTlc_GetConnectionAddress(void)
 {
     return KNXTlc_ConnectionAddress;
 }
 
-void KNXTlcSetSequenceNumberSend(uint8 SequenceNumberSend)
+void KNXTlc_SetSequenceNumberSend(uint8 SequenceNumberSend)
 {
     KNXTlc_SequenceNumberSend=(SequenceNumberSend & ((uint8)0x0f));
 }
-void KNXTlcSetSequenceNumberReceived(uint8 SequenceNumberReceived)
+void KNXTlc_SetSequenceNumberReceived(uint8 SequenceNumberReceived)
 {
     KNXTlc_SequenceNumberReceived=(SequenceNumberReceived & ((uint8)0x0f));
 }
 
-void KNXTlcSetRepetitionCount(uint8 RepetitionCount)
+void KNXTlc_SetRepetitionCount(uint8 RepetitionCount)
 {
     KNXTlc_RepetitionCount=RepetitionCount;
 }
-void KNXTlcSetSequenceNumberOfPDU(uint8 SequenceNumberOfPDU)
+
+void KNXTlc_SetSequenceNumberOfPDU(uint8 SequenceNumberOfPDU)
 {
     KNXTlc_SequenceNumberOfPDU=SequenceNumberOfPDU;
 }
 
-void KNXTlcSetSourceAddress(Knx_AddressType SourceAddress)
+void KNXTlc_SetSourceAddress(Knx_AddressType SourceAddress)
 {
     KNXTlc_SourceAddress=SourceAddress;
 }
 
-void KNXTlcSetConnectionAddress(Knx_AddressType ConnectionAddress)
+void KNXTlc_SetConnectionAddress(Knx_AddressType ConnectionAddress)
 {
     KNXTlc_ConnectionAddress=ConnectionAddress;
 }
-

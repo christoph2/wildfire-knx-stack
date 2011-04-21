@@ -24,11 +24,9 @@
 #if !defined(__TPUART_H)
 #define __TPUART_H
 
-#include <Std_Types.h>
-/* #include "target.h" */
 #include "knx_disp.h"
 
-#define BUF_LEN     ((uint8)0x1f)
+#define BUF_LEN     ((SizeType)0x1f)
 
 typedef enum tagTPUART_RCV_STATE {
         TPSR_INIT,
@@ -69,7 +67,7 @@ typedef enum tagTPUART_RCV_SERVICE {
 #define REPEATED_MASK           ((uint8)0x20)
 
 /*
-**      Immediate Acknowledge Services 
+**      Immediate Acknowledge Services
 **      =========================================
 **      1 1 0 0 1 1 0 0         Acknowledge frame
 **      0 0 0 0 1 1 0 0         NotAcknowledge frame

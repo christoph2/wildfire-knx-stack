@@ -55,12 +55,14 @@ static const KNXLayerServicesType ALG_ServiceTable[]={
 
 
 const uint8 KNX_AL_SHORT_DATA_MASK[]={
-    (1<<1)-1,(1<<2)-1,(1<<3)-1,(1<<4)-1,
-    (1<<5)-1,(1<<6)-1,(1<<7)-1,(1<<8)-1
+    (uint8)(1<<1)-1, (uint8)(1<<2)-1, (uint8)(1<<3)-1, (uint8)(1<<4)-1,
+    (uint8)(1<<5)-1, (uint8)(1<<6)-1, (uint8)(1<<7)-1, (uint8)(1<<8)-1
 };
 
 const uint8 KNX_OBJ_LEN_TAB[16]={
-    1,1,1,1,1,1,1,1,2,3,4,6,8,10,14,0
+    (uint8)1, (uint8)1, (uint8)1, (uint8)1, (uint8)1, (uint8)1,
+    (uint8)1, (uint8)1, (uint8)2, (uint8)3, (uint8)4, (uint8)6,
+    (uint8)8, (uint8)10, (uint8)14, (uint8)0
 };  /* 'Interface Object Reference' not supported yet. */
 
 
@@ -143,7 +145,7 @@ static void Disp_T_DataGroupInd(void)
 
     apci=AL_GetAPCIType(MSG_GetMessagePtr(MSG_ScratchBuffer));
 
-    if (LSM_IsGrOATLoaded()) { 
+    if (LSM_IsGrOATLoaded()) {
         switch (apci) {
             case apciGROUP_VALUE_WRITE:
                 /* When the Application Layer of a device receives an A_GroupValue_Write-Service, it searches the */
@@ -293,7 +295,7 @@ void ALG_PollCycle(void)
 
             }
             AL_SetRAMFlags(idx,KNX_OBJ_TRANSMITTING);
-            return; 
+            return;
         }
     }
 }
@@ -357,11 +359,11 @@ void AL_UpdateAssociatedASAPs(PMSG_Buffer pBuffer,uint8 testFlags)
     uint8 numAssocs=ADR_GrOATLength();
     uint8 len_lsdu,len_obj;
 
-    
+
     if ((pBuffer->sap==KNX_INVALID_TSAP) || (pBuffer->sap==KNX_UNUSED_TSAP)) {
         return;
     }
-    
+
     while (numAssocs--) {
         ca=btohs(*ap++);
         if (HIBYTE(ca)==pBuffer->sap) {

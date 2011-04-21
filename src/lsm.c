@@ -49,19 +49,19 @@ Start Load              0x01
 Load Complete   0x02
 Segment                 0x03
         Absolute Code/Data Allocation Record    0x00
-        Segment Control Record                                  0x02 
-        Task Pointer Record                                             0x03 
-        Task Control Record1                                    0x04 
-        Task Control Record2                                    0x05 
+        Segment Control Record                                  0x02
+        Task Pointer Record                                             0x03
+        Task Control Record1                                    0x04
+        Task Control Record2                                    0x05
 Unload                  0x04
-*/ 
+*/
 
 /* "EEPROM-checksum is set when the load state of an object is set to "loaded". */
 
 /*
-** Status "unloaded" does not just mean that no valid data are in the BCU 
-** (that means every allocated memory is released, but without the event 
-** "segment" [start load + load complete] it can't reach a valid memory structure, 
+** Status "unloaded" does not just mean that no valid data are in the BCU
+** (that means every allocated memory is released, but without the event
+** "segment" [start load + load complete] it can't reach a valid memory structure,
 **  e.g. the status "loaded")
 */
 
@@ -69,7 +69,7 @@ Unload                  0x04
 /*
 Load Status             Value   Remark
 ===========             =====   ======
-Unloaded                0x00    no data loaded 
+Unloaded                0x00    no data loaded
 Loaded                  0x01    data loaded
 Loading                 0x02    load process is active
 Error                   0x03    error in data detected
@@ -95,11 +95,12 @@ typedef enum tagKNX_LSMStateType {
 } KNX_LSMStateType;
 
 static const uint8 LS_Table[4][5]={
-/*      NOP                     START_LOAD              LOAD_COMPLETE           SEGMENT                 UNLOAD */
-        {LSM_STATE_UNLOADED,    LSM_STATE_LOADING,      LSM_STATE_UNLOADED,     LSM_STATE_UNLOADED,     LSM_STATE_UNLOADED},    /* UNLOADED */
-        {LSM_STATE_LOADED,      LSM_STATE_LOADING,      LSM_STATE_LOADED,       LSM_STATE_LOADED,       LSM_STATE_UNLOADED},    /* LOADED */
-        {LSM_STATE_LOADING,     LSM_STATE_LOADING,      LSM_STATE_LOADED,       LSM_STATE_LOADING,      LSM_STATE_UNLOADED},    /* LOADING */
-        {LSM_STATE_ERROR,       LSM_STATE_ERROR,        LSM_STATE_ERROR,        LSM_STATE_ERROR,        LSM_STATE_UNLOADED},    /* ERROR */
+/*  NOP                     START_LOAD          LOAD_COMPLETE       SEGMENT             UNLOAD                  */
+/*  ----------------------------------------------------------------------------------------------------------- */
+    {LSM_STATE_UNLOADED,    LSM_STATE_LOADING,  LSM_STATE_UNLOADED, LSM_STATE_UNLOADED, LSM_STATE_UNLOADED},    /* UNLOADED */
+    {LSM_STATE_LOADED,      LSM_STATE_LOADING,  LSM_STATE_LOADED,   LSM_STATE_LOADED,   LSM_STATE_UNLOADED},    /* LOADED */
+    {LSM_STATE_LOADING,     LSM_STATE_LOADING,  LSM_STATE_LOADED,   LSM_STATE_LOADING,  LSM_STATE_UNLOADED},    /* LOADING */
+    {LSM_STATE_ERROR,       LSM_STATE_ERROR,    LSM_STATE_ERROR,    LSM_STATE_ERROR,    LSM_STATE_UNLOADED},    /* ERROR */
 };
 
 
@@ -131,7 +132,7 @@ ACTION __LSM[][]=
 
 #if     defined(__HIWARE__)
         #pragma DATA_SEG        EEPROM
-#endif  
+#endif
 KNX_LSCType KNX_SystemLSC[KNX_NUM_SYS_LSCS];    /* System-Load-/State-Controls. */
 #if     defined(__HIWARE__)
         #pragma DATA_SEG DEFAULT
@@ -193,7 +194,7 @@ void LSM_Dispatch(uint8 *record,/*LSM_State*/uint8 *ls_var)
 void LSM_Test(void)
 {
     uint8 i;
-/*    
+/*
         app_lsc=LSM_STATE_UNLOADED;
         while (1) {
                 LSM_Dispatch(app_rec,&app_lsc);

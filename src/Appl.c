@@ -31,6 +31,9 @@
 #endif
 
 
+ 
+
+
 #include "Appl.h"
 
 uint8 DEV_GetHopCount(void);
@@ -58,38 +61,38 @@ const uint8 KNX_DEV_ORDER_INFO[10]={0x0a,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02
 // BIM13X-Application-Information-Block.
 typedef struct
 {
-	USHORT AIBVersion;				// At the moment 0x0001 has to be specified.
-	uint8 ApplFirmwareVersion;		// Property (3/204).
-	uint8 ApplFirmwareSubVersion;	// Property (3/205). - both Versions free to App.
-	void (*AppMain) (void);
-	void (*AppSave) (void);
-	void (*AppUnload) (void);
-	const CObjPtr* pCObjects;
-	uint8* pRAMFlags;
-	TIMER_TAB* pUserTimerTab;		// if no User-Timers ==> NULL.
-	const INTERFACE_ROOT* pUsrIntObjRoot;	// User-Interface-Objects.
-	ParamMgmt* pUsrParamMgmt;
-	USHORT WatchDogTime;			// if no Watchdog ==> 0x0000.
+   USHORT AIBVersion;            // At the moment 0x0001 has to be specified.
+   uint8 ApplFirmwareVersion;      // Property (3/204).
+   uint8 ApplFirmwareSubVersion;   // Property (3/205). - both Versions free to App.
+   void (*AppMain) (void);
+   void (*AppSave) (void);
+   void (*AppUnload) (void);
+   const CObjPtr* pCObjects;
+   uint8* pRAMFlags;
+   TIMER_TAB* pUserTimerTab;      // if no User-Timers ==> NULL.
+   const INTERFACE_ROOT* pUsrIntObjRoot;   // User-Interface-Objects.
+   ParamMgmt* pUsrParamMgmt;
+   USHORT WatchDogTime;         // if no Watchdog ==> 0x0000.
 } AppInfoBlock;
 */
 
 
 /*static*/ const uint8 DEV_EEPROM_HEADER[0x16]={
-    0xff,   /* OptionReg (HC05 EEPROM Option Register).			*/
-    0x00,   /* ManData (2 Bytes).	*/
+    0xff,   /* OptionReg (HC05 EEPROM Option Register).         */
+    0x00,   /* ManData (2 Bytes).   */
     0x00,
-    0x00,   /* Manufacturer (2 Bytes).	*/
+    0x00,   /* Manufacturer (2 Bytes).   */
     0x00,
-    0x00,   /* DevTyp (2 Bytes).	*/
+    0x00,   /* DevTyp (2 Bytes).   */
     0x00,
-    0x00,   /* Version.	    */
+    0x00,   /* Version.       */
     0xff,   /* CheckLimit.  */
-    0x00,   /* PEI_Type expected.	*/
-    0x00,   /* SyncRate. (t.b.d).	*/
+    0x00,   /* PEI_Type expected.   */
+    0x00,   /* SyncRate. (t.b.d).   */
     0x00,   /* PortCDDR.    */
     0x00,   /* PortADDR.    */
-    0xff,   /* RunError (A flag is set if the corresponding bit = 0).	*/
-    0x60,   /* RouteCnt (Bits #6-#4).	*/
+    0xff,   /* RunError (A flag is set if the corresponding bit = 0).   */
+    0x60,   /* RouteCnt (Bits #6-#4).   */
     0x63,   /* MxRstCnt.    */
     0xE7,   /* ConfigDes.   */
     0x00,   /* AssocTabPtr. */
@@ -103,7 +106,7 @@ START_ADDRESS_TABLE(APP_NUM_OF_COM_OBJS)
 /* IMPLEMENT_PHYS_ADDR(0x0164) */
     IMPLEMENT_PHYS_ADDR(0x1101)    /* todo: Macro 'MAKE_PHYS_ADDR(a,l,d) */
 
-    IMPLEMENT_GROUP_ADDR(0x0901)	/* todo: Macro 'MAKE_GROUP_ADDR(main.middle,sub)'. */
+    IMPLEMENT_GROUP_ADDR(0x0901)   /* todo: Macro 'MAKE_GROUP_ADDR(main.middle,sub)'. */
     IMPLEMENT_GROUP_ADDR(0x5100)
     IMPLEMENT_GROUP_ADDR(0x5101)
 END_ADDRESS_TABLE()
