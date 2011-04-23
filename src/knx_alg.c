@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -20,56 +20,52 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
-*/
+ */
 
 /*
 **  Application-Layer / Group-Oriented.
 */
 
+#include "knx_layer_application.h"
 
-#include "Application.h"
+static void Disp_A_DataGroupReq(void), Disp_A_PollDataReq(void), Disp_T_PollDataCon(void);
+static void Disp_T_DataGroupInd(void), Disp_T_DataGroupCon(void);
 
-static void Disp_A_DataGroupReq(void),Disp_A_PollDataReq(void),Disp_T_PollDataCon(void);
-static void Disp_T_DataGroupInd(void),Disp_T_DataGroupCon(void);
-
-static const KNXLayerServiceFunctionType ALG_Services[]={
+static const KNXLayerServiceFunctionType ALG_Services[] = {
 /*      Service                     Handler                 */
 /*      ====================================================*/
-/*      T_DATA_GROUP_IND        */  Disp_T_DataGroupInd,
-/*      T_DATA_GROUP_CON        */  Disp_T_DataGroupCon,
-/*      T_POLL_DATA_CON         */  Disp_T_PollDataCon,
-/*      A_DATA_GROUP_REQ        */  Disp_A_DataGroupReq,
-/*      A_POLL_DATA_REQ         */  Disp_A_PollDataReq,
+/*      T_DATA_GROUP_IND        */ Disp_T_DataGroupInd,
+/*      T_DATA_GROUP_CON        */ Disp_T_DataGroupCon,
+/*      T_POLL_DATA_CON         */ Disp_T_PollDataCon,
+/*      A_DATA_GROUP_REQ        */ Disp_A_DataGroupReq,
+/*      A_POLL_DATA_REQ         */ Disp_A_PollDataReq,
 /*      ====================================================*/
 };
 
-static const KNXLayerServicesType ALG_ServiceTable[]={
-    {KNX_ALG_SERVICES,5,ALG_Services}
+static const KNXLayerServicesType ALG_ServiceTable[] = {
+    {KNX_ALG_SERVICES, 5, ALG_Services}
 };
 
+#define SAP_CB_OK       ((uint8)0)      /* Ok (Return messagebuffer to system). */
+#define SAP_CB_BREAK    ((uint8)1)      /* Break and free buffer */
+#define SAP_CB_GETBUF   ((uint8)2)      /* Hold buffer and break */
+#define SAP_CB_SEND     ((uint8)3)      /* Send message and break */
 
-#define SAP_CB_OK       ((uint8)0)   /* Ok (Return messagebuffer to system). */
-#define SAP_CB_BREAK    ((uint8)1)   /* Break and free buffer */
-#define SAP_CB_GETBUF   ((uint8)2)   /* Hold buffer and break */
-#define SAP_CB_SEND     ((uint8)3)   /* Send message and break */
-
-
-const uint8 KNX_AL_SHORT_DATA_MASK[]={
-    (uint8)(1<<1)-1, (uint8)(1<<2)-1, (uint8)(1<<3)-1, (uint8)(1<<4)-1,
-    (uint8)(1<<5)-1, (uint8)(1<<6)-1, (uint8)(1<<7)-1, (uint8)(1<<8)-1
+const uint8 KNX_AL_SHORT_DATA_MASK[] = {
+    (uint8)(1 << 1) - 1, (uint8)(1 << 2) - 1, (uint8)(1 << 3) - 1, (uint8)(1 << 4) - 1,
+    (uint8)(1 << 5) - 1, (uint8)(1 << 6) - 1, (uint8)(1 << 7) - 1, (uint8)(1 << 8) - 1
 };
 
-const uint8 KNX_OBJ_LEN_TAB[16]={
-    (uint8)1, (uint8)1, (uint8)1, (uint8)1, (uint8)1, (uint8)1,
-    (uint8)1, (uint8)1, (uint8)2, (uint8)3, (uint8)4, (uint8)6,
+const uint8 KNX_OBJ_LEN_TAB[16] = {
+    (uint8)1, (uint8)1,  (uint8)1,  (uint8)1,  (uint8)1, (uint8)1,
+    (uint8)1, (uint8)1,  (uint8)2,  (uint8)3,  (uint8)4, (uint8)6,
     (uint8)8, (uint8)10, (uint8)14, (uint8)0
 };  /* 'Interface Object Reference' not supported yet. */
 
-
 /* *** OUTGOING *** */
 /*
-AL_CallbackHandler (Standard Callback Handler)
----
+   AL_CallbackHandler (Standard Callback Handler)
+   ---
     1. search object with status "transmit request" with index from 0 .. max, if no object found -> return(SAP_CB_BREAK)
     2.  check telegram rate limitation (based on timer)
     3. check object properties (transmit enable, communication enable), on error set object (RAM flags) to transmiterror
@@ -78,9 +74,9 @@ AL_CallbackHandler (Standard Callback Handler)
     6. value read : -> data request : set object number to read,set APCI
     7. value write : -> no data request : set object number to write, copy object data, set APCI
     8. return (SAP_CB_SEND)
-*/
+ */
 /*
-Depend on the "return values" of handler the following things will be done :
+   Depend on the "return values" of handler the following things will be done :
 
     - SAP_CB_SEND
 
@@ -91,19 +87,19 @@ Depend on the "return values" of handler the following things will be done :
         5. force T_Group_Datat_requ (per scheduler cycle only _one_ request)
 
     - Other -> clears message
-*/
+ */
 
 /* *** INCOMING *** */
 /*
-AL_CallbackHandler (Standard Callback Handler)
----
+   AL_CallbackHandler (Standard Callback Handler)
+   ---
 
-Incoming T_Group_Data_conf :
+   Incoming T_Group_Data_conf :
 
     1. Set object (ramflags) of former T_Group_Data_requ
     2. Return (SAP_CB_OK)
 
-Incoming T_Group_Data_ind :
+   Incoming T_Group_Data_ind :
 
     1. Get properties of object, on error (object not found) return (SAP_CB_OK)
     2. Check if object "communication enable", on error return (SAP_CB_OK)
@@ -121,7 +117,7 @@ Incoming T_Group_Data_ind :
             ok: copy object data, return (SAP_CB_OK)
 
         on unknown APCI : return (SAP_CB_BREAK)
-*/
+ */
 
 static uint8 APP_RAMFlags[(APP_NUM_OF_COM_OBJS + 1) / 2 ];
 
@@ -131,7 +127,7 @@ static uint8 ALG_NumQueuedGroupMessages;
 
 void ALG_Task(void)
 {
-    KNXDispDispatchLayer(TASK_AL_ID,ALG_ServiceTable);
+    KNXDispDispatchLayer(TASK_AL_ID, ALG_ServiceTable);
 }
 
 /*
@@ -143,18 +139,18 @@ static void Disp_T_DataGroupInd(void)
 {
     uint8 apci;
 
-    apci=AL_GetAPCIType(MSG_GetMessagePtr(MSG_ScratchBuffer));
+    apci = AL_GetAPCIType(MSG_GetMessagePtr(MSG_ScratchBuffer));
 
     if (LSM_IsGrOATLoaded()) {
         switch (apci) {
             case apciGROUP_VALUE_WRITE:
                 /* When the Application Layer of a device receives an A_GroupValue_Write-Service, it searches the */
                 /* TSAP in all entries of the association-table and informs all the associated ASAP. */
-                AL_UpdateAssociatedASAPs(MSG_ScratchBuffer,(KNX_OBJ_COMM_ENABLE|KNX_OBJ_WRITE_ENABLE));
+                AL_UpdateAssociatedASAPs(MSG_ScratchBuffer, (KNX_OBJ_COMM_ENABLE | KNX_OBJ_WRITE_ENABLE));
                 (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
                 break;
             case apciGROUP_VALUE_RESP:
-                AL_UpdateAssociatedASAPs(MSG_ScratchBuffer,(KNX_OBJ_COMM_ENABLE|KNX_OBJ_WRITE_ENABLE|KNX_OBJ_UPDATE_ENABLE));
+                AL_UpdateAssociatedASAPs(MSG_ScratchBuffer, (KNX_OBJ_COMM_ENABLE | KNX_OBJ_WRITE_ENABLE | KNX_OBJ_UPDATE_ENABLE));
                 (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
                 break;
             case apciGROUP_VALUE_READ:
@@ -183,13 +179,11 @@ static void Disp_T_PollDataCon(void)
 
 }
 
-
 /*
 **
 **  Services from User-Layer.
 **
 */
-
 
 static void Disp_A_DataGroupReq(void)
 {
@@ -207,193 +201,197 @@ static void Disp_A_PollDataReq(void)
 
 void ALG_Init(void)
 {
-    ALG_NumQueuedGroupMessages=((uint8)0x00);
+    ALG_NumQueuedGroupMessages = ((uint8)0x00);
 }
 
-void A_GroupValue_Read_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest,KNX_PriorityType prio)
+void A_GroupValue_Read_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest, KNX_PriorityType prio)
 {
-    MSG_SetAPCI(pBuffer,apciGROUP_VALUE_READ);
-    MSG_SetSourceAddress(pBuffer,source);
-    MSG_SetDestAddress(pBuffer,dest);
-    MSG_SetPriority(pBuffer,prio);
-    MSG_SetLen(pBuffer,(uint8)8);
+    MSG_SetAPCI(pBuffer, apciGROUP_VALUE_READ);
+    MSG_SetSourceAddress(pBuffer, source);
+    MSG_SetDestAddress(pBuffer, dest);
+    MSG_SetPriority(pBuffer, prio);
+    MSG_SetLen(pBuffer, (uint8)8);
 
-    pBuffer->service=T_DATA_GROUP_REQ;
+    pBuffer->service = T_DATA_GROUP_REQ;
 
     (void)MSG_Post(pBuffer);
 }
 
-void A_GroupValue_Write_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest,KNX_PriorityType prio,uint8 *data,uint8 len)
+void A_GroupValue_Write_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest, KNX_PriorityType prio, uint8 * data,
+                            uint8 len)
 {
-    MSG_SetAPCI(pBuffer,apciGROUP_VALUE_WRITE);
-    MSG_SetSourceAddress(pBuffer,source);
-    MSG_SetDestAddress(pBuffer,dest);
-    MSG_SetPriority(pBuffer,prio);
-    MSG_SetLen(pBuffer,8);
+    MSG_SetAPCI(pBuffer, apciGROUP_VALUE_WRITE);
+    MSG_SetSourceAddress(pBuffer, source);
+    MSG_SetDestAddress(pBuffer, dest);
+    MSG_SetPriority(pBuffer, prio);
+    MSG_SetLen(pBuffer, 8);
 
-    pBuffer->service=T_DATA_GROUP_REQ;
+    pBuffer->service = T_DATA_GROUP_REQ;
 
     (void)MSG_Post(pBuffer);
 }
 
 void ALG_PollCycle(void)
 {
-    uint8 idx,flags;
-    PMSG_Buffer pBuffer;
-    Knx_AddressType source,dest;
-    uint16 assoc;
-    KNX_PriorityType prio;
+    uint8               idx, flags;
+    PMSG_Buffer         pBuffer;
+    Knx_AddressType     source, dest;
+    uint16              assoc;
+    KNX_PriorityType    prio;
 
     if (!LSM_IsGrOATLoaded()) {  /* Association-Table must be 'LOADED'. */
         return;
     }
 
-    if (ALG_NumQueuedGroupMessages!=(uint8)0) {
+    if (ALG_NumQueuedGroupMessages != (uint8)0) {
         return;
     }
 
-    for (idx=(uint8)0;idx<AL_GetNumCommObjs();idx++) {
-        flags=AL_GetRAMFlags(idx);
+    for (idx = (uint8)0; idx < AL_GetNumCommObjs(); idx++) {
+        flags = AL_GetRAMFlags(idx);
 
-        if ((flags & KNX_OBJ_TRANSMIT_REQ)==KNX_OBJ_TRANSMIT_REQ) {
+        if ((flags & KNX_OBJ_TRANSMIT_REQ) == KNX_OBJ_TRANSMIT_REQ) {
             if (!AL_ObjTransmitEnabled(AL_GetCommObjDescr(idx)->Config)) {
                 /* Transmitting not configured. */
-                AL_SetRAMFlags(idx,KNX_OBJ_IDLE_ERROR);
+                AL_SetRAMFlags(idx, KNX_OBJ_IDLE_ERROR);
                 continue;
             }
-            assoc=ADR_GetAssoc(idx);
 
-            if (LOBYTE(assoc)!=idx) {
+            assoc = ADR_GetAssoc(idx);
+
+            if (LOBYTE(assoc) != idx) {
                 /* this is not a sending object. */
-                AL_SetRAMFlags(idx,KNX_OBJ_IDLE_ERROR);
+                AL_SetRAMFlags(idx, KNX_OBJ_IDLE_ERROR);
                 continue;
             }
 
-            if (HIBYTE(assoc)>=ADR_GrATLength()) {   /* todo: handle 'INVALID_/UNUSED_TSAP'!!! */
+            if (HIBYTE(assoc) >= ADR_GrATLength()) {   /* todo: handle 'INVALID_/UNUSED_TSAP'!!! */
                 /* TSAP does not exist. */
-                AL_SetRAMFlags(idx,KNX_OBJ_IDLE_ERROR);
+                AL_SetRAMFlags(idx, KNX_OBJ_IDLE_ERROR);
                 continue;
             }
 
-            pBuffer=MSG_AllocateBuffer();
-            if (pBuffer==(PMSG_Buffer)NULL) {
+            pBuffer = MSG_AllocateBuffer();
+
+            if (pBuffer == (PMSG_Buffer)NULL) {
                 /* no Message-Buffer available. */
                 return;
             }
-            pBuffer->sap=idx;
-            source=ADR_GetPhysAddr();
-            dest=ADR_GetGroupAddress(HIBYTE(assoc));
-            prio=AL_GetObjPriority(idx);
 
-            if ((flags & KNX_OBJ_DATA_REQUEST)==KNX_OBJ_DATA_REQUEST) {
-                A_GroupValue_Read_Req(pBuffer,source,dest,prio);
+            pBuffer->sap   = idx;
+            source         = ADR_GetPhysAddr();
+            dest           = ADR_GetGroupAddress(HIBYTE(assoc));
+            prio           = AL_GetObjPriority(idx);
+
+            if ((flags & KNX_OBJ_DATA_REQUEST) == KNX_OBJ_DATA_REQUEST) {
+                A_GroupValue_Read_Req(pBuffer, source, dest, prio);
 
             } else {
                 /* todo: 'WriteShort-Req' for lens <7 Bit!!!  */
-                A_GroupValue_Write_Req(pBuffer,source,dest,prio,NULL,(uint8)0);
+                A_GroupValue_Write_Req(pBuffer, source, dest, prio, NULL, (uint8)0);
                 /* WRITE_req */
 
             }
-            AL_SetRAMFlags(idx,KNX_OBJ_TRANSMITTING);
+
+            AL_SetRAMFlags(idx, KNX_OBJ_TRANSMITTING);
             return;
         }
     }
 }
 
 /*
-void AL_SetAPDUShortData(const KNX_StandardFrameRefType pmsg,uint8 data,uint8 nbits)
-{
+   void AL_SetAPDUShortData(const KNX_StandardFrameRefType pmsg,uint8 data,uint8 nbits)
+   {
     if (nbits>6) {
         return;
     }
 
     pmsg->apci=(pmsg->apci & (uint8)~0x3f) | (data & KNX_AL_SHORT_DATA_MASK[nbits-1]);
-}
-*/
+   }
+ */
 
-uint8 *AL_GetObjectDataPointer(uint8 objectNr)
+uint8 * AL_GetObjectDataPointer(uint8 objectNr)
 {
-    if (objectNr<AL_GetNumCommObjs()) {
-        return (uint8*)&APP_ObjectData[AL_GetCommObjDescr(objectNr)->DataPtr];
+    if (objectNr < AL_GetNumCommObjs()) {
+        return (uint8 *)&APP_ObjectData[AL_GetCommObjDescr(objectNr)->DataPtr];
     } else {
-        return (uint8*)NULL;
+        return (uint8 *)NULL;
     }
 }
 
-
-void AL_SetRAMFlags(uint16 objectNr,uint8 flags)
+void AL_SetRAMFlags(uint16 objectNr, uint8 flags)
 {
-    if ((objectNr % (uint8)2)==(uint8)1) {
-        APP_RAMFlags[objectNr>>1]=((flags & (uint8)0x0f)<<4);
+    if ((objectNr % (uint8)2) == (uint8)1) {
+        APP_RAMFlags[objectNr >> 1] = ((flags & (uint8)0x0f) << 4);
     } else {
-        APP_RAMFlags[objectNr>>1]=(flags & (uint8)0x0f);
+        APP_RAMFlags[objectNr >> 1] = (flags & (uint8)0x0f);
     }
 }
-
 
 uint8 AL_GetRAMFlags(uint16 objectNr)
 {
     uint8 b;
 
-    b=APP_RAMFlags[objectNr>>1];
+    b = APP_RAMFlags[objectNr >> 1];
 
-    if ((objectNr % (uint8)2)==1) {
-        return ((b & (uint8)0xf0)>>4);
+    if ((objectNr % (uint8)2) == 1) {
+        return (b & (uint8)0xf0) >> 4;
     } else {
-        return ((b & (uint8)0x0f));
+        return (b & (uint8)0x0f);
     }
 }
 
-
-uint8 *AL_GetRAMFlagPointer(void)
+uint8 * AL_GetRAMFlagPointer(void)
 {
-    return (uint8*)&APP_RAMFlags;
+    return (uint8 *)&APP_RAMFlags;
 }
 
-
-
-void AL_UpdateAssociatedASAPs(PMSG_Buffer pBuffer,uint8 testFlags)
+void AL_UpdateAssociatedASAPs(PMSG_Buffer pBuffer, uint8 testFlags)
 {
-    uint16 ca,*ap=ADR_GrOATBasePtr();
-    uint8 asap;
-    uint8 numAssocs=ADR_GrOATLength();
-    uint8 len_lsdu,len_obj;
+    uint16  ca, * ap = ADR_GrOATBasePtr();
+    uint8   asap;
+    uint8   numAssocs = ADR_GrOATLength();
+    uint8   len_lsdu, len_obj;
 
-
-    if ((pBuffer->sap==KNX_INVALID_TSAP) || (pBuffer->sap==KNX_UNUSED_TSAP)) {
+    if ((pBuffer->sap == KNX_INVALID_TSAP) || (pBuffer->sap == KNX_UNUSED_TSAP)) {
         return;
     }
 
     while (numAssocs--) {
-        ca=btohs(*ap++);
-        if (HIBYTE(ca)==pBuffer->sap) {
-            asap=LOBYTE(ca);
+        ca = btohs(*ap++);
 
-            if (asap<=AL_GetNumCommObjs()) {
-                if (AL_ObjCheckEnabled(AL_GetCommObjDescr(asap)->Config,testFlags)) {
+        if (HIBYTE(ca) == pBuffer->sap) {
+            asap = LOBYTE(ca);
+
+            if (asap <= AL_GetNumCommObjs()) {
+                if (AL_ObjCheckEnabled(AL_GetCommObjDescr(asap)->Config, testFlags)) {
 /*                if (AL_ObjWriteEnabled(AL_GetCommObjDescr(asap)->Config)) */
-                    len_lsdu=MSG_GetLSDULen(pBuffer);
-                    len_obj=AL_GetObjLen(AL_GetCommObjDescr(asap)->Type);
-                    if (len_lsdu-(uint8)1!=len_obj) {
+                    len_lsdu   = MSG_GetLSDULen(pBuffer);
+                    len_obj    = AL_GetObjLen(AL_GetCommObjDescr(asap)->Type);
+
+                    if (len_lsdu - (uint8)1 != len_obj) {
                         continue;
                     }
-                    if (len_lsdu>=(uint8)2) {
+
+                    if (len_lsdu >= (uint8)2) {
                         /* Normal-Data. */
-                        if (len_obj==(uint8)1) {
-                            *AL_GetObjectDataPointer(asap)=AL_GetAPDUDataByte(MSG_GetMessagePtr(pBuffer),0)
-                                & KNX_AL_SHORT_DATA_MASK[AL_GetCommObjDescr(asap)->Type];
+                        if (len_obj == (uint8)1) {
+                            *AL_GetObjectDataPointer(asap) = AL_GetAPDUDataByte(MSG_GetMessagePtr(pBuffer), 0)
+                                                             & KNX_AL_SHORT_DATA_MASK[AL_GetCommObjDescr(asap)->Type];
                         } else {
-                            Utl_MemCopy(AL_GetObjectDataPointer(asap),MSG_GetMessagePtr(pBuffer)->data,len_obj);
+                            Utl_MemCopy(AL_GetObjectDataPointer(asap), MSG_GetMessagePtr(pBuffer)->data, len_obj);
                         }
-                    } else if (len_lsdu==(uint8)1) {
+                    } else if (len_lsdu == (uint8)1) {
                         /* Short-Data. */
-                        *AL_GetObjectDataPointer(asap)=AL_GetAPDUShortData(MSG_GetMessagePtr(pBuffer),AL_GetCommObjDescr(asap)->Type);
+                        *AL_GetObjectDataPointer(asap) = AL_GetAPDUShortData(MSG_GetMessagePtr(pBuffer), AL_GetCommObjDescr(
+                                                                                 asap)->Type);
                     } else {
                         /* 'len_lsdu==0' ==> Error in Telegram. */
                         continue;
                     }
                 }
-                AL_SetRAMFlags(asap,(KNX_OBJ_UPDATED | KNX_OBJ_IDLE_OK));
+
+                AL_SetRAMFlags(asap, (KNX_OBJ_UPDATED | KNX_OBJ_IDLE_OK));
                 /* todo: generate 'A_Event_ind'? */
             }
         }

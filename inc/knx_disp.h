@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -20,17 +20,16 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
-*/
+ */
 #if !defined(__KNX_DISP_H)
 #define __KNX_DISP_H
 
 #include "KNXDefs.h"
-#include "Messaging.h"
+#include "knx_messaging.h"
 
 extern PMSG_Buffer MSG_ScratchBuffer;
 
-
-void KNXDispDispatchLayer(const uint8 LayerID,const KNXLayerServicesType *ServiceTable);
+void KNXDispDispatchLayer(const uint8 LayerID, const KNXLayerServicesType * ServiceTable);
 
 #endif /* __KNX_DISP_H */
 

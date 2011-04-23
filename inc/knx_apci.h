@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -20,9 +20,9 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
-*/
-#if !defined(__APCI_H)
-#define __APCI_H
+ */
+#if !defined(__KNX_APCI_H)
+#define __KNX_APCI_H
 
 /*
 **  APCI-Typen.
@@ -53,23 +53,22 @@ typedef enum tagAPCI_TypeType {
 
 } APCI_TypeType;
 
-
 /*
-**  Group-Services. 
+**  Group-Services.
 */
 #define A_GROUPVALUE_READ                       ((uint16)0x0000)
 #define A_GROUPVALUE_RESPONSE                   ((uint16)0x0040)
 #define A_GROUPVALUE_WRITE                      ((uint16)0x0080)
 
 /*
-**  Broadcast. 
+**  Broadcast.
 */
 #define A_PHYSICALADDRESS_WRITE                 ((uint16)0x00C0)    /* Phys.AddrSet                 */
 #define A_PHYSICALADDRESS_READ                  ((uint16)0x0100)    /* Phys.AddrRead                */
 #define A_PHYSICALADDRESS_RESPONSE              ((uint16)0x0140)    /* Phys.AddrResponse            */
 
 /*
-**  Point-to-Point. 
+**  Point-to-Point.
 */
 #define A_ADC_READ                              ((uint16)0x0180)    /* ADCRead                      */
 #define A_ADC_RESPONSE                          ((uint16)0x01C0)    /* ADCResponse                  */
@@ -94,7 +93,7 @@ typedef enum tagAPCI_TypeType {
 #define A_RESTART                               ((uint16)0x0380)    /* Restart                      */
 
 /*
-**  Coupler-/Router-specific. 
+**  Coupler-/Router-specific.
 */
 #define A_OPEN_ROUTING_TABLE_REQ                ((uint16)0x03C0)    /* LcTabMemEnable               */
 #define A_READ_ROUTING_TABLE_REQ                ((uint16)0x03C1)    /* LcTabMemRead                 */
@@ -119,7 +118,7 @@ typedef enum tagAPCI_TypeType {
 #define A_PROPERTYDESCRIPTION_READ              ((uint16)0x03D8)    /* PropertyDescriptionRead      */
 #define A_PROPERTYDESCRIPTION_RESPONSE          ((uint16)0x03D9)    /* PropertyDescriptionResponse  */
 
-/* 
+/*
 ** Broadcast.
 ** Hinweis: 'C'-Identifier dürfen höchstens 31 Zeichen lang sein!!!
 */
@@ -138,19 +137,18 @@ typedef enum tagAPCI_TypeType {
 #define A_NETWORKPARAMETER_RESPONSE             ((uint16)0x03DB)    /* (s. Supplement S03)          */
 
 /*
-**  Point to Point. 
+**  Point to Point.
 */
 #define A_LINK_READ                             ((uint16)0x03E5)
 #define A_LINK_RESPONSE                         ((uint16)0x03E6)
 #define A_LINK_WRITE                            ((uint16)0x03E7)
 
 /*
-**  Multicast. 
+**  Multicast.
 */
 #define A_GROUPPROPVALUE_READ                   ((uint16)0x03E8)    /* s. KNX 10_01 LTE             */
 #define A_GROUPPROPVALUE_RESPONSE               ((uint16)0x03E9)
 #define A_GROUPPROPVALUE_WRITE                  ((uint16)0x03EA)
 #define A_GROUPPROPVALUE_INFOREPORT             ((uint16)0x03EB)
 
-#endif  /* __APCI_H */
-
+#endif  /* __KNX_APCI_H */

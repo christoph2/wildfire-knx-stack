@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -20,49 +20,48 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
-*/
-#include "Transport.h"
+ */
+#include "knx_layer_transport.h"
 
-static void Disp_T_DataConnectedReq(void),Disp_T_ConnectReq(void),Disp_T_DisconnectReq(void);
-static void Disp_N_Data_IndividualInd(void),Disp_T_DataIndividualReq(void),Disp_T_DataBroadcastReq(void);
-static void Disp_N_DataBroadcastInd(void),Disp_N_DataIndividualCon(void),Disp_N_DataBroadcast_Con(void);
+static void Disp_T_DataConnectedReq(void), Disp_T_ConnectReq(void), Disp_T_DisconnectReq(void);
+static void Disp_N_Data_IndividualInd(void), Disp_T_DataIndividualReq(void), Disp_T_DataBroadcastReq(void);
+static void Disp_N_DataBroadcastInd(void), Disp_N_DataIndividualCon(void), Disp_N_DataBroadcast_Con(void);
 
-static uint8 KNXTlc_SequenceNumberSend,KNXTlc_SequenceNumberReceived;
-static uint8 KNXTlc_RepetitionCount,KNXTlc_SequenceNumberOfPDU;
-static Knx_AddressType KNXTlc_SourceAddress,KNXTlc_ConnectionAddress;
+static uint8            KNXTlc_SequenceNumberSend, KNXTlc_SequenceNumberReceived;
+static uint8            KNXTlc_RepetitionCount, KNXTlc_SequenceNumberOfPDU;
+static Knx_AddressType  KNXTlc_SourceAddress, KNXTlc_ConnectionAddress;
 
-static const KNXLayerServiceFunctionType TLC_Services[]={
+static const KNXLayerServiceFunctionType TLC_Services[] = {
 /*      Service                     Handler                 */
 /*      ====================================================*/
-/*      N_DATA_INDIVIDUAL_IND   */  Disp_N_Data_IndividualInd,
-/*      N_DATA_INDIVIDUAL_CON   */  Disp_N_DataIndividualCon,
-/*      N_DATA_BROADCAST_IND    */  Disp_N_DataBroadcastInd,
-/*      N_DATA_BROADCAST_CON    */  Disp_N_DataBroadcast_Con,
-/*      T_CONNECT_REQ           */  Disp_T_ConnectReq,
-/*      T_DISCONNECT_REQ        */  Disp_T_DisconnectReq,
-/*      T_DATA_CONNECTED_REQ    */  Disp_T_DataConnectedReq,
-/*      T_DATA_INDIVIDUAL_REQ   */  Disp_T_DataIndividualReq,
-/*      T_DATA_BROADCAST_REQ    */  Disp_T_DataBroadcastReq
+/*      N_DATA_INDIVIDUAL_IND   */ Disp_N_Data_IndividualInd,
+/*      N_DATA_INDIVIDUAL_CON   */ Disp_N_DataIndividualCon,
+/*      N_DATA_BROADCAST_IND    */ Disp_N_DataBroadcastInd,
+/*      N_DATA_BROADCAST_CON    */ Disp_N_DataBroadcast_Con,
+/*      T_CONNECT_REQ           */ Disp_T_ConnectReq,
+/*      T_DISCONNECT_REQ        */ Disp_T_DisconnectReq,
+/*      T_DATA_CONNECTED_REQ    */ Disp_T_DataConnectedReq,
+/*      T_DATA_INDIVIDUAL_REQ   */ Disp_T_DataIndividualReq,
+/*      T_DATA_BROADCAST_REQ    */ Disp_T_DataBroadcastReq
 /*      ====================================================*/
 };
 
-static const KNXLayerServicesType TLC_ServiceTable[]={
-    {KNX_TLC_SERVICES,9,TLC_Services}
+static const KNXLayerServicesType TLC_ServiceTable[] = {
+    {KNX_TLC_SERVICES, 9, TLC_Services}
 };
 
 void TLC_Task(void)
 {
-	if (TM_IsExpired(TM_TIMER_TLC_CON_TIMEOUT)) {
-		KNXTlc_StateMachine(tlcTIMEOUT_CON);
-	}
+    if (TM_IsExpired(TM_TIMER_TLC_CON_TIMEOUT)) {
+        KNXTlc_StateMachine(tlcTIMEOUT_CON);
+    }
 
-	if (TM_IsExpired(TM_TIMER_TLC_ACK_TIMEOUT)) {
-		KNXTlc_StateMachine(tlcTIMEOUT_ACK);
-	}
+    if (TM_IsExpired(TM_TIMER_TLC_ACK_TIMEOUT)) {
+        KNXTlc_StateMachine(tlcTIMEOUT_ACK);
+    }
 
-        KNXDispDispatchLayer(TASK_TC_ID,TLC_ServiceTable);
+    KNXDispDispatchLayer(TASK_TC_ID, TLC_ServiceTable);
 }
-
 
 void TL_Init(void)
 {
@@ -73,7 +72,6 @@ void TL_Init(void)
 
     KNXTlc_SetState(CLOSED);
 }
-
 
 /********************************************************************/
 /********************************************************************/
@@ -91,10 +89,11 @@ static void Disp_N_Data_IndividualInd(void)
 
     KNXTlc_SetSourceAddress(MSG_GetSourceAddress(MSG_ScratchBuffer)); /* todo: !!! TESTEN !!! */
 
-    tpci=MSG_GetTPCI(MSG_ScratchBuffer) & (uint8)0xc0;
+    tpci = MSG_GetTPCI(MSG_ScratchBuffer) & (uint8)0xc0;
+
     switch (tpci) {
         case TPCI_UDT:   /* Unnumbered Data (1:1-Connection-Less). */
-            MSG_ScratchBuffer->service=T_DATA_INDIVIDUAL_IND;
+            MSG_ScratchBuffer->service = T_DATA_INDIVIDUAL_IND;
             (void)MSG_Post(MSG_ScratchBuffer);
             break;
         case TPCI_NDT:   /* Numbered Data (T_DATA_CONNECTED_REQ_PDU, 1:1-Connection-Oriented). */
@@ -102,29 +101,31 @@ static void Disp_N_Data_IndividualInd(void)
             KNXTlc_StateMachine((KNX_TlcEventType)tlcDATA_CONNECTED_IND);
             break;
         case TPCI_UCD:   /* Unnumbered Control. (CONNECT|DISCONNECT). */
-            tpci=MSG_GetTPCI(MSG_ScratchBuffer);
+            tpci = MSG_GetTPCI(MSG_ScratchBuffer);
 
-            if (tpci==T_CONNECT_REQ_PDU) {
+            if (tpci == T_CONNECT_REQ_PDU) {
                 /* T_CONNECT_IND */
                 KNXTlc_StateMachine((KNX_TlcEventType)tlcCONNECT_IND);
-            } else if (tpci==T_DISCONNECT_REQ_PDU) {
+            } else if (tpci == T_DISCONNECT_REQ_PDU) {
                 /* T_DISCONNECT_IND */
                 KNXTlc_StateMachine((KNX_TlcEventType)tlcDISCONNECT_IND);
             } else {
                 (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
             }
+
             break;
-        case TPCI_NCD:   /* Numbered Control (TACK|TNACK). */
-            tpci=MSG_GetTPCI(MSG_ScratchBuffer) & (uint8)0xC3;  /* 0x03 */
+        case TPCI_NCD:                                              /* Numbered Control (TACK|TNACK). */
+            tpci = MSG_GetTPCI(MSG_ScratchBuffer) & (uint8)0xC3;    /* 0x03 */
             KNXTlc_SetSequenceNumberOfPDU(MSG_GetSeqNo(MSG_ScratchBuffer));
 
-            if (tpci==T_ACK_PDU) {
+            if (tpci == T_ACK_PDU) {
                 KNXTlc_StateMachine((KNX_TlcEventType)tlcACK_IND);
-            } else if (tpci==T_NAK_PDU) {
+            } else if (tpci == T_NAK_PDU) {
                 KNXTlc_StateMachine((KNX_TlcEventType)tlcNAK_IND);
             } else {
                 (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
             }
+
             break;
         default:
             ASSERT(FALSE);
@@ -133,7 +134,7 @@ static void Disp_N_Data_IndividualInd(void)
 
 static void Disp_N_DataBroadcastInd(void)
 {
-    MSG_ScratchBuffer->service=T_DATA_BROADCAST_IND;
+    MSG_ScratchBuffer->service = T_DATA_BROADCAST_IND;
     (void)MSG_Post(MSG_ScratchBuffer);
 }
 
@@ -144,7 +145,7 @@ static void Disp_N_DataIndividualCon(void)
 
 static void Disp_N_DataBroadcast_Con(void)
 {
-    MSG_ScratchBuffer->service=T_DATA_BROADCAST_CON;
+    MSG_ScratchBuffer->service = T_DATA_BROADCAST_CON;
     (void)MSG_Post(MSG_ScratchBuffer);
 }
 
@@ -156,97 +157,96 @@ static void Disp_N_DataBroadcast_Con(void)
 
 static void Disp_T_DataIndividualReq(void)
 {
-    MSG_SetTPCI(MSG_ScratchBuffer,TPCI_UDT);
-    MSG_ScratchBuffer->service=N_DATA_INDIVIDUAL_REQ;
+    MSG_SetTPCI(MSG_ScratchBuffer, TPCI_UDT);
+    MSG_ScratchBuffer->service = N_DATA_INDIVIDUAL_REQ;
     (void)MSG_Post(MSG_ScratchBuffer);
 }
 
 static void Disp_T_DataConnectedReq(void)
 {
-    MSG_SetTPCI(MSG_ScratchBuffer,TPCI_NDT);
-    MSG_ScratchBuffer->service=N_DATA_INDIVIDUAL_REQ;
+    MSG_SetTPCI(MSG_ScratchBuffer, TPCI_NDT);
+    MSG_ScratchBuffer->service = N_DATA_INDIVIDUAL_REQ;
     (void)MSG_Post(MSG_ScratchBuffer);
 }
 
 static void Disp_T_ConnectReq(void)
 {
-    MSG_SetTPCI(MSG_ScratchBuffer,TPCI_UCD);
-    MSG_ScratchBuffer->service=N_DATA_INDIVIDUAL_REQ;
+    MSG_SetTPCI(MSG_ScratchBuffer, TPCI_UCD);
+    MSG_ScratchBuffer->service = N_DATA_INDIVIDUAL_REQ;
     (void)MSG_Post(MSG_ScratchBuffer);
 }
 
 static void Disp_T_DisconnectReq(void)
 {
-    MSG_SetTPCI(MSG_ScratchBuffer,TPCI_UCD);
-    MSG_ScratchBuffer->service=N_DATA_INDIVIDUAL_REQ;
+    MSG_SetTPCI(MSG_ScratchBuffer, TPCI_UCD);
+    MSG_ScratchBuffer->service = N_DATA_INDIVIDUAL_REQ;
     (void)MSG_Post(MSG_ScratchBuffer);
 }
 
 static void Disp_T_DataBroadcastReq(void)
 {
-    MSG_SetTPCI(MSG_ScratchBuffer,TPCI_UDT);
-    MSG_ScratchBuffer->service=N_DATA_BROADCAST_REQ;
+    MSG_SetTPCI(MSG_ScratchBuffer, TPCI_UDT);
+    MSG_ScratchBuffer->service = N_DATA_BROADCAST_REQ;
     (void)MSG_Post(MSG_ScratchBuffer);
 }
 
-
 /********************************************************************/
 /********************************************************************/
 /********************************************************************/
 
-void T_Connect_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest)
+void T_Connect_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest)
 {
-    MSG_SetTPCI(pBuffer,T_CONNECT_REQ_PDU);
-    MSG_SetSourceAddress(pBuffer,source);
-    MSG_SetDestAddress(pBuffer,dest);
-    MSG_SetPriority(pBuffer,KNX_OBJ_PRIO_SYSTEM);
-    MSG_SetLen(pBuffer,(uint8)7);
-    pBuffer->service=N_DATA_INDIVIDUAL_REQ; /* T_CONNECT_REQ; */
+    MSG_SetTPCI(pBuffer, T_CONNECT_REQ_PDU);
+    MSG_SetSourceAddress(pBuffer, source);
+    MSG_SetDestAddress(pBuffer, dest);
+    MSG_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
+    MSG_SetLen(pBuffer, (uint8)7);
+    pBuffer->service = N_DATA_INDIVIDUAL_REQ; /* T_CONNECT_REQ; */
 
     (void)MSG_Post(pBuffer);
 }
 
-void T_Disconnect_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest)
+void T_Disconnect_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest)
 {
-    MSG_SetTPCI(pBuffer,T_DISCONNECT_REQ_PDU);
-    MSG_SetSourceAddress(pBuffer,source);
-    MSG_SetDestAddress(pBuffer,dest);
-    MSG_SetPriority(pBuffer,KNX_OBJ_PRIO_SYSTEM);
-    MSG_SetLen(pBuffer,7);
-    pBuffer->service=N_DATA_INDIVIDUAL_REQ; /* T_DISCONNECT_REQ; */
+    MSG_SetTPCI(pBuffer, T_DISCONNECT_REQ_PDU);
+    MSG_SetSourceAddress(pBuffer, source);
+    MSG_SetDestAddress(pBuffer, dest);
+    MSG_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
+    MSG_SetLen(pBuffer, 7);
+    pBuffer->service = N_DATA_INDIVIDUAL_REQ; /* T_DISCONNECT_REQ; */
 
     (void)MSG_Post(pBuffer);
 }
 
-void T_Ack_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest,uint8 SeqNo)
+void T_Ack_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 SeqNo)
 {
-    MSG_SetTPCI(pBuffer,T_ACK_PDU | ((SeqNo & (uint8)0x0f)<<2));
-    MSG_SetSourceAddress(pBuffer,source);
-    MSG_SetDestAddress(pBuffer,dest);
-    MSG_SetPriority(pBuffer,KNX_OBJ_PRIO_SYSTEM);
-    MSG_SetLen(pBuffer,7);
-    pBuffer->service=N_DATA_INDIVIDUAL_REQ;
+    MSG_SetTPCI(pBuffer, T_ACK_PDU | ((SeqNo & (uint8)0x0f) << 2));
+    MSG_SetSourceAddress(pBuffer, source);
+    MSG_SetDestAddress(pBuffer, dest);
+    MSG_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
+    MSG_SetLen(pBuffer, 7);
+    pBuffer->service = N_DATA_INDIVIDUAL_REQ;
 
     (void)MSG_Post(pBuffer);
 }
 
-void T_Nak_Req(PMSG_Buffer pBuffer,Knx_AddressType source,Knx_AddressType dest,uint8 SeqNo)
+void T_Nak_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 SeqNo)
 {
-    MSG_SetTPCI(pBuffer,T_NAK_PDU | ((SeqNo & (uint8)0x0f)<<2));
-    MSG_SetSourceAddress(pBuffer,source);
-    MSG_SetDestAddress(pBuffer,dest);
-    MSG_SetPriority(pBuffer,KNX_OBJ_PRIO_SYSTEM);
-    MSG_SetLen(pBuffer,7);
-    pBuffer->service=N_DATA_INDIVIDUAL_REQ;
+    MSG_SetTPCI(pBuffer, T_NAK_PDU | ((SeqNo & (uint8)0x0f) << 2));
+    MSG_SetSourceAddress(pBuffer, source);
+    MSG_SetDestAddress(pBuffer, dest);
+    MSG_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
+    MSG_SetLen(pBuffer, 7);
+    pBuffer->service = N_DATA_INDIVIDUAL_REQ;
 
     (void)MSG_Post(pBuffer);
 }
-
 
 uint8 KNXTlc_GetSequenceNumberSend(void)
 {
     return KNXTlc_SequenceNumberSend;
 }
+
 uint8 KNXTlc_GetSequenceNumberReceived(void)
 {
     return KNXTlc_SequenceNumberReceived;
@@ -274,29 +274,31 @@ Knx_AddressType KNXTlc_GetConnectionAddress(void)
 
 void KNXTlc_SetSequenceNumberSend(uint8 SequenceNumberSend)
 {
-    KNXTlc_SequenceNumberSend=(SequenceNumberSend & ((uint8)0x0f));
+    KNXTlc_SequenceNumberSend = (SequenceNumberSend & ((uint8)0x0f));
 }
+
 void KNXTlc_SetSequenceNumberReceived(uint8 SequenceNumberReceived)
 {
-    KNXTlc_SequenceNumberReceived=(SequenceNumberReceived & ((uint8)0x0f));
+    KNXTlc_SequenceNumberReceived = (SequenceNumberReceived & ((uint8)0x0f));
 }
 
 void KNXTlc_SetRepetitionCount(uint8 RepetitionCount)
 {
-    KNXTlc_RepetitionCount=RepetitionCount;
+    KNXTlc_RepetitionCount = RepetitionCount;
 }
 
 void KNXTlc_SetSequenceNumberOfPDU(uint8 SequenceNumberOfPDU)
 {
-    KNXTlc_SequenceNumberOfPDU=SequenceNumberOfPDU;
+    KNXTlc_SequenceNumberOfPDU = SequenceNumberOfPDU;
 }
 
 void KNXTlc_SetSourceAddress(Knx_AddressType SourceAddress)
 {
-    KNXTlc_SourceAddress=SourceAddress;
+    KNXTlc_SourceAddress = SourceAddress;
 }
 
 void KNXTlc_SetConnectionAddress(Knx_AddressType ConnectionAddress)
 {
-    KNXTlc_ConnectionAddress=ConnectionAddress;
+    KNXTlc_ConnectionAddress = ConnectionAddress;
 }
+

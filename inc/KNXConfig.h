@@ -20,7 +20,7 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
-*/
+ */
 #if !defined(__KNXCONFIG_H)
 #define __KNXCONFIG_H
 
@@ -28,10 +28,10 @@
 #define KNX_CLIENT_LIB
 #define KNX_USE_CONFIMATIONS
 #define KNX_BUSACCESS_TPUART
-#define KNX_TL_STYLE		((uint8)3)
+#define KNX_TL_STYLE    ((uint8)3)
 #undef  KNX_TL_RATIONALIZE
 #define KNX_USER_OBJECTS
-#define KNX_MASK_TYPE		((uint8)21)
+#define KNX_MASK_TYPE   ((uint8)21)
 
 #endif  /* __KNXCONFIG_H */
 

@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -20,31 +20,28 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
-*/
+ */
+#if !defined(__KNX_LSM_H)
+#define __KNX_LSM_H
 
-/*
-** cEMI
-*/
-#if !defined(__CEMI_H)
-#define __CEMI_H
+#include "KNXDefs.h"
 
-#include "target.h"
+#define KNX_NUM_SYS_LSCS    ((uint8)3)
 
-#define L_BUSMON_IND        ((BYTE)0x2B)
-#define L_RAW_IND           ((BYTE)0x2D)
-#define L_RAW_REQ           ((BYTE)0x10)
-#define L_RAW_CON           ((BYTE)0x2F)
-#define L_DATA_REQ          ((BYTE)0x11)
-#define L_DATA_CON          ((BYTE)0x2E)
-#define L_DATA_IND          ((BYTE)0x29)
-#define L_POLL_DATA_REQ     ((BYTE)0x13)
-#define L_POLL_DATA_CON     ((BYTE)0x25)
-#define M_PROP_READ_REQ     ((BYTE)0xFC)
-#define M_PROP_READ_CON     ((BYTE)0xFB)
-#define M_PROP_WRITE_REQ    ((BYTE)0xF6)
-#define M_PROP_WRITE_CON    ((BYTE)0xF5)
-#define M_PROP_INFO_IND     ((BYTE)0xF7)
-#define M_RESET_REQ         ((BYTE)0xF1)
-#define M_RESET_IND         ((BYTE)0xF0)
+#define KNX_LSC_APP         ((uint8)0)
+#define KNX_LSC_GRAT        ((uint8)1)
+#define KNX_LSC_GROAT       ((uint8)2)
 
-#endif  /* __CEMI_H  */
+typedef uint8 KNX_LSCType;
+
+extern KNX_LSCType KNX_SystemLSC[];
+
+void    LSM_Init(void);
+void    LSM_Dispatch(uint8 * record, /*LSM_State*/ uint8 * ls_var);
+boolean LSM_IsAppLoaded(void);
+boolean LSM_IsGrATLoaded(void);
+boolean LSM_IsGrOATLoaded(void);
+
+void LSM_Test(void);
+
+#endif  /* __KNX_LSM_H */

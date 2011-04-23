@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -20,29 +20,16 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
-*/
-#if !defined(__LSM_H)
-#define __LSM_H
+ */
+#if !defined(__KNX_SYS_OBJS_H)
+#define __KNX_SYS_OBJS_H
 
 #include "KNXDefs.h"
+#include "knx_lsm.h"
+#include "Appl.h"
 
-#define KNX_NUM_SYS_LSCS    ((uint8)3)
+extern const uint8                              Knx_SystemInterfaceObjCount;
+extern Knx_InterfaceObjectType const * const    Knx_SystemInterfaceObjs[];
 
-#define KNX_LSC_APP         ((uint8)0)
-#define KNX_LSC_GRAT        ((uint8)1)
-#define KNX_LSC_GROAT       ((uint8)2)
-
-typedef uint8 KNX_LSCType;
-
-extern KNX_LSCType KNX_SystemLSC[];
-
-void LSM_Init(void);
-void LSM_Dispatch(uint8 *record,/*LSM_State*/uint8 *ls_var);
-boolean LSM_IsAppLoaded(void);
-boolean LSM_IsGrATLoaded(void);
-boolean LSM_IsGrOATLoaded(void);
-
-void LSM_Test(void);
-
-#endif  /* __LSM_H */
+#endif  /* __KNX_SYS_OBJS_H */
 

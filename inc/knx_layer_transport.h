@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -21,13 +21,13 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-#if !defined(__TRANSPORT_H)
-#define __TRANSPORT_H
+#if !defined(__KNX_LAYER_TRANSPORT_H)
+#define __KNX_LAYER_TRANSPORT_H
 
-#include "Address.h"
-#include "Messaging.h"
+#include "knx_address.h"
+#include "knx_messaging.h"
 #include "StateMachineKNX.h"
-#include "Timer.h"
+#include "knx_timer.h"
 #include "knx_disp.h"
 
 /*
@@ -72,4 +72,4 @@ void    KNXTlc_SetSequenceNumberOfPDU(uint8 SequenceNumberOfPDU);
 void    KNXTlc_SetSourceAddress(Knx_AddressType SourceAddress);
 void    KNXTlc_SetConnectionAddress(Knx_AddressType ConnectionAddress);
 
-#endif  /* __TRANSPORT_H */
+#endif  /* __KNX_LAYER_TRANSPORT_H */

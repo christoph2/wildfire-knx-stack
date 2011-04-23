@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -20,16 +20,16 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
-*/
+ */
 #if !defined(__KNXCONV_H)
 #define __KNXCONV_H
 
 #include "KNXDefs.h"
 
-uint16 LongToDPT9(sint32 value);
-uint16 FloatToDPT9(float value);
-float DPT9ToFloat(uint16 value);
-sint32 DPT9ToLong(uint16 value);
+uint16  LongToDPT9(sint32 value);
+uint16  FloatToDPT9(float value);
+float   DPT9ToFloat(uint16 value);
+sint32  DPT9ToLong(uint16 value);
 
 #if defined(__HIWARE__)
 #define KNX_BIG_ENDIAN
@@ -40,15 +40,16 @@ sint32 DPT9ToLong(uint16 value);
 #endif
 
 #if defined(KNX_BIG_ENDIAN)
-#define btohs(w) (w)
-#define htobs(w) (w)
+#define btohs(w)    (w)
+#define htobs(w)    (w)
 
 #elif defined(KNX_LITTLE_ENDIAN)
 
 /* #define btohs(w)    MAKEWORD(LOBYTE((w)),HIBYTE((w))) */
 
 uint16 btohs(uint16 w);
-#define htobs(w)    btohs(w)
+
+#define htobs(w) btohs(w)
 #else
  #error "No Endianess defined!!!"
 #endif

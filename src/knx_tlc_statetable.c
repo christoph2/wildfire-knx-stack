@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <chris@konnex-tools.de,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -21,10 +21,23 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
 */
-#if !defined(__RSM_H)
-#define	__RSM_H
 
-#include "KNXDefs.h"
+// Das sollte aber kein Problem darstellen, ich habe grössten
+// Wert darauf gelegt, meine Projekte Compiler unabhängig zu
+// gestalten.
 
-#endif	/* __RSM_H */
+//
+// I will fix the linkage problem, refactor some stuff over weekend
+// and the I will send you installation instructions. Man kann zwar
+// nicht davon ausgehen das gleich auf Anhieb alles funktioniert,
+// aber es ist ein <important first step, that the protocol stack
+// compiles and links on you machine.
+//
+
+//
+// Was mir noch einfiel: if you where using HC12 controller, U could
+// use the build-in fuzzy-logic instructions ;-)
+//
+
+#include "knx_tlc_statetable.h"
 

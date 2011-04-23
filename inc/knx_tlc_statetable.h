@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <chris@konnex-tools.de,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -21,15 +21,11 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
 */
-#if !defined(__SYS_OBJS_H)
-#define __SYS_OBJS_H
+#if !defined(__KNX_TLC_STATETABLE_H)
+#define __KNX_TLC_STATETABLE_H
 
 #include "KNXDefs.h"
-#include "lsm.h"
-#include "Appl.h"
+//extern const KNXTlc_ActionListType Actions[];
 
-extern const uint8 Knx_SystemInterfaceObjCount;
-extern Knx_InterfaceObjectType const * const Knx_SystemInterfaceObjs[];
 
-#endif  /* __SYS_OBJS_H */
-
+#endif /* __KNX_TLC_STATETABLE_H */

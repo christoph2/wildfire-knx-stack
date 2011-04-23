@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -20,40 +20,40 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
-*/
-#include "rsm.h"
+ */
+#include "knx_rsm.h"
 
 /*
-State           Value   Remark
-=====           =====   ======
-Halted          0x00    the program is halted 
-Running         0x01    the program is running
-Ready           0x02    the program is ready, but not yet running
-Terminate       0x03    the program is terminated
-*/
+   State           Value   Remark
+   =====           =====   ======
+   Halted          0x00    the program is halted
+   Running         0x01    the program is running
+   Ready           0x02    the program is ready, but not yet running
+   Terminate       0x03    the program is terminated
+ */
 
 /*
-Event   Value   Remark
-====    =====   ======
-Ready   0x00    no operation
-Restart 0x01    request to restart the program
-Stop    0x02    request to stop the program
-*/
+   Event   Value   Remark
+   ====    =====   ======
+   Ready   0x00    no operation
+   Restart 0x01    request to restart the program
+   Stop    0x02    request to stop the program
+ */
 
 /*
-// Format (reading run control).
+   // Format (reading run control).
 
-#define KNX_RSM_STATE_HALTED        0   // the program is halted.
-#define KNX_RSM_STATE_RUNNING       1   // the program is running.
-#define KNX_RSM_STATE_READY         2   // the program is ready, but not yet running.
-#define KNX_RSM_STATE_TERMINATED    3   // the program is terminated.
+   #define KNX_RSM_STATE_HALTED        0   // the program is halted.
+   #define KNX_RSM_STATE_RUNNING       1   // the program is running.
+   #define KNX_RSM_STATE_READY         2   // the program is ready, but not yet running.
+   #define KNX_RSM_STATE_TERMINATED    3   // the program is terminated.
 
-// Format (writing run control).
+   // Format (writing run control).
 
-#define KNX_RSM_EVENT_READY     0   // no operation.
-#define KNX_RSM_EVENT_RESTART   1   // request to restart the program.
-#define KNX_RSM_EVENT_STOP      2   // request to stop the program.
-*/
+   #define KNX_RSM_EVENT_READY     0   // no operation.
+   #define KNX_RSM_EVENT_RESTART   1   // request to restart the program.
+   #define KNX_RSM_EVENT_STOP      2   // request to stop the program.
+ */
 
 typedef enum tagRSM_State {
     RSM_STATE_HALTED,
