@@ -30,6 +30,11 @@
 
 #include "target.h"
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 #define L_BUSMON_IND        ((BYTE)0x2B)
 #define L_RAW_IND           ((BYTE)0x2D)
 #define L_RAW_REQ           ((BYTE)0x10)
@@ -46,5 +51,9 @@
 #define M_PROP_INFO_IND     ((BYTE)0xF7)
 #define M_RESET_REQ         ((BYTE)0xF1)
 #define M_RESET_IND         ((BYTE)0xF0)
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __CEMI_H  */

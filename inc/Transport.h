@@ -30,6 +30,11 @@
 #include "Timer.h"
 #include "knx_disp.h"
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 /*
 **  TPCI-Codings.
 */
@@ -71,5 +76,9 @@ void    KNXTlc_SetRepetitionCount(uint8 RepetitionCount);
 void    KNXTlc_SetSequenceNumberOfPDU(uint8 SequenceNumberOfPDU);
 void    KNXTlc_SetSourceAddress(Knx_AddressType SourceAddress);
 void    KNXTlc_SetConnectionAddress(Knx_AddressType ConnectionAddress);
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __TRANSPORT_H */

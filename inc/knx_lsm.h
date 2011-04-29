@@ -26,6 +26,11 @@
 
 #include "KNXDefs.h"
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 #define KNX_NUM_SYS_LSCS    ((uint8)3)
 
 #define KNX_LSC_APP         ((uint8)0)
@@ -43,5 +48,9 @@ boolean LSM_IsGrATLoaded(void);
 boolean LSM_IsGrOATLoaded(void);
 
 void LSM_Test(void);
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __KNX_LSM_H */

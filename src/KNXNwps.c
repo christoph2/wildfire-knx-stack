@@ -23,7 +23,7 @@
  */
 #include "KNXNwps.h"
 
-void NWPS_Dispatch(PMSG_Buffer pBuffer, uint8 service /*,boolean connected*/);
+void NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*/);
 
 /*
    · check the usage of a Group Address (Group Address Check)
@@ -79,7 +79,7 @@ void NWPS_Dispatch(PMSG_Buffer pBuffer, uint8 service /*,boolean connected*/);
     Value:          11..21
  */
 
-typedef boolean (*NWPS_FUNC)(PMSG_Buffer pBuffer);
+typedef boolean (*NWPS_FUNC)(KnxMSG_BufferPtr pBuffer);
 
 typedef struct tagNWPSFunctions {
     uint16      ObjectType_from, ObjectType_to;
@@ -87,51 +87,51 @@ typedef struct tagNWPSFunctions {
     NWPS_FUNC   func;
 } NWPSFunctions;
 
-boolean NWPS_GroupAddressCheck(PMSG_Buffer pBuffer);
-boolean NWPS_FunctionalBlockScan(PMSG_Buffer pBuffer);
-boolean NWPS_GetSerialNumber(PMSG_Buffer pBuffer);
+boolean NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer);
+boolean NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer);
+boolean NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer);
 
 static NWPSFunctions NWPSReadFunctions[] = {
-    {KNX_OT_ADDRESSTABLE_OBJECT, KNX_OT_ADDRESSTABLE_OBJECT, KNX_PID_GROUP_ADDRESS_LIST, NWPS_GroupAddressCheck  },
-    {(uint8)50,                  (uint16)50000,              KNX_PID_OBJECT_TYPE,        NWPS_FunctionalBlockScan},
-    {KNX_OT_DEVICE_OBJECT,       KNX_OT_DEVICE_OBJECT,       KNX_PID_SERIAL_NUMBER,      NWPS_GetSerialNumber    }
+    {KNX_OT_ADDRESSTABLE_OBJECT, KNX_OT_ADDRESSTABLE_OBJECT,     KNX_PID_GROUP_ADDRESS_LIST,           NWPS_GroupAddressCheck                                       },
+    {(uint8)50,                  (uint16)50000,                  KNX_PID_OBJECT_TYPE,                  NWPS_FunctionalBlockScan                                     },
+    {KNX_OT_DEVICE_OBJECT,       KNX_OT_DEVICE_OBJECT,           KNX_PID_SERIAL_NUMBER,                NWPS_GetSerialNumber                                         }
 };
 
 /* A_NetworkParameter_Read.req(hop_count_type, parameter_type, priority, test_info); */
 
-void NWPS_Dispatch(PMSG_Buffer pBuffer, uint8 service /*,boolean connected*/)
+void NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*/)
 {
     KNX_StandardFrameRefType    pmsg;
     uint8                       len, Pid;
     uint16                      objectType;
 
-    pmsg = MSG_GetMessagePtr(pBuffer);
+    pmsg = KnxMSG_GetMessagePtr(pBuffer);
 
     objectType = btohs((uint16)pmsg->data[0]);
     Pid        = pmsg->data[2];
 
-    len = MSG_GetLSDULen(pBuffer);
+    len = KnxMSG_GetLSDULen(pBuffer);
 
     if (service == NWPS_READ) {
 
     } else if (service == NWPS_WRITE) {
 
     } else {
-        (void)MSG_ReleaseBuffer(pBuffer);
+        (void)KnxMSG_ReleaseBuffer(pBuffer);
     }
 }
 
-boolean NWPS_GroupAddressCheck(PMSG_Buffer pBuffer)
+boolean NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer)
 {
     return TRUE;
 }
 
-boolean NWPS_FunctionalBlockScan(PMSG_Buffer pBuffer)
+boolean NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer)
 {
     return TRUE;
 }
 
-boolean NWPS_GetSerialNumber(PMSG_Buffer pBuffer)
+boolean NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer)
 {
     return TRUE;
 }

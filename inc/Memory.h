@@ -27,6 +27,11 @@
 /* #include "target.h" */
 #include <Std_Types.h>
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 typedef enum tagMemoryType { mtROM, mtZPRAM, mtRAM, mtEEPROM } MemoryType;
 
 typedef struct tagMemoryControlBlock {
@@ -57,5 +62,9 @@ void    ZeroRAM(void * p, uint16 len);
 #define CompRAM CompMem
 #define CopyMem CopyRAM
 
-#endif /* __MEMORY_H */
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
+
+#endif  /* __MEMORY_H */
 

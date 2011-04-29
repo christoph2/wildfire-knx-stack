@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -20,24 +20,21 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
-*/
+ */
+#if !defined(__KNX_TLG_H)
+#define __KNX_TLG_H
 
-// Das sollte aber kein Problem darstellen, ich habe grössten
-// Wert darauf gelegt, meine Projekte Compiler unabhängig zu
-// gestalten.
+#include "knx_layer_transport.h"
 
-//
-// I will fix the linkage problem, refactor some stuff over weekend
-// and the I will send you installation instructions. Man kann zwar
-// nicht davon ausgehen das gleich auf Anhieb alles funktioniert,
-// aber es ist ein <important first step, that the protocol stack
-// compiles and links on you machine.
-//
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
 
-//
-// Was mir noch einfiel: if you where using HC12 controller, U could
-// use the build-in fuzzy-logic instructions ;-)
-//
+void KnxTLG_Task(void);
 
-#include "knx_tlc_statetable.h"
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
+#endif  /* __KNX_TLG_H */

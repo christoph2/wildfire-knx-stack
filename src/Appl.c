@@ -236,3 +236,4 @@ uint8 DEV_GetHopCount(void)
 
     return ((hc < 1) || (hc > KNX_DEFAULT_HOP_COUNT)) ? KNX_DEFAULT_HOP_COUNT : hc;
 }
+

@@ -27,9 +27,18 @@
 #include "KNXDefs.h"
 #include "knx_messaging.h"
 
-extern PMSG_Buffer MSG_ScratchBuffer;
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
 
-void KNXDispDispatchLayer(const uint8 LayerID, const KNXLayerServicesType * ServiceTable);
+extern KnxMSG_BufferPtr KnxMSG_ScratchBufferPtr;
 
-#endif /* __KNX_DISP_H */
+void KnxDisp_DispatchLayer(const uint8 LayerID, const Knx_LayerServicesType * ServiceTable);
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
+
+#endif  /* __KNX_DISP_H */
 

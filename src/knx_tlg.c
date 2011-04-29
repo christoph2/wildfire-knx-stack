@@ -21,12 +21,12 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-#include "knx_layer_transport.h"
+#include "knx_tlg.h"
 
 static void Disp_T_DataGroupReq(void), Disp_T_PollDataReq(void), Disp_N_PollDataCon(void);
 static void Disp_N_DataGroupInd(void), Disp_N_DataGroupCon(void);
 
-static const KNXLayerServiceFunctionType TLG_Services[] = {
+static const Knx_LayerServiceFunctionType TLG_Services[] = {
 /*      Service                     Handler                 */
 /*      ====================================================*/
 /*      N_DATA_GROUP_IND        */ Disp_N_DataGroupInd,
@@ -37,13 +37,13 @@ static const KNXLayerServiceFunctionType TLG_Services[] = {
 /*      ====================================================*/
 };
 
-static const KNXLayerServicesType TLG_ServiceTable[] = {
+static const Knx_LayerServicesType TLG_ServiceTable[] = {
     {KNX_TLG_SERVICES, 5, TLG_Services}
 };
 
-void TLG_Task(void)
+void KnxTLG_Task(void)
 {
-    KNXDispDispatchLayer(TASK_TL_ID, TLG_ServiceTable);
+    KnxDisp_DispatchLayer(TASK_TL_ID, TLG_ServiceTable);
 }
 
 /*
@@ -53,20 +53,20 @@ void TLG_Task(void)
 */
 static void Disp_N_DataGroupInd(void)
 {
-    MSG_ScratchBuffer->service = T_DATA_GROUP_IND;
-    (void)MSG_Post(MSG_ScratchBuffer);
+    KnxMSG_ScratchBufferPtr->service = T_DATA_GROUP_IND;
+    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
 static void Disp_N_DataGroupCon(void)
 {
-    MSG_ScratchBuffer->service = T_DATA_GROUP_CON;
-    (void)MSG_Post(MSG_ScratchBuffer);
+    KnxMSG_ScratchBufferPtr->service = T_DATA_GROUP_CON;
+    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
 static void Disp_N_PollDataCon(void)
 {
-    MSG_ScratchBuffer->service = T_POLL_DATA_CON;
-    (void)MSG_Post(MSG_ScratchBuffer);
+    KnxMSG_ScratchBufferPtr->service = T_POLL_DATA_CON;
+    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
 /*
@@ -76,9 +76,9 @@ static void Disp_N_PollDataCon(void)
 */
 static void Disp_T_DataGroupReq(void)
 {
-    MSG_SetTPCI(MSG_ScratchBuffer, TPCI_UDT);
-    MSG_ScratchBuffer->service = N_DATA_GROUP_REQ;
-    (void)MSG_Post(MSG_ScratchBuffer);
+    KnxMSG_SetTPCI(KnxMSG_ScratchBufferPtr, TPCI_UDT);
+    KnxMSG_ScratchBufferPtr->service = N_DATA_GROUP_REQ;
+    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
 static void Disp_T_PollDataReq(void)

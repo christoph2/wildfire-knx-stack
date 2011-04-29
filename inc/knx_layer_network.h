@@ -27,10 +27,19 @@
 #include "knx_messaging.h"
 #include "knx_disp.h"
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 #define KNX_DEFAULT_HOP_COUNT ((uint8)6)
 
-void    NL_Task(void);
-void    NL_Init(void);
+void    KnxNL_Task(void);
+void    KnxNL_Init(void);
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __KNX_LAYER_NETWORK_H */
 

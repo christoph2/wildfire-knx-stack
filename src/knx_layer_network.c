@@ -23,7 +23,7 @@
  */
 #include "knx_layer_network.h"
 
-void NL_CheckRoutingCount(PMSG_Buffer pBuffer);
+void NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer);
 
 /*
 **  Flags im Control-Field:
@@ -41,7 +41,7 @@ static void Disp_N_DataIndividualReq(void), Disp_N_DataGroupReq(void), Disp_N_Po
 static void Disp_L_PollDataCon(void), Disp_L_DataInd(void), Disp_L_BusmonInd(void);
 static void Disp_N_DataBroadcastReq(void), Disp_L_DataCon(void);
 
-static const KNXLayerServiceFunctionType NL_Services[] = {
+static const Knx_LayerServiceFunctionType NL_Services[] = {
 /*      Service                     Handler                 */
 /*      ====================================================*/
 /*      L_DATA_IND              */ Disp_L_DataInd,
@@ -55,16 +55,16 @@ static const KNXLayerServiceFunctionType NL_Services[] = {
 /*      ====================================================*/
 };
 
-static const KNXLayerServicesType NL_ServiceTable[] = {
+static const Knx_LayerServicesType NL_ServiceTable[] = {
     {KNX_NL_SERVICES, (uint8)8, NL_Services}
 };
 
-void NL_Task(void)
+void KnxNL_Task(void)
 {
-    KNXDispDispatchLayer(TASK_NL_ID, NL_ServiceTable);
+    KnxDisp_DispatchLayer(TASK_NL_ID, NL_ServiceTable);
 }
 
-void NL_Init(void)
+void KnxNL_Init(void)
 {
 
 }
@@ -77,20 +77,20 @@ void NL_Init(void)
 
 static void Disp_L_DataInd(void)
 {
-    if ((MSG_GetMessagePtr(MSG_ScratchBuffer)->ncpi & (uint8)0x80) == (uint8)0x80) {
-        if (ADR_IsBroadcastAddress(MSG_GetMessagePtr(MSG_ScratchBuffer)->dest)) {
+    if ((KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->ncpi & (uint8)0x80) == (uint8)0x80) {
+        if (KnxADR_IsBroadcastAddress(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->dest)) {
             /* Broadcast-Communication. */
-            MSG_ScratchBuffer->service = N_DATA_BROADCAST_IND;
-            (void)MSG_Post(MSG_ScratchBuffer);
+            KnxMSG_ScratchBufferPtr->service = N_DATA_BROADCAST_IND;
+            (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
         } else {
             /* Multicast-Communication. */
-            MSG_ScratchBuffer->service = N_DATA_GROUP_IND;
-            (void)MSG_Post(MSG_ScratchBuffer);
+            KnxMSG_ScratchBufferPtr->service = N_DATA_GROUP_IND;
+            (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
         }
     } else {
         /* Individual-Adressing. */
-        MSG_ScratchBuffer->service = N_DATA_INDIVIDUAL_IND;
-        (void)MSG_Post(MSG_ScratchBuffer);
+        KnxMSG_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_IND;
+        (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
     }
 }
 
@@ -116,26 +116,26 @@ static void Disp_L_PollDataCon(void)
 */
 static void Disp_N_DataBroadcastReq(void)
 {
-    MSG_SetAddressType(MSG_ScratchBuffer, atMULTICAST);
-    MSG_SetRoutingCount(MSG_ScratchBuffer);
-    MSG_ScratchBuffer->service = L_DATA_REQ;
-    (void)MSG_Post(MSG_ScratchBuffer);
+    KnxMSG_SetAddressType(KnxMSG_ScratchBufferPtr, atMULTICAST);
+    KnxMSG_SetRoutingCount(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ScratchBufferPtr->service = L_DATA_REQ;
+    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
 static void Disp_N_DataIndividualReq(void)
 {
-    MSG_SetAddressType(MSG_ScratchBuffer, atINDIVIDUAL);
-    MSG_SetRoutingCount(MSG_ScratchBuffer);
-    MSG_ScratchBuffer->service = L_DATA_REQ;
-    (void)MSG_Post(MSG_ScratchBuffer);
+    KnxMSG_SetAddressType(KnxMSG_ScratchBufferPtr, atINDIVIDUAL);
+    KnxMSG_SetRoutingCount(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ScratchBufferPtr->service = L_DATA_REQ;
+    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
 static void Disp_N_DataGroupReq(void)
 {
-    MSG_SetAddressType(MSG_ScratchBuffer, atMULTICAST);
-    MSG_SetRoutingCount(MSG_ScratchBuffer);
-    MSG_ScratchBuffer->service = L_DATA_REQ;
-    (void)MSG_Post(MSG_ScratchBuffer);
+    KnxMSG_SetAddressType(KnxMSG_ScratchBufferPtr, atMULTICAST);
+    KnxMSG_SetRoutingCount(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ScratchBufferPtr->service = L_DATA_REQ;
+    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
 static void Disp_N_PollDataReq(void)
@@ -143,12 +143,12 @@ static void Disp_N_PollDataReq(void)
     /* todo: Implement!!! */
 }
 
-void NL_CheckRoutingCount(PMSG_Buffer pBuffer)
+void NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer)
 {
-    if (MSG_GetRoutingCount(pBuffer) == MSG_NO_ROUTING_CTRL) {
-        MSG_SetRoutingCtrl(pBuffer, TRUE);
+    if (KnxMSG_GetRoutingCount(pBuffer) == MSG_NO_ROUTING_CTRL) {
+        KnxMSG_SetRoutingCtrl(pBuffer, TRUE);
     } else {
-        MSG_SetRoutingCtrl(pBuffer, FALSE);
+        KnxMSG_SetRoutingCtrl(pBuffer, FALSE);
     }
 }
 

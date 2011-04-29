@@ -26,6 +26,11 @@
 
 #include <Std_Types.h>
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 void TimerTest(void);
 
 #define TM_TIMER_TLC_CON_TIMEOUT    ((uint8)0)
@@ -74,5 +79,9 @@ void    TM_DelayHMS(uint16 H, uint16 M, uint16 S);
 void    TM_SystemTimeHandler(void);
 void    TM_SecondCallback(void);
 
-#endif /* __KNX_TIMER_H */
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
+
+#endif  /* __KNX_TIMER_H */
 

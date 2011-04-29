@@ -24,10 +24,15 @@
 #if !defined(__KNX_APCI_H)
 #define __KNX_APCI_H
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 /*
 **  APCI-Typen.
 */
-typedef enum tagAPCI_TypeType {
+typedef enum tagKNX_APCITypeType {
     apciGROUP_VALUE_READ,           /* Multicast.                   */
     apciGROUP_VALUE_RESP,           /* "       ".                   */
     apciGROUP_VALUE_WRITE,          /* "       ".                   */
@@ -51,7 +56,7 @@ typedef enum tagAPCI_TypeType {
     /*                                                              */
     apciESCAPE                      /* Others, escape.              */
 
-} APCI_TypeType;
+} KNX_APCITypeType;
 
 /*
 **  Group-Services.
@@ -150,5 +155,9 @@ typedef enum tagAPCI_TypeType {
 #define A_GROUPPROPVALUE_RESPONSE               ((uint16)0x03E9)
 #define A_GROUPPROPVALUE_WRITE                  ((uint16)0x03EA)
 #define A_GROUPPROPVALUE_INFOREPORT             ((uint16)0x03EB)
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __KNX_APCI_H */

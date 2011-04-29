@@ -28,8 +28,17 @@
 #include "knx_lsm.h"
 #include "Appl.h"
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 extern const uint8                              Knx_SystemInterfaceObjCount;
 extern Knx_InterfaceObjectType const * const    Knx_SystemInterfaceObjs[];
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __KNX_SYS_OBJS_H */
 

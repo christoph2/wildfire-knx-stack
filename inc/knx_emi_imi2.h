@@ -33,6 +33,11 @@
    T_Data_SystemBroadcast.ind      3Dh 4Dh -
  */
 
+ #if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 typedef enum tagKNXServiceTypeType {
 /*
 **      Link-Layer.
@@ -143,5 +148,9 @@ typedef enum tagKNXServiceTypeType {
 
 } KNXServiceTypeType;
 
-#endif /* __EMI_IMI2_H */
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
+
+#endif  /* __EMI_IMI2_H */
 

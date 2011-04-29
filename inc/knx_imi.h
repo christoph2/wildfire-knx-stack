@@ -26,6 +26,11 @@
 
 /* knx_imi.h */
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 /*
 **
 **  Service Codes for Konnex/EIB Internal-Message-Interface.
@@ -43,7 +48,7 @@
 #define KNX_ALG_SERVICES    ((uint8)0x70)
 #define KNX_ALM_SERVICES    ((uint8)0x80)
 
-typedef enum tagKNXServiceTypeType {
+typedef enum tagKnx_ServiceTypeType {
 /*
 **      Link-Layer.
 */
@@ -107,7 +112,10 @@ typedef enum tagKNXServiceTypeType {
     T_DATA_BROADCAST_IND,
     T_DATA_BROADCAST_CON
 
-} KNXServiceTypeType;
+} Knx_ServiceTypeType;
 
-#endif /* __KNX_IMI_H */
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
+#endif  /* __KNX_IMI_H */

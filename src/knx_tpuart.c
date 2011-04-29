@@ -65,7 +65,7 @@
 
 static void Disp_L_DataReq(void), Disp_L_PollDataReq(void);
 
-static const KNXLayerServiceFunctionType LL_Services[] = {
+static const Knx_LayerServiceFunctionType LL_Services[] = {
 /*      Service                     Handler                 */
 /*      ====================================================*/
 /*      L_DATA_REQ              */ Disp_L_DataReq,
@@ -73,7 +73,7 @@ static const KNXLayerServiceFunctionType LL_Services[] = {
 /*      ====================================================*/
 };
 
-static const KNXLayerServicesType LL_ServiceTable[] = {
+static const Knx_LayerServicesType LL_ServiceTable[] = {
     {KNX_LL_SERVICES, 2, LL_Services}
 };
 
@@ -134,13 +134,13 @@ boolean         addressed;
 
 uint8 TpuartRcvBuf[BUF_LEN];
 
-PMSG_Buffer pBuffer;
+KnxMSG_BufferPtr pBuffer;
 
 uint8 AckService;
 
-uint8   CalculateChecksum(PMSG_Buffer ptr);
+uint8   CalculateChecksum(KnxMSG_BufferPtr ptr);
 void    PH_AckInformation_req(uint8 flags);
-void    DBG_DUMP(PMSG_Buffer ptr);
+void    DBG_DUMP(KnxMSG_BufferPtr ptr);
 
 void decode(uint8 b);
 
@@ -288,9 +288,9 @@ void decode(uint8 b)
                 dest_addr = btohs(*(uint16 *)&TpuartRcvBuf[3]);
 
                 if ((TpuartRcvBuf[5] & atMULTICAST)) {
-                    addressed = ADR_IsAddressed(dest_addr, &tsap);
+                    addressed = KnxADR_IsAddressed(dest_addr, &tsap);
                 } else {
-                    addressed = ADR_IsOwnPhysicalAddr(dest_addr);
+                    addressed = KnxADR_IsOwnPhysicalAddr(dest_addr);
                 }
 
                 if (addressed) {
@@ -309,15 +309,15 @@ void decode(uint8 b)
 
                 if ((Checksum == TpuartRcvBuf[RcvIdx - (uint8)1])) {             /* Checksum valid? */
                     if (addressed) {
-                        pBuffer = MSG_AllocateBuffer();
+                        pBuffer = KnxMSG_AllocateBuffer();
 
-                        if (pBuffer != (PMSG_Buffer)NULL) {
+                        if (pBuffer != (KnxMSG_BufferPtr)NULL) {
                             pBuffer->service   = L_DATA_IND;
                             pBuffer->sap       = tsap;
                             pBuffer->len       = RcvLen = (TpuartRcvBuf[5] & (uint8)0x0f) + (uint8)7;
 
                             Utl_MemCopy((void *)pBuffer->msg, (void *)TpuartRcvBuf, RcvLen);
-                            (void)MSG_Post(pBuffer);
+                            (void)KnxMSG_Post(pBuffer);
                         } else {
                             stop = TRUE;
                             /* todo: Error-Handling. */
@@ -367,7 +367,7 @@ void OnTimeout(void)            /* Callback. */
     rcvState = TPSR_WAIT;
 }
 
-void DBG_DUMP(PMSG_Buffer ptr)
+void DBG_DUMP(KnxMSG_BufferPtr ptr)
 {
     uint8 i /*,chk*/;
 
@@ -393,7 +393,7 @@ void PH_AckInformation_req(uint8 flags)
 
 void LL_Task(void)
 {
-    KNXDispDispatchLayer(TASK_LL_ID, LL_ServiceTable);
+    KnxDisp_DispatchLayer(TASK_LL_ID, LL_ServiceTable);
 }
 
 /*
@@ -406,26 +406,26 @@ static void Disp_L_DataReq(void)
 {
     uint8 chk;
 
-    MSG_SetFrameType(MSG_ScratchBuffer, ftStandard);
+    KnxMSG_SetFrameType(KnxMSG_ScratchBufferPtr, ftStandard);
 
     /* PREPARE_CONTROL_FIELD() */
-    MSG_ScratchBuffer->msg[0] |= (uint8)0x30;   /* fixed one bit + repeated. */
-    MSG_ScratchBuffer->msg[0] &= (~(uint8)3);   /* clear two LSBs. */
+    KnxMSG_ScratchBufferPtr->msg[0]   |= (uint8)0x30;   /* fixed one bit + repeated. */
+    KnxMSG_ScratchBufferPtr->msg[0]   &= (~(uint8)3);   /* clear two LSBs. */
     /**/
 
-    chk = CalculateChecksum(MSG_ScratchBuffer);
+    chk = CalculateChecksum(KnxMSG_ScratchBufferPtr);
 
-    (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
-    DBG_DUMP(MSG_ScratchBuffer);
+    (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    DBG_DUMP(KnxMSG_ScratchBufferPtr);
 }
 
 static void Disp_L_PollDataReq(void)
 {
     /* todo: Implement!!! */
-    MSG_SetFrameType(MSG_ScratchBuffer, ftPolling);
+    KnxMSG_SetFrameType(KnxMSG_ScratchBufferPtr, ftPolling);
 }
 
-uint8 CalculateChecksum(PMSG_Buffer ptr)
+uint8 CalculateChecksum(KnxMSG_BufferPtr ptr)
 {
     uint8   chk = (uint8)0xff;
     uint8   i;

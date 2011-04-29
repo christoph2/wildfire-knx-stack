@@ -25,18 +25,23 @@
 #define __STATEMACHINE_KNX
 
 #include "knx_messaging.h"
-#include "knx_layer_transport.h"
+#include "knx_tlc.h"
+
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
 
 #define MAX_REP_COUNT   ((uint8)3)
 
 #define TL_STYLE        3   /* [1,2,3] - Transport-Layer-Styles gem. KNX-Handbuch 3/3/4. */
 
-typedef enum tagKNXTlc_StateType {
+typedef enum tagKnxTLC_StateType {
     CLOSED,
     OPEN_IDLE,
     OPEN_WAIT,
     CONNECTING
-} KNXTlc_StateType;
+} KnxTLC_StateType;
 
 typedef enum {
     tlcCONNECT_IND,
@@ -57,32 +62,36 @@ typedef enum {
     tlcUNDEFINED
 } KNX_TlcEventType;
 
-typedef void (*KNXTlc_ActionFuncType)(void);
+typedef void (*KnxTLC_ActionFuncType)(void);
 
-typedef struct tagKNXTlc_ActionType {
-    KNXTlc_ActionFuncType   Function;
-    KNXTlc_StateType        Next;
-} KNXTlc_ActionType;
+typedef struct tagKnxTLC_ActionType {
+    KnxTLC_ActionFuncType   Function;
+    KnxTLC_StateType        Next;
+} KnxTLC_ActionType;
 
-typedef struct tagKNXTlc_ActionListType {
+typedef struct tagKnxTLC_ActionListType {
 /*    const uint8 num; */
 #if (TL_STYLE == 1) || (TL_STYLE == 2)
-    const KNXTlc_ActionType Action[3];
+    const KnxTLC_ActionType Action[3];
 #elif TL_STYLE == 3
-    const KNXTlc_ActionType Action[4];
+    const KnxTLC_ActionType Action[4];
 #else
 #error "TL_STYLE muss entweder 1,2 oder 3 sein!"
 #endif
-} KNXTlc_ActionListType;
+} KnxTLC_ActionListType;
 
 #define TLC_CONNECTION_TIMEOUT  ((TM_TickType)6)
 #define TLC_ACKNOWLEDGE_TIMEOUT ((TM_TickType)3)
 
 /*  #define Def_Rep_Count               ((uint8)3) */
 
-void KNXTlc_StateMachine(KNX_TlcEventType event);
+void KnxTLC_StateMachine(KNX_TlcEventType event);
 
-KNXTlc_StateType    KNXTlc_GetState(void);
-void                KNXTlc_SetState(KNXTlc_StateType State);
+KnxTLC_StateType    KnxTLC_GetState(void);
+void                KnxTLC_SetState(KnxTLC_StateType State);
 
-#endif /* __STATEMACHINE_KNX */
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
+
+#endif  /* __STATEMACHINE_KNX */

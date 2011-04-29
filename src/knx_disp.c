@@ -23,25 +23,25 @@
  */
 #include "knx_disp.h"
 
-PMSG_Buffer MSG_ScratchBuffer;
+KnxMSG_BufferPtr KnxMSG_ScratchBufferPtr;
 
-void KNXDispDispatchLayer(const uint8 LayerID, const KNXLayerServicesType * ServiceTable)
+void KnxDisp_DispatchLayer(const uint8 LayerID, const Knx_LayerServicesType * ServiceTable)
 {
     uint8 entry;
 
     do {
-        MSG_ScratchBuffer = MSG_Get(LayerID);
+        KnxMSG_ScratchBufferPtr = KnxMSG_Get(LayerID);
 
-        if (MSG_ScratchBuffer != (PMSG_Buffer)NULL) {
-            entry = MSG_ScratchBuffer->service - ServiceTable->LayerOffset;
+        if (KnxMSG_ScratchBufferPtr != (KnxMSG_BufferPtr)NULL) {
+            entry = KnxMSG_ScratchBufferPtr->service - ServiceTable->LayerOffset;
 
             if (entry < ServiceTable->NumServices) {
                 /* todo: _ASSERT() Function-Pointer!=NULL !!! */
                 ServiceTable->Functions[entry]();
             } else {
-                (void)MSG_ReleaseBuffer(MSG_ScratchBuffer);
+                (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
             }
         }
-    } while (MSG_ScratchBuffer != (PMSG_Buffer)NULL);
+    } while (KnxMSG_ScratchBufferPtr != (KnxMSG_BufferPtr)NULL);
 }
 

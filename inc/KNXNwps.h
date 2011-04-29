@@ -29,7 +29,16 @@
 #include "knx_messaging.h"
 #include "KNXConv.h"
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 typedef enum tagNWPSServiceType {NWPS_READ, NWPS_WRITE} NWPSServiceType;
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __KNXNWPS_H */
 

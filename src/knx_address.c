@@ -48,7 +48,7 @@
 /*
 **  todo: this Fkt. is hardware-dependent !!!
 */
-boolean ADR_InProgrammingMode(void)
+boolean KnxADR_InProgrammingMode(void)
 {
     return TRUE;
 }
@@ -57,7 +57,7 @@ boolean ADR_InProgrammingMode(void)
 **
 */
 
-boolean ADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap)
+boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap)
 {
     uint8   len;
     uint16  mid;
@@ -68,14 +68,14 @@ boolean ADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap)
     ack    = FALSE;
     *tsap  = KNX_INVALID_TSAP;
 
-    if (ADR_IsBroadcastAddress(searched_addr)) {
+    if (KnxADR_IsBroadcastAddress(searched_addr)) {
         return TRUE;
     }
 
-    len = ADR_GrATLength();
+    len = KnxADR_GrATLength();
 
     if (len > (uint8)1) {
-        ap = ADR_GrATBasePtr();
+        ap = KnxADR_GrATBasePtr();
 
         left   = (sint16)0;
         right  = len - (sint16)1;
@@ -103,24 +103,24 @@ boolean ADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap)
     return ack;
 }
 
-Knx_AddressType ADR_GetPhysAddr(void)
+Knx_AddressType KnxADR_GetPhysAddr(void)
 {
     return btohs(*(uint16 *)&APP_AddressTable[1]);
 }
 
-void ADR_SetPhysAddr(Knx_AddressType addr)
+void KnxADR_SetPhysAddr(Knx_AddressType addr)
 {
     *(uint16 *)APP_AddressTable[1] = htobs(addr);    /* todo: use Memory-Server!!! */
 }
 
-void ADR_GetSerialNumber(Knx_SerialNumberType serial_number)
+void KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number)
 {
 /*CopyMem((uint8*)serial_number,(uint8*)DEV_SERIAL_NUM,sizeof(KNX_SerialNumberType)); */
 }
 
-boolean ADR_IsOwnPhysicalAddr(Knx_AddressType addr)     /* todo: Macro!!! */
+boolean KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr)     /* todo: Macro!!! */
 {
-    return ADR_GetPhysAddr() == addr;
+    return KnxADR_GetPhysAddr() == addr;
 }
 
 /*

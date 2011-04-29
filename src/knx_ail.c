@@ -30,81 +30,81 @@
 
 #include "knx_ail.h"
 
-boolean U_TestObject(uint16 objectNr)
+boolean KnxAIL_TestObject(uint16 objectNr)
 {
     uint8 flags;
 
-    if (!U_GetRAMFlags(objectNr, &flags)) {
+    if (!KnxAIL_GetRAMFlags(objectNr, &flags)) {
         return FALSE;
     } else {
-        (void)U_SetRAMFlags(objectNr, KNX_RESET_FLG_UPDATED);
+        (void)KnxAIL_SetRAMFlags(objectNr, KNX_RESET_FLG_UPDATED);
         return (flags & KNX_OBJ_UPDATED) == KNX_OBJ_UPDATED;
     }
 }
 
-boolean U_TestAndGetObject(uint16 objectNr, void * dst)
+boolean KnxAIL_TestAndGetObject(uint16 objectNr, void * dst)
 {
-    if (!U_TestObject(objectNr)) {
+    if (!KnxAIL_TestObject(objectNr)) {
         return FALSE;
     } else {
-        (void)U_GetObject(objectNr, dst);
+        (void)KnxAIL_GetObject(objectNr, dst);
         return TRUE;
     }
 }
 
-boolean U_GetObject(uint16 objectNr, void * dst)
+boolean KnxAIL_GetObject(uint16 objectNr, void * dst)
 {
-    if ((objectNr < AL_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
-        Utl_MemCopy(dst, AL_GetObjectDataPointer(objectNr),
-                    AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type));
+    if ((objectNr < KnxALG_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
+        Utl_MemCopy(dst, KnxALG_GetObjectDataPointer(objectNr),
+                    KnxALG_GetObjLen(KnxALG_GetCommObjDescr(objectNr)->Type));
         return TRUE;
     } else {
         return FALSE;
     }
 }
 
-boolean U_TransmitObject(uint16 objectNr)
+boolean KnxAIL_TransmitObject(uint16 objectNr)
 {
     /* todo: check 'objectNr'? */
 
-    if (AL_IsObjectTransmitting(objectNr)) {
+    if (KnxALG_IsObjectTransmitting(objectNr)) {
         return FALSE;
     } else {
-        AL_SetRAMFlags(objectNr, KNX_OBJ_TRANSMIT_REQ);
+        KnxALG_SetRAMFlags(objectNr, KNX_OBJ_TRANSMIT_REQ);
         return TRUE;
     }
 }
 
-boolean U_SetAndTransmitObject(uint16 objectNr, void * src)
+boolean KnxAIL_SetAndTransmitObject(uint16 objectNr, void * src)
 {
-    if (!U_SetObject(objectNr, src)) {
+    if (!KnxAIL_SetObject(objectNr, src)) {
         return FALSE;
     }
 
-    if (!U_TransmitObject(objectNr)) {
+    if (!KnxAIL_TransmitObject(objectNr)) {
         return FALSE;
     }
 
     return TRUE;
 }
 
-boolean U_SetObject(uint16 objectNr, void * src)
+boolean KnxAIL_SetObject(uint16 objectNr, void * src)
 {
-    if ((objectNr < AL_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
-        Utl_MemCopy(AL_GetObjectDataPointer(objectNr), src, AL_GetObjLen(AL_GetCommObjDescr(objectNr)->Type));
+    if ((objectNr < KnxALG_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
+        Utl_MemCopy(KnxALG_GetObjectDataPointer(objectNr), src, KnxALG_GetObjLen(KnxALG_GetCommObjDescr(objectNr)->Type));
         return TRUE;
     } else {
         return FALSE;
     }
 }
 
-boolean U_ReadObject(uint16 objectNr)
+boolean KnxAIL_ReadObject(uint16 objectNr)
 {
-    if (objectNr < AL_GetNumCommObjs() && LSM_IsAppLoaded()) {
-        if (AL_IsObjectTransmitting(objectNr)) {
+    if (objectNr < KnxALG_GetNumCommObjs() && LSM_IsAppLoaded()) {
+        if (KnxALG_IsObjectTransmitting(objectNr)) {
             return FALSE;
         } else {
-            AL_SetRAMFlags(objectNr, KNX_OBJ_DATA_REQUEST);
+            KnxALG_SetRAMFlags(objectNr, KNX_OBJ_DATA_REQUEST);
             return TRUE;
         }
     } else {
@@ -112,27 +112,27 @@ boolean U_ReadObject(uint16 objectNr)
     }
 }
 
-boolean U_GetRAMFlags(uint16 objectNr, uint8 * flags)
+boolean KnxAIL_GetRAMFlags(uint16 objectNr, uint8 * flags)
 {
-    if (objectNr < AL_GetNumCommObjs() && LSM_IsAppLoaded()) {
-        *flags = AL_GetRAMFlags(objectNr);
+    if (objectNr < KnxALG_GetNumCommObjs() && LSM_IsAppLoaded()) {
+        *flags = KnxALG_GetRAMFlags(objectNr);
         return TRUE;
     }
 
     return FALSE;
 }
 
-uint8 U_SetRAMFlags(uint16 objectNr, uint8 flags)
+uint8 KnxAIL_SetRAMFlags(uint16 objectNr, uint8 flags)
 {
     uint8   value;
     uint8   mask;
     uint8   tmp = (uint8)0x00;
 
-    if ((objectNr < AL_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
+    if ((objectNr < KnxALG_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
         value  = (flags & (uint8)0x0f);
         mask   = (flags & (uint8)0xf0) >> (uint8)4;
 /*        tmp=APP_RAMFlags[objectNr>>1];    */
-        tmp = AL_GetRAMFlagPointer()[objectNr >> 1];
+        tmp = KnxALG_GetRAMFlagPointer()[objectNr >> 1];
 
         if ((objectNr % (uint16)2) == (uint16)0) {
             tmp &= (uint8)0x0f;
@@ -144,13 +144,14 @@ uint8 U_SetRAMFlags(uint16 objectNr, uint8 flags)
 
         if ((objectNr % (uint16)2) == (uint16)1) {
 /*            APP_RAMFlags[objectNr>>1]&=(0x0f | (tmp<<4)); */
-            AL_GetRAMFlagPointer()[objectNr >> 1] &= (0x0f | (tmp << 4));
+            KnxALG_GetRAMFlagPointer()[objectNr >> 1] &= (0x0f | (tmp << 4));
         } else {
 /*            APP_RAMFlags[objectNr>>1]&=(0xf0 | tmp);  */
-            AL_GetRAMFlagPointer()[objectNr >> 1] &= (0xf0 | tmp);
+            KnxALG_GetRAMFlagPointer()[objectNr >> 1] &= (0xf0 | tmp);
         }
 
     }
 
     return tmp;
 }
+

@@ -30,6 +30,11 @@
 #include "knx_timer.h"
 #include "knx_disp.h"
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 /*
 **  TPCI-Codings.
 */
@@ -47,29 +52,8 @@
 
 #define T_DATA_TAG_GROUP_PDU    ((uint8)0x04)    /* Interface-Objects using Group-Addressing (LTE-HEE). */
 
-void    TL_Init(void);
-void    TLG_Task(void);
-void    TLC_Task(void);
-
-void    T_Connect_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest);
-void    T_Disconnect_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest);
-
-void    T_Ack_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 SeqNo);
-void    T_Nak_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 SeqNo);
-
-/* 'knx_tlc.h' !!! */
-uint8           KNXTlc_GetSequenceNumberSend(void);
-uint8           KNXTlc_GetSequenceNumberReceived(void);
-uint8           KNXTlc_GetRepetitionCount(void);
-uint8           KNXTlc_GetSequenceNumberOfPDU(void);
-Knx_AddressType KNXTlc_GetSourceAddress(void);
-Knx_AddressType KNXTlc_GetConnectionAddress(void);
-
-void    KNXTlc_SetSequenceNumberSend(uint8 SequenceNumberSend);
-void    KNXTlc_SetSequenceNumberReceived(uint8 SequenceNumberReceived);
-void    KNXTlc_SetRepetitionCount(uint8 RepetitionCount);
-void    KNXTlc_SetSequenceNumberOfPDU(uint8 SequenceNumberOfPDU);
-void    KNXTlc_SetSourceAddress(Knx_AddressType SourceAddress);
-void    KNXTlc_SetConnectionAddress(Knx_AddressType ConnectionAddress);
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __KNX_LAYER_TRANSPORT_H */

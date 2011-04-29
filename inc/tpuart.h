@@ -26,6 +26,11 @@
 
 #include "knx_disp.h"
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 #define BUF_LEN ((SizeType)0x1f)
 
 typedef enum tagTPUART_RCV_STATE {

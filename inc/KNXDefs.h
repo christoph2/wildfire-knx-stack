@@ -24,72 +24,18 @@
 #if !defined(__KNX_DEFS_H)
 #define __KNX_DEFS_H
 
+#include "knx_types.h"
+#include "Utl.h"
+
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 #define KNX_BIG_ENDIAN
 
 #define DISABLE_ALL_INTERRUPTS()
 #define ENABLE_ALL_INTERRUPTS()
-
-#include "Std_Types.h"
-#include "Utl.h"
-#include "knx_imi.h"
-
-typedef uint16  Knx_AddressType;
-typedef uint8   Knx_SerialNumberType[6];
-
-typedef struct tagKnx_PollGroupSettingType {
-    uint16  group_addr;
-    uint8   slot_no;
-} Knx_PollGroupSettingType;
-
-typedef struct tagKNX_CommObjDescriptorType {
-    uint8 DataPtr, Config, Type;
-} KNX_CommObjDescriptorType;
-
-typedef enum tagKnx_DafType {
-    atINDIVIDUAL   = ((uint8) 0x00),
-    atMULTICAST    = ((uint8) 0x80)
-} Knx_DafType;
-
-typedef enum tagKNX_FrameTypeType {
-    ftExtended = ((uint8) 0x00),
-    ftStandard = ((uint8) 0x80),
-    ftPolling  = ((uint8) 0xC0)
-} KNX_FrameTypeType;
-
-typedef enum tagKNX_ObjectType {
-    otUINT1, otUINT2, otUINT3, otUINT4, otUINT5, otUINT6, otUINT7,
-    otUINT8, otUINT16, otBYTE3, otFLOAT, otDATA6, otDOUBLE, otDATA10, otMAXDATA, otVARDATA
-} KNX_ObjectType;    /* Type-Byte / Object-Descriptor. */
-
-typedef uint8 KNX_PriorityType;
-
-/*
-**  START: LAYER-Dispatching-Functions.
-*/
-typedef void (*KNXLayerServiceFunctionType)(void);
-
-typedef struct tagKNXServiceEntryType {
-    KNXServiceTypeType          Service;
-    KNXLayerServiceFunctionType Function;
-} KNXServiceEntryType;
-
-typedef struct tagKNXLayerServicesType {
-    uint8                               LayerOffset;
-    uint8                               NumServices;
-    const KNXLayerServiceFunctionType * Functions;
-} KNXLayerServicesType;
-/*
-**  END: LAYER-Dispatching-Functions.
-*/
-
-/*
-   typedef enum tagKNX_PriorityType {
-    prSystem,prNormal,
-    prUrgent,prLow
-   } KNX_PriorityType;
- */
-
-typedef uint8 KNX_HopCountType;
 
 #define IAK_OK                  ((uint8)0x00)
 #define IAK_NOT_OK              ((uint8)0x01)
@@ -158,5 +104,9 @@ typedef uint8 KNX_HopCountType;
 
 #define KNX_UNUSED_TSAP                 ((uint8)0xfe)
 #define KNX_INVALID_TSAP                ((uint8)0x00)
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __KNX_DEFS_H */

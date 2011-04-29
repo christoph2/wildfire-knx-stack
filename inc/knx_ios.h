@@ -27,6 +27,11 @@
 #include "knx_address.h"
 #include "knx_messaging.h"
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 #define PROP_RO         ((uint8)0)
 #define PROP_RW         ((uint8)1)
 #define PROP_NO_ARR     ((uint8)0)
@@ -89,7 +94,7 @@ Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_inde
 Knx_PropertyType const *        IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id);
 Knx_PropertyType const *        IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16 prop_index);
 
-void IOS_Dispatch(const PMSG_Buffer pBuffer, uint8 service, boolean connected);
+void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connected);
 
 /*
 ** void IOS_SetUserObjTable(KNX_USER_OBJ_DESCR descr);
@@ -200,5 +205,9 @@ void IOS_Dispatch(const PMSG_Buffer pBuffer, uint8 service, boolean connected);
    #define PDT_WR_EN                               0x80
    #define FUNCTION_FLAG                           0x40
  */
+
+ #if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __KNX_IOS_H */

@@ -28,6 +28,11 @@
 #include "knx_layer_network.h"
 #include "knx_ios.h"
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 #define APP_NUM_OF_COM_OBJS     ((uint8)3)
 /* todo: NUM_ASSOCS */
 
@@ -50,6 +55,10 @@ extern const uint8                          Knx_UserInterfaceObjCount;
 extern const Knx_InterfaceObjectType * *    Knx_UserInterfaceObjPtr;
 
 void DEV_Init(void);
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __APPL_H */
 

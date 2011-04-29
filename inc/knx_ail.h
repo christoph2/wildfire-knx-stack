@@ -24,9 +24,14 @@
 #if !defined(__KNX_AIL_H)
 #define __KNX_AIL_H
 
-#include "KNXDefs.h"
+#include "knx_alg.h"
 #include "knx_layer_application.h"
 #include "knx_lsm.h"
+
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
 
 #define KNX_SET_TX_STATUS_IDLE_OK       ((uint8)0x00)
 #define KNX_SET_TX_STATUS_IDLE_ERROR    ((uint8)0x01)
@@ -39,20 +44,20 @@
 #define KNX_SET_FLG_UPDATED             ((uint8)0x88)
 #define KNX_RESET_FLG_UPDATED           ((uint8)0x80)
 
-boolean U_TestAndGetObject(uint16 objectNr, void * dst);
-boolean U_TestObject(uint16 objectNr);
-boolean U_GetObject(uint16 objectNr, void * dst);
+boolean KnxAIL_TestAndGetObject(uint16 objectNr, void * dst);
+boolean KnxAIL_TestObject(uint16 objectNr);
+boolean KnxAIL_GetObject(uint16 objectNr, void * dst);
 
-boolean U_SetAndTransmitObject(uint16 objectNr, void * src);
-boolean U_SetObject(uint16 objectNr, void * src);
-boolean U_TransmitObject(uint16 objectNr);
+boolean KnxAIL_SetAndTransmitObject(uint16 objectNr, void * src);
+boolean KnxAIL_SetObject(uint16 objectNr, void * src);
+boolean KnxAIL_TransmitObject(uint16 objectNr);
 
-boolean U_ReadObject(uint16 objectNr);
+boolean KnxAIL_ReadObject(uint16 objectNr);
 
-uint8   U_SetRAMFlags(uint16 objectNr, uint8 flags);
-boolean U_GetRAMFlags(uint16 objectNr, uint8 * flags);
+uint8   KnxAIL_SetRAMFlags(uint16 objectNr, uint8 flags);
+boolean KnxAIL_GetRAMFlags(uint16 objectNr, uint8 * flags);
 
-#define U_GetTransmissionStatus(objectNr) AL_GetTransmissionStatus((objectNr))
+#define KnxAIL_GetTransmissionStatus(objectNr) AL_GetTransmissionStatus((objectNr))
 
 /*
    BIM112-Object-Handling:
@@ -74,4 +79,8 @@ boolean U_GetRAMFlags(uint16 objectNr, uint8 * flags);
    U_transmitRequest       This macro initiates the transmission of an objectvalue via the bus.
  */
 
-#endif /* __KNX_AIL_H */
+ #if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
+
+#endif  /* __KNX_AIL_H */

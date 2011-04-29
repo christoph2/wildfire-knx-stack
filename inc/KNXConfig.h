@@ -24,6 +24,11 @@
 #if !defined(__KNXCONFIG_H)
 #define __KNXCONFIG_H
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 #define KNX_STANDALONE
 #define KNX_CLIENT_LIB
 #define KNX_USE_CONFIMATIONS
@@ -32,6 +37,10 @@
 #undef  KNX_TL_RATIONALIZE
 #define KNX_USER_OBJECTS
 #define KNX_MASK_TYPE   ((uint8)21)
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __KNXCONFIG_H */
 

@@ -27,37 +27,37 @@
 #define HOP_COUNT ((uint8)6)
 
 /* check: 'static' ??? */
-PMSG_Buffer GetBufferAddress(uint8 buf_num);
-uint8       GetBufferNumber(const PMSG_Buffer buffer);
-void        ClearMessageBuffer(uint8 buf_num);
+KnxMSG_BufferPtr    GetBufferAddress(uint8 buf_num);
+uint8               GetBufferNumber(const KnxMSG_BufferPtr buffer);
+void                ClearMessageBuffer(uint8 buf_num);
 
-static const uint8 MSG_MessageRedirectionTable[16] = {
-    TASK_FREE_ID, TASK_LL_ID, TASK_NL_ID, TASK_TL_ID, TASK_TC_ID,   TASK_FREE_ID, TASK_FREE_ID, TASK_AL_ID,
-    TASK_MG_ID,   TASK_MG_ID, TASK_PM_ID, TASK_LC_ID, TASK_FREE_ID, TASK_US_ID,   TASK_US_ID,   TASK_US_ID
+static const uint8 KnxMSG_MessageRedirectionTable[16] = {
+    TASK_FREE_ID, TASK_LL_ID,   TASK_NL_ID,   TASK_TL_ID,   TASK_TC_ID,   TASK_FREE_ID,   TASK_FREE_ID,   TASK_AL_ID,
+    TASK_MG_ID,   TASK_MG_ID,   TASK_PM_ID,   TASK_LC_ID,   TASK_FREE_ID, TASK_US_ID,     TASK_US_ID,     TASK_US_ID
 };
 
-static uint8        MSG_Queues[MSG_NUM_TASKS];
-static MSG_Buffer   MSG_Buffers[MSG_NUM_BUFFERS];
+static uint8            KnxMSG_Queues[MSG_NUM_TASKS];
+static KnxMSG_Buffer    KnxMSG_Buffers[MSG_NUM_BUFFERS];
 
 /*  Get Destination Queue from Message-Code. */
-#define MSG_GetQueueForService(service) ((uint8)MSG_MessageRedirectionTable[(service) >> 4])
+#define KnxMSG_GetQueueForService(service) ((uint8)KnxMSG_MessageRedirectionTable[(service) >> 4])
 
-PMSG_Buffer GetBufferAddress(uint8 buf_num)
+KnxMSG_BufferPtr GetBufferAddress(uint8 buf_num)
 {
     if (buf_num >= MSG_NUM_BUFFERS) {
-        return (PMSG_Buffer)NULL;
+        return (KnxMSG_BufferPtr)NULL;
     } else {
-        return &MSG_Buffers[buf_num];
+        return &KnxMSG_Buffers[buf_num];
     }
 }
 
-uint8 GetBufferNumber(const PMSG_Buffer buffer)
+uint8 GetBufferNumber(const KnxMSG_BufferPtr buffer)
 {
-    PMSG_Buffer tmp_buf;
-    uint8       idx;
+    KnxMSG_BufferPtr    tmp_buf;
+    uint8               idx;
 
     for (idx = (uint8)0; idx < MSG_NUM_BUFFERS; idx++) {
-        tmp_buf = &MSG_Buffers[idx];
+        tmp_buf = &KnxMSG_Buffers[idx];
 
         if (tmp_buf == buffer) {
             return idx;
@@ -69,51 +69,51 @@ uint8 GetBufferNumber(const PMSG_Buffer buffer)
 
 void ClearMessageBuffer(uint8 buf_num)
 {
-    PMSG_Buffer ptr;
-    uint8 *     pb;
+    KnxMSG_BufferPtr    ptr;
+    uint8 *             pb;
 
     ptr = GetBufferAddress(buf_num);
 
-    if (ptr == (PMSG_Buffer)NULL) {
+    if (ptr == (KnxMSG_BufferPtr)NULL) {
         return;
     }
 
     pb = (uint8 *)ptr;
     pb++;
 
-    Utl_MemSet(pb, '\0', (uint16)sizeof(MSG_Buffer) - (uint16)1);
+    Utl_MemSet(pb, '\0', (uint16)sizeof(KnxMSG_Buffer) - (uint16)1);
 }
 
 static uint16 AllocCount = (uint16)0, ReleaseCount = (uint16)0;
 
-PMSG_Buffer MSG_AllocateBuffer(void)
+KnxMSG_BufferPtr KnxMSG_AllocateBuffer(void)
 {
-    uint8       fp;
-    PMSG_Buffer ptr;
+    uint8               fp;
+    KnxMSG_BufferPtr    ptr;
 
     DISABLE_ALL_INTERRUPTS();
 
     AllocCount++;
 
-    if ((fp = MSG_Queues[TASK_FREE_ID]) == MSG_NO_NEXT) {
+    if ((fp = KnxMSG_Queues[TASK_FREE_ID]) == MSG_NO_NEXT) {
         ENABLE_ALL_INTERRUPTS();
-        return (PMSG_Buffer)NULL;       /* no Buffer available. */
+        return (KnxMSG_BufferPtr)NULL;       /* no Buffer available. */
     }
 
-    ptr = &MSG_Buffers[fp];
+    ptr = &KnxMSG_Buffers[fp];
 
     if (ptr->next == MSG_NO_NEXT) {
-        MSG_Queues[TASK_FREE_ID] = MSG_NO_NEXT;
+        KnxMSG_Queues[TASK_FREE_ID] = MSG_NO_NEXT;
     } else {
-        MSG_Queues[TASK_FREE_ID]   = ptr->next;
-        ptr->next                  = MSG_NO_NEXT;
+        KnxMSG_Queues[TASK_FREE_ID]    = ptr->next;
+        ptr->next                      = MSG_NO_NEXT;
     }
 
     ENABLE_ALL_INTERRUPTS();
-    return &MSG_Buffers[fp];
+    return &KnxMSG_Buffers[fp];
 }
 
-boolean MSG_ReleaseBuffer(PMSG_Buffer ptr)
+boolean KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
 {
     uint8 buf_num, old_fp, t_fp;
 
@@ -126,7 +126,7 @@ boolean MSG_ReleaseBuffer(PMSG_Buffer ptr)
 
     ReleaseCount++;
 
-    old_fp = MSG_Queues[TASK_FREE_ID];
+    old_fp = KnxMSG_Queues[TASK_FREE_ID];
     t_fp   = old_fp;
 
     while (t_fp != MSG_NO_NEXT) {
@@ -135,35 +135,35 @@ boolean MSG_ReleaseBuffer(PMSG_Buffer ptr)
             return FALSE;   /* not allocated. */
         }
 
-        t_fp = MSG_Buffers[t_fp].next;
+        t_fp = KnxMSG_Buffers[t_fp].next;
     }
 
-    MSG_Queues[TASK_FREE_ID]   = buf_num;
-    MSG_Buffers[buf_num].next  = old_fp;
+    KnxMSG_Queues[TASK_FREE_ID]    = buf_num;
+    KnxMSG_Buffers[buf_num].next   = old_fp;
     ClearMessageBuffer(buf_num);
 
-    ptr = (PMSG_Buffer)NULL;  /* invalidate Buffer. */
+    ptr = (KnxMSG_BufferPtr)NULL;  /* invalidate Buffer. */
     ENABLE_ALL_INTERRUPTS();
     return TRUE;
 }
 
-boolean MSG_ClearBuffer(PMSG_Buffer ptr)
+boolean KnxMSG_ClearBuffer(KnxMSG_BufferPtr ptr)
 {
     uint8 * pb;
 
-    if (ptr == (PMSG_Buffer)NULL) {
+    if (ptr == (KnxMSG_BufferPtr)NULL) {
         return FALSE;
     }
 
     pb = (uint8 *)ptr;
     pb++;
 
-    Utl_MemSet(pb, '\0', sizeof(MSG_Buffer) - 1);
+    Utl_MemSet(pb, '\0', sizeof(KnxMSG_Buffer) - 1);
 
     return TRUE;
 }
 
-boolean MSG_Post(PMSG_Buffer ptr)
+boolean KnxMSG_Post(KnxMSG_BufferPtr ptr)
 {
     uint8 queue, buf_num, qp;
 
@@ -171,50 +171,50 @@ boolean MSG_Post(PMSG_Buffer ptr)
         return FALSE;
     }
 
-    if ((queue = MSG_GetQueueForService(ptr->service)) == TASK_FREE_ID) {
+    if ((queue = KnxMSG_GetQueueForService(ptr->service)) == TASK_FREE_ID) {
         return FALSE;
     }
 
-    qp = MSG_Queues[queue];
+    qp = KnxMSG_Queues[queue];
 
     if (qp == MSG_QUEUE_EMPTY) {
-        MSG_Queues[queue] = buf_num;
+        KnxMSG_Queues[queue] = buf_num;
     } else {
 
-        while (MSG_Buffers[qp].next != MSG_QUEUE_EMPTY) {
-            qp = MSG_Buffers[qp].next;
+        while (KnxMSG_Buffers[qp].next != MSG_QUEUE_EMPTY) {
+            qp = KnxMSG_Buffers[qp].next;
         }
 
-        MSG_Buffers[qp].next = buf_num;
+        KnxMSG_Buffers[qp].next = buf_num;
     }
 
     return TRUE;
 }
 
-PMSG_Buffer MSG_Get(uint8 task)
+KnxMSG_BufferPtr KnxMSG_Get(uint8 task)
 {
     uint8 qp;
 
     if ((task < 1) || (task > MSG_NUM_TASKS)) {
-        return (PMSG_Buffer)NULL;
+        return (KnxMSG_BufferPtr)NULL;
     }
 
-    if ((qp = MSG_Queues[task]) == MSG_QUEUE_EMPTY) {
-        return (PMSG_Buffer)NULL;   /* no message for task. */
+    if ((qp = KnxMSG_Queues[task]) == MSG_QUEUE_EMPTY) {
+        return (KnxMSG_BufferPtr)NULL;   /* no message for task. */
     }
 
-    if (MSG_Buffers[qp].next != MSG_QUEUE_EMPTY) {
-        MSG_Queues[task]       = MSG_Buffers[qp].next;
-        MSG_Buffers[qp].next   = MSG_NO_NEXT; /* unlink Message-Buffer. */
+    if (KnxMSG_Buffers[qp].next != MSG_QUEUE_EMPTY) {
+        KnxMSG_Queues[task]        = KnxMSG_Buffers[qp].next;
+        KnxMSG_Buffers[qp].next    = MSG_NO_NEXT; /* unlink Message-Buffer. */
     } else {
-        MSG_Queues[task] = MSG_QUEUE_EMPTY;
+        KnxMSG_Queues[task] = MSG_QUEUE_EMPTY;
     }
 
 /*     */
-    return &MSG_Buffers[qp];
+    return &KnxMSG_Buffers[qp];
 }
 
-void MSG_Init(void)
+void KnxMSG_Init(void)
 {
     uint8 t;
 
@@ -222,26 +222,26 @@ void MSG_Init(void)
         ClearMessageBuffer(t);
     }
 
-    MSG_Queues[TASK_FREE_ID] = (uint8)0x00;         /* the first Queue contains the Freelist. */
+    KnxMSG_Queues[TASK_FREE_ID] = (uint8)0x00;      /* the first Queue contains the Freelist. */
 
     for (t = (uint8)0; t <= MSG_NUM_BUFFERS; t++) { /* Setup Freelist. */
-        MSG_Buffers[t].next = t + (uint8)1;
+        KnxMSG_Buffers[t].next = t + (uint8)1;
     }
 
-    MSG_Buffers[MSG_NUM_BUFFERS - 1].next = MSG_NO_NEXT;
+    KnxMSG_Buffers[MSG_NUM_BUFFERS - 1].next = MSG_NO_NEXT;
 
     for (t = (uint8)1; t < MSG_NUM_TASKS; t++) {
-        MSG_Queues[t] = MSG_QUEUE_EMPTY;
+        KnxMSG_Queues[t] = MSG_QUEUE_EMPTY;
     }
 }
 
-void MSG_SetLen(PMSG_Buffer pBuffer, uint8 len)
+void KnxMSG_SetLen(KnxMSG_BufferPtr pBuffer, uint8 len)
 {
-    pBuffer->len                       = len;
-    MSG_GetMessagePtr(pBuffer)->ncpi  |= ((len - (uint8)7) & (uint8)0x0f);
+    pBuffer->len                           = len;
+    KnxMSG_GetMessagePtr(pBuffer)->ncpi   |= ((len - (uint8)7) & (uint8)0x0f);
 }
 
-uint8 MSG_GetLen(const PMSG_Buffer pBuffer)
+uint8 KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer)
 {
     return pBuffer->len;
 }
@@ -258,34 +258,34 @@ uint8 MSG_GetLen(const PMSG_Buffer pBuffer)
    }
  */
 
-void MSG_SetRoutingCount(PMSG_Buffer pBuffer)
+void KnxMSG_SetRoutingCount(KnxMSG_BufferPtr pBuffer)
 {
     uint8 ctrl, hop_count;
 
-    ctrl = MSG_GetMessagePtr(pBuffer)->ctrl;
+    ctrl = KnxMSG_GetMessagePtr(pBuffer)->ctrl;
 
     if ((ctrl & (uint8)0x02) == (uint8)0x02) {
-        hop_count                          = MSG_NO_ROUTING_CTRL;
-        ctrl                              &= ~(uint8)0x02;
-        MSG_GetMessagePtr(pBuffer)->ctrl   = ctrl;
+        hop_count                              = MSG_NO_ROUTING_CTRL;
+        ctrl                                  &= ~(uint8)0x02;
+        KnxMSG_GetMessagePtr(pBuffer)->ctrl    = ctrl;
     } else {
         hop_count = HOP_COUNT;
     }
 
-    MSG_GetMessagePtr(pBuffer)->ncpi |= ((hop_count & (uint8)0x07) << 4);
+    KnxMSG_GetMessagePtr(pBuffer)->ncpi |= ((hop_count & (uint8)0x07) << 4);
 }
 
-uint8 MSG_GetRoutingCount(const PMSG_Buffer pBuffer)
+uint8 KnxMSG_GetRoutingCount(const KnxMSG_BufferPtr pBuffer)
 {
-    return ((MSG_GetMessagePtr(pBuffer)->ncpi) & (uint8)0x70) >> 4;
+    return ((KnxMSG_GetMessagePtr(pBuffer)->ncpi) & (uint8)0x70) >> 4;
 }
 
-void MSG_SetRoutingCtrl(PMSG_Buffer pBuffer, boolean on)
+void KnxMSG_SetRoutingCtrl(KnxMSG_BufferPtr pBuffer, boolean on)
 {
     uint8 r;
 
     (on == TRUE) ? (r = (uint8)0x02) : (r = (uint8)0x00);
-    MSG_GetMessagePtr(pBuffer)->ctrl |= r;
+    KnxMSG_GetMessagePtr(pBuffer)->ctrl |= r;
 }
 
 /*

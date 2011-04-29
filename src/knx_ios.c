@@ -34,10 +34,10 @@
 #include "knx_layer_application.h"
 
 const uint8 KNX_PDT_LEN_TAB[32] = {
-    (uint8)0, (uint8)1, (uint8)1,  (uint8)2, (uint8)2,  (uint8)2, (uint8)3, (uint8)3,
-    (uint8)4, (uint8)4, (uint8)4,  (uint8)8, (uint8)10, (uint8)3, (uint8)5, (uint8)0,
-    (uint8)0, (uint8)1, (uint8)2,  (uint8)3, (uint8)4,  (uint8)5, (uint8)6, (uint8)7,
-    (uint8)8, (uint8)9, (uint8)10, (uint8)0, (uint8)0,  (uint8)0, (uint8)0, (uint8)0
+    (uint8)0, (uint8)1, (uint8)1,  (uint8)2,  (uint8)2,   (uint8)2,   (uint8)3,  (uint8)3,
+    (uint8)4, (uint8)4, (uint8)4,  (uint8)8,  (uint8)10,  (uint8)3,   (uint8)5,  (uint8)0,
+    (uint8)0, (uint8)1, (uint8)2,  (uint8)3,  (uint8)4,   (uint8)5,   (uint8)6,  (uint8)7,
+    (uint8)8, (uint8)9, (uint8)10, (uint8)0,  (uint8)0,   (uint8)0,   (uint8)0,  (uint8)0
 };
 
 #define OBJECT_READ_ALLOWED(o)      (((((o)->access_level & (uint8)0xf0) >> 4) >= DEV_Current_Accesslevel) ? TRUE : FALSE)
@@ -63,10 +63,10 @@ const uint8 KNX_PDT_LEN_TAB[32] = {
 #define PH_PTR_TO_VAL_FN    ((uint8)0x01)
 #define PH_PTR_TO_ARRAY     ((uint8)0x03)
 
-typedef void (*PROPERTY_FUNC)(PMSG_Buffer pBuffer, boolean write);
+typedef void (*PROPERTY_FUNC)(KnxMSG_BufferPtr pBuffer, boolean write);
 void ios_test(void);
 
-void IOS_Dispatch(const PMSG_Buffer pBuffer, uint8 service, boolean connected)
+void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connected)
 {
     uint8                           data[MAX_PROP_DATA_LEN];
     KNX_PropertyFrameRefType        pmsg;
@@ -78,11 +78,11 @@ void IOS_Dispatch(const PMSG_Buffer pBuffer, uint8 service, boolean connected)
     PROPERTY_FUNC                   pf;
     Knx_AddressType                 source, dest;
 
-    if (pBuffer == (PMSG_Buffer)NULL) {
+    if (pBuffer == (KnxMSG_BufferPtr)NULL) {
         return;
     }
 
-    pmsg = MSG_GetProperyFramePtr(pBuffer);
+    pmsg = KnxMSG_GetProperyFramePtr(pBuffer);
 
 /*
 **      1. object exists?
@@ -107,8 +107,8 @@ void IOS_Dispatch(const PMSG_Buffer pBuffer, uint8 service, boolean connected)
             goto empty_answer;
         }
 
-        source = ADR_GetPhysAddr();
-        dest   = MSG_GetSourceAddress(pBuffer);
+        source = KnxADR_GetPhysAddr();
+        dest   = KnxMSG_GetSourceAddress(pBuffer);
 
         A_PropertyDescription_Read_Res(pBuffer, source, dest, pmsg->obj_id, pprop->property_id,
                                        pmsg->num_elems, GET_PROPERTY_TYPE(pprop), (uint8)1, pobj->access_level);
@@ -211,8 +211,8 @@ void IOS_Dispatch(const PMSG_Buffer pBuffer, uint8 service, boolean connected)
     return;
 
 pr_desc_empty:
-    source = ADR_GetPhysAddr();
-    dest   = MSG_GetSourceAddress(pBuffer);
+    source = KnxADR_GetPhysAddr();
+    dest   = KnxMSG_GetSourceAddress(pBuffer);
     A_PropertyDescription_Read_Res_NoData(pBuffer, source, dest, pmsg->obj_id, pmsg->prop_id, pmsg->num_elems);
     return;
 
@@ -221,7 +221,7 @@ empty_answer:   /* Property-Read /wo Data. */
     return;
 
 invalid:
-    (void)MSG_ReleaseBuffer(pBuffer);
+    (void)KnxMSG_ReleaseBuffer(pBuffer);
 }
 
 Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_index)

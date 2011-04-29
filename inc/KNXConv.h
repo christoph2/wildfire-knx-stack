@@ -26,6 +26,11 @@
 
 #include "KNXDefs.h"
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
 uint16  LongToDPT9(sint32 value);
 uint16  FloatToDPT9(float value);
 float   DPT9ToFloat(uint16 value);
@@ -53,6 +58,10 @@ uint16 btohs(uint16 w);
 #else
  #error "No Endianess defined!!!"
 #endif
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
 
 #endif  /* __KNXCONV_H */
 

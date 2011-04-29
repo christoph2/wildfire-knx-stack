@@ -96,10 +96,10 @@ typedef enum tagKNX_LSMStateType {
 static const uint8 LS_Table[4][5] = {
 /*  NOP                     START_LOAD          LOAD_COMPLETE       SEGMENT             UNLOAD                  */
 /*  ----------------------------------------------------------------------------------------------------------- */
-    {LSM_STATE_UNLOADED, LSM_STATE_LOADING,      LSM_STATE_UNLOADED,  LSM_STATE_UNLOADED,  LSM_STATE_UNLOADED   },  /* UNLOADED */
-    {LSM_STATE_LOADED,   LSM_STATE_LOADING,      LSM_STATE_LOADED,    LSM_STATE_LOADED,    LSM_STATE_UNLOADED   },  /* LOADED */
-    {LSM_STATE_LOADING,  LSM_STATE_LOADING,      LSM_STATE_LOADED,    LSM_STATE_LOADING,   LSM_STATE_UNLOADED   },  /* LOADING */
-    {LSM_STATE_ERROR,    LSM_STATE_ERROR,        LSM_STATE_ERROR,     LSM_STATE_ERROR,     LSM_STATE_UNLOADED   },  /* ERROR */
+    {LSM_STATE_UNLOADED, LSM_STATE_LOADING,   LSM_STATE_UNLOADED,   LSM_STATE_UNLOADED,    LSM_STATE_UNLOADED                     },    /* UNLOADED */
+    {LSM_STATE_LOADED,   LSM_STATE_LOADING,   LSM_STATE_LOADED,     LSM_STATE_LOADED,      LSM_STATE_UNLOADED                     },    /* LOADED */
+    {LSM_STATE_LOADING,  LSM_STATE_LOADING,   LSM_STATE_LOADED,     LSM_STATE_LOADING,     LSM_STATE_UNLOADED                     },    /* LOADING */
+    {LSM_STATE_ERROR,    LSM_STATE_ERROR,     LSM_STATE_ERROR,      LSM_STATE_ERROR,       LSM_STATE_UNLOADED                     },    /* ERROR */
 };
 
 typedef uint8 LoadEventType[10];
@@ -201,3 +201,4 @@ void LSM_Test(void)
         KNX_SystemLSC[i] = LSM_STATE_LOADED;
     }
 }
+
