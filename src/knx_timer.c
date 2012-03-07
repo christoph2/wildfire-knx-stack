@@ -37,7 +37,12 @@ static TM_TimerType KNX_Timer[TM_NUM_TIMERS];
 static TM_TickType  TM_SysMsCounter;
 static TM_TickType  TM_SysSecondCounter;
 
-void TM_Init(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
+void KnxTMR_Init(void)
 {
     uint8_least idx;
 
@@ -54,7 +59,8 @@ void TM_Init(void)
     ENABLE_ALL_INTERRUPTS();
 }
 
-boolean TM_Start(uint8 timer, TM_BaseType base, TM_TickType ticks)
+
+boolean KnxTMR_Start(uint8 timer, TM_BaseType base, TM_TickType ticks)
 {
     if (timer < TM_NUM_TIMERS) {
         if (!(KNX_Timer[timer].state & TM_STATE_RUNNING)) {
@@ -72,7 +78,8 @@ boolean TM_Start(uint8 timer, TM_BaseType base, TM_TickType ticks)
     }
 }
 
-boolean TM_Stop(uint8 timer)
+
+boolean KnxTMR_Stop(uint8 timer)
 {
     if (timer < TM_NUM_TIMERS) {
         DISABLE_ALL_INTERRUPTS();
@@ -84,7 +91,8 @@ boolean TM_Stop(uint8 timer)
     }
 }
 
-boolean TM_IsExpired(uint8 timer)
+
+boolean KnxTMR_IsExpired(uint8 timer)
 {
     TM_StateType state;
 
@@ -100,7 +108,8 @@ boolean TM_IsExpired(uint8 timer)
     }
 }
 
-boolean TM_IsRunning(uint8 timer)
+
+boolean KnxTMR_IsRunning(uint8 timer)
 {
     if (timer < TM_NUM_TIMERS) {
         return (KNX_Timer[timer].state & TM_STATE_RUNNING) == TM_STATE_RUNNING;
@@ -109,7 +118,8 @@ boolean TM_IsRunning(uint8 timer)
     }
 }
 
-boolean TM_GetRemainder(uint8 timer, TM_TickRefType remainder)
+
+boolean KnxTMR_GetRemainder(uint8 timer, TM_TickRefType remainder)
 {
     if (timer < TM_NUM_TIMERS) {
         if (!(KNX_Timer[timer].state & TM_STATE_RUNNING)) {
@@ -125,7 +135,8 @@ boolean TM_GetRemainder(uint8 timer, TM_TickRefType remainder)
     }
 }
 
-TM_TickType TM_GetSystemTime(TM_BaseType base)
+
+TM_TickType KnxTMR_GetSystemTime(TM_BaseType base)
 {
     TM_TickType t;
 
@@ -141,6 +152,7 @@ TM_TickType TM_GetSystemTime(TM_BaseType base)
 
     return t;
 }
+
 
 /*
    void TM_Delay(TM_TickType ms
@@ -160,12 +172,13 @@ TM_TickType TM_GetSystemTime(TM_BaseType base)
    }
  */
 
-void TM_SecondCallback(void)
+void KnxTMR_SecondCallback(void)
 {
 
 }
 
-void TM_SystemTimeHandler(void)
+
+void KnxTMR_SystemTimeHandler(void)
 {
     TM_TimerType *  tm;
     uint8           idx;
@@ -176,7 +189,7 @@ void TM_SystemTimeHandler(void)
     if ((TM_SysMsCounter % (uint32)1000UL) == (uint32)0UL) {
         TM_SysSecondCounter++;
         SecondChanged = TRUE;
-        TM_SecondCallback();
+        KnxTMR_SecondCallback();
     }
 
     for (idx = (uint8)0; idx < TM_NUM_TIMERS; idx++) {
@@ -195,6 +208,7 @@ void TM_SystemTimeHandler(void)
         }
     }
 }
+
 
 /*
    ---
@@ -239,3 +253,7 @@ void TM_SystemTimeHandler(void)
    }
  */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

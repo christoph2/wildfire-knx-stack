@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -30,6 +30,15 @@
 
 #include "knx_ail.h"
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
+/*
+**	Global functions.
+*/
 boolean KnxAIL_TestObject(uint16 objectNr)
 {
     uint8 flags;
@@ -42,6 +51,7 @@ boolean KnxAIL_TestObject(uint16 objectNr)
     }
 }
 
+
 boolean KnxAIL_TestAndGetObject(uint16 objectNr, void * dst)
 {
     if (!KnxAIL_TestObject(objectNr)) {
@@ -51,6 +61,7 @@ boolean KnxAIL_TestAndGetObject(uint16 objectNr, void * dst)
         return TRUE;
     }
 }
+
 
 boolean KnxAIL_GetObject(uint16 objectNr, void * dst)
 {
@@ -63,6 +74,7 @@ boolean KnxAIL_GetObject(uint16 objectNr, void * dst)
     }
 }
 
+
 boolean KnxAIL_TransmitObject(uint16 objectNr)
 {
     /* todo: check 'objectNr'? */
@@ -74,6 +86,7 @@ boolean KnxAIL_TransmitObject(uint16 objectNr)
         return TRUE;
     }
 }
+
 
 boolean KnxAIL_SetAndTransmitObject(uint16 objectNr, void * src)
 {
@@ -88,6 +101,7 @@ boolean KnxAIL_SetAndTransmitObject(uint16 objectNr, void * src)
     return TRUE;
 }
 
+
 boolean KnxAIL_SetObject(uint16 objectNr, void * src)
 {
     if ((objectNr < KnxALG_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
@@ -97,6 +111,7 @@ boolean KnxAIL_SetObject(uint16 objectNr, void * src)
         return FALSE;
     }
 }
+
 
 boolean KnxAIL_ReadObject(uint16 objectNr)
 {
@@ -112,6 +127,7 @@ boolean KnxAIL_ReadObject(uint16 objectNr)
     }
 }
 
+
 boolean KnxAIL_GetRAMFlags(uint16 objectNr, uint8 * flags)
 {
     if (objectNr < KnxALG_GetNumCommObjs() && LSM_IsAppLoaded()) {
@@ -121,6 +137,7 @@ boolean KnxAIL_GetRAMFlags(uint16 objectNr, uint8 * flags)
 
     return FALSE;
 }
+
 
 uint8 KnxAIL_SetRAMFlags(uint16 objectNr, uint8 flags)
 {
@@ -155,3 +172,8 @@ uint8 KnxAIL_SetRAMFlags(uint16 objectNr, uint8 flags)
     return tmp;
 }
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

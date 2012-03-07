@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -162,4 +162,3 @@ const uint8 Knx_SystemInterfaceObjCount = SIZEOF_ARRAY(Knx_SystemInterfaceObjs);
    #endif
 
  */
-

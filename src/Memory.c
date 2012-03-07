@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -40,20 +40,28 @@ MemoryControlBlock MCBs[NUM_MCBs] = {
     {(uint16)0x00BDU, &UserLowRAM, (uint8)0x23, mtRAM, (uint8)0x00},
 };
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
 void MM_ClearMCBs(void)
 {
     ZeroRAM(MCBs, sizeof(MemoryControlBlock) * NUM_MCBs);
 }
+
 
 uint16 MM_MapAddressToTarget(uint16 Address)
 {
     return (uint16)0xffffU;
 }
 
+
 uint16 MM_MapAddressFromTarget(uint16 Address)
 {
     return (uint16)0xffffU;
 }
+
 
 /*
    int MM_SetByte(uint16 Address,uint8 value)
@@ -81,6 +89,7 @@ boolean CompMem(void * p1, void * p2, uint16 len)
     return TRUE;
 }
 
+
 void FillRAM(void * p, uint8 b, uint16 len)
 {
     uint8 * bp = (uint8 *)p;
@@ -89,6 +98,7 @@ void FillRAM(void * p, uint8 b, uint16 len)
         *bp++ = b;
     }
 }
+
 
 void CopyRAM(void * d, void * s, uint16 len)
 {
@@ -100,6 +110,7 @@ void CopyRAM(void * d, void * s, uint16 len)
     }
 }
 
+
 void ZeroRAM(void * p, uint16 len)
 {
     uint8 * bp = (uint8 *)p;
@@ -109,3 +120,7 @@ void ZeroRAM(void * p, uint16 len)
     }
 }
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -26,6 +26,7 @@
 static void Disp_T_DataGroupReq(void), Disp_T_PollDataReq(void), Disp_N_PollDataCon(void);
 static void Disp_N_DataGroupInd(void), Disp_N_DataGroupCon(void);
 
+
 static const Knx_LayerServiceFunctionType TLG_Services[] = {
 /*      Service                     Handler                 */
 /*      ====================================================*/
@@ -41,10 +42,16 @@ static const Knx_LayerServicesType TLG_ServiceTable[] = {
     {KNX_TLG_SERVICES, 5, TLG_Services}
 };
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
 void KnxTLG_Task(void)
 {
     KnxDisp_DispatchLayer(TASK_TL_ID, TLG_ServiceTable);
 }
+
 
 /*
 **
@@ -57,17 +64,20 @@ static void Disp_N_DataGroupInd(void)
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
+
 static void Disp_N_DataGroupCon(void)
 {
     KnxMSG_ScratchBufferPtr->service = T_DATA_GROUP_CON;
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
+
 static void Disp_N_PollDataCon(void)
 {
     KnxMSG_ScratchBufferPtr->service = T_POLL_DATA_CON;
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
+
 
 /*
 **
@@ -81,8 +91,13 @@ static void Disp_T_DataGroupReq(void)
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
+
 static void Disp_T_PollDataReq(void)
 {
     /* todo: Implement!!! */
 }
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

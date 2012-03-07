@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2012 by Christoph Schueler <chris@konnex-tools.de,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -43,6 +43,7 @@ static void StopAcknowledgementTimeoutTimer(void);
 void    T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
 void    T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
 
+
 typedef uint8 (*EVENT_FUNC)(void);
 
 static uint8    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
@@ -55,43 +56,44 @@ static uint8    EventUndefined(void);
 static void A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
 static void A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(void);
 
+
 #if TL_STYLE == 3
 /* Transport-Layer-Statemachine-Style #3 */
 static const KnxTLC_ActionListType Actions[] = {
-    { /* 0,  */ {{A1, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }, {A0,  CONNECTING    }}        },
+    { /* 0,  */ {{A1, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }, {A0, CONNECTING     }}        },
     { /* 1,  */ {{A1, OPEN_IDLE}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT}, {A10, CONNECTING   }}        },
-    { /* 2,  */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED  },        {A5,  CLOSED        }}        },
-    { /* 3,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },    {A0,  CONNECTING    }}        },
-    { /* 4,  */ {{A0, CLOSED}, {A2, OPEN_IDLE}, {A2, OPEN_WAIT },    {A6,  CLOSED        }}        },
-    { /* 5,  */ {{A0, CLOSED}, {A3, OPEN_IDLE}, {A3, OPEN_WAIT },    {A3,  CONNECTING    }}        },
-    { /* 6,  */ {{A0, CLOSED}, {A4, OPEN_IDLE}, {A4, OPEN_WAIT },    {A6,  CONNECTING    }}        },
-    { /* 7,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },    {A10, CONNECTING    }}        },
-    { /* 8,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A8, OPEN_IDLE },    {A6,  CLOSED        }}        },
-    { /* 9,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED },       {A6,  CLOSED        }}        },
-    { /* 10, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },    {A10, CONNECTING    }}        },
-    { /* 11, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },    {A6,  CLOSED        }}        },
-    { /* 12, */ {{A0, CLOSED}, {A6, CLOSED }, {A9, OPEN_WAIT },      {A6,  CLOSED        }}        },
-    { /* 13, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED  },        {A6,  CLOSED        }}        },
-    { /* 14, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },    {A10, CONNECTING    }}        },
-    { /* 15, */ {{A0, CLOSED}, {A7, OPEN_WAIT}, {A11, OPEN_WAIT },   {A11, CONNECTING    }}        },
-    { /* 16, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED  },        {A6,  CLOSED        }}        },
-    { /* 17, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A9, OPEN_WAIT },    {A0,  CONNECTING    }}        },
-    { /* 18, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED },       {A0,  CONNECTING    }}        },
-    { /* 19, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },    {A13, OPEN_IDLE     }}        },
-    { /* 20, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },    {A5,  CLOSED        }}        },
-    { /* 21, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },    {A0,  CONNECTING    }}        },
-    { /* 22, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },    {A0,  CONNECTING    }}        },
-    { /* 23, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },    {A0,  CONNECTING    }}        },
-    { /* 24, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },    {A0,  CONNECTING    }}        },
-    { /* 25, */ {{A12, CONNECTING}, {A6, CLOSED}, {A6, CLOSED },     {A6,  CLOSED        }}        },
-    { /* 26, */ {{A15, CLOSED}, {A14, CLOSED }, {A14, CLOSED },      {A14, CLOSED        }}        },
-    { /* 27, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },    {A0,  CONNECTING    }}        },
+    { /* 2,  */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED },        {A5,  CLOSED         }}        },
+    { /* 3,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING     }}        },
+    { /* 4,  */ {{A0, CLOSED}, {A2, OPEN_IDLE}, {A2, OPEN_WAIT },   {A6,  CLOSED         }}        },
+    { /* 5,  */ {{A0, CLOSED}, {A3, OPEN_IDLE}, {A3, OPEN_WAIT },   {A3,  CONNECTING     }}        },
+    { /* 6,  */ {{A0, CLOSED}, {A4, OPEN_IDLE}, {A4, OPEN_WAIT },   {A6,  CONNECTING     }}        },
+    { /* 7,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A10, CONNECTING     }}        },
+    { /* 8,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A8, OPEN_IDLE },   {A6,  CLOSED         }}        },
+    { /* 9,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED },      {A6,  CLOSED         }}        },
+    { /* 10, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A10, CONNECTING     }}        },
+    { /* 11, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A6,  CLOSED         }}        },
+    { /* 12, */ {{A0, CLOSED}, {A6, CLOSED }, {A9, OPEN_WAIT },     {A6,  CLOSED         }}        },
+    { /* 13, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED },        {A6,  CLOSED         }}        },
+    { /* 14, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A10, CONNECTING     }}        },
+    { /* 15, */ {{A0, CLOSED}, {A7, OPEN_WAIT}, {A11, OPEN_WAIT },  {A11, CONNECTING     }}        },
+    { /* 16, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED },        {A6,  CLOSED         }}        },
+    { /* 17, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A9, OPEN_WAIT },   {A0,  CONNECTING     }}        },
+    { /* 18, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED },      {A0,  CONNECTING     }}        },
+    { /* 19, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A13, OPEN_IDLE      }}        },
+    { /* 20, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A5,  CLOSED         }}        },
+    { /* 21, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING     }}        },
+    { /* 22, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING     }}        },
+    { /* 23, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING     }}        },
+    { /* 24, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING     }}        },
+    { /* 25, */ {{A12, CONNECTING}, {A6, CLOSED}, {A6, CLOSED },    {A6,  CLOSED         }}        },
+    { /* 26, */ {{A15, CLOSED}, {A14, CLOSED }, {A14, CLOSED },     {A14, CLOSED         }}        },
+    { /* 27, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING     }}        },
 };
 #elif (TL_STYLE == 1) || (TL_STYLE == 2)
 /* Transport-Layer-Statemachine, Styles #1 and #2 */
 static const ACTION_LIST Actions[] = {
 #if     TL_STYLE == 1
-    { /* 0,  */ {{A1, OPEN_IDLE}, {A6, CLOSED }, {A6, CLOSED }}      },
+    { /* 0,  */ {{A1, OPEN_IDLE}, {A6, CLOSED }, {A6, CLOSED }}     },
 #else
 /* #if TL_STYLE==2 */
     { /* 0,  */ {{A1, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_IDLE }} },
@@ -102,92 +104,92 @@ static const ACTION_LIST Actions[] = {
 #else
     { /* 1,  */ {{A1, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }} },
 #endif
-    { /* 2,  */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED  }}        },
-    { /* 3,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}    },
+    { /* 2,  */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED }}        },
+    { /* 3,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
 #if     TL_STYLE == 1
-    { /* 4,  */ {{A10, CLOSED}, {A2, OPEN_IDLE}, {A2, OPEN_WAIT }}   },
+    { /* 4,  */ {{A10, CLOSED}, {A2, OPEN_IDLE}, {A2, OPEN_WAIT }}  },
 #else
-    { /* 4,  */ {{A0, CLOSED}, {A2, OPEN_IDLE}, {A2, OPEN_WAIT }}    },
+    { /* 4,  */ {{A0, CLOSED}, {A2, OPEN_IDLE}, {A2, OPEN_WAIT }}   },
 #endif
 #if     TL_STYLE == 1
-    { /* 5,  */ {{A10, CLOSED}, {A3, OPEN_IDLE}, {A3, OPEN_WAIT }}   },
+    { /* 5,  */ {{A10, CLOSED}, {A3, OPEN_IDLE}, {A3, OPEN_WAIT }}  },
 #else
-    { /* 5,  */ {{A0, CLOSED}, {A3, OPEN_IDLE}, {A3, OPEN_WAIT }}    },
+    { /* 5,  */ {{A0, CLOSED}, {A3, OPEN_IDLE}, {A3, OPEN_WAIT }}   },
 #endif
 #if     TL_STYLE == 1
-    { /* 6,  */ {{A10, CLOSED}, {A4, OPEN_IDLE}, {A4, OPEN_WAIT }}   },
+    { /* 6,  */ {{A10, CLOSED}, {A4, OPEN_IDLE}, {A4, OPEN_WAIT }}  },
 #else
-    { /* 6,  */ {{A0, CLOSED}, {A4, OPEN_IDLE}, {A4, OPEN_WAIT }}    },
+    { /* 6,  */ {{A0, CLOSED}, {A4, OPEN_IDLE}, {A4, OPEN_WAIT }}   },
 #endif
 #if     TL_STYLE == 1
     { /* 7,  */ {{A10, CLOSED}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT }} },
 #else
-    { /* 7,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}    },
+    { /* 7,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
 #endif
 #if     TL_STYLE == 1
-    { /* 8,  */ {{A10, CLOSED}, {A6, CLOSED }, {A8, OPEN_IDLE }}     },
+    { /* 8,  */ {{A10, CLOSED}, {A6, CLOSED }, {A8, OPEN_IDLE }}    },
 #else
-    { /* 8,  */ {{A0, CLOSED}, {A6, CLOSED }, {A8b, OPEN_IDLE }}     },
+    { /* 8,  */ {{A0, CLOSED}, {A6, CLOSED }, {A8b, OPEN_IDLE }}    },
 #endif
 #if     TL_STYLE == 1
-    { /* 9,  */ {{A10, CLOSED}, {A6, CLOSED }, {A6, CLOSED }}        },
+    { /* 9,  */ {{A10, CLOSED}, {A6, CLOSED }, {A6, CLOSED }}       },
 #else
-    { /* 9,  */ {{A0, CLOSED}, {A6, CLOSED }, {A0, OPEN_WAIT }}      },
+    { /* 9,  */ {{A0, CLOSED}, {A6, CLOSED }, {A0, OPEN_WAIT }}     },
 #endif
 #if     TL_STYLE == 1
     { /* 10, */ {{A10, CLOSED}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT }} },
 #else
-    { /* 10, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}    },
+    { /* 10, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
 #endif
 #if     TL_STYLE == 1
-    { /* 11, */ {{A10, CLOSED}, {A6, CLOSED }, {A6, CLOSED }}        },
+    { /* 11, */ {{A10, CLOSED}, {A6, CLOSED }, {A6, CLOSED }}       },
 #else
-    { /* 11, */ {{A0, CLOSED}, {A6, CLOSED }, {A0, OPEN_WAIT }}      },
+    { /* 11, */ {{A0, CLOSED}, {A6, CLOSED }, {A0, OPEN_WAIT }}     },
 #endif
 #if     TL_STYLE == 1
-    { /* 12, */ {{A10, CLOSED}, {A6, CLOSED }, {A9, OPEN_WAIT }}     },
+    { /* 12, */ {{A10, CLOSED}, {A6, CLOSED }, {A9, OPEN_WAIT }}    },
 #else
-    { /* 12, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A9, OPEN_WAIT }}    },
+    { /* 12, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A9, OPEN_WAIT }}   },
 #endif
 #if     TL_STYLE == 1
-    { /* 13, */ {{A10, CLOSED}, {A6, CLOSED }, {A6, CLOSED }}        },
+    { /* 13, */ {{A10, CLOSED}, {A6, CLOSED }, {A6, CLOSED }}       },
 #else
-    { /* 13, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED }}       },
+    { /* 13, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED }}      },
 #endif
 #if     TL_STYLE == 1
     { /* 14, */ {{A10, CLOSED}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT }} },
 #else
-    { /* 14, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}    },
+    { /* 14, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
 #endif
 #if     TL_STYLE == 1
-    { /* 15, */ {{A5, CLOSED}, {A7, OPEN_WAIT}, {A6, CLOSED }}       },
+    { /* 15, */ {{A5, CLOSED}, {A7, OPEN_WAIT}, {A6, CLOSED }}      },
 #else
-    { /* 15, */ {{A0, CLOSED}, {A7, OPEN_WAIT}, {A11, OPEN_WAIT }}   },
+    { /* 15, */ {{A0, CLOSED}, {A7, OPEN_WAIT}, {A11, OPEN_WAIT }}  },
 #endif
-    { /* 16, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED  }}        },
-    { /* 17, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A9, OPEN_WAIT }}    },
-    { /* 18, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED }}       },
+    { /* 16, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED }}        },
+    { /* 17, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A9, OPEN_WAIT }}   },
+    { /* 18, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED }}      },
 #if     TL_STYLE == 1
-    { /* 19, */ {{A0, CLOSED}, {A13, OPEN_IDLE}, {A13, OPEN_WAIT }}  },
+    { /* 19, */ {{A0, CLOSED}, {A13, OPEN_IDLE}, {A13, OPEN_WAIT }} },
 #else
-    { /* 19, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}    },
+    { /* 19, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
 #endif
-    { /* 20, */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED  }}        },
-    { /* 21, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}    },
-    { /* 22, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}    },
-    { /* 23, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}    },
-    { /* 24, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}    },
+    { /* 20, */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED }}        },
+    { /* 21, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
+    { /* 22, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
+    { /* 23, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
+    { /* 24, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
 #if     TL_STYLE == 1
-    { /* 25, */ {{A12, OPEN_IDLE}, {A6, CLOSED}, {A6, CLOSED }}      },
+    { /* 25, */ {{A12, OPEN_IDLE}, {A6, CLOSED}, {A6, CLOSED }}     },
 #else
     { /* 25, */ {{A12, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT}} },
 #endif
 #if     TL_STYLE == 1
-    { /* 26, */ {{A15, CLOSED}, {A14, CLOSED }, {A14, CLOSED }}      },
+    { /* 26, */ {{A15, CLOSED}, {A14, CLOSED }, {A14, CLOSED }}     },
 #else
-    { /* 26, */ {{A0, CLOSED}, {A14b, CLOSED }, {A11, OPEN_WAIT }}   },
+    { /* 26, */ {{A0, CLOSED}, {A14b, CLOSED }, {A11, OPEN_WAIT }}  },
 #endif
-    { /* 27, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}    },
+    { /* 27, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
 };
 #else
 #error "Invalid TL_STYLE [1|2|3]"
@@ -234,6 +236,11 @@ static const EVENT_FUNC TLC_Events[] = {
    }
  */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
 #define StoreMessage()      Utl_MemCopy(_StoredMsg, KnxMSG_ScratchBufferPtr->msg, MSG_LEN)
 #define RestoreMessage()    Utl_MemCopy(KnxMSG_ScratchBufferPtr->msg, _StoredMsg, MSG_LEN)
 
@@ -242,10 +249,12 @@ KnxTLC_StateType KnxTLC_GetState(void)
     return KnxTLC_State;
 }
 
+
 void KnxTLC_SetState(KnxTLC_StateType State)
 {
     KnxTLC_State = State;
 }
+
 
 void T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
 {
@@ -262,6 +271,7 @@ void T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
     (void)KnxMSG_Post(pBuffer);
 }
 
+
 void T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
 {
     KnxMSG_SetTPCI(pBuffer, T_DISCONNECT_REQ_PDU);
@@ -277,31 +287,37 @@ void T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
     (void)KnxMSG_Post(pBuffer);
 }
 
+
 static void StartConnectionTimeoutTimer(void)
 {
-    (void)TM_Start(TM_TIMER_TLC_CON_TIMEOUT, TM_BASE_SEC, TLC_CONNECTION_TIMEOUT);
+    (void)KnxTMR_Start(TM_TIMER_TLC_CON_TIMEOUT, TM_BASE_SEC, TLC_CONNECTION_TIMEOUT);
 }
+
 
 static void RestartConnectionTimeoutTimer(void)
 {
-    (void)TM_Stop(TM_TIMER_TLC_CON_TIMEOUT);
-    (void)TM_Start(TM_TIMER_TLC_CON_TIMEOUT, TM_BASE_SEC, TLC_CONNECTION_TIMEOUT);
+    (void)KnxTMR_Stop(TM_TIMER_TLC_CON_TIMEOUT);
+    (void)KnxTMR_Start(TM_TIMER_TLC_CON_TIMEOUT, TM_BASE_SEC, TLC_CONNECTION_TIMEOUT);
 }
+
 
 static void StopConnectionTimeoutTimer(void)
 {
-    (void)TM_Stop(TM_TIMER_TLC_CON_TIMEOUT);
+    (void)KnxTMR_Stop(TM_TIMER_TLC_CON_TIMEOUT);
 }
+
 
 static void StartAcknowledgementTimeoutTimer(void)
 {
-    (void)TM_Start(TM_TIMER_TLC_ACK_TIMEOUT, TM_BASE_SEC, TLC_ACKNOWLEDGE_TIMEOUT);
+    (void)KnxTMR_Start(TM_TIMER_TLC_ACK_TIMEOUT, TM_BASE_SEC, TLC_ACKNOWLEDGE_TIMEOUT);
 }
+
 
 static void StopAcknowledgementTimeoutTimer(void)
 {
-    (void)TM_Stop(TM_TIMER_TLC_ACK_TIMEOUT);
+    (void)KnxTMR_Stop(TM_TIMER_TLC_ACK_TIMEOUT);
 }
+
 
 void A0(void)
 {
@@ -310,6 +326,7 @@ void A0(void)
         (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
     }
 }
+
 
 void A1(void)
 {
@@ -323,6 +340,7 @@ void A1(void)
     KnxTLC_SetSequenceNumberReceived((uint8)0);
     StartConnectionTimeoutTimer();
 }
+
 
 void A2(void)
 {
@@ -346,6 +364,7 @@ void A2(void)
     RestartConnectionTimeoutTimer();
 }
 
+
 void A3(void)
 {
 /*
@@ -358,6 +377,7 @@ void A3(void)
     T_Ack_Req(KnxMSG_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTLC_GetConnectionAddress(), KnxTLC_GetSequenceNumberReceived());
     RestartConnectionTimeoutTimer();
 }
+
 
 void A4(void)
 {
@@ -373,6 +393,7 @@ void A4(void)
     RestartConnectionTimeoutTimer();
 }
 
+
 void A5(void)
 {
     /* Send a T_Disconnect.ind to the user. */
@@ -382,6 +403,7 @@ void A5(void)
     StopAcknowledgementTimeoutTimer();
     StopConnectionTimeoutTimer();
 }
+
 
 void A6(void)
 {
@@ -413,6 +435,7 @@ void A6(void)
     StopConnectionTimeoutTimer();
 }
 
+
 void A7(void)   /* Nur local-user (Client only). */
 {
 /*
@@ -434,6 +457,7 @@ void A7(void)   /* Nur local-user (Client only). */
     RestartConnectionTimeoutTimer();
 }
 
+
 void A8(void)  /* only local-user (Client only). */
 {
     StopAcknowledgementTimeoutTimer();
@@ -449,6 +473,7 @@ void A8(void)  /* only local-user (Client only). */
     RestartConnectionTimeoutTimer();
 }
 
+
 void A8b(void)        /* only local-user (Client only). */
 {
     (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
@@ -456,6 +481,7 @@ void A8b(void)        /* only local-user (Client only). */
     KnxTLC_SetSequenceNumberSend(KnxTLC_GetSequenceNumberSend() + (uint8)1);
     RestartConnectionTimeoutTimer();
 }
+
 
 void A9(void)  /* only local-user (Client only). */
 {
@@ -477,12 +503,14 @@ void A9(void)  /* only local-user (Client only). */
     RestartConnectionTimeoutTimer();
 }
 
+
 void A10(void)  /* GO AWAY!!! */
 {
 /*      Send a N_Data_Individual.req with T_DISCONNECT_REQ_PDU Priority = SYSTEM, */
 /*      Destination = source (rbuffer), Sequence = 0 back to sender. */
 
-    Knx_AddressType source, dest;
+    Knx_AddressType source;
+    Knx_AddressType dest;
 
     source = KnxMSG_GetSourceAddress(KnxMSG_ScratchBufferPtr);
     dest   = KnxMSG_GetDestAddress(KnxMSG_ScratchBufferPtr);
@@ -492,12 +520,14 @@ void A10(void)  /* GO AWAY!!! */
 
 }
 
+
 void A11(void)  /* (Client only???) */
 {
 /* Store event back and handle after next event. Don�t change order of T_Data_Connected.req events. */
 
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);   /* push-bask event. */
 }
+
 
 void A12(void)                                              /* (Client only.) */
 {
@@ -512,12 +542,14 @@ void A12(void)                                              /* (Client only.) */
     StartConnectionTimeoutTimer();
 }
 
+
 void A13(void)  /* Nur local-user (Client only). */
 {
 /*     Send a T_Connect.con to the user. */
     KnxMSG_ScratchBufferPtr->service = T_CONNECT_CON;
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
+
 
 void A14(void)    /* only local-user (Client only). */
 {
@@ -530,6 +562,7 @@ void A14(void)    /* only local-user (Client only). */
     StopConnectionTimeoutTimer();
 }
 
+
 void A14b(void)  /* wie A14, nur ohne T_DISCONNECT_CON to user. */
 {
 /*      Send a N_Data_Individual.req with T_DISCONNECT_REQ_PDU, priority = SYSTEM, */
@@ -539,6 +572,7 @@ void A14b(void)  /* wie A14, nur ohne T_DISCONNECT_CON to user. */
     StopConnectionTimeoutTimer();
 }
 
+
 void A15(void)   /* only local-user (Client only). */
 {
 /*      Send a T_Disconnect.con to the management user */
@@ -546,6 +580,7 @@ void A15(void)   /* only local-user (Client only). */
     StopAcknowledgementTimeoutTimer();
     StopConnectionTimeoutTimer();
 }
+
 
 /*
 **
@@ -561,6 +596,7 @@ static uint8 EventConnectInd(void)
     }
 }
 
+
 static uint8 EventDisconnectInd(void)
 {
     if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
@@ -569,6 +605,7 @@ static uint8 EventDisconnectInd(void)
         return (uint8)3;
     }
 }
+
 
 static uint8 EventDataConnectedInd(void)
 {
@@ -593,6 +630,7 @@ static uint8 EventDataConnectedInd(void)
     return event_num;
 }
 
+
 static uint8 EventAckInd(void)
 {
     uint8 event_num;
@@ -609,6 +647,7 @@ static uint8 EventAckInd(void)
 
     return event_num;
 }
+
 
 static uint8 EventNakInd(void)
 {
@@ -631,12 +670,14 @@ static uint8 EventNakInd(void)
     return event_num;
 }
 
+
 static uint8 EventConnectReq(void)
 {
     /* Client-only. */
     /* Event 25.    */
     return (uint8)25;
 }
+
 
 static uint8 EventDisconnectReq(void)
 {
@@ -645,12 +686,14 @@ static uint8 EventDisconnectReq(void)
     return (uint8)26;
 }
 
+
 static uint8 EventDataConnectedReq(void)
 {
     /* Client-only. */
     /* Event 15.    */
     return (uint8)15;
 }
+
 
 static uint8 EventConnectCon(void)
 {
@@ -663,11 +706,13 @@ static uint8 EventConnectCon(void)
     }
 }
 
+
 static uint8 EventDisconnectCon(void)
 {
     /* Event 21.    */
     return (uint8)21;
 }
+
 
 static uint8 EventDataConnectedCon(void)
 {
@@ -675,11 +720,13 @@ static uint8 EventDataConnectedCon(void)
     return (uint8)22;
 }
 
+
 static uint8 EventAckCon(void)
 {
     /* Event 23.    */
     return (uint8)23;
 }
+
 
 static uint8 EventNakCon(void)
 {
@@ -687,10 +734,12 @@ static uint8 EventNakCon(void)
     return (uint8)24;
 }
 
+
 static uint8 EventTimeoutCon(void)
 {
     return (uint8)16;
 }
+
 
 static uint8 EventTimeoutAck(void)
 {
@@ -701,10 +750,12 @@ static uint8 EventTimeoutAck(void)
     }
 }
 
+
 static uint8 EventUndefined(void)
 {
     return (uint8)27;
 }
+
 
 void KnxTLC_StateMachine(KNX_TlcEventType event)
 {
@@ -721,4 +772,9 @@ void KnxTLC_StateMachine(KNX_TlcEventType event)
     KnxTLC_SetState(action.Next);
     action.Function();
 }
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
 

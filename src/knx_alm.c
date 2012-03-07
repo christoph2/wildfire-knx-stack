@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -41,6 +41,7 @@ void    A_Individual_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_A
 
 void AL_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8 obj_index, uint8 prop_id, uint8 nr_of_elem, uint16 start_index);
 
+
 #define APDU_PHYS_ADDR ((uint8)0)        /* A_IndividualAddress_Write-PDU */
 
 /*
@@ -63,6 +64,7 @@ static void Disp_T_DisconnectCon(void), Disp_T_DataConnectedInd(void), Disp_T_Da
 static void Disp_T_DataBroadcastInd(void), Disp_T_DataBroadcastCon(void), Disp_T_DataIndividualInd(void);
 static void Disp_T_DataIndividualCon(void);
 
+
 static const Knx_LayerServiceFunctionType ALM_Services[] = {
 /*      Service                     Handler                 */
 /*      ====================================================*/
@@ -83,10 +85,18 @@ static const Knx_LayerServicesType ALM_ServiceTable[] = {
     {KNX_ALM_SERVICES, 10, ALM_Services}
 };
 
-void ALM_Task(void)
+
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
+void KnxALM_Task(void)
 {
     KnxDisp_DispatchLayer(TASK_MG_ID, ALM_ServiceTable);
 }
+
 
 /*
 **
@@ -99,10 +109,12 @@ static void Disp_T_ConnectInd(void)
     (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
 
+
 static void Disp_T_DisconnectInd(void)
 {
     (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
+
 
 static void Disp_T_DataConnectedInd(void)
 {
@@ -128,6 +140,7 @@ static void Disp_T_DataConnectedInd(void)
 
     (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
+
 
 static void Disp_T_DataBroadcastInd(void)
 {
@@ -162,6 +175,7 @@ static void Disp_T_DataBroadcastInd(void)
     }
 }
 
+
 static void Disp_T_DataIndividualInd(void)
 {
     uint8 apci_type = KnxAL_GetAPCIType(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr));
@@ -184,30 +198,36 @@ static void Disp_T_DataIndividualInd(void)
     }
 }
 
+
 static void Disp_T_ConnectCon(void)
 {
     (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
+
 
 static void Disp_T_DisconnectCon(void)
 {
     (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
 
+
 static void Disp_T_DataConnectedCon(void)
 {
     (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
+
 
 static void Disp_T_DataBroadcastCon(void)
 {
     (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
 
+
 static void Disp_T_DataIndividualCon(void)
 {
     (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
+
 
 /*
 **
@@ -225,6 +245,7 @@ uint8 KnxAL_GetAPCIType(const KNX_StandardFrameRefType pmsg)
     return ((pmsg->tpci & (uint8)0x03) << 2) | ((pmsg->apci & (uint8)0xC0) >> 6);
 }
 
+
 uint8 KnxAL_GetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8 offset)
 {
     offset = MIN(offset, MAX_ADPU_LEN - (uint8)1);
@@ -232,12 +253,14 @@ uint8 KnxAL_GetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8 offset)
     return pmsg->data[offset];
 }
 
+
 void KnxAL_SetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8 offset, const uint8 value)
 {
     offset = MIN(offset, MAX_ADPU_LEN - (uint8)1);
 
     pmsg->data[offset] = value;
 }
+
 
 void KnxAL_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset, uint8 * data, uint8 len)
 {
@@ -249,6 +272,7 @@ void KnxAL_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset, uint8 
     }
 }
 
+
 void KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset, uint8 * data, uint8 len)
 {
     offset = MIN(offset, MAX_ADPU_LEN - (uint8)1);
@@ -258,6 +282,7 @@ void KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset, uint8 
         Utl_MemCopy((uint8 *)pmsg->data + offset, data, len);
     }
 }
+
 
 /*
 **
@@ -284,6 +309,7 @@ void A_Broadcast_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, uint16 ap
     (void)KnxMSG_Post(pBuffer);
 }
 
+
 /*
 **  A_IndividualAddress
 */
@@ -293,10 +319,12 @@ void A_IndividualAddress_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType sour
     A_Broadcast_Req(pBuffer, source, A_PHYSICALADDRESS_RESPONSE, (uint8 *)NULL, (uint8)0);
 }
 
+
 void A_IndividualAddress_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source)
 {
     A_Broadcast_Req(pBuffer, source, A_PHYSICALADDRESS_READ, (uint8 *)NULL, (uint8)0);
 }
+
 
 void A_IndividualAddress_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType newaddress)
 {
@@ -309,6 +337,7 @@ void A_IndividualAddress_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType sou
 */
     A_Broadcast_Req(pBuffer, source, A_PHYSICALADDRESS_WRITE, (uint8 *)&source, (uint8)2);
 }
+
 
 /*
 **  A_IndividualAddressSerialNumber
@@ -323,12 +352,14 @@ void A_IndividualAddressSerialNumber_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_Addr
     A_Broadcast_Req(pBuffer, source, A_PHYSICALADDRESSSERIALNUMBER_RESPONSE, (uint8 *)NULL, (uint8)10);
 }
 
+
 void A_IndividualAddressSerialNumber_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_SerialNumberType serial_number)
 {
     KnxAL_SetAPDUData(KnxMSG_GetMessagePtr(pBuffer), (uint8)0, serial_number, sizeof(Knx_SerialNumberType));
 
     A_Broadcast_Req(pBuffer, source, A_PHYSICALADDRESSSERIALNUMBER_READ, (uint8 *)NULL, (uint8)6);
 }
+
 
 void A_IndividualAddressSerialNumber_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_SerialNumberType serial_number,
                                                Knx_AddressType new_addr)
@@ -338,6 +369,7 @@ void A_IndividualAddressSerialNumber_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_Add
 
     A_Broadcast_Req(pBuffer, source, A_PHYSICALADDRESSSERIALNUMBER_WRITE, (uint8 *)NULL, (uint8)12);
 }
+
 
 /*
 **  A_ServiceInformation_Indication_Write
@@ -353,6 +385,7 @@ void A_ServiceInformation_Indication_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_Add
     A_Broadcast_Req(pBuffer, source, A_SERVICEINFORMATION_INDICATION_WRITE, (uint8 *)data, 3);
 }
 
+
 /*
 **  A_DomainAddress
 */
@@ -362,10 +395,12 @@ void A_DomainAddress_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source)
     A_Broadcast_Req(pBuffer, source, A_DOMAINADDRESS_RESPONSE, (uint8 *)NULL, (uint8)0);
 }
 
+
 void A_DomainAddress_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source)
 {
     A_Broadcast_Req(pBuffer, source, A_DOMAINADDRESS_READ, (uint8 *)NULL, (uint8)0);
 }
+
 
 void A_DomainAddress_Write_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType domain_ddress)
 {
@@ -378,6 +413,7 @@ void A_DomainAddress_Write_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
 
     A_Broadcast_Req(pBuffer, source, A_DOMAINADDRESS_WRITE, (uint8 *)data, (uint8)2);
 }
+
 
 void A_DomainAddressSelective_Read_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType domain_ddress,
                                        Knx_AddressType start_address, uint8 range)
@@ -396,6 +432,7 @@ void A_DomainAddressSelective_Read_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType
 
     A_Broadcast_Req(pBuffer, source, A_DOMAINADDRESSSELECTIVE_READ, (uint8 *)data, (uint8)5);
 }
+
 
 /*
 **
@@ -423,6 +460,7 @@ void A_Individual_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
     (void)KnxMSG_Post(pBuffer);
 }
 
+
 void AL_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8 obj_index, uint8 prop_id, uint8 nr_of_elem, uint16 start_index)
 {
     uint8 data[4];
@@ -435,6 +473,7 @@ void AL_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8 obj_index, uint8 prop_
     KnxAL_SetAPDUData(KnxMSG_GetMessagePtr(pBuffer), (uint8)0, data, (uint8)4);
 }
 
+
 void A_PropertyValue_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
                               uint8 prop_id, uint8 nr_of_elem, uint16 start_index, uint8 * data)
 {
@@ -444,6 +483,7 @@ void A_PropertyValue_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, 
 /* A_PROPERTYVALUE_RESPONSE */
 }
 
+
 void A_PropertyValue_Read_Res_NoData(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
                                      uint8 prop_id, uint8 nr_of_elem, uint16 start_index)
 {
@@ -451,12 +491,14 @@ void A_PropertyValue_Read_Res_NoData(KnxMSG_BufferPtr pBuffer, Knx_AddressType s
     A_Individual_Req(pBuffer, source, dest, A_PROPERTYVALUE_RESPONSE, (uint8 *)NULL, (uint8)4);
 }
 
+
 void A_PropertyValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
                               uint8 prop_id, uint8 nr_of_elem, uint16 start_index)
 {
     AL_SetPropertyHeader(pBuffer, obj_index, prop_id, nr_of_elem, start_index);
     A_Individual_Req(pBuffer, source, dest, A_PROPERTYVALUE_READ, (uint8 *)NULL, (uint8)4);
 }
+
 
 /*
    A_PROPERTYVALUE_WRITE
@@ -479,6 +521,7 @@ void A_PropertyDescription_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType so
     A_Individual_Req(pBuffer, source, dest, A_PROPERTYDESCRIPTION_RESPONSE, (uint8 *)data, (uint8)7);
 }
 
+
 void A_PropertyDescription_Read_Res_NoData(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
                                            uint8 prop_id, uint8 prop_index)
 {
@@ -492,6 +535,7 @@ void A_PropertyDescription_Read_Res_NoData(KnxMSG_BufferPtr pBuffer, Knx_Address
     A_Individual_Req(pBuffer, source, dest, A_PROPERTYDESCRIPTION_RESPONSE, (uint8 *)data, (uint8)3);
 }
 
+
 void A_PropertyDescription_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
                                     uint8 prop_id, uint8 prop_index)
 {
@@ -504,6 +548,7 @@ void A_PropertyDescription_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType so
 
     A_Individual_Req(pBuffer, source, dest, A_PROPERTYDESCRIPTION_READ, (uint8 *)data, (uint8)3);
 }
+
 
 /*
    Device-Descriptor:
@@ -545,3 +590,8 @@ void A_PropertyDescription_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType so
    40h     12h     Power Line 132  BCU 1                   2
 
  */
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

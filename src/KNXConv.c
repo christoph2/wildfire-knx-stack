@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -22,7 +22,14 @@
  *
  */
 
+/* TODO: rename to 'knx_conversion'.*/
+
 #include "KNXConv.h"
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
 
 #if defined(KNX_LITTLE_ENDIAN)
 uint16 btohs(uint16 w)
@@ -30,15 +37,17 @@ uint16 btohs(uint16 w)
     return MAKEWORD(LOBYTE(w), HIBYTE(w));
 }
 
+
 #endif  /* defined(KNX_LITTLE_ENDIAN) */
 
 #define COMW(w) ((~(w)) + 1)
 
 uint16 LongToDPT9(sint32 value)
 {
-    uint16  Mantisse, Res;
+    uint16  Mantissa;
     uint8   Exponent;
     boolean Sign;
+    uint16  Res;
 
     Exponent   = (uint8)0;
     Res        = (uint16)0U;
@@ -53,23 +62,25 @@ uint16 LongToDPT9(sint32 value)
         Exponent  += (uint8)1;
     }
 
-    Mantisse = (uint16)value;
+    Mantissa = (uint16)value;
 
     if (Sign) {
-        Mantisse   = (COMW(Mantisse)) & (uint16)0x07ffU;
+        Mantissa   = (COMW(Mantissa)) & (uint16)0x07ffU;
         Res       |= (uint16)0x8000U;
     }
 
-    Res |= ((((Exponent << 3) & (uint16)0x0078U) * (uint16)0x0100U) | Mantisse);
+    Res |= ((((Exponent << 3) & (uint16)0x0078U) * (uint16)0x0100U) | Mantissa);
 
     return Res;
 }
 
+
 uint16 FloatToDPT9(float value)
 {
-    uint16  Mantisse, Res;
+    uint16  Mantissa;
     uint8   Exponent;
     boolean Sign;
+    uint16  Res;
 
     Exponent   = (uint8)0;
     Res        = (uint16)0U;
@@ -84,35 +95,36 @@ uint16 FloatToDPT9(float value)
         Exponent  += (uint8)1;
     }
 
-    Mantisse = (uint16)(value * (float)100.0);
+    Mantissa = (uint16)(value * (float)100.0);
 
     if (Sign) {
-        Mantisse   = (COMW(Mantisse)) & (uint16)0x07ffU;
+        Mantissa   = (COMW(Mantissa)) & (uint16)0x07ffU;
         Res       |= (uint16)0x8000;
     }
 
-    Res |= ((((Exponent << 3) & (uint16)0x0078U) * (uint16)0x0100U) | Mantisse);
+    Res |= ((((Exponent << 3) & (uint16)0x0078U) * (uint16)0x0100U) | Mantissa);
 
     return Res;
 }
 
+
 float DPT9ToFloat(uint16 value)
 {
-    uint16  Mantisse;
+    uint16  Mantissa;
     uint8   Exponent;
     boolean Sign;
     float   Res;
 
     Sign       = (HIBYTE(value) & (uint8)0x80) == (uint8)0x80;
-    Mantisse   = value & (uint16)0x07ffU;
+    Mantissa   = value & (uint16)0x07ffU;
 
     if (Sign) {
-        Mantisse = (COMW(Mantisse)) & (uint16)0x07ffU;
+        Mantissa = (COMW(Mantissa)) & (uint16)0x07ffU;
     }
 
     Exponent = (HIBYTE(value) & (uint8)0x78) >> 3;
 
-    Res = (float)((Mantisse << Exponent) / (float)100.0);
+    Res = (float)((Mantissa << Exponent) / (float)100.0);
 
     if (Sign) {
         Res = Res * (float)-1.0;
@@ -121,23 +133,24 @@ float DPT9ToFloat(uint16 value)
     return Res;
 }
 
+
 sint32 DPT9ToLong(uint16 value)
 {
-    uint16  Mantisse;
+    uint16  Mantissa;
     uint8   Exponent;
     boolean Sign;
     sint32  Res;
 
     Sign       = (HIBYTE(value) & (uint8)0x80) == (uint8)0x80;
-    Mantisse   = value & 0x7ff;
+    Mantissa   = value & 0x7ff;
 
     if (Sign) {
-        Mantisse = (COMW(Mantisse)) & (uint16)0x07ffU;
+        Mantissa = (COMW(Mantissa)) & (uint16)0x07ffU;
     }
 
     Exponent = (HIBYTE(value) & (uint8)0x78) >> 3;
 
-    Res = (sint32)((Mantisse << Exponent) /*/100.0*/);
+    Res = (sint32)((Mantissa << Exponent) /*/100.0*/);
 
     if (Sign) {
         Res = -Res;
@@ -146,3 +159,7 @@ sint32 DPT9ToLong(uint16 value)
     return Res;
 }
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

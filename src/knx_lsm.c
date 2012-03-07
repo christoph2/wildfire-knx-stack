@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -96,10 +96,10 @@ typedef enum tagKNX_LSMStateType {
 static const uint8 LS_Table[4][5] = {
 /*  NOP                     START_LOAD          LOAD_COMPLETE       SEGMENT             UNLOAD                  */
 /*  ----------------------------------------------------------------------------------------------------------- */
-    {LSM_STATE_UNLOADED, LSM_STATE_LOADING,   LSM_STATE_UNLOADED,   LSM_STATE_UNLOADED,    LSM_STATE_UNLOADED                     },    /* UNLOADED */
-    {LSM_STATE_LOADED,   LSM_STATE_LOADING,   LSM_STATE_LOADED,     LSM_STATE_LOADED,      LSM_STATE_UNLOADED                     },    /* LOADED */
-    {LSM_STATE_LOADING,  LSM_STATE_LOADING,   LSM_STATE_LOADED,     LSM_STATE_LOADING,     LSM_STATE_UNLOADED                     },    /* LOADING */
-    {LSM_STATE_ERROR,    LSM_STATE_ERROR,     LSM_STATE_ERROR,      LSM_STATE_ERROR,       LSM_STATE_UNLOADED                     },    /* ERROR */
+    {LSM_STATE_UNLOADED, LSM_STATE_LOADING,   LSM_STATE_UNLOADED,   LSM_STATE_UNLOADED,    LSM_STATE_UNLOADED                           },  /* UNLOADED */
+    {LSM_STATE_LOADED,   LSM_STATE_LOADING,   LSM_STATE_LOADED,     LSM_STATE_LOADED,      LSM_STATE_UNLOADED                           },  /* LOADED */
+    {LSM_STATE_LOADING,  LSM_STATE_LOADING,   LSM_STATE_LOADED,     LSM_STATE_LOADING,     LSM_STATE_UNLOADED                           },  /* LOADING */
+    {LSM_STATE_ERROR,    LSM_STATE_ERROR,     LSM_STATE_ERROR,      LSM_STATE_ERROR,       LSM_STATE_UNLOADED                           },  /* ERROR */
 };
 
 typedef uint8 LoadEventType[10];
@@ -135,21 +135,29 @@ KNX_LSCType KNX_SystemLSC[KNX_NUM_SYS_LSCS];    /* System-Load-/State-Controls. 
         #pragma DATA_SEG DEFAULT
 #endif
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
 /* todo: als Makro!!! */
 boolean LSM_IsAppLoaded(void)
 {
     return KNX_SystemLSC[KNX_LSC_APP] == LSM_STATE_LOADED;
 }
 
+
 boolean LSM_IsGrATLoaded(void)     /* Address-Table. */
 {
     return KNX_SystemLSC[KNX_LSC_GRAT] == LSM_STATE_LOADED;
 }
 
+
 boolean LSM_IsGrOATLoaded(void)    /* Assoc-Table. */
 {
     return KNX_SystemLSC[KNX_LSC_GROAT] == LSM_STATE_LOADED;
 }
+
 
 /*
 **
@@ -159,6 +167,7 @@ void LSM_Init(void)
 {
 
 }
+
 
 void LSM_Dispatch(uint8 * record, /*LSM_State*/ uint8 * ls_var)
 /*
@@ -184,6 +193,7 @@ void LSM_Dispatch(uint8 * record, /*LSM_State*/ uint8 * ls_var)
     *ls_var = new_state;
 }
 
+
 /* static uint8 app_rec[10]; */
 /*static LSM_Stateuint8 app_lsc; */
 
@@ -202,3 +212,7 @@ void LSM_Test(void)
     }
 }
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -45,6 +45,14 @@
    };
  */
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+/*
+**	Global functions.
+*/
 /*
 **  todo: this Fkt. is hardware-dependent !!!
 */
@@ -52,6 +60,7 @@ boolean KnxADR_InProgrammingMode(void)
 {
     return TRUE;
 }
+
 
 /*
 **
@@ -103,25 +112,30 @@ boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap)
     return ack;
 }
 
+
 Knx_AddressType KnxADR_GetPhysAddr(void)
 {
     return btohs(*(uint16 *)&APP_AddressTable[1]);
 }
+
 
 void KnxADR_SetPhysAddr(Knx_AddressType addr)
 {
     *(uint16 *)APP_AddressTable[1] = htobs(addr);    /* todo: use Memory-Server!!! */
 }
 
+
 void KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number)
 {
 /*CopyMem((uint8*)serial_number,(uint8*)DEV_SERIAL_NUM,sizeof(KNX_SerialNumberType)); */
 }
 
+
 boolean KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr)     /* todo: Macro!!! */
 {
     return KnxADR_GetPhysAddr() == addr;
 }
+
 
 /*
    int CompareAddresses(Knx_AddressType a1,Knx_AddressType a2)   // addrcmp
@@ -130,3 +144,7 @@ boolean KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr)     /* todo: Macro!!! */
    }
  */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

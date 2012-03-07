@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -25,6 +25,12 @@
 
 KnxMSG_BufferPtr KnxMSG_ScratchBufferPtr;
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
 void KnxDisp_DispatchLayer(const uint8 LayerID, const Knx_LayerServicesType * ServiceTable)
 {
     uint8 entry;
@@ -45,3 +51,7 @@ void KnxDisp_DispatchLayer(const uint8 LayerID, const Knx_LayerServicesType * Se
     } while (KnxMSG_ScratchBufferPtr != (KnxMSG_BufferPtr)NULL);
 }
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

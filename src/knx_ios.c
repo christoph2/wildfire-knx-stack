@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -34,10 +34,10 @@
 #include "knx_layer_application.h"
 
 const uint8 KNX_PDT_LEN_TAB[32] = {
-    (uint8)0, (uint8)1, (uint8)1,  (uint8)2,  (uint8)2,   (uint8)2,   (uint8)3,  (uint8)3,
-    (uint8)4, (uint8)4, (uint8)4,  (uint8)8,  (uint8)10,  (uint8)3,   (uint8)5,  (uint8)0,
-    (uint8)0, (uint8)1, (uint8)2,  (uint8)3,  (uint8)4,   (uint8)5,   (uint8)6,  (uint8)7,
-    (uint8)8, (uint8)9, (uint8)10, (uint8)0,  (uint8)0,   (uint8)0,   (uint8)0,  (uint8)0
+    (uint8)0, (uint8)1, (uint8)1,  (uint8)2,  (uint8)2,   (uint8)2,   (uint8)3,   (uint8)3,
+    (uint8)4, (uint8)4, (uint8)4,  (uint8)8,  (uint8)10,  (uint8)3,   (uint8)5,   (uint8)0,
+    (uint8)0, (uint8)1, (uint8)2,  (uint8)3,  (uint8)4,   (uint8)5,   (uint8)6,   (uint8)7,
+    (uint8)8, (uint8)9, (uint8)10, (uint8)0,  (uint8)0,   (uint8)0,   (uint8)0,   (uint8)0
 };
 
 #define OBJECT_READ_ALLOWED(o)      (((((o)->access_level & (uint8)0xf0) >> 4) >= DEV_Current_Accesslevel) ? TRUE : FALSE)
@@ -66,6 +66,12 @@ const uint8 KNX_PDT_LEN_TAB[32] = {
 typedef void (*PROPERTY_FUNC)(KnxMSG_BufferPtr pBuffer, boolean write);
 void ios_test(void);
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
+
 void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connected)
 {
     uint8                           data[MAX_PROP_DATA_LEN];
@@ -74,9 +80,12 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connect
     Knx_PropertyType const *        pprop;
     uint8                           num_elems;
     uint16                          start_index;
-    uint8                           type, type_len, ctl;
+    uint8                           type;
+    uint8                           type_len;
+    uint8                           ctl;
     PROPERTY_FUNC                   pf;
-    Knx_AddressType                 source, dest;
+    Knx_AddressType                 source;
+    Knx_AddressType                 dest;
 
     if (pBuffer == (KnxMSG_BufferPtr)NULL) {
         return;
@@ -224,6 +233,7 @@ invalid:
     (void)KnxMSG_ReleaseBuffer(pBuffer);
 }
 
+
 Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_index)
 {
     if (object_index < Knx_SystemInterfaceObjCount) {
@@ -243,6 +253,7 @@ Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_inde
     }
 }
 
+
 Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id)    /* todo: binary search!? */
 {
     uint8_least                 idx;
@@ -259,6 +270,7 @@ Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const * pobj, 
     return pprop;
 }
 
+
 Knx_PropertyType const * IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16 prop_index)
 {
     if (prop_index > pobj->property_count - (uint8)1) {
@@ -267,6 +279,7 @@ Knx_PropertyType const * IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * 
         return &pobj->properties[prop_index];
     }
 }
+
 
 #if 0
 void ios_test(void)
@@ -277,6 +290,7 @@ void ios_test(void)
     pobj   = IOS_GetInterfaceObjectByIndex(0);
     pprop  = IOS_FindProperty(pobj, KNX_PID_ORDER_INFO);
 }
+
 
 #endif
 
@@ -369,3 +383,7 @@ void ios_test(void)
         END
  */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

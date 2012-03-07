@@ -25,6 +25,7 @@
 
 void NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer);
 
+
 /*
 **  Flags im Control-Field:
 **  =======================
@@ -40,6 +41,7 @@ void NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer);
 static void Disp_N_DataIndividualReq(void), Disp_N_DataGroupReq(void), Disp_N_PollDataReq(void);
 static void Disp_L_PollDataCon(void), Disp_L_DataInd(void), Disp_L_BusmonInd(void);
 static void Disp_N_DataBroadcastReq(void), Disp_L_DataCon(void);
+
 
 static const Knx_LayerServiceFunctionType NL_Services[] = {
 /*      Service                     Handler                 */
@@ -59,15 +61,22 @@ static const Knx_LayerServicesType NL_ServiceTable[] = {
     {KNX_NL_SERVICES, (uint8)8, NL_Services}
 };
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
 void KnxNL_Task(void)
 {
     KnxDisp_DispatchLayer(TASK_NL_ID, NL_ServiceTable);
 }
 
+
 void KnxNL_Init(void)
 {
 
 }
+
 
 /*
 **
@@ -94,20 +103,24 @@ static void Disp_L_DataInd(void)
     }
 }
 
+
 static void Disp_L_DataCon(void)
 {
     /* todo: Implement!! */
 }
+
 
 static void Disp_L_BusmonInd(void)
 {
     /* todo: Implement!!! */
 }
 
+
 static void Disp_L_PollDataCon(void)
 {
     /* todo: Implement!!! */
 }
+
 
 /*
 **
@@ -122,6 +135,7 @@ static void Disp_N_DataBroadcastReq(void)
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
+
 static void Disp_N_DataIndividualReq(void)
 {
     KnxMSG_SetAddressType(KnxMSG_ScratchBufferPtr, atINDIVIDUAL);
@@ -129,6 +143,7 @@ static void Disp_N_DataIndividualReq(void)
     KnxMSG_ScratchBufferPtr->service = L_DATA_REQ;
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
+
 
 static void Disp_N_DataGroupReq(void)
 {
@@ -138,10 +153,12 @@ static void Disp_N_DataGroupReq(void)
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
+
 static void Disp_N_PollDataReq(void)
 {
     /* todo: Implement!!! */
 }
+
 
 void NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer)
 {
@@ -152,3 +169,8 @@ void NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer)
     }
 }
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

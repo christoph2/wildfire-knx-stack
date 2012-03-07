@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -24,6 +24,7 @@
 #include "KNXNwps.h"
 
 void NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*/);
+
 
 /*
    · check the usage of a Group Address (Group Address Check)
@@ -82,8 +83,9 @@ void NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*
 typedef boolean (*NWPS_FUNC)(KnxMSG_BufferPtr pBuffer);
 
 typedef struct tagNWPSFunctions {
-    uint16      ObjectType_from, ObjectType_to;
-    uint8       Pid;
+    uint16      objectTypeFrom;
+    uint16      objectTypeTo;
+    uint8       pid;
     NWPS_FUNC   func;
 } NWPSFunctions;
 
@@ -91,24 +93,31 @@ boolean NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer);
 boolean NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer);
 boolean NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer);
 
+
 static NWPSFunctions NWPSReadFunctions[] = {
-    {KNX_OT_ADDRESSTABLE_OBJECT, KNX_OT_ADDRESSTABLE_OBJECT,     KNX_PID_GROUP_ADDRESS_LIST,           NWPS_GroupAddressCheck                                       },
-    {(uint8)50,                  (uint16)50000,                  KNX_PID_OBJECT_TYPE,                  NWPS_FunctionalBlockScan                                     },
-    {KNX_OT_DEVICE_OBJECT,       KNX_OT_DEVICE_OBJECT,           KNX_PID_SERIAL_NUMBER,                NWPS_GetSerialNumber                                         }
+    {KNX_OT_ADDRESSTABLE_OBJECT, KNX_OT_ADDRESSTABLE_OBJECT,     KNX_PID_GROUP_ADDRESS_LIST,           NWPS_GroupAddressCheck                                                        },
+    {(uint8)50,                  (uint16)50000,                  KNX_PID_OBJECT_TYPE,                  NWPS_FunctionalBlockScan                                                      },
+    {KNX_OT_DEVICE_OBJECT,       KNX_OT_DEVICE_OBJECT,           KNX_PID_SERIAL_NUMBER,                NWPS_GetSerialNumber                                                          }
 };
 
 /* A_NetworkParameter_Read.req(hop_count_type, parameter_type, priority, test_info); */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
 void NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*/)
 {
     KNX_StandardFrameRefType    pmsg;
-    uint8                       len, Pid;
+    uint8                       len;
+    uint8                       pid;
     uint16                      objectType;
 
     pmsg = KnxMSG_GetMessagePtr(pBuffer);
 
     objectType = btohs((uint16)pmsg->data[0]);
-    Pid        = pmsg->data[2];
+    pid        = pmsg->data[2];
 
     len = KnxMSG_GetLSDULen(pBuffer);
 
@@ -121,18 +130,26 @@ void NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*
     }
 }
 
+
 boolean NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer)
 {
     return TRUE;
 }
+
 
 boolean NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer)
 {
     return TRUE;
 }
 
+
 boolean NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer)
 {
     return TRUE;
 }
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
 

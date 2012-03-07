@@ -33,6 +33,11 @@ static boolean  KnxSched_PostLinkLayerTest(void);
 static boolean  KnxSched_PreUserApplicationTest(void);
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
 void KnxSched_Init(void)
 {
     /*
@@ -127,4 +132,7 @@ TODO: check entry conditions for application
  */
 }
 
-
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

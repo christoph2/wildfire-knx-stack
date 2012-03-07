@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -31,9 +31,10 @@ KnxMSG_BufferPtr    GetBufferAddress(uint8 buf_num);
 uint8               GetBufferNumber(const KnxMSG_BufferPtr buffer);
 void                ClearMessageBuffer(uint8 buf_num);
 
+
 static const uint8 KnxMSG_MessageRedirectionTable[16] = {
-    TASK_FREE_ID, TASK_LL_ID,   TASK_NL_ID,   TASK_TL_ID,   TASK_TC_ID,   TASK_FREE_ID,   TASK_FREE_ID,   TASK_AL_ID,
-    TASK_MG_ID,   TASK_MG_ID,   TASK_PM_ID,   TASK_LC_ID,   TASK_FREE_ID, TASK_US_ID,     TASK_US_ID,     TASK_US_ID
+    TASK_FREE_ID, TASK_LL_ID,   TASK_NL_ID,   TASK_TL_ID,   TASK_TC_ID,     TASK_FREE_ID,   TASK_FREE_ID,   TASK_AL_ID,
+    TASK_MG_ID,   TASK_MG_ID,   TASK_PM_ID,   TASK_LC_ID,   TASK_FREE_ID,   TASK_US_ID,     TASK_US_ID,     TASK_US_ID
 };
 
 static uint8            KnxMSG_Queues[MSG_NUM_TASKS];
@@ -41,6 +42,11 @@ static KnxMSG_Buffer    KnxMSG_Buffers[MSG_NUM_BUFFERS];
 
 /*  Get Destination Queue from Message-Code. */
 #define KnxMSG_GetQueueForService(service) ((uint8)KnxMSG_MessageRedirectionTable[(service) >> 4])
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
 
 KnxMSG_BufferPtr GetBufferAddress(uint8 buf_num)
 {
@@ -50,6 +56,7 @@ KnxMSG_BufferPtr GetBufferAddress(uint8 buf_num)
         return &KnxMSG_Buffers[buf_num];
     }
 }
+
 
 uint8 GetBufferNumber(const KnxMSG_BufferPtr buffer)
 {
@@ -67,6 +74,7 @@ uint8 GetBufferNumber(const KnxMSG_BufferPtr buffer)
     return MSG_INVALID_BUFFER;
 }
 
+
 void ClearMessageBuffer(uint8 buf_num)
 {
     KnxMSG_BufferPtr    ptr;
@@ -83,6 +91,7 @@ void ClearMessageBuffer(uint8 buf_num)
 
     Utl_MemSet(pb, '\0', (uint16)sizeof(KnxMSG_Buffer) - (uint16)1);
 }
+
 
 static uint16 AllocCount = (uint16)0, ReleaseCount = (uint16)0;
 
@@ -113,9 +122,12 @@ KnxMSG_BufferPtr KnxMSG_AllocateBuffer(void)
     return &KnxMSG_Buffers[fp];
 }
 
+
 boolean KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
 {
-    uint8 buf_num, old_fp, t_fp;
+    uint8   buf_num;
+    uint8   old_fp;
+    uint8   t_fp;
 
     DISABLE_ALL_INTERRUPTS();
 
@@ -147,6 +159,7 @@ boolean KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
     return TRUE;
 }
 
+
 boolean KnxMSG_ClearBuffer(KnxMSG_BufferPtr ptr)
 {
     uint8 * pb;
@@ -163,9 +176,12 @@ boolean KnxMSG_ClearBuffer(KnxMSG_BufferPtr ptr)
     return TRUE;
 }
 
+
 boolean KnxMSG_Post(KnxMSG_BufferPtr ptr)
 {
-    uint8 queue, buf_num, qp;
+    uint8   queue;
+    uint8   buf_num;
+    uint8   qp;
 
     if ((buf_num = GetBufferNumber(ptr)) == MSG_INVALID_BUFFER) {
         return FALSE;
@@ -191,6 +207,7 @@ boolean KnxMSG_Post(KnxMSG_BufferPtr ptr)
     return TRUE;
 }
 
+
 KnxMSG_BufferPtr KnxMSG_Get(uint8 task)
 {
     uint8 qp;
@@ -214,6 +231,7 @@ KnxMSG_BufferPtr KnxMSG_Get(uint8 task)
     return &KnxMSG_Buffers[qp];
 }
 
+
 void KnxMSG_Init(void)
 {
     uint8 t;
@@ -235,16 +253,19 @@ void KnxMSG_Init(void)
     }
 }
 
+
 void KnxMSG_SetLen(KnxMSG_BufferPtr pBuffer, uint8 len)
 {
     pBuffer->len                           = len;
     KnxMSG_GetMessagePtr(pBuffer)->ncpi   |= ((len - (uint8)7) & (uint8)0x0f);
 }
 
+
 uint8 KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer)
 {
     return pBuffer->len;
 }
+
 
 /*
    void MSG_SetHopCount(PMSG_Buffer pBuffer,uint8 hop_count)
@@ -260,7 +281,8 @@ uint8 KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer)
 
 void KnxMSG_SetRoutingCount(KnxMSG_BufferPtr pBuffer)
 {
-    uint8 ctrl, hop_count;
+    uint8   ctrl;
+    uint8   hop_count;
 
     ctrl = KnxMSG_GetMessagePtr(pBuffer)->ctrl;
 
@@ -275,10 +297,12 @@ void KnxMSG_SetRoutingCount(KnxMSG_BufferPtr pBuffer)
     KnxMSG_GetMessagePtr(pBuffer)->ncpi |= ((hop_count & (uint8)0x07) << 4);
 }
 
+
 uint8 KnxMSG_GetRoutingCount(const KnxMSG_BufferPtr pBuffer)
 {
     return ((KnxMSG_GetMessagePtr(pBuffer)->ncpi) & (uint8)0x70) >> 4;
 }
+
 
 void KnxMSG_SetRoutingCtrl(KnxMSG_BufferPtr pBuffer, boolean on)
 {
@@ -287,6 +311,7 @@ void KnxMSG_SetRoutingCtrl(KnxMSG_BufferPtr pBuffer, boolean on)
     (on == TRUE) ? (r = (uint8)0x02) : (r = (uint8)0x00);
     KnxMSG_GetMessagePtr(pBuffer)->ctrl |= r;
 }
+
 
 /*
    boolean MSG_GetRoutingCtrl(const PMSG_Buffer pBuffer)
@@ -307,3 +332,7 @@ void KnxMSG_SetRoutingCtrl(KnxMSG_BufferPtr pBuffer, boolean on)
    }
  */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */

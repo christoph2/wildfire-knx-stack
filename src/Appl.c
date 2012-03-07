@@ -1,8 +1,8 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
- *                                       cpu12.gems@googlemail.com>
+ * (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *                                      cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
  *
@@ -32,6 +32,7 @@
 #include "Appl.h"
 
 uint8 DEV_GetHopCount(void);
+
 
 uint8   DEV_Device_Control;
 uint8   DEV_Current_Accesslevel;
@@ -145,17 +146,17 @@ const Knx_PollGroupSettingType KNX_DEV_POLLGROUP_SETTINGS = {0xffff, 0xff};
 
 #define START_USER_INTERFACE_OBJECTS()
 
-#define START_IMPLEMENT_USER_INTERFACE_OBJECT(objName, objType, objAccess0, objAccess1)    \
-    Knx_PropertyType * KNX_PROPS_ ## objName;                                                  \
-    Knx_InterfaceObjectType KNX_UIO_ ## objName = {                                             \
-        MAKE_OBJ_ACCESS((objAccess0), (objAccess1)),                                         \
-        0,                                                                                  \
+#define START_IMPLEMENT_USER_INTERFACE_OBJECT(objName, objType, objAccess0, objAccess1) \
+    Knx_PropertyType * KNX_PROPS_ ## objName;                                           \
+    Knx_InterfaceObjectType KNX_UIO_ ## objName = {                                     \
+        MAKE_OBJ_ACCESS((objAccess0), (objAccess1)),                                    \
+        0,                                                                              \
         NULL
 
-#define END_IMPLEMENT_USER_INTERFACE_OBJECT()    \
+#define END_IMPLEMENT_USER_INTERFACE_OBJECT() \
     }
 
-#define IMPLEMENT_USER_PROPERY(PropName, propID, propType)    \
+#define IMPLEMENT_USER_PROPERY(PropName, propID, propType) \
     {(propID), MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, (propType)), PROP_NO_FUNC, (ADDR_T)KNX_OT_ASSOCIATIONTABLE_OBJECT},
 
 #define END_USER_INTERFACE_OBJECTS()
@@ -230,10 +231,12 @@ void DEV_Init(void)
  */
 }
 
+
 uint8 DEV_GetHopCount(void)
 {
     uint8 hc = DEV_EEPROM_HEADER[0x0e] >> 4;
 
     return ((hc < 1) || (hc > KNX_DEFAULT_HOP_COUNT)) ? KNX_DEFAULT_HOP_COUNT : hc;
 }
+
 

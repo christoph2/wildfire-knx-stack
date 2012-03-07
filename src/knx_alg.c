@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -28,8 +28,12 @@
 
 #include "knx_alg.h"
 
+/*
+**	Local function prototypes.
+*/
 static void Disp_A_DataGroupReq(void), Disp_A_PollDataReq(void), Disp_T_PollDataCon(void);
 static void Disp_T_DataGroupInd(void), Disp_T_DataGroupCon(void);
+
 
 static const Knx_LayerServiceFunctionType ALG_Services[] = {
 /*      Service                     Handler                 */
@@ -125,6 +129,11 @@ uint8 APP_ObjectData[APP_OBJECT_DATA_SIZE];
 
 static uint8 ALG_NumQueuedGroupMessages;
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
+
 void KnxALG_Task(void)
 {
     KnxDisp_DispatchLayer(TASK_AL_ID, ALG_ServiceTable);
@@ -170,15 +179,18 @@ static void Disp_T_DataGroupInd(void)
     }
 }
 
+
 static void Disp_T_DataGroupCon(void)
 {
 
 }
 
+
 static void Disp_T_PollDataCon(void)
 {
 
 }
+
 
 /*
 **
@@ -191,10 +203,12 @@ static void Disp_A_DataGroupReq(void)
     /* todo: Implement!! */
 }
 
+
 static void Disp_A_PollDataReq(void)
 {
     /* todo: Implement!! */
 }
+
 
 /*****************************************************************************************************************/
 /*****************************************************************************************************************/
@@ -204,6 +218,7 @@ void KnxALG_Init(void)
 {
     ALG_NumQueuedGroupMessages = ((uint8)0x00);
 }
+
 
 void A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio)
 {
@@ -217,6 +232,7 @@ void A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx
 
     (void)KnxMSG_Post(pBuffer);
 }
+
 
 void A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
                             uint8 * data,
@@ -233,11 +249,14 @@ void A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Kn
     (void)KnxMSG_Post(pBuffer);
 }
 
-void ALG_PollCycle(void)
+
+void KnxALG_PollCycle(void)
 {
-    uint8               idx, flags;
+    uint8               idx;
+    uint8               flags;
     KnxMSG_BufferPtr    pBuffer;
-    Knx_AddressType     source, dest;
+    Knx_AddressType     source;
+    Knx_AddressType     dest;
     uint16              assoc;
     Knx_PriorityType    prio;
 
@@ -301,6 +320,7 @@ void ALG_PollCycle(void)
     }
 }
 
+
 /*
    void AL_SetAPDUShortData(const KNX_StandardFrameRefType pmsg,uint8 data,uint8 nbits)
    {
@@ -321,6 +341,7 @@ uint8 * KnxALG_GetObjectDataPointer(uint8 objectNr)
     }
 }
 
+
 void KnxALG_SetRAMFlags(uint16 objectNr, uint8 flags)
 {
     if ((objectNr % (uint8)2) == (uint8)1) {
@@ -329,6 +350,7 @@ void KnxALG_SetRAMFlags(uint16 objectNr, uint8 flags)
         APP_RAMFlags[objectNr >> 1] = (flags & (uint8)0x0f);
     }
 }
+
 
 uint8 KnxALG_GetRAMFlags(uint16 objectNr)
 {
@@ -343,17 +365,21 @@ uint8 KnxALG_GetRAMFlags(uint16 objectNr)
     }
 }
 
+
 uint8 * KnxALG_GetRAMFlagPointer(void)
 {
     return (uint8 *)&APP_RAMFlags;
 }
 
+
 void KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8 testFlags)
 {
-    uint16  ca, * ap = KnxADR_GrOATBasePtr();
-    uint8   asap;
-    uint8   numAssocs = KnxADR_GrOATLength();
-    uint8   len_lsdu, len_obj;
+    uint16      ca;
+    uint16 *    ap = KnxADR_GrOATBasePtr();
+    uint8       asap;
+    uint8       numAssocs = KnxADR_GrOATLength();
+    uint8       len_lsdu;
+    uint8       len_obj;
 
     if ((pBuffer->sap == KNX_INVALID_TSAP) || (pBuffer->sap == KNX_UNUSED_TSAP)) {
         return;
@@ -401,3 +427,7 @@ void KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8 testFlags)
     }
 }
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
