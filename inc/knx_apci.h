@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -30,7 +30,7 @@ extern "C"
 #endif  /* __cplusplus */
 
 /*
-**  APCI-Typen.
+**  APCI types.
 */
 typedef enum tagKNX_APCITypeType {
     apciGROUP_VALUE_READ,           /* Multicast.                   */
@@ -59,7 +59,7 @@ typedef enum tagKNX_APCITypeType {
 } KNX_APCITypeType;
 
 /*
-**  Group-Services.
+**  Group services.
 */
 #define A_GROUPVALUE_READ                       ((uint16)0x0000)
 #define A_GROUPVALUE_RESPONSE                   ((uint16)0x0040)
@@ -161,3 +161,4 @@ typedef enum tagKNX_APCITypeType {
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_APCI_H */
+

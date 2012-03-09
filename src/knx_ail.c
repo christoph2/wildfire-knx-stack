@@ -39,7 +39,11 @@
 /*
 **	Global functions.
 */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxAIL_TestObject(uint16 objectNr)
+#else
 boolean KnxAIL_TestObject(uint16 objectNr)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 flags;
 
@@ -52,7 +56,11 @@ boolean KnxAIL_TestObject(uint16 objectNr)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxAIL_TestAndGetObject(uint16 objectNr, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) dst)
+#else
 boolean KnxAIL_TestAndGetObject(uint16 objectNr, void * dst)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (!KnxAIL_TestObject(objectNr)) {
         return FALSE;
@@ -63,7 +71,11 @@ boolean KnxAIL_TestAndGetObject(uint16 objectNr, void * dst)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxAIL_GetObject(uint16 objectNr, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) dst)
+#else
 boolean KnxAIL_GetObject(uint16 objectNr, void * dst)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if ((objectNr < KnxALG_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
         Utl_MemCopy(dst, KnxALG_GetObjectDataPointer(objectNr),
@@ -75,7 +87,11 @@ boolean KnxAIL_GetObject(uint16 objectNr, void * dst)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxAIL_TransmitObject(uint16 objectNr)
+#else
 boolean KnxAIL_TransmitObject(uint16 objectNr)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* todo: check 'objectNr'? */
 
@@ -88,7 +104,11 @@ boolean KnxAIL_TransmitObject(uint16 objectNr)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxAIL_SetAndTransmitObject(uint16 objectNr, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) src)
+#else
 boolean KnxAIL_SetAndTransmitObject(uint16 objectNr, void * src)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (!KnxAIL_SetObject(objectNr, src)) {
         return FALSE;
@@ -102,7 +122,11 @@ boolean KnxAIL_SetAndTransmitObject(uint16 objectNr, void * src)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxAIL_SetObject(uint16 objectNr, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) src)
+#else
 boolean KnxAIL_SetObject(uint16 objectNr, void * src)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if ((objectNr < KnxALG_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
         Utl_MemCopy(KnxALG_GetObjectDataPointer(objectNr), src, KnxALG_GetObjLen(KnxALG_GetCommObjDescr(objectNr)->Type));
@@ -113,7 +137,11 @@ boolean KnxAIL_SetObject(uint16 objectNr, void * src)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxAIL_ReadObject(uint16 objectNr)
+#else
 boolean KnxAIL_ReadObject(uint16 objectNr)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (objectNr < KnxALG_GetNumCommObjs() && LSM_IsAppLoaded()) {
         if (KnxALG_IsObjectTransmitting(objectNr)) {
@@ -128,7 +156,11 @@ boolean KnxAIL_ReadObject(uint16 objectNr)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxAIL_GetRAMFlags(uint16 objectNr, P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) flags)
+#else
 boolean KnxAIL_GetRAMFlags(uint16 objectNr, uint8 * flags)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (objectNr < KnxALG_GetNumCommObjs() && LSM_IsAppLoaded()) {
         *flags = KnxALG_GetRAMFlags(objectNr);
@@ -139,7 +171,11 @@ boolean KnxAIL_GetRAMFlags(uint16 objectNr, uint8 * flags)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint8 , KSTACK_CODE) KnxAIL_SetRAMFlags(uint16 objectNr, uint8 flags)
+#else
 uint8 KnxAIL_SetRAMFlags(uint16 objectNr, uint8 flags)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8   value;
     uint8   mask;

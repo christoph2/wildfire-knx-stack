@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -30,19 +30,34 @@
    DWORD TickerThreadID;
  */
 
+#if 0
 #define DISABLE_ALL_INTERRUPTS()
 #define ENABLE_ALL_INTERRUPTS()
+#endif
 
+
+/*
+** Local variables.
+*/
 static TM_TimerType KNX_Timer[TM_NUM_TIMERS];
 static TM_TickType  TM_SysMsCounter;
 static TM_TickType  TM_SysSecondCounter;
 
+
+/*
+** Global functions.
+*/
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxTMR_Init(void)
+#else
 void KnxTMR_Init(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_least idx;
 
@@ -60,7 +75,11 @@ void KnxTMR_Init(void)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxTMR_Start(uint8 timer, TM_BaseType base, TM_TickType ticks)
+#else
 boolean KnxTMR_Start(uint8 timer, TM_BaseType base, TM_TickType ticks)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TM_NUM_TIMERS) {
         if (!(KNX_Timer[timer].state & TM_STATE_RUNNING)) {
@@ -79,7 +98,11 @@ boolean KnxTMR_Start(uint8 timer, TM_BaseType base, TM_TickType ticks)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxTMR_Stop(uint8 timer)
+#else
 boolean KnxTMR_Stop(uint8 timer)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TM_NUM_TIMERS) {
         DISABLE_ALL_INTERRUPTS();
@@ -92,7 +115,11 @@ boolean KnxTMR_Stop(uint8 timer)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxTMR_IsExpired(uint8 timer)
+#else
 boolean KnxTMR_IsExpired(uint8 timer)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     TM_StateType state;
 
@@ -109,7 +136,11 @@ boolean KnxTMR_IsExpired(uint8 timer)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxTMR_IsRunning(uint8 timer)
+#else
 boolean KnxTMR_IsRunning(uint8 timer)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TM_NUM_TIMERS) {
         return (KNX_Timer[timer].state & TM_STATE_RUNNING) == TM_STATE_RUNNING;
@@ -119,7 +150,11 @@ boolean KnxTMR_IsRunning(uint8 timer)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxTMR_GetRemainder(uint8 timer, TM_TickRefType remainder)
+#else
 boolean KnxTMR_GetRemainder(uint8 timer, TM_TickRefType remainder)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TM_NUM_TIMERS) {
         if (!(KNX_Timer[timer].state & TM_STATE_RUNNING)) {
@@ -136,7 +171,12 @@ boolean KnxTMR_GetRemainder(uint8 timer, TM_TickRefType remainder)
 }
 
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(TM_TickType, KSTACK_CODE) KnxTMR_GetSystemTime(TM_BaseType base)
+#else
 TM_TickType KnxTMR_GetSystemTime(TM_BaseType base)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     TM_TickType t;
 
@@ -172,13 +212,21 @@ TM_TickType KnxTMR_GetSystemTime(TM_BaseType base)
    }
  */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxTMR_SecondCallback(void)
+#else
 void KnxTMR_SecondCallback(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxTMR_SystemTimeHandler(void)
+#else
 void KnxTMR_SystemTimeHandler(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     TM_TimerType *  tm;
     uint8           idx;

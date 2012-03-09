@@ -1,8 +1,8 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
- *                                       cpu12.gems@googlemail.com>
+ * (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *                                      cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
  *
@@ -29,6 +29,10 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+
+/*
+** Global function-like macros.
+*/
 #define LC_ABSCOBJSEG(StartAddr)    /* Table-Type-ID for BIM112 is 00 01 00 01 00H. */
 #define LC_ABSDATASEG(Type, Address, EndAddress, AccAttrs, MemoryType, MemAttrs)
 #define LC_ABSSTACKSEG(Address, EndAddress, AccAttrs, MemoryType, MemAttrs)

@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -31,10 +31,19 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+
+/*
+** Global functions.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON	
+FUNC(void, KSTACK_CODE) KnxTLG_Task(void);
+#else
 void KnxTLG_Task(void);
+#endif /* KSTACK_MEMORY_MAPPING */
 
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_TLG_H */
+

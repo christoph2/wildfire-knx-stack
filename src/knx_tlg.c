@@ -23,11 +23,23 @@
  */
 #include "knx_tlg.h"
 
-static void Disp_T_DataGroupReq(void), Disp_T_PollDataReq(void), Disp_N_PollDataCon(void);
-static void Disp_N_DataGroupInd(void), Disp_N_DataGroupCon(void);
+
+/*
+** Local function prototypes.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_T_DataGroupReq(void), Disp_T_PollDataReq(void), Disp_N_PollDataCon(void);
+STATIC FUNC(void, KSTACK_CODE) Disp_N_DataGroupInd(void), Disp_N_DataGroupCon(void);
+#else
+STATIC void Disp_T_DataGroupReq(void), Disp_T_PollDataReq(void), Disp_N_PollDataCon(void);
+STATIC void Disp_N_DataGroupInd(void), Disp_N_DataGroupCon(void);
+#endif /* KSTACK_MEMORY_MAPPING */
 
 
-static const Knx_LayerServiceFunctionType TLG_Services[] = {
+/*
+** Local constants.
+*/
+STATIC const Knx_LayerServiceFunctionType TLG_Services[] = {
 /*      Service                     Handler                 */
 /*      ====================================================*/
 /*      N_DATA_GROUP_IND        */ Disp_N_DataGroupInd,
@@ -38,7 +50,7 @@ static const Knx_LayerServiceFunctionType TLG_Services[] = {
 /*      ====================================================*/
 };
 
-static const Knx_LayerServicesType TLG_ServiceTable[] = {
+STATIC const Knx_LayerServicesType TLG_ServiceTable[] = {
     {KNX_TLG_SERVICES, 5, TLG_Services}
 };
 
@@ -47,32 +59,58 @@ static const Knx_LayerServicesType TLG_ServiceTable[] = {
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
 
+/*
+**
+** Global functions.
+**
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxTLG_Task(void)
+#else
 void KnxTLG_Task(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxDisp_DispatchLayer(TASK_TL_ID, TLG_ServiceTable);
 }
 
 
+
 /*
 **
-**  Services from Network-Layer.
+** Local functions.
 **
 */
-static void Disp_N_DataGroupInd(void)
+
+/*
+**  Services from Network-Layer.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_N_DataGroupInd(void)
+#else
+STATIC void Disp_N_DataGroupInd(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_ScratchBufferPtr->service = T_DATA_GROUP_IND;
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
 
-static void Disp_N_DataGroupCon(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_N_DataGroupCon(void)
+#else
+STATIC void Disp_N_DataGroupCon(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_ScratchBufferPtr->service = T_DATA_GROUP_CON;
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 }
 
 
-static void Disp_N_PollDataCon(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_N_PollDataCon(void)
+#else
+STATIC void Disp_N_PollDataCon(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_ScratchBufferPtr->service = T_POLL_DATA_CON;
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
@@ -80,11 +118,13 @@ static void Disp_N_PollDataCon(void)
 
 
 /*
-**
 **  Services from Application-Layer.
-**
 */
-static void Disp_T_DataGroupReq(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_T_DataGroupReq(void)
+#else
+STATIC void Disp_T_DataGroupReq(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_SetTPCI(KnxMSG_ScratchBufferPtr, TPCI_UDT);
     KnxMSG_ScratchBufferPtr->service = N_DATA_GROUP_REQ;
@@ -92,7 +132,11 @@ static void Disp_T_DataGroupReq(void)
 }
 
 
-static void Disp_T_PollDataReq(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_T_PollDataReq(void)
+#else
+STATIC void Disp_T_PollDataReq(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* todo: Implement!!! */
 }

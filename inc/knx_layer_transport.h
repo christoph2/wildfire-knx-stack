@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -35,10 +35,10 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+
 /*
 **  TPCI-Codings.
 */
-
 #define TPCI_UDT                ((uint8)0x00)       /* Unnumbered Data. */
 #define TPCI_NDT                ((uint8)0x40)       /* Numbered Data (T_DATA_CONNECTED_REQ_PDU). */
 #define TPCI_UCD                ((uint8)0x80)       /* Unnumbered Control. */
@@ -57,3 +57,4 @@ extern "C"
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_LAYER_TRANSPORT_H */
+

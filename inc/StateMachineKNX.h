@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -32,10 +32,17 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+
+/* TODO: Config. */
 #define MAX_REP_COUNT   ((uint8)3)
-
 #define TL_STYLE        3   /* [1,2,3] - Transport-Layer-Styles gem. KNX-Handbuch 3/3/4. */
+#define TLC_CONNECTION_TIMEOUT  ((TM_TickType)6)
+#define TLC_ACKNOWLEDGE_TIMEOUT ((TM_TickType)3)
+/*  #define Def_Rep_Count               ((uint8)3) */
 
+/*
+** Global types.
+*/
 typedef enum tagKnxTLC_StateType {
     CLOSED,
     OPEN_IDLE,
@@ -80,18 +87,25 @@ typedef struct tagKnxTLC_ActionListType {
 #endif
 } KnxTLC_ActionListType;
 
-#define TLC_CONNECTION_TIMEOUT  ((TM_TickType)6)
-#define TLC_ACKNOWLEDGE_TIMEOUT ((TM_TickType)3)
+/*
+** Global functions.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE)		    KnxTLC_StateMachine(KNX_TlcEventType event);
 
-/*  #define Def_Rep_Count               ((uint8)3) */
-
-void KnxTLC_StateMachine(KNX_TlcEventType event);
+FUNC(KnxTLC_StateType, KSTACK_CODE) KnxTLC_GetState(void);
+FUNC(void, KSTACK_CODE)		    KnxTLC_SetState(KnxTLC_StateType State);
+#else
+void		    KnxTLC_StateMachine(KNX_TlcEventType event);
 
 KnxTLC_StateType    KnxTLC_GetState(void);
 void                KnxTLC_SetState(KnxTLC_StateType State);
+#endif /* KSTACK_MEMORY_MAPPING */
+
 
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */
 
 #endif  /* __STATEMACHINE_KNX */
+

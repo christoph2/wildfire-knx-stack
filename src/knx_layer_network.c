@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -23,7 +23,12 @@
  */
 #include "knx_layer_network.h"
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer);
+#else
 void NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer);
+#endif /* KSTACK_MEMORY_MAPPING */
 
 
 /*
@@ -38,10 +43,15 @@ void NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer);
 #define CONF_OK     ((uint8)0x00)
 #define CONF_ERROR  ((uint8)0x01)
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_N_DataIndividualReq(void), Disp_N_DataGroupReq(void), Disp_N_PollDataReq(void);
+STATIC FUNC(void, KSTACK_CODE) Disp_L_PollDataCon(void), Disp_L_DataInd(void), Disp_L_BusmonInd(void);
+STATIC FUNC(void, KSTACK_CODE) Disp_N_DataBroadcastReq(void), Disp_L_DataCon(void);
+#else
 static void Disp_N_DataIndividualReq(void), Disp_N_DataGroupReq(void), Disp_N_PollDataReq(void);
 static void Disp_L_PollDataCon(void), Disp_L_DataInd(void), Disp_L_BusmonInd(void);
 static void Disp_N_DataBroadcastReq(void), Disp_L_DataCon(void);
-
+#endif /* KSTACK_MEMORY_MAPPING */
 
 static const Knx_LayerServiceFunctionType NL_Services[] = {
 /*      Service                     Handler                 */
@@ -66,12 +76,19 @@ static const Knx_LayerServicesType NL_ServiceTable[] = {
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE)  KnxNL_Task(void)
+#else
 void KnxNL_Task(void)
 {
     KnxDisp_DispatchLayer(TASK_NL_ID, NL_ServiceTable);
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxNL_Init(void)
+#else
 void KnxNL_Init(void)
 {
 
@@ -83,8 +100,10 @@ void KnxNL_Init(void)
 **  Services from Link-Layer.
 **
 */
-
-static void Disp_L_DataInd(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_L_DataInd(void)
+#else
+STATIC void Disp_L_DataInd(void)
 {
     if ((KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->ncpi & (uint8)0x80) == (uint8)0x80) {
         if (KnxADR_IsBroadcastAddress(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->dest)) {
@@ -104,19 +123,28 @@ static void Disp_L_DataInd(void)
 }
 
 
-static void Disp_L_DataCon(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_L_DataCon(void)
+#else
+STATIC void Disp_L_DataCon(void)
 {
     /* todo: Implement!! */
 }
 
 
-static void Disp_L_BusmonInd(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_L_BusmonInd(void)
+#else
+STATIC void Disp_L_BusmonInd(void)
 {
     /* todo: Implement!!! */
 }
 
 
-static void Disp_L_PollDataCon(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_L_PollDataCon(void)
+#else
+STATIC void Disp_L_PollDataCon(void)
 {
     /* todo: Implement!!! */
 }
@@ -127,7 +155,10 @@ static void Disp_L_PollDataCon(void)
 **  Services from Transport-Layer.
 **
 */
-static void Disp_N_DataBroadcastReq(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_N_DataBroadcastReq(void)
+#else
+STATIC void Disp_N_DataBroadcastReq(void)
 {
     KnxMSG_SetAddressType(KnxMSG_ScratchBufferPtr, atMULTICAST);
     KnxMSG_SetRoutingCount(KnxMSG_ScratchBufferPtr);
@@ -136,7 +167,10 @@ static void Disp_N_DataBroadcastReq(void)
 }
 
 
-static void Disp_N_DataIndividualReq(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_N_DataIndividualReq(void)
+#else
+STATIC void Disp_N_DataIndividualReq(void)
 {
     KnxMSG_SetAddressType(KnxMSG_ScratchBufferPtr, atINDIVIDUAL);
     KnxMSG_SetRoutingCount(KnxMSG_ScratchBufferPtr);
@@ -145,7 +179,10 @@ static void Disp_N_DataIndividualReq(void)
 }
 
 
-static void Disp_N_DataGroupReq(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_N_DataGroupReq(void)
+#else
+STATIC void Disp_N_DataGroupReq(void)
 {
     KnxMSG_SetAddressType(KnxMSG_ScratchBufferPtr, atMULTICAST);
     KnxMSG_SetRoutingCount(KnxMSG_ScratchBufferPtr);
@@ -154,12 +191,18 @@ static void Disp_N_DataGroupReq(void)
 }
 
 
-static void Disp_N_PollDataReq(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_N_PollDataReq(void)
+#else
+STATIC void Disp_N_PollDataReq(void)
 {
     /* todo: Implement!!! */
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer)
+#else
 void NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer)
 {
     if (KnxMSG_GetRoutingCount(pBuffer) == MSG_NO_ROUTING_CTRL) {

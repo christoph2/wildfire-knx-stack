@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -31,30 +31,11 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+
+/*
+** Global defines.
+*/
 #define BUF_LEN ((SizeType)0x1f)
-
-typedef enum tagTPUART_RCV_STATE {
-    TPSR_INIT,
-    TPSR_WAIT_RESET_IND,
-    TPSR_WAIT_IACK,
-    TPSR_WAIT,
-    TPSR_DATA_CONT1,
-    TPSR_DATA_CONT2,
-/*      TSR_DATA_END, */
-    TPSR_LONG_DATA,
-    TPSR_LONG_DATA_CONT1,
-    TPSR_LONG_DATA_CONT2,
-/*      TSR_LONG_DATA_END, */
-    TPSR_POLL_DATA,
-    TPSR_POLL_DATA_CONT,
-/*      TSR_POLL_DATA_END, */
-    TPSR_IACK_SRV,
-    TPSR_CTRL_SRV
-} TPUART_RCV_STATE;
-
-typedef enum tagTPUART_RCV_SERVICE {
-    SERVICE_NONE, SERVICE_DATA, SERVICE_IACK, SERVICE_CONTROL
-} TPUART_RCV_SERVICE;
 
 /*
 **    7 6 5 4 3  2  1 0
@@ -93,9 +74,48 @@ typedef enum tagTPUART_RCV_SERVICE {
 
 #define RESET_IND               ((uint8)0x03)
 
+
+/*
+** Global types.
+*/
+typedef enum tagTPUART_RCV_STATE {
+    TPSR_INIT,
+    TPSR_WAIT_RESET_IND,
+    TPSR_WAIT_IACK,
+    TPSR_WAIT,
+    TPSR_DATA_CONT1,
+    TPSR_DATA_CONT2,
+/*      TSR_DATA_END, */
+    TPSR_LONG_DATA,
+    TPSR_LONG_DATA_CONT1,
+    TPSR_LONG_DATA_CONT2,
+/*      TSR_LONG_DATA_END, */
+    TPSR_POLL_DATA,
+    TPSR_POLL_DATA_CONT,
+/*      TSR_POLL_DATA_END, */
+    TPSR_IACK_SRV,
+    TPSR_CTRL_SRV
+} TPUART_RCV_STATE;
+
+typedef enum tagTPUART_RCV_SERVICE {
+    SERVICE_NONE, SERVICE_DATA, SERVICE_IACK, SERVICE_CONTROL
+} TPUART_RCV_SERVICE;
+
+
+/*
+** Global functions.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) TPTest(void);
+FUNC(void, KSTACK_CODE) KnxLL_Init(void);
+FUNC(void, KSTACK_CODE) KnxLL_Task(void);
+#else
 void    TPTest(void);
-void    TPUARTInit(void);
-void    LL_Task(void);
+void    KnxLL_Init(void);
+void    KnxLL_Task(void);
+#endif /* KSTACK_MEMORY_MAPPING */
+
+
 
 #if defined(__cplusplus)
 }

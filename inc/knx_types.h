@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -32,6 +32,10 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+
+/*
+** Global types.
+*/
 typedef uint16  Knx_AddressType;
 typedef uint8   Knx_SerialNumberType[6];
 
@@ -41,7 +45,9 @@ typedef struct tagKnx_PollGroupSettingType {
 } Knx_PollGroupSettingType;
 
 typedef struct tagKnx_CommObjDescriptorType {
-    uint8 DataPtr, Config, Type;
+    uint8   DataPtr;
+    uint8   Config;
+    uint8   Type;
 } Knx_CommObjDescriptorType;
 
 typedef enum tagKnx_DafType {
@@ -95,3 +101,4 @@ typedef uint8 Knx_HopCountType;
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_TYPES_H */
+

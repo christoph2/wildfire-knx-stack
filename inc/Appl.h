@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -54,7 +54,12 @@ extern uint8 const * const  __PHYS_EEPROM_START;
 extern const uint8                          Knx_UserInterfaceObjCount;
 extern const Knx_InterfaceObjectType * *    Knx_UserInterfaceObjPtr;
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) DEV_Init(void);
+#else
 void DEV_Init(void);
+#endif /* KSTACK_MEMORY_MAPPING */
+
 
 #if defined(__cplusplus)
 }

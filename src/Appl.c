@@ -213,7 +213,11 @@ const uint32 KNX_DEV_ACCESS_KEYTABLE[3]; /* check: uint8? */
 uint8 const * const __LOG_EEPROM_START     = (uint8 *)0x0100;
 uint8 const * const __PHYS_EEPROM_START    = (const uint8 *)&DEV_EEPROM_HEADER;
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) DEV_Init(void)
+#else
 void DEV_Init(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*
     KNX_USER_OBJ_DESCR descr;
@@ -231,12 +235,14 @@ void DEV_Init(void)
  */
 }
 
-
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint8 , KSTACK_CODE) DEV_GetHopCount(void)
+#else
 uint8 DEV_GetHopCount(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 hc = DEV_EEPROM_HEADER[0x0e] >> 4;
 
     return ((hc < 1) || (hc > KNX_DEFAULT_HOP_COUNT)) ? KNX_DEFAULT_HOP_COUNT : hc;
 }
-
 

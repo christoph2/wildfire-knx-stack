@@ -1,8 +1,8 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
- *                                       cpu12.gems@googlemail.com>
+ * (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *                                      cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
  *
@@ -57,3 +57,4 @@ extern "C"
 #endif  /* __cplusplus */
 
 #endif  /* __CEMI_H  */
+

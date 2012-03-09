@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -32,9 +32,24 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+
+/*
+** Global variables.
+*/
 extern KnxMSG_BufferPtr KnxMSG_ScratchBufferPtr;
 
+
+/*
+** Global functions.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxDisp_DispatchLayer(const uint8 LayerID, 
+    CONSTP2CONST(Knx_LayerServicesType, AUTOMATIC, KSTACK_APPL_DATA) ServiceTable
+);
+#else
 void KnxDisp_DispatchLayer(const uint8 LayerID, const Knx_LayerServicesType * ServiceTable);
+#endif /* KSTACK_MEMORY_MAPPING */
+
 
 #if defined(__cplusplus)
 }

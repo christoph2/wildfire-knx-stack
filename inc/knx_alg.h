@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -33,16 +33,18 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+
+/*
+** Global function-like macros.
+*/	
 #define KnxALG_GetCommObjDescr(objectNumber)    ((Knx_CommObjDescriptorType *)((uint8 *)APP_CommObjTab + (uint8)2) + (objectNumber))
 #define KnxALG_GetNumCommObjs()                 ((uint8)APP_CommObjTab[0])
-
-uint8 * KnxALG_GetObjectDataPointer(uint8 objectNr);
 
 #define KnxALG_ObjCheckEnabled(f, m)            (((f) & (m)) == (m))
 
 #define KnxALG_ObjTransmitEnabled(f)            KnxALG_ObjCheckEnabled((f), (KNX_OBJ_COMM_ENABLE | KNX_OBJ_TRANSMIT_ENABLE))
 #define KnxALG_ObjReadEnabled(f)                KnxALG_ObjCheckEnabled((f), (KNX_OBJ_COMM_ENABLE | KNX_OBJ_READ_ENABLE))
-#define KnxALG_ObjResponseEnabled(f)            KnxALG_ObjCheckEnabled((f), \
+#define KnxALG_ObjResponseEnabled(f)            KnxALG_ObjCheckEnabled((f),                                          \
                                                                        (KNX_OBJ_COMM_ENABLE | KNX_OBJ_WRITE_ENABLE | \
                                                                         KNX_OBJ_UPDATE_ENABLE))
 #define KnxALG_ObjWriteEnabled(f)               KnxALG_ObjCheckEnabled((f), (KNX_OBJ_COMM_ENABLE | KNX_OBJ_WRITE_ENABLE))
@@ -54,6 +56,30 @@ uint8 * KnxALG_GetObjectDataPointer(uint8 objectNr);
 
 #define KnxALG_GetObjLen(o)                     (KNX_OBJ_LEN_TAB[((o) & (uint8)0x3f)])
 #define KnxALG_GetObjPriority(objectNr)         ((Knx_PriorityType)(KnxALG_GetCommObjDescr((objectNr))->Config) & (uint8)0x03)
+
+
+/*
+** Global functions.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint8 *, KSTACK_CODE)  KnxALG_GetObjectDataPointer(uint8 objectNr);
+
+FUNC(void, KSTACK_CODE)	    KnxALG_SetRAMFlags(uint16 objectNr, uint8 flags);
+FUNC(uint8, KSTACK_CODE)    KnxALG_GetRAMFlags(uint16 objectNr);
+FUNC(uint8 *, KSTACK_CODE)  KnxALG_GetRAMFlagPointer(void);
+
+FUNC(void, KSTACK_CODE)	    KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8 testFlags);
+
+FUNC(void, KSTACK_CODE)	    KnxALG_Task(void);
+FUNC(void, KSTACK_CODE)	    KnxALG_Init(void);
+
+/* Group-Services. */
+FUNC(void, KSTACK_CODE)	    A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, 
+    Knx_AddressType dest, uint8 prio);
+FUNC(void, KSTACK_CODE)	    A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, 
+    Knx_AddressType dest, Knx_PriorityType prio, P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len);
+#else	
+uint8 * KnxALG_GetObjectDataPointer(uint8 objectNr);
 
 void    KnxALG_SetRAMFlags(uint16 objectNr, uint8 flags);
 uint8   KnxALG_GetRAMFlags(uint16 objectNr);
@@ -69,9 +95,12 @@ void    A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, 
 void    A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
                                uint8 * data,
                                uint8 len);
+#endif /* KSTACK_MEMORY_MAPPING */
+
 
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_ALG_H */
+

@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -27,13 +27,12 @@
 #include "knx_messaging.h"
 #include "knx_disp.h"
 
-#include "link-layer/knx_tpuart.h"
+#include "link-layer/knx_tpuart.h"  /* TODO: parameterised. */
 
 #if defined(__cplusplus)
 extern "C"
 {
 #endif  /* __cplusplus */
-
 
 #if defined(__cplusplus)
 }

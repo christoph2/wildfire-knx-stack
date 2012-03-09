@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -32,11 +32,17 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-#define KNX_BIG_ENDIAN
+#define KNX_BIG_ENDIAN	/* TODO: config. */
 
-#define DISABLE_ALL_INTERRUPTS()
-#define ENABLE_ALL_INTERRUPTS()
+#if 0	
+    #define DISABLE_ALL_INTERRUPTS()
+    #define ENABLE_ALL_INTERRUPTS()
+#endif
 
+
+/*
+** Global defines.
+*/
 #define IAK_OK                  ((uint8)0x00)
 #define IAK_NOT_OK              ((uint8)0x01)
 
@@ -110,3 +116,4 @@ extern "C"
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_DEFS_H */
+

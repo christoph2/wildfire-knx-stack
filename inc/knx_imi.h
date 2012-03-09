@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -35,10 +35,14 @@ extern "C"
 **
 **  Service Codes for Konnex/EIB Internal-Message-Interface.
 **
-**  Own coding of Services permits usage of Jump-Tables.
+**  Own coding of services permits usage of jump-tables.
 **
 */
 
+
+/*
+** Global defines.
+*/	
 #define KNX_LL_SERVICES     ((uint8)0x10)
 #define KNX_NL_SERVICES     ((uint8)0x20)
 
@@ -48,6 +52,10 @@ extern "C"
 #define KNX_ALG_SERVICES    ((uint8)0x70)
 #define KNX_ALM_SERVICES    ((uint8)0x80)
 
+
+/*
+** Global types.
+*/	
 typedef enum tagKnx_ServiceTypeType {
 /*
 **      Link-Layer.
@@ -119,3 +127,4 @@ typedef enum tagKnx_ServiceTypeType {
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_IMI_H */
+

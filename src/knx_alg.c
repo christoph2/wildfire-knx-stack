@@ -31,11 +31,15 @@
 /*
 **	Local function prototypes.
 */
-static void Disp_A_DataGroupReq(void), Disp_A_PollDataReq(void), Disp_T_PollDataCon(void);
-static void Disp_T_DataGroupInd(void), Disp_T_DataGroupCon(void);
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_A_DataGroupReq(void), Disp_A_PollDataReq(void), Disp_T_PollDataCon(void);
+STATIC FUNC(void, KSTACK_CODE) Disp_T_DataGroupInd(void), Disp_T_DataGroupCon(void);
+#else
+void Disp_A_DataGroupReq(void), Disp_A_PollDataReq(void), Disp_T_PollDataCon(void);
+void Disp_T_DataGroupInd(void), Disp_T_DataGroupCon(void);
+#endif /* KSTACK_MEMORY_MAPPING */
 
-
-static const Knx_LayerServiceFunctionType ALG_Services[] = {
+STATIC const Knx_LayerServiceFunctionType ALG_Services[] = {
 /*      Service                     Handler                 */
 /*      ====================================================*/
 /*      T_DATA_GROUP_IND        */ Disp_T_DataGroupInd,
@@ -46,7 +50,7 @@ static const Knx_LayerServiceFunctionType ALG_Services[] = {
 /*      ====================================================*/
 };
 
-static const Knx_LayerServicesType ALG_ServiceTable[] = {
+STATIC const Knx_LayerServicesType ALG_ServiceTable[] = {
     {KNX_ALG_SERVICES, 5, ALG_Services}
 };
 
@@ -123,18 +127,22 @@ const uint8 KNX_OBJ_LEN_TAB[16] = {
         on unknown APCI : return (SAP_CB_BREAK)
  */
 
-static uint8 APP_RAMFlags[(APP_NUM_OF_COM_OBJS + 1) / 2 ];
+STATIC uint8 APP_RAMFlags[(APP_NUM_OF_COM_OBJS + 1) / 2 ];
 
 uint8 APP_ObjectData[APP_OBJECT_DATA_SIZE];
 
-static uint8 ALG_NumQueuedGroupMessages;
+STATIC uint8 ALG_NumQueuedGroupMessages;
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
 
-void KnxALG_Task(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxALG_Task(void)
+#else
+FUNC(void, KSTACK_CODE) KnxALG_Task(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxDisp_DispatchLayer(TASK_AL_ID, ALG_ServiceTable);
 }
@@ -144,7 +152,11 @@ void KnxALG_Task(void)
 **  Services from Transport-Layer.
 **
 */
-static void Disp_T_DataGroupInd(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_T_DataGroupInd(void)
+#else
+STATIC void Disp_T_DataGroupInd(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 apci;
 
@@ -180,13 +192,21 @@ static void Disp_T_DataGroupInd(void)
 }
 
 
-static void Disp_T_DataGroupCon(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_T_DataGroupCon(void)
+#else
+STATIC void Disp_T_DataGroupCon(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 
 }
 
 
-static void Disp_T_PollDataCon(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE)  Disp_T_PollDataCon(void)
+#else
+STATIC void Disp_T_PollDataCon(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 
 }
@@ -198,13 +218,21 @@ static void Disp_T_PollDataCon(void)
 **
 */
 
-static void Disp_A_DataGroupReq(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_A_DataGroupReq(void)
+#else
+STATIC void Disp_A_DataGroupReq(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* todo: Implement!! */
 }
 
 
-static void Disp_A_PollDataReq(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_A_PollDataReq(void)
+#else
+STATIC void Disp_A_PollDataReq(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* todo: Implement!! */
 }
@@ -213,14 +241,21 @@ static void Disp_A_PollDataReq(void)
 /*****************************************************************************************************************/
 /*****************************************************************************************************************/
 /*****************************************************************************************************************/
-
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxALG_Init(void)
+#else
 void KnxALG_Init(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     ALG_NumQueuedGroupMessages = ((uint8)0x00);
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio)
+#else
 void A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_SetAPCI(pBuffer, apciGROUP_VALUE_READ);
     KnxMSG_SetSourceAddress(pBuffer, source);
@@ -234,9 +269,15 @@ void A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
+                            P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data,
+                            uint8 len)
+#else
 void A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
                             uint8 * data,
                             uint8 len)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_SetAPCI(pBuffer, apciGROUP_VALUE_WRITE);
     KnxMSG_SetSourceAddress(pBuffer, source);
@@ -250,7 +291,11 @@ void A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Kn
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxALG_PollCycle(void)
+#else
 void KnxALG_PollCycle(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8               idx;
     uint8               flags;
@@ -332,7 +377,11 @@ void KnxALG_PollCycle(void)
    }
  */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint8 *, KSTACK_CODE) KnxALG_GetObjectDataPointer(uint8 objectNr)
+#else
 uint8 * KnxALG_GetObjectDataPointer(uint8 objectNr)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (objectNr < KnxALG_GetNumCommObjs()) {
         return (uint8 *)&APP_ObjectData[KnxALG_GetCommObjDescr(objectNr)->DataPtr];
@@ -342,7 +391,11 @@ uint8 * KnxALG_GetObjectDataPointer(uint8 objectNr)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxALG_SetRAMFlags(uint16 objectNr, uint8 flags)
+#else
 void KnxALG_SetRAMFlags(uint16 objectNr, uint8 flags)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if ((objectNr % (uint8)2) == (uint8)1) {
         APP_RAMFlags[objectNr >> 1] = ((flags & (uint8)0x0f) << 4);
@@ -352,7 +405,11 @@ void KnxALG_SetRAMFlags(uint16 objectNr, uint8 flags)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint8, KSTACK_CODE) KnxALG_GetRAMFlags(uint16 objectNr)
+#else
 uint8 KnxALG_GetRAMFlags(uint16 objectNr)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 b;
 
@@ -366,13 +423,21 @@ uint8 KnxALG_GetRAMFlags(uint16 objectNr)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint8 *, KSTACK_CODE) KnxALG_GetRAMFlagPointer(void)
+#else
 uint8 * KnxALG_GetRAMFlagPointer(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return (uint8 *)&APP_RAMFlags;
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8 testFlags)
+#else
 void KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8 testFlags)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16      ca;
     uint16 *    ap = KnxADR_GrOATBasePtr();

@@ -1,8 +1,8 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2010 by Christoph Schueler <chris@konnex-tools.de,
- *                                       cpu12.gems@googlemail.com>
+ * (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *                                      cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
  *
@@ -29,7 +29,11 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-#define KNX_STANDALONE
+
+/*
+** Global defines.
+*/
+#define KNX_STANDALONE	/* TODO: STD_ON | STD_OFF */
 #define KNX_CLIENT_LIB
 #define KNX_USE_CONFIMATIONS
 #define KNX_BUSACCESS_TPUART

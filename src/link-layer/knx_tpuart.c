@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -57,15 +57,44 @@
 #include "knx_tpuart.h"
 #include "knx_messaging.h"
 
-#define ACK_INFORMATION ((uint8)0x10)
 
-#define ACK_ADDRESSED   ((uint8)0x01)
-#define ACK_BUSY        ((uint8)0x02)
-#define ACK_NACK        ((uint8)0x04)
+/*
+** Local defines.
+*/
+#define ACK_INFORMATION    ((uint8)0x10)
+#define ACK_ADDRESSED       ((uint8)0x01)
+#define ACK_BUSY                ((uint8)0x02)
+#define ACK_NACK                ((uint8)0x04)
 
-static void Disp_L_DataReq(void), Disp_L_PollDataReq(void);
 
-static const Knx_LayerServiceFunctionType LL_Services[] = {
+/*
+** Local functions prototypes.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_L_DataReq(void), Disp_L_PollDataReq(void);
+FUNC(uint8, KSTACK_CODE)    CalculateChecksum(KnxMSG_BufferPtr ptr);
+FUNC(void, KSTACK_CODE)    PH_AckInformation_req(uint8 flags);
+FUNC(void, KSTACK_CODE)    DBG_DUMP(KnxMSG_BufferPtr ptr);
+FUNC(void, KSTACK_CODE)    decode(uint8 b);
+FUNC(void, KSTACK_CODE)    StartTimeout(void);
+FUNC(void, KSTACK_CODE)    StopTimeout(void);
+FUNC(void, KSTACK_CODE)    OnTimeout(void);        /* Callback. */
+#else
+STATIC void Disp_L_DataReq(void), Disp_L_PollDataReq(void);
+uint8   CalculateChecksum(KnxMSG_BufferPtr ptr);
+void    PH_AckInformation_req(uint8 flags);
+void    DBG_DUMP(KnxMSG_BufferPtr ptr);
+void decode(uint8 b);
+void    StartTimeout(void);
+void    StopTimeout(void);
+void    OnTimeout(void);        /* Callback. */
+#endif /* KSTACK_MEMORY_MAPPING */
+
+
+/*
+** Local constants.
+*/
+STATIC const Knx_LayerServiceFunctionType LL_Services[] = {
 /*      Service                     Handler                 */
 /*      ====================================================*/
 /*      L_DATA_REQ              */ Disp_L_DataReq,
@@ -73,7 +102,7 @@ static const Knx_LayerServiceFunctionType LL_Services[] = {
 /*      ====================================================*/
 };
 
-static const Knx_LayerServicesType LL_ServiceTable[] = {
+STATIC const Knx_LayerServicesType LL_ServiceTable[] = {
     {KNX_LL_SERVICES, 2, LL_Services}
 };
 
@@ -122,6 +151,10 @@ const uint8 T2[] = {
 };
 /* T_Disconnect (01.01.100 ==> 01.01.001). */
 
+
+/*
+** Local variables.
+*/
 TPUART_RCV_STATE    rcvState;
 TPUART_RCV_SERVICE  rcvService;
 
@@ -138,17 +171,17 @@ KnxMSG_BufferPtr pBuffer;
 
 uint8 AckService;
 
-uint8   CalculateChecksum(KnxMSG_BufferPtr ptr);
-void    PH_AckInformation_req(uint8 flags);
-void    DBG_DUMP(KnxMSG_BufferPtr ptr);
 
-void decode(uint8 b);
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_START_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
 
-void    StartTimeout(void);
-void    StopTimeout(void);
-void    OnTimeout(void);        /* Callback. */
-
-void TPUARTInit(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxLL_Init(void)
+#else
+void KnxLL_Init(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     rcvState   = TPSR_WAIT_RESET_IND;
     RcvLen     = RcvIdx = (uint8)0x00;
@@ -158,7 +191,12 @@ void TPUARTInit(void)
     rcvState = TPSR_WAIT;
 }
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) TPTest(void)
+#else
 void TPTest(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     int         b, len;
     static int  cnt;
@@ -205,7 +243,12 @@ void TPTest(void)
  */
 }
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) decode(uint8 b)
+#else
 void decode(uint8 b)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 state;
 
@@ -351,23 +394,43 @@ void decode(uint8 b)
     }
 }
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) StartTimeout(void)
+#else
 void StartTimeout(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 
 }
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) StopTimeout(void)
+#else
 void StopTimeout(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 
 }
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) OnTimeout(void)
+#else
 void OnTimeout(void)            /* Callback. */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*      Differenzieren: z.B.: 'TPSR_WAIT_RESET_IND'. */
     rcvState = TPSR_WAIT;
 }
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) DBG_DUMP(KnxMSG_BufferPtr ptr)
+#else
 void DBG_DUMP(KnxMSG_BufferPtr ptr)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 i /*,chk*/;
 
@@ -386,23 +449,37 @@ void DBG_DUMP(KnxMSG_BufferPtr ptr)
 #endif
 }
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) PH_AckInformation_req(uint8 flags)
+#else
 void PH_AckInformation_req(uint8 flags)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /* PutSCI(ACK_INFORMATION | flags); */
 }
 
-void LL_Task(void)
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxLL_Task(void)
+#else
+void KnxLL_Task(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxDisp_DispatchLayer(TASK_LL_ID, LL_ServiceTable);
 }
+
 
 /*
 **
 **  Services from Network-Layer.
 **
 */
-
-static void Disp_L_DataReq(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_L_DataReq(void)
+#else
+STATIC void Disp_L_DataReq(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 chk;
 
@@ -419,13 +496,23 @@ static void Disp_L_DataReq(void)
     DBG_DUMP(KnxMSG_ScratchBufferPtr);
 }
 
-static void Disp_L_PollDataReq(void)
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_L_PollDataReq(void)
+#else
+STATIC void Disp_L_PollDataReq(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* todo: Implement!!! */
     KnxMSG_SetFrameType(KnxMSG_ScratchBufferPtr, ftPolling);
 }
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint8, KSTACK_CODE) CalculateChecksum(KnxMSG_BufferPtr ptr)
+#else
 uint8 CalculateChecksum(KnxMSG_BufferPtr ptr)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8   chk = (uint8)0xff;
     uint8   i;
@@ -436,4 +523,11 @@ uint8 CalculateChecksum(KnxMSG_BufferPtr ptr)
 
     return chk;
 }
+
+
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+    #define KSTACK_STOP_SEC_CODE
+    #include "MemMap.h"
+#endif /* KSTACK_MEMORY_MAPPING */
 

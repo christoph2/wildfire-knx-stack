@@ -93,7 +93,7 @@ typedef enum tagKNX_LSMStateType {
     LSM_STATE_ERROR, LSM_STATE_LAST
 } KNX_LSMStateType;
 
-static const uint8 LS_Table[4][5] = {
+STATIC const uint8 LS_Table[4][5] = {
 /*  NOP                     START_LOAD          LOAD_COMPLETE       SEGMENT             UNLOAD                  */
 /*  ----------------------------------------------------------------------------------------------------------- */
     {LSM_STATE_UNLOADED, LSM_STATE_LOADING,   LSM_STATE_UNLOADED,   LSM_STATE_UNLOADED,    LSM_STATE_UNLOADED                           },  /* UNLOADED */
@@ -141,19 +141,31 @@ KNX_LSCType KNX_SystemLSC[KNX_NUM_SYS_LSCS];    /* System-Load-/State-Controls. 
 #endif /* KSTACK_MEMORY_MAPPING */
 
 /* todo: als Makro!!! */
-boolean LSM_IsAppLoaded(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+
+#else
+FUNC(boolean, KSTACK_CODE) LSM_IsAppLoaded(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return KNX_SystemLSC[KNX_LSC_APP] == LSM_STATE_LOADED;
 }
 
 
-boolean LSM_IsGrATLoaded(void)     /* Address-Table. */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+
+#else
+FUNC(boolean, KSTACK_CODE) LSM_IsGrATLoaded(void)     /* Address-Table. */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return KNX_SystemLSC[KNX_LSC_GRAT] == LSM_STATE_LOADED;
 }
 
 
-boolean LSM_IsGrOATLoaded(void)    /* Assoc-Table. */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+
+#else
+FUNC(boolean, KSTACK_CODE) LSM_IsGrOATLoaded(void)    /* Assoc-Table. */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return KNX_SystemLSC[KNX_LSC_GROAT] == LSM_STATE_LOADED;
 }
@@ -162,14 +174,21 @@ boolean LSM_IsGrOATLoaded(void)    /* Assoc-Table. */
 /*
 **
 */
+#if KSTACK_MEMORY_MAPPING == STD_ON
 
-void LSM_Init(void)
+#else
+FUNC(void, KSTACK_CODE) LSM_Init(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 
 }
 
 
-void LSM_Dispatch(uint8 * record, /*LSM_State*/ uint8 * ls_var)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+
+#else
+FUNC(void, KSTACK_CODE) LSM_Dispatch(uint8 * record, /*LSM_State*/ uint8 * ls_var)
+#endif /* KSTACK_MEMORY_MAPPING */
 /*
 **      record: Pointer auf das 10-Byte-Load-Control.
 **      ls_var: Zeiger auf die Load-State-Variable.
@@ -196,8 +215,11 @@ void LSM_Dispatch(uint8 * record, /*LSM_State*/ uint8 * ls_var)
 
 /* static uint8 app_rec[10]; */
 /*static LSM_Stateuint8 app_lsc; */
+#if KSTACK_MEMORY_MAPPING == STD_ON
 
-void LSM_Test(void)
+#else
+FUNC(void, KSTACK_CODE) LSM_Test(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 i;
 

@@ -30,19 +30,29 @@
     #define KSTACK_START_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
+/*
+** Global functions.
+*/
 
 #if defined(KNX_LITTLE_ENDIAN)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint16, KSTACK_CODE) btohs(uint16 w)
+#else
 uint16 btohs(uint16 w)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return MAKEWORD(LOBYTE(w), HIBYTE(w));
 }
-
 
 #endif  /* defined(KNX_LITTLE_ENDIAN) */
 
 #define COMW(w) ((~(w)) + 1)
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint16, KSTACK_CODE) LongToDPT9(sint32 value)
+#else
 uint16 LongToDPT9(sint32 value)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16  Mantissa;
     uint8   Exponent;
@@ -75,7 +85,11 @@ uint16 LongToDPT9(sint32 value)
 }
 
 
-uint16 FloatToDPT9(float value)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint16, KSTACK_CODE) FloatToDPT9(float64 value)
+#else
+uint16 FloatToDPT9(float64 value)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16  Mantissa;
     uint8   Exponent;
@@ -108,7 +122,11 @@ uint16 FloatToDPT9(float value)
 }
 
 
-float DPT9ToFloat(uint16 value)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(float64, KSTACK_CODE) DPT9ToFloat(uint16 value)
+#else
+float64 DPT9ToFloat(uint16 value)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16  Mantissa;
     uint8   Exponent;
@@ -134,7 +152,11 @@ float DPT9ToFloat(uint16 value)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(sint32, KSTACK_CODE) DPT9ToLong(uint16 value)
+#else
 sint32 DPT9ToLong(uint16 value)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16  Mantissa;
     uint8   Exponent;

@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -32,6 +32,12 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+
+/*
+**
+** Global defines.
+**
+*/ 
 #define PROP_RO         ((uint8)0)
 #define PROP_RW         ((uint8)1)
 #define PROP_NO_ARR     ((uint8)0)
@@ -41,65 +47,7 @@ extern "C"
 #define PROP_NO_FUNC    ((uint8)0)
 #define PROP_FUNC       ((uint8)1)
 
-#define MAKE_PROP_CTL(write, array, ptr, \
-                      type)             (((write) & 0x01) << 7) | (((array) & 0x01) << 6) | (((ptr) & 0x01) << 5) | ((type) & 0x1f)
-#define MAKE_OBJ_ACCESS(read, write)    (((read) & 0x0f) << 4) | ((write) & 0x0f)
-
-typedef enum tagKnx_IOS_ServiceType {
-    IOS_PROP_READ,
-    IOS_PROP_WRITE,
-    IOS_PROP_DESC_READ
-} Knx_IOS_ServiceType;
-
-typedef struct tagKnx_PropertyType {
-    uint8               property_id;
-    uint8               property_ctrl;
-    uint8               property_func;
-    void const * const  property_var;
-} Knx_PropertyType;
-
-typedef struct tagKNX_InterfaceObjectType {
-    uint8                       access_level; /* access per object. */
-    uint8                       property_count;
-    const Knx_PropertyType *    properties;
-} Knx_InterfaceObjectType;
-
-/* folgendes aus 'BIM_M13x.h': */
 /*
-   typedef struct PROPERTY                         //! structure for a property
-   {
-    uint8 PropertyID;                            //!< possible: 1...255
-    uint8 PropertyType;                          //!< defines type and writeability
-    USHORT MaxLength;                           //!< number of max. elements
-    USHORT *pActualLength;                      //!< pointer to actual numbers of elem or NULL pointer if fix length
-    const void *pData;                          //!< void pointer to data(s) or function
-    enum PropertyInternalType InternalType;     //!< indicates if property is normal memory, eeval or otp
-   } PROPERTY;
-
-   typedef struct INTERFACE_OBJECT                 //! structure for a interface object
-   {
-    USHORT ObjType;                             //!< object type (2 byte: higbyte,lowbyte)
-    USHORT PropCount;                           //!< max 256 properties possible
-    PROPERTY *PropTable;                        //!< pointer to propertytable (first property in table!)
-   } INTERFACE_OBJECT;
-
-   typedef struct INTERFACE_ROOT                   //! root of the interface objects
-   {
-    USHORT ObjCount;                            //!< max 65536 objects possible
-    const INTERFACE_OBJECT *ObjTable;           //!< pointer to objectable
-   } INTERFACE_ROOT;
- */
-
-Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_index);
-Knx_PropertyType const *        IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id);
-Knx_PropertyType const *        IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16 prop_index);
-
-void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connected);
-
-/*
-** void IOS_SetUserObjTable(KNX_USER_OBJ_DESCR descr);
-** void IOS_GetUserObjTable(KNX_USER_OBJ_DESCR *pdescr);
-**
 **  System Interface Objects.
 */
 #define KNX_OT_DEVICE_OBJECT                ((uint16)0)
@@ -114,7 +62,6 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connect
 /*
 ** Interface Object Type independent Standardized Property Identifiers.
 */
-
 #define KNX_PID_OBJECT_TYPE                 ((uint8)1)
 #define KNX_PID_OBJECT_NAME                 ((uint8)2)
 #define KNX_PID_SEMAPHOR                    ((uint8)3)
@@ -169,7 +116,7 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connect
 #define KNX_PDT_POLL_GROUP_SETTINGS         ((uint8)0x0D)
 #define KNX_PDT_SHORT_CHAR_BLOCK            ((uint8)0x0E)
 /* 0x0f */
-/*0x10 */
+/* 0x10 */
 #define KNX_PDT_GENERIC_01                  ((uint8)0x11)
 #define KNX_PDT_GENERIC_02                  ((uint8)0x12)
 #define KNX_PDT_GENERIC_03                  ((uint8)0x13)
@@ -204,10 +151,97 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connect
 
    #define PDT_WR_EN                               0x80
    #define FUNCTION_FLAG                           0x40
+*/	
+
+
+/*
+** Global function-like macros.
+*/
+#define MAKE_PROP_CTL(write, array, ptr, \
+                      type)             (((write) & 0x01) << 7) | (((array) & 0x01) << 6) | (((ptr) & 0x01) << 5) | ((type) & 0x1f)
+#define MAKE_OBJ_ACCESS(read, write)    (((read) & 0x0f) << 4) | ((write) & 0x0f)
+
+
+/*
+** Global types.
+*/	
+typedef enum tagKnx_IOS_ServiceType {
+    IOS_PROP_READ,
+    IOS_PROP_WRITE,
+    IOS_PROP_DESC_READ
+} Knx_IOS_ServiceType;
+
+typedef struct tagKnx_PropertyType {
+    uint8               property_id;
+    uint8               property_ctrl;
+    uint8               property_func;
+    void const * const  property_var;
+} Knx_PropertyType;
+
+typedef struct tagKNX_InterfaceObjectType {
+    uint8                       access_level; /* access per object. */
+    uint8                       property_count;
+    const Knx_PropertyType *    properties;
+} Knx_InterfaceObjectType;
+
+/* folgendes aus 'BIM_M13x.h': */
+/*
+   typedef struct PROPERTY                         //! structure for a property
+   {
+    uint8 PropertyID;                            //!< possible: 1...255
+    uint8 PropertyType;                          //!< defines type and writeability
+    USHORT MaxLength;                           //!< number of max. elements
+    USHORT *pActualLength;                      //!< pointer to actual numbers of elem or NULL pointer if fix length
+    const void *pData;                          //!< void pointer to data(s) or function
+    enum PropertyInternalType InternalType;     //!< indicates if property is normal memory, eeval or otp
+   } PROPERTY;
+
+   typedef struct INTERFACE_OBJECT                 //! structure for a interface object
+   {
+    USHORT ObjType;                             //!< object type (2 byte: higbyte,lowbyte)
+    USHORT PropCount;                           //!< max 256 properties possible
+    PROPERTY *PropTable;                        //!< pointer to propertytable (first property in table!)
+   } INTERFACE_OBJECT;
+
+   typedef struct INTERFACE_ROOT                   //! root of the interface objects
+   {
+    USHORT ObjCount;                            //!< max 65536 objects possible
+    const INTERFACE_OBJECT *ObjTable;           //!< pointer to objectable
+   } INTERFACE_ROOT;
  */
 
- #if defined(__cplusplus)
+
+/*
+** Global functions.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(Knx_InterfaceObjectType const *, KSTACK_CODE)  IOS_GetInterfaceObjectByIndex(uint16 object_index);
+FUNC(Knx_PropertyType const *, KSTACK_CODE)	    IOS_FindProperty(
+    P2CONST(Knx_InterfaceObjectType, AUTOMATIC, KSTACK_APPL_DATA) pobj, 
+    uint16 prop_id
+);
+FUNC(Knx_PropertyType const *, KSTACK_CODE)         IOS_GetPropertyByIndex(
+    P2CONST(Knx_InterfaceObjectType, AUTOMATIC, KSTACK_APPL_DATA) pobj, 
+    uint16 prop_index
+);
+FUNC(void, KSTACK_CODE)				    IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, 
+    uint8 service, boolean connected
+);
+#else
+Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_index);
+Knx_PropertyType const *        IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id);
+Knx_PropertyType const *        IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16 prop_index);
+void				IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connected);
+#endif /* KSTACK_MEMORY_MAPPING */
+
+/*
+** void IOS_SetUserObjTable(KNX_USER_OBJ_DESCR descr);
+** void IOS_GetUserObjTable(KNX_USER_OBJ_DESCR *pdescr);
+*/
+
+#if defined(__cplusplus)
 }
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_IOS_H */
+

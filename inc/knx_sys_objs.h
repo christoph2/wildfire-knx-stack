@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -33,8 +33,13 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+
+/*
+** Global variables.
+*/
 extern const uint8                              Knx_SystemInterfaceObjCount;
 extern Knx_InterfaceObjectType const * const    Knx_SystemInterfaceObjs[];
+
 
 #if defined(__cplusplus)
 }

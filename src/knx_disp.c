@@ -23,6 +23,9 @@
  */
 #include "knx_disp.h"
 
+/*
+** Global variables.
+*/
 KnxMSG_BufferPtr KnxMSG_ScratchBufferPtr;
 
 
@@ -31,7 +34,17 @@ KnxMSG_BufferPtr KnxMSG_ScratchBufferPtr;
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
 
-void KnxDisp_DispatchLayer(const uint8 LayerID, const Knx_LayerServicesType * ServiceTable)
+
+/*
+** Global functions.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxDisp_DispatchLayer(const uint8 LayerID, 
+    CONSTP2CONST(Knx_LayerServicesType, AUTOMATIC, KSTACK_APPL_DATA) ServiceTable
+);
+#else
+void KnxDisp_DispatchLayer(const uint8 LayerID, const Knx_LayerServicesType * ServiceTable);
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 entry;
 

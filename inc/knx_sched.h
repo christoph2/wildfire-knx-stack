@@ -1,8 +1,8 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- * (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
- *                                      cpu12.gems@googlemail.com>
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
  *
@@ -21,13 +21,11 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-#if !defined(__KNXNWPS_H)
-#define __KNXNWPS_H
+#if !defined(__KNX_SCHED_H)
+#define __KNX_SCHED_H
 
-#include "KNXDefs.h"
-#include "knx_ios.h"
 #include "knx_messaging.h"
-#include "KNXConv.h"
+#include "knx_disp.h"
 
 #if defined(__cplusplus)
 extern "C"
@@ -36,16 +34,26 @@ extern "C"
 
 
 /*
-** Global types.
-*/typedef enum tagNWPSServiceType {
-    NWPS_READ, 
-    NWPS_WRITE
-} NWPSServiceType;
+** Global defines.
+*/
+#define KNX_DEFAULT_HOP_COUNT ((uint8)6)
+
+
+/*
+** Global functions.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE)	KnxSched_Task(void);
+FUNC(void, KSTACK_CODE)	KnxSched_Init(void);
+#else	
+void    KnxSched_Task(void);
+void    KnxSched_Init(void);
+#endif /* KSTACK_MEMORY_MAPPING */
 
 
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */
 
-#endif  /* __KNXNWPS_H */
+#endif  /*__KNX_SCHED_H*/
 

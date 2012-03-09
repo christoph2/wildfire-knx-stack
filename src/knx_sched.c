@@ -28,17 +28,27 @@
 #include "knx_tlg.h"
 #include "knx_layer_application.h"
 
-static boolean  KnxSched_PreLinkLayerTest(void);
-static boolean  KnxSched_PostLinkLayerTest(void);
-static boolean  KnxSched_PreUserApplicationTest(void);
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(boolean, KSTACK_CODE)  KnxSched_PreLinkLayerTest(void);
+STATIC FUNC(boolean, KSTACK_CODE)  KnxSched_PostLinkLayerTest(void);
+STATIC FUNC(boolean, KSTACK_CODE)  KnxSched_PreUserApplicationTest(void);
+#else
+STATIC boolean  KnxSched_PreLinkLayerTest(void);
+STATIC boolean  KnxSched_PostLinkLayerTest(void);
+STATIC boolean  KnxSched_PreUserApplicationTest(void);
+#endif /* KSTACK_MEMORY_MAPPING */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxSched_Init(void)
+#else
 void KnxSched_Init(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /*
        Initialisation on power on:
@@ -63,7 +73,11 @@ void KnxSched_Init(void)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxSched_Task(void)
+#else
 void KnxSched_Task(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (KnxSched_PreLinkLayerTest()) {
 
@@ -105,7 +119,11 @@ void KnxSched_Task(void)
 }
 
 
-static boolean KnxSched_PreLinkLayerTest(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(boolean, KSTACK_CODE) KnxSched_PreLinkLayerTest(void)
+#else
+STATIC boolean KnxSched_PreLinkLayerTest(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*
     check stack overflow
@@ -117,7 +135,11 @@ static boolean KnxSched_PreLinkLayerTest(void)
 }
 
 
-static boolean KnxSched_PostLinkLayerTest(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(boolean, KSTACK_CODE) KnxSched_PostLinkLayerTest(void)
+#else
+STATIC boolean KnxSched_PostLinkLayerTest(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*
 TODO: check if system-state is changed (busmonitor mode).
@@ -125,7 +147,11 @@ TODO: check if system-state is changed (busmonitor mode).
 }
 
 
-static boolean KnxSched_PreUserApplicationTest(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(boolean, KSTACK_CODE) KnxSched_PreUserApplicationTest(void)
+#else
+STATIC boolean KnxSched_PreUserApplicationTest(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*
 TODO: check entry conditions for application

@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -31,26 +31,55 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-#define KNX_NUM_SYS_LSCS    ((uint8)3)
 
+/*
+** Global defines.
+*/	
 #define KNX_LSC_APP         ((uint8)0)
 #define KNX_LSC_GRAT        ((uint8)1)
 #define KNX_LSC_GROAT       ((uint8)2)
 
+#define KNX_NUM_SYS_LSCS    ((uint8)3)
+
+	
+/*
+** Global types.
+*/	
 typedef uint8 KNX_LSCType;
 
+
+/*
+** Global variables.
+*/
 extern KNX_LSCType KNX_SystemLSC[];
 
+
+/*
+** Global functions.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE)    LSM_Init(void);
+FUNC(void, KSTACK_CODE)    LSM_Dispatch(
+    P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) record, 
+    /*LSM_State*/ P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) ls_var
+);
+FUNC(boolean, KSTACK_CODE) LSM_IsAppLoaded(void);
+FUNC(boolean, KSTACK_CODE) LSM_IsGrATLoaded(void);
+FUNC(boolean, KSTACK_CODE) LSM_IsGrOATLoaded(void);
+FUNC(void, KSTACK_CODE)    LSM_Test(void);
+#else
 void    LSM_Init(void);
 void    LSM_Dispatch(uint8 * record, /*LSM_State*/ uint8 * ls_var);
 boolean LSM_IsAppLoaded(void);
 boolean LSM_IsGrATLoaded(void);
 boolean LSM_IsGrOATLoaded(void);
+void    LSM_Test(void);
+#endif /* KSTACK_MEMORY_MAPPING */
 
-void LSM_Test(void);
 
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_LSM_H */
+

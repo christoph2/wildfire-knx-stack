@@ -64,7 +64,13 @@ const uint8 KNX_PDT_LEN_TAB[32] = {
 #define PH_PTR_TO_ARRAY     ((uint8)0x03)
 
 typedef void (*PROPERTY_FUNC)(KnxMSG_BufferPtr pBuffer, boolean write);
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) ios_test(void);
+#else
 void ios_test(void);
+#endif /* KSTACK_MEMORY_MAPPING */
+
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
@@ -72,7 +78,11 @@ void ios_test(void);
 #endif /* KSTACK_MEMORY_MAPPING */
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connected)
+#else
 void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connected)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8                           data[MAX_PROP_DATA_LEN];
     KNX_PropertyFrameRefType        pmsg;
@@ -234,7 +244,11 @@ invalid:
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(Knx_InterfaceObjectType const *, KSTACK_CODE)  IOS_GetInterfaceObjectByIndex(uint16 object_index)
+#else
 Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_index)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (object_index < Knx_SystemInterfaceObjCount) {
         return *((Knx_SystemInterfaceObjs) + object_index);
@@ -254,7 +268,11 @@ Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_inde
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(Knx_PropertyType const *, KSTACK_CODE) IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id)    /* todo: binary search!? */
+#else
 Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id)    /* todo: binary search!? */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_least                 idx;
     Knx_PropertyType const *    pprop = (Knx_PropertyType const *)NULL;
@@ -271,7 +289,11 @@ Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const * pobj, 
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(Knx_PropertyType const *, KSTACK_CODE) IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16 prop_index)
+#else
 Knx_PropertyType const * IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16 prop_index)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (prop_index > pobj->property_count - (uint8)1) {
         return (Knx_PropertyType const *)NULL;
@@ -282,7 +304,11 @@ Knx_PropertyType const * IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * 
 
 
 #if 0
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) ios_test(void)
+#else
 void ios_test(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     Knx_InterfaceObjectType *   pobj;
     Knx_PropertyType *          pprop;

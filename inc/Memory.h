@@ -59,6 +59,7 @@ void    CopyRAM(void * d, void * s, uint16 len);
 void    FillRAM(void * p, uint8 b, uint16 len);
 void    ZeroRAM(void * p, uint16 len);
 
+
 #define CompRAM CompMem
 #define CopyMem CopyRAM
 

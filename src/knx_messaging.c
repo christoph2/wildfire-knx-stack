@@ -27,18 +27,24 @@
 #define HOP_COUNT ((uint8)6)
 
 /* check: 'static' ??? */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(KnxMSG_BufferPtr, KSTACK_CODE) GetBufferAddress(uint8 buf_num);
+FUNC(uint8, KSTACK_CODE)                  GetBufferNumber(const KnxMSG_BufferPtr buffer);
+FUNC(void, KSTACK_CODE)                  ClearMessageBuffer(uint8 buf_num);
+#else
 KnxMSG_BufferPtr    GetBufferAddress(uint8 buf_num);
-uint8               GetBufferNumber(const KnxMSG_BufferPtr buffer);
-void                ClearMessageBuffer(uint8 buf_num);
+uint8                     GetBufferNumber(const KnxMSG_BufferPtr buffer);
+void                     ClearMessageBuffer(uint8 buf_num);
+#endif /* KSTACK_MEMORY_MAPPING */
 
 
-static const uint8 KnxMSG_MessageRedirectionTable[16] = {
+STATIC const uint8 KnxMSG_MessageRedirectionTable[16] = {
     TASK_FREE_ID, TASK_LL_ID,   TASK_NL_ID,   TASK_TL_ID,   TASK_TC_ID,     TASK_FREE_ID,   TASK_FREE_ID,   TASK_AL_ID,
     TASK_MG_ID,   TASK_MG_ID,   TASK_PM_ID,   TASK_LC_ID,   TASK_FREE_ID,   TASK_US_ID,     TASK_US_ID,     TASK_US_ID
 };
 
-static uint8            KnxMSG_Queues[MSG_NUM_TASKS];
-static KnxMSG_Buffer    KnxMSG_Buffers[MSG_NUM_BUFFERS];
+STATIC uint8            KnxMSG_Queues[MSG_NUM_TASKS];
+STATIC KnxMSG_Buffer    KnxMSG_Buffers[MSG_NUM_BUFFERS];
 
 /*  Get Destination Queue from Message-Code. */
 #define KnxMSG_GetQueueForService(service) ((uint8)KnxMSG_MessageRedirectionTable[(service) >> 4])
@@ -48,7 +54,11 @@ static KnxMSG_Buffer    KnxMSG_Buffers[MSG_NUM_BUFFERS];
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(KnxMSG_BufferPtr, KSTACK_CODE) GetBufferAddress(uint8 buf_num)
+#else
 KnxMSG_BufferPtr GetBufferAddress(uint8 buf_num)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (buf_num >= MSG_NUM_BUFFERS) {
         return (KnxMSG_BufferPtr)NULL;
@@ -58,7 +68,11 @@ KnxMSG_BufferPtr GetBufferAddress(uint8 buf_num)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint8, KSTACK_CODE) GetBufferNumber(const KnxMSG_BufferPtr buffer)
+#else
 uint8 GetBufferNumber(const KnxMSG_BufferPtr buffer)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_BufferPtr    tmp_buf;
     uint8               idx;
@@ -75,7 +89,11 @@ uint8 GetBufferNumber(const KnxMSG_BufferPtr buffer)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) ClearMessageBuffer(uint8 buf_num)
+#else
 void ClearMessageBuffer(uint8 buf_num)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_BufferPtr    ptr;
     uint8 *             pb;
@@ -93,9 +111,13 @@ void ClearMessageBuffer(uint8 buf_num)
 }
 
 
-static uint16 AllocCount = (uint16)0, ReleaseCount = (uint16)0;
+STATIC uint16 AllocCount = (uint16)0, ReleaseCount = (uint16)0;
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(KnxMSG_BufferPtr, KSTACK_CODE) KnxMSG_AllocateBuffer(void)
+#else
 KnxMSG_BufferPtr KnxMSG_AllocateBuffer(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8               fp;
     KnxMSG_BufferPtr    ptr;
@@ -123,7 +145,11 @@ KnxMSG_BufferPtr KnxMSG_AllocateBuffer(void)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
+#else
 boolean KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8   buf_num;
     uint8   old_fp;
@@ -160,7 +186,11 @@ boolean KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxMSG_ClearBuffer(KnxMSG_BufferPtr ptr)
+#else
 boolean KnxMSG_ClearBuffer(KnxMSG_BufferPtr ptr)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 * pb;
 
@@ -177,7 +207,11 @@ boolean KnxMSG_ClearBuffer(KnxMSG_BufferPtr ptr)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxMSG_Post(KnxMSG_BufferPtr ptr)
+#else
 boolean KnxMSG_Post(KnxMSG_BufferPtr ptr)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8   queue;
     uint8   buf_num;
@@ -208,7 +242,11 @@ boolean KnxMSG_Post(KnxMSG_BufferPtr ptr)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(KnxMSG_BufferPtr, KSTACK_CODE) KnxMSG_Get(uint8 task)
+#else
 KnxMSG_BufferPtr KnxMSG_Get(uint8 task)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 qp;
 
@@ -232,7 +270,11 @@ KnxMSG_BufferPtr KnxMSG_Get(uint8 task)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxMSG_Init(void)
+#else
 void KnxMSG_Init(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 t;
 
@@ -254,14 +296,22 @@ void KnxMSG_Init(void)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxMSG_SetLen(KnxMSG_BufferPtr pBuffer, uint8 len)
+#else
 void KnxMSG_SetLen(KnxMSG_BufferPtr pBuffer, uint8 len)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     pBuffer->len                           = len;
     KnxMSG_GetMessagePtr(pBuffer)->ncpi   |= ((len - (uint8)7) & (uint8)0x0f);
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint8, KSTACK_CODE) KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer)
+#else
 uint8 KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return pBuffer->len;
 }
@@ -279,7 +329,11 @@ uint8 KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer)
    }
  */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxMSG_SetRoutingCount(KnxMSG_BufferPtr pBuffer)
+#else
 void KnxMSG_SetRoutingCount(KnxMSG_BufferPtr pBuffer)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8   ctrl;
     uint8   hop_count;
@@ -298,13 +352,21 @@ void KnxMSG_SetRoutingCount(KnxMSG_BufferPtr pBuffer)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint8, KSTACK_CODE) KnxMSG_GetRoutingCount(const KnxMSG_BufferPtr pBuffer)
+#else
 uint8 KnxMSG_GetRoutingCount(const KnxMSG_BufferPtr pBuffer)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return ((KnxMSG_GetMessagePtr(pBuffer)->ncpi) & (uint8)0x70) >> 4;
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxMSG_SetRoutingCtrl(KnxMSG_BufferPtr pBuffer, boolean on)
+#else
 void KnxMSG_SetRoutingCtrl(KnxMSG_BufferPtr pBuffer, boolean on)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 r;
 

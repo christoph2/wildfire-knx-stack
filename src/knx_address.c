@@ -53,9 +53,13 @@
 /*
 **	Global functions.
 */
+
 /*
 **  todo: this Fkt. is hardware-dependent !!!
 */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+
+#else
 boolean KnxADR_InProgrammingMode(void)
 {
     return TRUE;
@@ -66,7 +70,13 @@ boolean KnxADR_InProgrammingMode(void)
 **
 */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE)  KnxADR_IsAddressed(Knx_AddressType searched_addr, 
+	P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) tsap
+)
+#else
 boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8   len;
     uint16  mid;
@@ -113,25 +123,41 @@ boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(Knx_AddressType, KSTACK_CODE) KnxADR_GetPhysAddr(void)
+#else
 Knx_AddressType KnxADR_GetPhysAddr(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return btohs(*(uint16 *)&APP_AddressTable[1]);
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxADR_SetPhysAddr(Knx_AddressType addr)
+#else
 void KnxADR_SetPhysAddr(Knx_AddressType addr)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     *(uint16 *)APP_AddressTable[1] = htobs(addr);    /* todo: use Memory-Server!!! */
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number)
+#else
 void KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*CopyMem((uint8*)serial_number,(uint8*)DEV_SERIAL_NUM,sizeof(KNX_SerialNumberType)); */
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr)     /* todo: Macro!!! */
+#else
 boolean KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr)     /* todo: Macro!!! */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return KnxADR_GetPhysAddr() == addr;
 }

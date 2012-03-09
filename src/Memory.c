@@ -32,8 +32,11 @@
    3   EEPROM
  */
 
-#define NUM_MCBs 1
+#define NUM_MCBs 1  /* TODO: config. */
 
+/*
+** Global variables.
+*/
 uint8 UserLowRAM[0x23];
 
 MemoryControlBlock MCBs[NUM_MCBs] = {
@@ -45,19 +48,34 @@ MemoryControlBlock MCBs[NUM_MCBs] = {
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
 
+/*
+** Global functions.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) MM_ClearMCBs(void)
+#else
 void MM_ClearMCBs(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     ZeroRAM(MCBs, sizeof(MemoryControlBlock) * NUM_MCBs);
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint16, KSTACK_CODE) MM_MapAddressToTarget(uint16 Address)
+#else
 uint16 MM_MapAddressToTarget(uint16 Address)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return (uint16)0xffffU;
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(uint16, KSTACK_CODE) MM_MapAddressFromTarget(uint16 Address)
+#else
 uint16 MM_MapAddressFromTarget(uint16 Address)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return (uint16)0xffffU;
 }
@@ -75,7 +93,11 @@ uint16 MM_MapAddressFromTarget(uint16 Address)
    }
  */
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(boolean, KSTACK_CODE) CompMem(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p1, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p2, uint16 len)
+#else
 boolean CompMem(void * p1, void * p2, uint16 len)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 * bp1    = (uint8 *)p1;
     uint8 * bp2    = (uint8 *)p2;
@@ -90,7 +112,11 @@ boolean CompMem(void * p1, void * p2, uint16 len)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) FillRAM(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p, uint8 b, uint16 len)
+#else
 void FillRAM(void * p, uint8 b, uint16 len)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 * bp = (uint8 *)p;
 
@@ -100,7 +126,11 @@ void FillRAM(void * p, uint8 b, uint16 len)
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) CopyRAM(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) d, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) s, uint16 len)
+#else
 void CopyRAM(void * d, void * s, uint16 len)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 * bd = (uint8 *)d;
     uint8 * bs = (uint8 *)s;
@@ -111,7 +141,12 @@ void CopyRAM(void * d, void * s, uint16 len)
 }
 
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) ZeroRAM(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p, uint16 len)
+#else
 void ZeroRAM(void * p, uint16 len)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 * bp = (uint8 *)p;
 

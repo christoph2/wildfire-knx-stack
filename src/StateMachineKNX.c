@@ -30,36 +30,69 @@
 
 #include "knx_layer_transport.h"
 
-static KnxTLC_StateType KnxTLC_State;
 
-static Knx_MessageType _StoredMsg;     /* Client-only. */
-
-static void StartConnectionTimeoutTimer(void);
-static void RestartConnectionTimeoutTimer(void);
-static void StopConnectionTimeoutTimer(void);
-static void StartAcknowledgementTimeoutTimer(void);
-static void StopAcknowledgementTimeoutTimer(void);
-
-void    T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
-void    T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
+/*
+** Local variables.
+*/
+STATIC KnxTLC_StateType KnxTLC_State;
+STATIC Knx_MessageType _StoredMsg;     /* Client-only. */
 
 
+/*
+** Local types.
+*/
 typedef uint8 (*EVENT_FUNC)(void);
 
-static uint8    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
-static uint8    EventAckInd(void), EventNakInd(void), EventConnectReq(void);
-static uint8    EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
-static uint8    EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
-static uint8    EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
-static uint8    EventUndefined(void);
 
-static void A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
-static void A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(void);
+/*
+** Local function prototypes.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE)     StartConnectionTimeoutTimer(void);
+STATIC FUNC(void, KSTACK_CODE)     RestartConnectionTimeoutTimer(void);
+STATIC FUNC(void, KSTACK_CODE)     StopConnectionTimeoutTimer(void);
+STATIC FUNC(void, KSTACK_CODE)     StartAcknowledgementTimeoutTimer(void);
+STATIC FUNC(void, KSTACK_CODE)     StopAcknowledgementTimeoutTimer(void);
 
+STATIC FUNC(uint8, KSTACK_CODE)    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
+STATIC FUNC(uint8, KSTACK_CODE)    EventAckInd(void), EventNakInd(void), EventConnectReq(void);
+STATIC FUNC(uint8, KSTACK_CODE)    EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
+STATIC FUNC(uint8, KSTACK_CODE)    EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
+STATIC FUNC(uint8, KSTACK_CODE)    EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
+STATIC FUNC(uint8, KSTACK_CODE)    EventUndefined(void);
 
+STATIC FUNC(void, KSTACK_CODE)     A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
+STATIC FUNC(void, KSTACK_CODE)     A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(void);
+
+FUNC(void, KSTACK_CODE)                T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);   /* TODO: include file. */
+FUNC(void, KSTACK_CODE)                T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
+#else
+STATIC void    StartConnectionTimeoutTimer(void);
+STATIC void    RestartConnectionTimeoutTimer(void);
+STATIC void    StopConnectionTimeoutTimer(void);
+STATIC void    StartAcknowledgementTimeoutTimer(void);
+STATIC void    StopAcknowledgementTimeoutTimer(void);
+
+STATIC uint8    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
+STATIC uint8    EventAckInd(void), EventNakInd(void), EventConnectReq(void);
+STATIC uint8    EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
+STATIC uint8    EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
+STATIC uint8    EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
+STATIC uint8    EventUndefined(void);
+
+STATIC void    A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
+STATIC void    A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(void);
+
+void               T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);   /* TODO: include file. */
+void               T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
+#endif /* KSTACK_MEMORY_MAPPING */
+
+/*
+** Local constants.
+*/
 #if TL_STYLE == 3
 /* Transport-Layer-Statemachine-Style #3 */
-static const KnxTLC_ActionListType Actions[] = {
+STATIC const KnxTLC_ActionListType Actions[] = {
     { /* 0,  */ {{A1, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }, {A0, CONNECTING     }}        },
     { /* 1,  */ {{A1, OPEN_IDLE}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT}, {A10, CONNECTING   }}        },
     { /* 2,  */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED },        {A5,  CLOSED         }}        },
@@ -91,7 +124,7 @@ static const KnxTLC_ActionListType Actions[] = {
 };
 #elif (TL_STYLE == 1) || (TL_STYLE == 2)
 /* Transport-Layer-Statemachine, Styles #1 and #2 */
-static const ACTION_LIST Actions[] = {
+STATIC const ACTION_LIST Actions[] = {
 #if     TL_STYLE == 1
     { /* 0,  */ {{A1, OPEN_IDLE}, {A6, CLOSED }, {A6, CLOSED }}     },
 #else
@@ -195,7 +228,7 @@ static const ACTION_LIST Actions[] = {
 #error "Invalid TL_STYLE [1|2|3]"
 #endif
 
-static const EVENT_FUNC TLC_Events[] = {
+STATIC const EVENT_FUNC TLC_Events[] = {
 /*      Event                       Handler                 */
 /*      ====================================================*/
 /*      tlcCONNECT_IND          */ EventConnectInd,
@@ -244,19 +277,35 @@ static const EVENT_FUNC TLC_Events[] = {
 #define StoreMessage()      Utl_MemCopy(_StoredMsg, KnxMSG_ScratchBufferPtr->msg, MSG_LEN)
 #define RestoreMessage()    Utl_MemCopy(KnxMSG_ScratchBufferPtr->msg, _StoredMsg, MSG_LEN)
 
+
+/*
+** Global functions.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(KnxTLC_StateType, KSTACK_CODE) KnxTLC_GetState(void)
+#else
 KnxTLC_StateType KnxTLC_GetState(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return KnxTLC_State;
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxTLC_SetState(KnxTLC_StateType State)
+#else
 void KnxTLC_SetState(KnxTLC_StateType State)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxTLC_State = State;
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
+#else
 void T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_SetTPCI(pBuffer, T_DISCONNECT_REQ_PDU);
     KnxMSG_SetSourceAddress(pBuffer, source);
@@ -272,7 +321,11 @@ void T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
 }
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
+#else
 void T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_SetTPCI(pBuffer, T_DISCONNECT_REQ_PDU);
     KnxMSG_SetSourceAddress(pBuffer, source);
@@ -287,39 +340,88 @@ void T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
     (void)KnxMSG_Post(pBuffer);
 }
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxTLC_StateMachine(KNX_TlcEventType event)
+#else
+void KnxTLC_StateMachine(KNX_TlcEventType event)
+#endif /* KSTACK_MEMORY_MAPPING */
+{
+    uint8               event_num;
+    KnxTLC_ActionType   action;
 
-static void StartConnectionTimeoutTimer(void)
+    if (event < tlcUNDEFINED) {
+        event_num = TLC_Events[event]();
+    } else {
+        event_num = EventUndefined();
+    }
+
+    action = Actions[event_num].Action[KnxTLC_GetState()];
+    KnxTLC_SetState(action.Next);
+    action.Function();
+}
+
+
+/*
+**
+** Local functions.
+**
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) StartConnectionTimeoutTimer(void)
+#else
+STATIC void StartConnectionTimeoutTimer(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     (void)KnxTMR_Start(TM_TIMER_TLC_CON_TIMEOUT, TM_BASE_SEC, TLC_CONNECTION_TIMEOUT);
 }
 
 
-static void RestartConnectionTimeoutTimer(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) RestartConnectionTimeoutTimer(void)
+#else
+STATIC void RestartConnectionTimeoutTimer(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     (void)KnxTMR_Stop(TM_TIMER_TLC_CON_TIMEOUT);
     (void)KnxTMR_Start(TM_TIMER_TLC_CON_TIMEOUT, TM_BASE_SEC, TLC_CONNECTION_TIMEOUT);
 }
 
 
-static void StopConnectionTimeoutTimer(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) StopConnectionTimeoutTimer(void)
+#else
+STATIC void StopConnectionTimeoutTimer(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     (void)KnxTMR_Stop(TM_TIMER_TLC_CON_TIMEOUT);
 }
 
 
-static void StartAcknowledgementTimeoutTimer(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) StartAcknowledgementTimeoutTimer(void)
+#else
+STATIC void StartAcknowledgementTimeoutTimer(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     (void)KnxTMR_Start(TM_TIMER_TLC_ACK_TIMEOUT, TM_BASE_SEC, TLC_ACKNOWLEDGE_TIMEOUT);
 }
 
 
-static void StopAcknowledgementTimeoutTimer(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) StopAcknowledgementTimeoutTimer(void)
+#else
+STATIC void StopAcknowledgementTimeoutTimer(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     (void)KnxTMR_Stop(TM_TIMER_TLC_ACK_TIMEOUT);
 }
 
 
-void A0(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A0(void)
+#else
+STATIC void A0(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* do nothing. */
     if (KnxMSG_ScratchBufferPtr != (KnxMSG_BufferPtr)NULL) {
@@ -328,7 +430,11 @@ void A0(void)
 }
 
 
-void A1(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A1(void)
+#else
+STATIC void A1(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxTLC_SetConnectionAddress(KnxTLC_GetSourceAddress());
 
@@ -342,7 +448,11 @@ void A1(void)
 }
 
 
-void A2(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A2(void)
+#else
+STATIC void A2(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_BufferPtr pBuffer;
 
@@ -365,7 +475,11 @@ void A2(void)
 }
 
 
-void A3(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A3(void)
+#else
+STATIC void A3(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*
 **      Send an N_Data_Individual.req with T_ACK_PDU, priority = SYSTEM, destination =
@@ -379,7 +493,11 @@ void A3(void)
 }
 
 
-void A4(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A4(void)
+#else
+STATIC void A4(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*
 **      Send an N_Data_Individual.req with T_NAK_PDU, priority = SYSTEM, destination =
@@ -394,7 +512,11 @@ void A4(void)
 }
 
 
-void A5(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A5(void)
+#else
+STATIC void A5(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Send a T_Disconnect.ind to the user. */
     (void)KnxMSG_ClearBuffer(KnxMSG_ScratchBufferPtr);
@@ -405,7 +527,11 @@ void A5(void)
 }
 
 
-void A6(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A6(void)
+#else
+STATIC void A6(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_BufferPtr pBuffer;
 
@@ -436,7 +562,11 @@ void A6(void)
 }
 
 
-void A7(void)   /* Nur local-user (Client only). */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A7(void)
+#else
+STATIC void A7(void)   /* Nur local-user (Client only). */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*
 **              Store the received T_Data_Connected.req and send as a N_Data_Individual.req
@@ -458,7 +588,11 @@ void A7(void)   /* Nur local-user (Client only). */
 }
 
 
-void A8(void)  /* only local-user (Client only). */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A8(void)
+#else
+STATIC void A8(void)  /* only local-user (Client only). */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     StopAcknowledgementTimeoutTimer();
     KnxTLC_SetSequenceNumberSend(KnxTLC_GetSequenceNumberSend() + (uint8)1);
@@ -474,7 +608,11 @@ void A8(void)  /* only local-user (Client only). */
 }
 
 
-void A8b(void)        /* only local-user (Client only). */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A8b(void)
+#else
+STATIC void A8b(void)        /* only local-user (Client only). */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
     StopAcknowledgementTimeoutTimer();
@@ -483,7 +621,11 @@ void A8b(void)        /* only local-user (Client only). */
 }
 
 
-void A9(void)  /* only local-user (Client only). */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A9(void)
+#else
+STATIC void A9(void)  /* only local-user (Client only). */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (KnxMSG_ScratchBufferPtr == (KnxMSG_BufferPtr)NULL) {
         KnxMSG_ScratchBufferPtr = KnxMSG_AllocateBuffer();
@@ -504,7 +646,11 @@ void A9(void)  /* only local-user (Client only). */
 }
 
 
-void A10(void)  /* GO AWAY!!! */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A10(void)
+#else
+STATIC void A10(void)  /* GO AWAY!!! */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*      Send a N_Data_Individual.req with T_DISCONNECT_REQ_PDU Priority = SYSTEM, */
 /*      Destination = source (rbuffer), Sequence = 0 back to sender. */
@@ -521,7 +667,11 @@ void A10(void)  /* GO AWAY!!! */
 }
 
 
-void A11(void)  /* (Client only???) */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A11(void)
+#else
+STATIC void A11(void)  /* (Client only???) */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /* Store event back and handle after next event. Don�t change order of T_Data_Connected.req events. */
 
@@ -529,7 +679,11 @@ void A11(void)  /* (Client only???) */
 }
 
 
-void A12(void)                                              /* (Client only.) */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A12(void)
+#else
+STATIC void A12(void)                                              /* (Client only.) */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxTLC_SetConnectionAddress(KnxTLC_GetSourceAddress()); /* connection_address=address from T_CONNECT_requ */
 
@@ -543,7 +697,11 @@ void A12(void)                                              /* (Client only.) */
 }
 
 
-void A13(void)  /* Nur local-user (Client only). */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A13(void)
+#else
+STATIC void A13(void)  /* Nur local-user (Client only). */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*     Send a T_Connect.con to the user. */
     KnxMSG_ScratchBufferPtr->service = T_CONNECT_CON;
@@ -551,7 +709,11 @@ void A13(void)  /* Nur local-user (Client only). */
 }
 
 
-void A14(void)    /* only local-user (Client only). */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A14(void)
+#else
+STATIC void A14(void)    /* only local-user (Client only). */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*      Send a N_Data_Individual.req with T_DISCONNECT_REQ_PDU, priority = SYSTEM, */
 /*      destination = connection_address, sequence = 0 to the network layer (remote device). */
@@ -563,7 +725,11 @@ void A14(void)    /* only local-user (Client only). */
 }
 
 
-void A14b(void)  /* wie A14, nur ohne T_DISCONNECT_CON to user. */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A14b(void)
+#else
+STATIC void A14b(void)  /* wie A14, nur ohne T_DISCONNECT_CON to user. */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*      Send a N_Data_Individual.req with T_DISCONNECT_REQ_PDU, priority = SYSTEM, */
 /*      destination = connection_address, sequence = 0 to the network layer (remote device). */
@@ -573,7 +739,11 @@ void A14b(void)  /* wie A14, nur ohne T_DISCONNECT_CON to user. */
 }
 
 
-void A15(void)   /* only local-user (Client only). */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) A15(void)
+#else
+STATIC void A15(void)   /* only local-user (Client only). */
+#endif /* KSTACK_MEMORY_MAPPING */
 {
 /*      Send a T_Disconnect.con to the management user */
 
@@ -587,7 +757,11 @@ void A15(void)   /* only local-user (Client only). */
 ** Event-Handler.
 **
 */
-static uint8 EventConnectInd(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventConnectInd(void)
+#else
+STATIC uint8 EventConnectInd(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
         return (uint8)0;
@@ -597,7 +771,11 @@ static uint8 EventConnectInd(void)
 }
 
 
-static uint8 EventDisconnectInd(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventDisconnectInd(void)
+#else
+STATIC uint8 EventDisconnectInd(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
         return (uint8)2;
@@ -607,7 +785,11 @@ static uint8 EventDisconnectInd(void)
 }
 
 
-static uint8 EventDataConnectedInd(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventDataConnectedInd(void)
+#else
+STATIC uint8 EventDataConnectedInd(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 event_num;
 
@@ -631,7 +813,11 @@ static uint8 EventDataConnectedInd(void)
 }
 
 
-static uint8 EventAckInd(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventAckInd(void)
+#else
+STATIC uint8 EventAckInd(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 event_num;
 
@@ -649,7 +835,11 @@ static uint8 EventAckInd(void)
 }
 
 
-static uint8 EventNakInd(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventNakInd(void)
+#else
+STATIC uint8 EventNakInd(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 event_num;
 
@@ -671,7 +861,11 @@ static uint8 EventNakInd(void)
 }
 
 
-static uint8 EventConnectReq(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventConnectReq(void)
+#else
+STATIC uint8 EventConnectReq(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Client-only. */
     /* Event 25.    */
@@ -679,7 +873,11 @@ static uint8 EventConnectReq(void)
 }
 
 
-static uint8 EventDisconnectReq(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventDisconnectReq(void)
+#else
+STATIC uint8 EventDisconnectReq(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Client-only. */
     /* Event 26.    */
@@ -687,7 +885,11 @@ static uint8 EventDisconnectReq(void)
 }
 
 
-static uint8 EventDataConnectedReq(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventDataConnectedReq(void)
+#else
+STATIC uint8 EventDataConnectedReq(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Client-only. */
     /* Event 15.    */
@@ -695,7 +897,11 @@ static uint8 EventDataConnectedReq(void)
 }
 
 
-static uint8 EventConnectCon(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventConnectCon(void)
+#else
+STATIC uint8 EventConnectCon(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Client only.         */
     /* Events 19 und 20.    */
@@ -707,41 +913,65 @@ static uint8 EventConnectCon(void)
 }
 
 
-static uint8 EventDisconnectCon(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventDisconnectCon(void)
+#else
+STATIC uint8 EventDisconnectCon(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Event 21.    */
     return (uint8)21;
 }
 
 
-static uint8 EventDataConnectedCon(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventDataConnectedCon(void)
+#else
+STATIC uint8 EventDataConnectedCon(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Event 22.    */
     return (uint8)22;
 }
 
 
-static uint8 EventAckCon(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventAckCon(void)
+#else
+STATIC uint8 EventAckCon(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Event 23.    */
     return (uint8)23;
 }
 
 
-static uint8 EventNakCon(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventNakCon(void)
+#else
+STATIC uint8 EventNakCon(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Event 24.    */
     return (uint8)24;
 }
 
 
-static uint8 EventTimeoutCon(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventTimeoutCon(void)
+#else
+STATIC uint8 EventTimeoutCon(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return (uint8)16;
 }
 
 
-static uint8 EventTimeoutAck(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventTimeoutAck(void)
+#else
+STATIC uint8 EventTimeoutAck(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     if (KnxTLC_GetRepetitionCount() < MAX_REP_COUNT) {
         return (uint8)17;
@@ -751,30 +981,18 @@ static uint8 EventTimeoutAck(void)
 }
 
 
-static uint8 EventUndefined(void)
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(uint8, KSTACK_CODE) EventUndefined(void)
+#else
+STATIC uint8 EventUndefined(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return (uint8)27;
 }
 
 
-void KnxTLC_StateMachine(KNX_TlcEventType event)
-{
-    uint8               event_num;
-    KnxTLC_ActionType   action;
-
-    if (event < tlcUNDEFINED) {
-        event_num = TLC_Events[event]();
-    } else {
-        event_num = EventUndefined();
-    }
-
-    action = Actions[event_num].Action[KnxTLC_GetState()];
-    KnxTLC_SetState(action.Next);
-    action.Function();
-}
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_STOP_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
-

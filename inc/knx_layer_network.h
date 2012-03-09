@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -32,10 +32,24 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+
+/*
+** Global defines.
+*/
 #define KNX_DEFAULT_HOP_COUNT ((uint8)6)
 
+
+/*
+** Global functions.
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxNL_Task(void);
+FUNC(void, KSTACK_CODE) KnxNL_Init(void);
+#else	
 void    KnxNL_Task(void);
 void    KnxNL_Init(void);
+#endif /* KSTACK_MEMORY_MAPPING */
+
 
 #if defined(__cplusplus)
 }
