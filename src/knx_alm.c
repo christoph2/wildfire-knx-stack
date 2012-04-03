@@ -537,8 +537,10 @@ void A_DomainAddress_Write_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
 {
     uint8 data[2];
 
-/*    data[0]=domain_ddress[0];
-   /*    data[1]=domain_ddress[1]; */
+/*    
+    data[0]=domain_ddress[0];
+    data[1]=domain_ddress[1]; 
+*/
 
     *(uint16 *)data[0] = domain_ddress;
 
