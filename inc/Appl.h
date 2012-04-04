@@ -58,8 +58,9 @@ extern const Knx_InterfaceObjectType * *    Knx_UserInterfaceObjPtr;
 FUNC(void, KSTACK_CODE) DEV_Init(void);
 #else
 void DEV_Init(void);
-#endif /* KSTACK_MEMORY_MAPPING */
 
+
+#endif /* KSTACK_MEMORY_MAPPING */
 
 #if defined(__cplusplus)
 }

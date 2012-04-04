@@ -30,48 +30,47 @@
 
 #include "knx_layer_transport.h"
 
-
 /*
 ** Local variables.
 */
 STATIC KnxTLC_StateType KnxTLC_State;
-STATIC Knx_MessageType _StoredMsg;     /* Client-only. */
-
+STATIC Knx_MessageType  _StoredMsg;    /* Client-only. */
 
 /*
 ** Local types.
 */
 typedef uint8 (*EVENT_FUNC)(void);
 
-
 /*
 ** Local function prototypes.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(void, KSTACK_CODE)     StartConnectionTimeoutTimer(void);
-STATIC FUNC(void, KSTACK_CODE)     RestartConnectionTimeoutTimer(void);
-STATIC FUNC(void, KSTACK_CODE)     StopConnectionTimeoutTimer(void);
-STATIC FUNC(void, KSTACK_CODE)     StartAcknowledgementTimeoutTimer(void);
-STATIC FUNC(void, KSTACK_CODE)     StopAcknowledgementTimeoutTimer(void);
+STATIC  FUNC(void, KSTACK_CODE)     StartConnectionTimeoutTimer(void);
+STATIC  FUNC(void, KSTACK_CODE)     RestartConnectionTimeoutTimer(void);
+STATIC  FUNC(void, KSTACK_CODE)     StopConnectionTimeoutTimer(void);
+STATIC  FUNC(void, KSTACK_CODE)     StartAcknowledgementTimeoutTimer(void);
+STATIC  FUNC(void, KSTACK_CODE)     StopAcknowledgementTimeoutTimer(void);
 
-STATIC FUNC(uint8, KSTACK_CODE)    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
-STATIC FUNC(uint8, KSTACK_CODE)    EventAckInd(void), EventNakInd(void), EventConnectReq(void);
-STATIC FUNC(uint8, KSTACK_CODE)    EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
-STATIC FUNC(uint8, KSTACK_CODE)    EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
-STATIC FUNC(uint8, KSTACK_CODE)    EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
-STATIC FUNC(uint8, KSTACK_CODE)    EventUndefined(void);
+STATIC  FUNC(uint8, KSTACK_CODE)    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
+STATIC  FUNC(uint8, KSTACK_CODE)    EventAckInd(void), EventNakInd(void), EventConnectReq(void);
+STATIC  FUNC(uint8, KSTACK_CODE)    EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
+STATIC  FUNC(uint8, KSTACK_CODE)    EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
+STATIC  FUNC(uint8, KSTACK_CODE)    EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
+STATIC  FUNC(uint8, KSTACK_CODE)    EventUndefined(void);
 
-STATIC FUNC(void, KSTACK_CODE)     A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
-STATIC FUNC(void, KSTACK_CODE)     A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(void);
+STATIC  FUNC(void, KSTACK_CODE)     A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
+STATIC  FUNC(void, KSTACK_CODE)     A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(
+    void);
+
 
 FUNC(void, KSTACK_CODE)                T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);   /* TODO: include file. */
 FUNC(void, KSTACK_CODE)                T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
 #else
-STATIC void    StartConnectionTimeoutTimer(void);
-STATIC void    RestartConnectionTimeoutTimer(void);
-STATIC void    StopConnectionTimeoutTimer(void);
-STATIC void    StartAcknowledgementTimeoutTimer(void);
-STATIC void    StopAcknowledgementTimeoutTimer(void);
+STATIC void StartConnectionTimeoutTimer(void);
+STATIC void RestartConnectionTimeoutTimer(void);
+STATIC void StopConnectionTimeoutTimer(void);
+STATIC void StartAcknowledgementTimeoutTimer(void);
+STATIC void StopAcknowledgementTimeoutTimer(void);
 
 STATIC uint8    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
 STATIC uint8    EventAckInd(void), EventNakInd(void), EventConnectReq(void);
@@ -80,11 +79,13 @@ STATIC uint8    EventDisconnectCon(void), EventDataConnectedCon(void), EventAckC
 STATIC uint8    EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
 STATIC uint8    EventUndefined(void);
 
-STATIC void    A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
-STATIC void    A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(void);
+STATIC void A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
+STATIC void A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(void);
 
-void               T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);   /* TODO: include file. */
-void               T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
+void    T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);              /* TODO: include file. */
+void    T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
+
+
 #endif /* KSTACK_MEMORY_MAPPING */
 
 /*
@@ -93,34 +94,34 @@ void               T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType so
 #if TL_STYLE == 3
 /* Transport-Layer-Statemachine-Style #3 */
 STATIC const KnxTLC_ActionListType Actions[] = {
-    { /* 0,  */ {{A1, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }, {A0, CONNECTING     }}        },
-    { /* 1,  */ {{A1, OPEN_IDLE}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT}, {A10, CONNECTING   }}        },
-    { /* 2,  */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED },        {A5,  CLOSED         }}        },
-    { /* 3,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING     }}        },
-    { /* 4,  */ {{A0, CLOSED}, {A2, OPEN_IDLE}, {A2, OPEN_WAIT },   {A6,  CLOSED         }}        },
-    { /* 5,  */ {{A0, CLOSED}, {A3, OPEN_IDLE}, {A3, OPEN_WAIT },   {A3,  CONNECTING     }}        },
-    { /* 6,  */ {{A0, CLOSED}, {A4, OPEN_IDLE}, {A4, OPEN_WAIT },   {A6,  CONNECTING     }}        },
-    { /* 7,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A10, CONNECTING     }}        },
-    { /* 8,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A8, OPEN_IDLE },   {A6,  CLOSED         }}        },
-    { /* 9,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED },      {A6,  CLOSED         }}        },
-    { /* 10, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A10, CONNECTING     }}        },
-    { /* 11, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A6,  CLOSED         }}        },
-    { /* 12, */ {{A0, CLOSED}, {A6, CLOSED }, {A9, OPEN_WAIT },     {A6,  CLOSED         }}        },
-    { /* 13, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED },        {A6,  CLOSED         }}        },
-    { /* 14, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A10, CONNECTING     }}        },
-    { /* 15, */ {{A0, CLOSED}, {A7, OPEN_WAIT}, {A11, OPEN_WAIT },  {A11, CONNECTING     }}        },
-    { /* 16, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED },        {A6,  CLOSED         }}        },
-    { /* 17, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A9, OPEN_WAIT },   {A0,  CONNECTING     }}        },
-    { /* 18, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED },      {A0,  CONNECTING     }}        },
-    { /* 19, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A13, OPEN_IDLE      }}        },
-    { /* 20, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A5,  CLOSED         }}        },
-    { /* 21, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING     }}        },
-    { /* 22, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING     }}        },
-    { /* 23, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING     }}        },
-    { /* 24, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING     }}        },
-    { /* 25, */ {{A12, CONNECTING}, {A6, CLOSED}, {A6, CLOSED },    {A6,  CLOSED         }}        },
-    { /* 26, */ {{A15, CLOSED}, {A14, CLOSED }, {A14, CLOSED },     {A14, CLOSED         }}        },
-    { /* 27, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING     }}        },
+    { /* 0,  */ {{A1, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }, {A0, CONNECTING       }}        },
+    { /* 1,  */ {{A1, OPEN_IDLE}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT}, {A10, CONNECTING     }}        },
+    { /* 2,  */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED },        {A5,  CLOSED           }}        },
+    { /* 3,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING       }}        },
+    { /* 4,  */ {{A0, CLOSED}, {A2, OPEN_IDLE}, {A2, OPEN_WAIT },   {A6,  CLOSED           }}        },
+    { /* 5,  */ {{A0, CLOSED}, {A3, OPEN_IDLE}, {A3, OPEN_WAIT },   {A3,  CONNECTING       }}        },
+    { /* 6,  */ {{A0, CLOSED}, {A4, OPEN_IDLE}, {A4, OPEN_WAIT },   {A6,  CONNECTING       }}        },
+    { /* 7,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A10, CONNECTING       }}        },
+    { /* 8,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A8, OPEN_IDLE },   {A6,  CLOSED           }}        },
+    { /* 9,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED },      {A6,  CLOSED           }}        },
+    { /* 10, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A10, CONNECTING       }}        },
+    { /* 11, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A6,  CLOSED           }}        },
+    { /* 12, */ {{A0, CLOSED}, {A6, CLOSED }, {A9, OPEN_WAIT },     {A6,  CLOSED           }}        },
+    { /* 13, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED },        {A6,  CLOSED           }}        },
+    { /* 14, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A10, CONNECTING       }}        },
+    { /* 15, */ {{A0, CLOSED}, {A7, OPEN_WAIT}, {A11, OPEN_WAIT },  {A11, CONNECTING       }}        },
+    { /* 16, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED },        {A6,  CLOSED           }}        },
+    { /* 17, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A9, OPEN_WAIT },   {A0,  CONNECTING       }}        },
+    { /* 18, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED },      {A0,  CONNECTING       }}        },
+    { /* 19, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A13, OPEN_IDLE        }}        },
+    { /* 20, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A5,  CLOSED           }}        },
+    { /* 21, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING       }}        },
+    { /* 22, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING       }}        },
+    { /* 23, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING       }}        },
+    { /* 24, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING       }}        },
+    { /* 25, */ {{A12, CONNECTING}, {A6, CLOSED}, {A6, CLOSED },    {A6,  CLOSED           }}        },
+    { /* 26, */ {{A15, CLOSED}, {A14, CLOSED }, {A14, CLOSED },     {A14, CLOSED           }}        },
+    { /* 27, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING       }}        },
 };
 #elif (TL_STYLE == 1) || (TL_STYLE == 2)
 /* Transport-Layer-Statemachine, Styles #1 and #2 */
@@ -277,7 +278,6 @@ STATIC const EVENT_FUNC TLC_Events[] = {
 #define StoreMessage()      Utl_MemCopy(_StoredMsg, KnxMSG_ScratchBufferPtr->msg, MSG_LEN)
 #define RestoreMessage()    Utl_MemCopy(KnxMSG_ScratchBufferPtr->msg, _StoredMsg, MSG_LEN)
 
-
 /*
 ** Global functions.
 */
@@ -339,6 +339,7 @@ void T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
 
     (void)KnxMSG_Post(pBuffer);
 }
+
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) KnxTLC_StateMachine(KNX_TlcEventType event)
@@ -425,7 +426,7 @@ STATIC void A0(void)
 {
     /* do nothing. */
     if (KnxMSG_ScratchBufferPtr != (KnxMSG_BufferPtr)NULL) {
-        (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+        KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
     }
 }
 
@@ -614,7 +615,7 @@ STATIC FUNC(void, KSTACK_CODE) A8b(void)
 STATIC void A8b(void)        /* only local-user (Client only). */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
     StopAcknowledgementTimeoutTimer();
     KnxTLC_SetSequenceNumberSend(KnxTLC_GetSequenceNumberSend() + (uint8)1);
     RestartConnectionTimeoutTimer();
@@ -989,7 +990,6 @@ STATIC uint8 EventUndefined(void)
 {
     return (uint8)27;
 }
-
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON

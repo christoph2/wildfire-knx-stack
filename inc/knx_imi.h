@@ -39,10 +39,9 @@ extern "C"
 **
 */
 
-
 /*
 ** Global defines.
-*/	
+*/
 #define KNX_LL_SERVICES     ((uint8)0x10)
 #define KNX_NL_SERVICES     ((uint8)0x20)
 
@@ -52,10 +51,9 @@ extern "C"
 #define KNX_ALG_SERVICES    ((uint8)0x70)
 #define KNX_ALM_SERVICES    ((uint8)0x80)
 
-
 /*
 ** Global types.
-*/	
+*/
 typedef enum tagKnx_ServiceTypeType {
 /*
 **      Link-Layer.

@@ -23,20 +23,22 @@
  */
 #include "knx_tlc.h"
 
-
 /*
 ** Local function prototypes.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(void, KSTACK_CODE) Disp_T_DataConnectedReq(void), Disp_T_ConnectReq(void), Disp_T_DisconnectReq(void);
-STATIC FUNC(void, KSTACK_CODE) Disp_N_Data_IndividualInd(void), Disp_T_DataIndividualReq(void), Disp_T_DataBroadcastReq(void);
-STATIC FUNC(void, KSTACK_CODE) Disp_N_DataBroadcastInd(void), Disp_N_DataIndividualCon(void), Disp_N_DataBroadcast_Con(void);
+STATIC  FUNC(void, KSTACK_CODE) Disp_T_DataConnectedReq(void), Disp_T_ConnectReq(void), Disp_T_DisconnectReq(void);
+STATIC  FUNC(void, KSTACK_CODE) Disp_N_Data_IndividualInd(void), Disp_T_DataIndividualReq(void), Disp_T_DataBroadcastReq(void);
+STATIC  FUNC(void, KSTACK_CODE) Disp_N_DataBroadcastInd(void), Disp_N_DataIndividualCon(void), Disp_N_DataBroadcast_Con(void);
+
+
 #else
 STATIC void Disp_T_DataConnectedReq(void), Disp_T_ConnectReq(void), Disp_T_DisconnectReq(void);
 STATIC void Disp_N_Data_IndividualInd(void), Disp_T_DataIndividualReq(void), Disp_T_DataBroadcastReq(void);
 STATIC void Disp_N_DataBroadcastInd(void), Disp_N_DataIndividualCon(void), Disp_N_DataBroadcast_Con(void);
-#endif /* KSTACK_MEMORY_MAPPING */
 
+
+#endif /* KSTACK_MEMORY_MAPPING */
 
 /*
 ** Local variables.
@@ -44,7 +46,6 @@ STATIC void Disp_N_DataBroadcastInd(void), Disp_N_DataIndividualCon(void), Disp_
 STATIC uint8            KnxTLC_SequenceNumberSend, KnxTLC_SequenceNumberReceived;
 STATIC uint8            KnxTLC_RepetitionCount, KnxTLC_SequenceNumberOfPDU;
 STATIC Knx_AddressType  KnxTLC_SourceAddress, KnxTLC_ConnectionAddress;
-
 
 /*
 ** Local constants.
@@ -72,7 +73,6 @@ STATIC const Knx_LayerServicesType TLC_ServiceTable[] = {
     #define KSTACK_START_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
-
 
 /*
 ** Global functions.
@@ -338,7 +338,7 @@ STATIC void Disp_N_Data_IndividualInd(void)
                 /* T_DISCONNECT_IND */
                 KnxTLC_StateMachine((KNX_TlcEventType)tlcDISCONNECT_IND);
             } else {
-                (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+                KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
             }
 
             break;
@@ -351,7 +351,7 @@ STATIC void Disp_N_Data_IndividualInd(void)
             } else if (tpci == T_NAK_PDU) {
                 KnxTLC_StateMachine((KNX_TlcEventType)tlcNAK_IND);
             } else {
-                (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+                KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
             }
 
             break;

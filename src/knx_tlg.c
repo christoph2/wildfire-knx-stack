@@ -23,18 +23,20 @@
  */
 #include "knx_tlg.h"
 
-
 /*
 ** Local function prototypes.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(void, KSTACK_CODE) Disp_T_DataGroupReq(void), Disp_T_PollDataReq(void), Disp_N_PollDataCon(void);
-STATIC FUNC(void, KSTACK_CODE) Disp_N_DataGroupInd(void), Disp_N_DataGroupCon(void);
+STATIC  FUNC(void, KSTACK_CODE) Disp_T_DataGroupReq(void), Disp_T_PollDataReq(void), Disp_N_PollDataCon(void);
+STATIC  FUNC(void, KSTACK_CODE) Disp_N_DataGroupInd(void), Disp_N_DataGroupCon(void);
+
+
 #else
 STATIC void Disp_T_DataGroupReq(void), Disp_T_PollDataReq(void), Disp_N_PollDataCon(void);
 STATIC void Disp_N_DataGroupInd(void), Disp_N_DataGroupCon(void);
-#endif /* KSTACK_MEMORY_MAPPING */
 
+
+#endif /* KSTACK_MEMORY_MAPPING */
 
 /*
 ** Local constants.
@@ -72,7 +74,6 @@ void KnxTLG_Task(void)
 {
     KnxDisp_DispatchLayer(TASK_TL_ID, TLG_ServiceTable);
 }
-
 
 
 /*
@@ -140,6 +141,7 @@ STATIC void Disp_T_PollDataReq(void)
 {
     /* todo: Implement!!! */
 }
+
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_STOP_SEC_CODE

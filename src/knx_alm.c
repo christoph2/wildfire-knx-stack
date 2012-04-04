@@ -35,22 +35,24 @@
 
 #include "knx_layer_application.h"
 
-
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_Broadcast_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, uint16 apci, 
-    P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len
-);
-FUNC(void, KSTACK_CODE) A_Individual_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint16 apci, uint8 * data,
-    uint8 len
-);
-FUNC(void, KSTACK_CODE) AL_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8 obj_index, uint8 prop_id, uint8 nr_of_elem, 
-uint16 start_index
-);
+FUNC(void, KSTACK_CODE) A_Broadcast_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, uint16 apci,
+                                        P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len
+                                        );
+FUNC(void, KSTACK_CODE) A_Individual_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint16 apci,
+                                         uint8 * data,
+                                         uint8 len
+                                         );
+FUNC(void, KSTACK_CODE) AL_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8 obj_index, uint8 prop_id, uint8 nr_of_elem,
+                                             uint16 start_index
+                                             );
 #else
 void    A_Broadcast_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, uint16 apci, uint8 * data, uint8 len);
 void    A_Individual_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint16 apci, uint8 * data,
                          uint8 len);
-void    AL_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8 obj_index, uint8 prop_id, uint8 nr_of_elem, uint16 start_index);
+void AL_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8 obj_index, uint8 prop_id, uint8 nr_of_elem, uint16 start_index);
+
+
 #endif /* KSTACK_MEMORY_MAPPING */
 
 #define APDU_PHYS_ADDR ((uint8)0)        /* A_IndividualAddress_Write-PDU */
@@ -71,17 +73,20 @@ void    AL_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8 obj_index, uint8 pr
 */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(void, KSTACK_CODE) Disp_T_ConnectInd(void), Disp_T_ConnectCon(void), Disp_T_DisconnectInd(void);
-STATIC FUNC(void, KSTACK_CODE) Disp_T_DisconnectCon(void), Disp_T_DataConnectedInd(void), Disp_T_DataConnectedCon(void);
-STATIC FUNC(void, KSTACK_CODE) Disp_T_DataBroadcastInd(void), Disp_T_DataBroadcastCon(void), Disp_T_DataIndividualInd(void);
-STATIC FUNC(void, KSTACK_CODE) Disp_T_DataIndividualCon(void);
+STATIC  FUNC(void, KSTACK_CODE) Disp_T_ConnectInd(void), Disp_T_ConnectCon(void), Disp_T_DisconnectInd(void);
+STATIC  FUNC(void, KSTACK_CODE) Disp_T_DisconnectCon(void), Disp_T_DataConnectedInd(void), Disp_T_DataConnectedCon(void);
+STATIC  FUNC(void, KSTACK_CODE) Disp_T_DataBroadcastInd(void), Disp_T_DataBroadcastCon(void), Disp_T_DataIndividualInd(void);
+STATIC  FUNC(void, KSTACK_CODE) Disp_T_DataIndividualCon(void);
+
+
 #else
 STATIC void Disp_T_ConnectInd(void), Disp_T_ConnectCon(void), Disp_T_DisconnectInd(void);
 STATIC void Disp_T_DisconnectCon(void), Disp_T_DataConnectedInd(void), Disp_T_DataConnectedCon(void);
 STATIC void Disp_T_DataBroadcastInd(void), Disp_T_DataBroadcastCon(void), Disp_T_DataIndividualInd(void);
 STATIC void Disp_T_DataIndividualCon(void);
-#endif /* KSTACK_MEMORY_MAPPING */
 
+
+#endif /* KSTACK_MEMORY_MAPPING */
 
 STATIC const Knx_LayerServiceFunctionType ALM_Services[] = {
 /*      Service                     Handler                 */
@@ -102,8 +107,6 @@ STATIC const Knx_LayerServiceFunctionType ALM_Services[] = {
 STATIC const Knx_LayerServicesType ALM_ServiceTable[] = {
     {KNX_ALM_SERVICES, 10, ALM_Services}
 };
-
-
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
@@ -131,7 +134,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_T_ConnectInd(void)
 STATIC void Disp_T_ConnectInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
 
 
@@ -141,7 +144,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_T_DisconnectInd(void)
 STATIC void Disp_T_DisconnectInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
 
 
@@ -167,11 +170,11 @@ STATIC void Disp_T_DataConnectedInd(void)
         case apciUSER_MSG:
             break;
         default:
-            (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+            KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
             break;
     }
 
-    (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
 
 
@@ -194,7 +197,7 @@ STATIC void Disp_T_DataBroadcastInd(void)
                 KnxADR_SetPhysAddr(addr);
             }
 
-            (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+            KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
             break;
         case apciINDIVIDUAL_ADDRESS_READ:
 
@@ -233,7 +236,7 @@ STATIC void Disp_T_DataIndividualInd(void)
                 IOS_Dispatch(KnxMSG_ScratchBufferPtr, IOS_PROP_DESC_READ, FALSE);
                 break;
             default:
-                (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+                KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
                 break;
         }
     }
@@ -246,7 +249,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_T_ConnectCon(void)
 STATIC void Disp_T_ConnectCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
 
 
@@ -256,7 +259,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_T_DisconnectCon(void)
 STATIC void Disp_T_DisconnectCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
 
 
@@ -266,7 +269,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_T_DataConnectedCon(void)
 STATIC void Disp_T_DataConnectedCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
 
 
@@ -276,7 +279,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_T_DataBroadcastCon(void)
 STATIC void Disp_T_DataBroadcastCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
 
 
@@ -286,7 +289,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_T_DataIndividualCon(void)
 STATIC void Disp_T_DataIndividualCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
 }
 
 
@@ -336,9 +339,9 @@ void KnxAL_SetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8 offset, co
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxAL_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset, 
-    P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len
-)
+FUNC(void, KSTACK_CODE) KnxAL_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset,
+                                          P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len
+                                          )
 #else
 void KnxAL_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset, uint8 * data, uint8 len)
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -353,13 +356,13 @@ void KnxAL_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset, uint8 
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset, 
-    P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len
-)
+FUNC(void, KSTACK_CODE) KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset,
+                                          P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len
+                                          )
 #else
-void KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset, 
-    P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len
-)
+void KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset,
+                       P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA)data, uint8 len
+                       )
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     offset = MIN(offset, MAX_ADPU_LEN - (uint8)1);
@@ -379,9 +382,9 @@ void KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8 offset,
 **
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_Broadcast_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, uint16 apci, 
-    P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len
-)
+FUNC(void, KSTACK_CODE) A_Broadcast_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, uint16 apci,
+                                        P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len
+                                        )
 #else
 void A_Broadcast_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, uint16 apci, uint8 * data, uint8 len)
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -447,11 +450,12 @@ void A_IndividualAddress_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType sou
 **  A_IndividualAddressSerialNumber
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_IndividualAddressSerialNumber_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_SerialNumberType serial_number,
-    Knx_AddressType domain_addr)
+FUNC(void, KSTACK_CODE) A_IndividualAddressSerialNumber_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
+                                                                 Knx_SerialNumberType serial_number,
+                                                                 Knx_AddressType domain_addr)
 #else
 void A_IndividualAddressSerialNumber_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_SerialNumberType serial_number,
-    Knx_AddressType domain_addr)
+                                              Knx_AddressType domain_addr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxAL_SetAPDUData(KnxMSG_GetMessagePtr(pBuffer), (uint8)0, serial_number, sizeof(Knx_SerialNumberType));
@@ -462,7 +466,8 @@ void A_IndividualAddressSerialNumber_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_Addr
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_IndividualAddressSerialNumber_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_SerialNumberType serial_number)
+FUNC(void, KSTACK_CODE) A_IndividualAddressSerialNumber_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
+                                                                 Knx_SerialNumberType serial_number)
 #else
 void A_IndividualAddressSerialNumber_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_SerialNumberType serial_number)
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -474,11 +479,12 @@ void A_IndividualAddressSerialNumber_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_Addr
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_IndividualAddressSerialNumber_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_SerialNumberType serial_number,
-    Knx_AddressType new_addr)
+FUNC(void, KSTACK_CODE) A_IndividualAddressSerialNumber_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
+                                                                  Knx_SerialNumberType serial_number,
+                                                                  Knx_AddressType new_addr)
 #else
 void A_IndividualAddressSerialNumber_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_SerialNumberType serial_number,
-    Knx_AddressType new_addr)
+                                               Knx_AddressType new_addr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxAL_SetAPDUData(KnxMSG_GetMessagePtr(pBuffer), (uint8)0, serial_number, sizeof(Knx_SerialNumberType));
@@ -537,10 +543,10 @@ void A_DomainAddress_Write_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
 {
     uint8 data[2];
 
-/*    
+/*
     data[0]=domain_ddress[0];
-    data[1]=domain_ddress[1]; 
-*/
+    data[1]=domain_ddress[1];
+ */
 
     *(uint16 *)data[0] = domain_ddress;
 
@@ -549,11 +555,13 @@ void A_DomainAddress_Write_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_DomainAddressSelective_Read_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType domain_ddress,
-    Knx_AddressType start_address, uint8 range)
+FUNC(void, KSTACK_CODE) A_DomainAddressSelective_Read_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
+                                                          Knx_AddressType domain_ddress,
+                                                          Knx_AddressType start_address,
+                                                          uint8 range)
 #else
 void A_DomainAddressSelective_Read_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType domain_ddress,
-    Knx_AddressType start_address, uint8 range)
+                                       Knx_AddressType start_address, uint8 range)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 data[5];
@@ -580,9 +588,9 @@ void A_DomainAddressSelective_Read_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType
 **
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_Individual_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint16 apci, 
-    P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len
-)
+FUNC(void, KSTACK_CODE) A_Individual_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint16 apci,
+                                         P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len
+                                         )
 #else
 void A_Individual_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint16 apci, uint8 * data, uint8 len)
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -605,7 +613,8 @@ void A_Individual_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) AL_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8 obj_index, uint8 prop_id, uint8 nr_of_elem, uint16 start_index)
+FUNC(void, KSTACK_CODE) AL_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8 obj_index, uint8 prop_id, uint8 nr_of_elem,
+                                             uint16 start_index)
 #else
 void AL_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8 obj_index, uint8 prop_id, uint8 nr_of_elem, uint16 start_index)
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -622,11 +631,13 @@ void AL_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8 obj_index, uint8 prop_
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_PropertyValue_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
-    uint8 prop_id, uint8 nr_of_elem, uint16 start_index, uint8 * data)
+FUNC(void, KSTACK_CODE) A_PropertyValue_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
+                                                 uint8 obj_index,
+                                                 uint8 prop_id, uint8 nr_of_elem, uint16 start_index,
+                                                 uint8 * data)
 #else
 void A_PropertyValue_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
-    uint8 prop_id, uint8 nr_of_elem, uint16 start_index, uint8 * data)
+                              uint8 prop_id, uint8 nr_of_elem, uint16 start_index, uint8 * data)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     AL_SetPropertyHeader(pBuffer, obj_index, prop_id, nr_of_elem, start_index);
@@ -637,11 +648,13 @@ void A_PropertyValue_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, 
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_PropertyValue_Read_Res_NoData(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
-    uint8 prop_id, uint8 nr_of_elem, uint16 start_index)
+FUNC(void, KSTACK_CODE) A_PropertyValue_Read_Res_NoData(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
+                                                        uint8 obj_index,
+                                                        uint8 prop_id, uint8 nr_of_elem,
+                                                        uint16 start_index)
 #else
 void A_PropertyValue_Read_Res_NoData(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
-    uint8 prop_id, uint8 nr_of_elem, uint16 start_index)
+                                     uint8 prop_id, uint8 nr_of_elem, uint16 start_index)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     AL_SetPropertyHeader(pBuffer, obj_index, prop_id, nr_of_elem, start_index);
@@ -650,11 +663,13 @@ void A_PropertyValue_Read_Res_NoData(KnxMSG_BufferPtr pBuffer, Knx_AddressType s
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_PropertyValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
-    uint8 prop_id, uint8 nr_of_elem, uint16 start_index)
+FUNC(void, KSTACK_CODE) A_PropertyValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
+                                                 uint8 obj_index,
+                                                 uint8 prop_id, uint8 nr_of_elem,
+                                                 uint16 start_index)
 #else
 void A_PropertyValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
-    uint8 prop_id, uint8 nr_of_elem, uint16 start_index)
+                              uint8 prop_id, uint8 nr_of_elem, uint16 start_index)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     AL_SetPropertyHeader(pBuffer, obj_index, prop_id, nr_of_elem, start_index);
@@ -666,11 +681,13 @@ void A_PropertyValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, 
    A_PROPERTYVALUE_WRITE
  */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_PropertyDescription_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
-    uint8 prop_id, uint8 prop_index, uint8 type, uint16 nr_of_elem, uint8 access)
+FUNC(void, KSTACK_CODE) A_PropertyDescription_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
+                                                       uint8 obj_index,
+                                                       uint8 prop_id, uint8 prop_index, uint8 type, uint16 nr_of_elem,
+                                                       uint8 access)
 #else
 void A_PropertyDescription_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
-    uint8 prop_id, uint8 prop_index, uint8 type, uint16 nr_of_elem, uint8 access)
+                                    uint8 prop_id, uint8 prop_index, uint8 type, uint16 nr_of_elem, uint8 access)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 data[7];
@@ -689,11 +706,13 @@ void A_PropertyDescription_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType so
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_PropertyDescription_Read_Res_NoData(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
-    uint8 prop_id, uint8 prop_index)
+FUNC(void, KSTACK_CODE) A_PropertyDescription_Read_Res_NoData(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
+                                                              Knx_AddressType dest, uint8 obj_index,
+                                                              uint8 prop_id,
+                                                              uint8 prop_index)
 #else
 void A_PropertyDescription_Read_Res_NoData(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
-    uint8 prop_id, uint8 prop_index)
+                                           uint8 prop_id, uint8 prop_index)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 data[3];
@@ -708,11 +727,13 @@ void A_PropertyDescription_Read_Res_NoData(KnxMSG_BufferPtr pBuffer, Knx_Address
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_PropertyDescription_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
-    uint8 prop_id, uint8 prop_index)
+FUNC(void, KSTACK_CODE) A_PropertyDescription_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
+                                                       uint8 obj_index,
+                                                       uint8 prop_id,
+                                                       uint8 prop_index)
 #else
 void A_PropertyDescription_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 obj_index,
-    uint8 prop_id, uint8 prop_index)
+                                    uint8 prop_id, uint8 prop_index)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 data[3];

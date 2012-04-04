@@ -32,24 +32,23 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 ** Global variables.
 */
 extern KnxMSG_BufferPtr KnxMSG_ScratchBufferPtr;
 
-
 /*
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxDisp_DispatchLayer(const uint8 LayerID, 
-    CONSTP2CONST(Knx_LayerServicesType, AUTOMATIC, KSTACK_APPL_DATA) ServiceTable
-);
+FUNC(void, KSTACK_CODE) KnxDisp_DispatchLayer(const uint8 LayerID,
+                                              CONSTP2CONST(Knx_LayerServicesType, AUTOMATIC, KSTACK_APPL_DATA) ServiceTable
+                                              );
 #else
 void KnxDisp_DispatchLayer(const uint8 LayerID, const Knx_LayerServicesType * ServiceTable);
-#endif /* KSTACK_MEMORY_MAPPING */
 
+
+#endif /* KSTACK_MEMORY_MAPPING */
 
 #if defined(__cplusplus)
 }

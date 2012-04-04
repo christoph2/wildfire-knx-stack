@@ -33,10 +33,9 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 ** Global function-like macros.
-*/	
+*/
 #define KnxALG_GetCommObjDescr(objectNumber)    ((Knx_CommObjDescriptorType *)((uint8 *)APP_CommObjTab + (uint8)2) + (objectNumber))
 #define KnxALG_GetNumCommObjs()                 ((uint8)APP_CommObjTab[0])
 
@@ -57,28 +56,28 @@ extern "C"
 #define KnxALG_GetObjLen(o)                     (KNX_OBJ_LEN_TAB[((o) & (uint8)0x3f)])
 #define KnxALG_GetObjPriority(objectNr)         ((Knx_PriorityType)(KnxALG_GetCommObjDescr((objectNr))->Config) & (uint8)0x03)
 
-
 /*
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(uint8 *, KSTACK_CODE)  KnxALG_GetObjectDataPointer(uint8 objectNr);
 
-FUNC(void, KSTACK_CODE)	    KnxALG_SetRAMFlags(uint16 objectNr, uint8 flags);
+FUNC(void, KSTACK_CODE)     KnxALG_SetRAMFlags(uint16 objectNr, uint8 flags);
 FUNC(uint8, KSTACK_CODE)    KnxALG_GetRAMFlags(uint16 objectNr);
 FUNC(uint8 *, KSTACK_CODE)  KnxALG_GetRAMFlagPointer(void);
 
-FUNC(void, KSTACK_CODE)	    KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8 testFlags);
+FUNC(void, KSTACK_CODE)     KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8 testFlags);
 
-FUNC(void, KSTACK_CODE)	    KnxALG_Task(void);
-FUNC(void, KSTACK_CODE)	    KnxALG_Init(void);
+FUNC(void, KSTACK_CODE)     KnxALG_Task(void);
+FUNC(void, KSTACK_CODE)     KnxALG_Init(void);
 
 /* Group-Services. */
-FUNC(void, KSTACK_CODE)	    A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, 
-    Knx_AddressType dest, uint8 prio);
-FUNC(void, KSTACK_CODE)	    A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, 
-    Knx_AddressType dest, Knx_PriorityType prio, P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len);
-#else	
+FUNC(void, KSTACK_CODE)     A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
+                                                  Knx_AddressType dest, uint8 prio);
+FUNC(void, KSTACK_CODE)     A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
+                                                   Knx_AddressType dest, Knx_PriorityType prio,
+                                                   P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data, uint8 len);
+#else
 uint8 * KnxALG_GetObjectDataPointer(uint8 objectNr);
 
 void    KnxALG_SetRAMFlags(uint16 objectNr, uint8 flags);
@@ -90,17 +89,18 @@ void KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8 testFlags);
 void    KnxALG_Task(void);
 void    KnxALG_Init(void);
 
+
 /* Group-Services. */
 void    A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 prio);
 void    A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
                                uint8 * data,
                                uint8 len);
-#endif /* KSTACK_MEMORY_MAPPING */
 
+
+#endif /* KSTACK_MEMORY_MAPPING */
 
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_ALG_H */
-

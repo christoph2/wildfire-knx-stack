@@ -31,10 +31,9 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 ** Global defines.
-*/	
+*/
 #define TM_TIMER_TLC_CON_TIMEOUT    ((uint8)0)
 #define TM_TIMER_TLC_ACK_TIMEOUT    ((uint8)1)
 
@@ -44,10 +43,9 @@ extern "C"
     #error "ERROR: Number of timers must be at least two!!!"
 #endif
 
-
 /*
 ** Global types.
-*/	
+*/
 typedef uint32 TM_TickType, * TM_TickRefType;
 
 typedef enum tagTM_BaseType {
@@ -67,12 +65,11 @@ typedef struct tagTM_TimerType {
     TM_TickType     expire_counter;
 } TM_TimerType;
 
-
 /*
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)	    KnxTMR_Init(void);
+FUNC(void, KSTACK_CODE)     KnxTMR_Init(void);
 
 FUNC(boolean, KSTACK_CODE)  KnxTMR_Start(uint8 timer, TM_BaseType base, TM_TickType ticks);
 FUNC(boolean, KSTACK_CODE)  KnxTMR_Stop(uint8 timer);
@@ -82,15 +79,16 @@ FUNC(boolean, KSTACK_CODE)  KnxTMR_IsRunning(uint8 timer);
 
 FUNC(boolean, KSTACK_CODE)  KnxTMR_GetRemainder(uint8 timer, TM_TickRefType remainder);
 
-FUNC(TM_TickType, KSTACK_CODE)TM_TickType KnxTMR_GetSystemTime(TM_BaseType base);
+FUNC(TM_TickType, KSTACK_CODE) TM_TickType KnxTMR_GetSystemTime(TM_BaseType base);
 
-FUNC(void, KSTACK_CODE)	    KnxTMR_Delay(TM_TickType ms);
-FUNC(void, KSTACK_CODE)	    KnxTMR_DelayHMS(uint16 H, uint16 M, uint16 S);
 
-FUNC(void, KSTACK_CODE)	    KnxTMR_SystemTimeHandler(void);
-FUNC(void, KSTACK_CODE)	    KnxTMR_SecondCallback(void);	
+FUNC(void, KSTACK_CODE)     KnxTMR_Delay(TM_TickType ms);
+FUNC(void, KSTACK_CODE)     KnxTMR_DelayHMS(uint16 H, uint16 M, uint16 S);
+
+FUNC(void, KSTACK_CODE)     KnxTMR_SystemTimeHandler(void);
+FUNC(void, KSTACK_CODE)     KnxTMR_SecondCallback(void);
 #else
-void	KnxTMR_Init(void);
+void KnxTMR_Init(void);
 
 boolean KnxTMR_Start(uint8 timer, TM_BaseType base, TM_TickType ticks);
 boolean KnxTMR_Stop(uint8 timer);
@@ -107,8 +105,9 @@ void    KnxTMR_DelayHMS(uint16 H, uint16 M, uint16 S);
 
 void    KnxTMR_SystemTimeHandler(void);
 void    KnxTMR_SecondCallback(void);
-#endif /* KSTACK_MEMORY_MAPPING */
 
+
+#endif /* KSTACK_MEMORY_MAPPING */
 
 #if defined(__cplusplus)
 }

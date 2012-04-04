@@ -69,14 +69,14 @@ typedef void (*PROPERTY_FUNC)(KnxMSG_BufferPtr pBuffer, boolean write);
 FUNC(void, KSTACK_CODE) ios_test(void);
 #else
 void ios_test(void);
-#endif /* KSTACK_MEMORY_MAPPING */
 
+
+#endif /* KSTACK_MEMORY_MAPPING */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
-
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connected)
@@ -240,7 +240,7 @@ empty_answer:   /* Property-Read /wo Data. */
     return;
 
 invalid:
-    (void)KnxMSG_ReleaseBuffer(pBuffer);
+    KnxMSG_ReleaseBuffer(pBuffer);
 }
 
 
@@ -267,11 +267,10 @@ Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_inde
     }
 }
 
-
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(Knx_PropertyType const *, KSTACK_CODE) IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id)    /* todo: binary search!? */
+FUNC(Knx_PropertyType const *, KSTACK_CODE) IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id)  /* todo: binary search!? */
 #else
-Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id)    /* todo: binary search!? */
+Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id)                     /* todo: binary search!? */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_least                 idx;
@@ -288,7 +287,6 @@ Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const * pobj, 
     return pprop;
 }
 
-
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(Knx_PropertyType const *, KSTACK_CODE) IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16 prop_index)
 #else
@@ -301,7 +299,6 @@ Knx_PropertyType const * IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * 
         return &pobj->properties[prop_index];
     }
 }
-
 
 #if 0
 #if KSTACK_MEMORY_MAPPING == STD_ON

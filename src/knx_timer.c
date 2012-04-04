@@ -35,14 +35,12 @@
 #define ENABLE_ALL_INTERRUPTS()
 #endif
 
-
 /*
 ** Local variables.
 */
 static TM_TimerType KNX_Timer[TM_NUM_TIMERS];
 static TM_TickType  TM_SysMsCounter;
 static TM_TickType  TM_SysSecondCounter;
-
 
 /*
 ** Global functions.
@@ -51,7 +49,6 @@ static TM_TickType  TM_SysSecondCounter;
     #define KSTACK_START_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
-
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) KnxTMR_Init(void)
@@ -169,7 +166,6 @@ boolean KnxTMR_GetRemainder(uint8 timer, TM_TickRefType remainder)
         return FALSE;
     }
 }
-
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON

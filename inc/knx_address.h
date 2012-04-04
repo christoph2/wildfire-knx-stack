@@ -33,17 +33,15 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 **  Global variables.
-*/	
+*/
 extern const uint8  APP_AddressTable[];
 extern const uint8  APP_AssociationTable[];
 
-
 /*
 **  Global function-like macros.
-*/	
+*/
 #define START_USER_EEPROM() /* Dummy, s.o. */
 #define END_USER_EEPROM()   /* Dummy, s.o. */
 
@@ -89,7 +87,6 @@ const uint8 APP_CommObjTab[]={      \
 #define MAKE_PHYS_ADDR(a, b, c)             ((((a) & (uint8)0x0f) << 12) | (((b) & (uint8)0x0f) << 8) | ((c) & (uint8)0xff))
 #define MAKE_GROUP_ADDR(a, b, c)            ((((a) & (uint8)0x1f) << 11) | (((b) & (uint8)0x07) << 8) | ((c) & (uint8)0xff))
 
-
 #define KnxADR_GrATLength()                 ((uint8)APP_AddressTable[0])
 #define KnxADR_GrOATLength()                ((uint8)APP_AssociationTable[0])
 
@@ -99,30 +96,30 @@ const uint8 APP_CommObjTab[]={      \
 #define KnxADR_GetGroupAddress(n)           (btohs(*(uint16 *)(KnxADR_GrATBasePtr() + ((n) - 1))))
 #define KnxADR_GetAssoc(n)                  (btohs(*(uint16 *)(KnxADR_GrOATBasePtr() + (n))))
 
-#define KnxADR_IsBroadcastAddress(addr)	    ((addr) == (Knx_AddressType)0x0000)
+#define KnxADR_IsBroadcastAddress(addr)     ((addr) == (Knx_AddressType)0x0000)
 
 /*
 **  Global functions.
-*/	
+*/
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE)	    KnxADR_InProgrammingMode(void);
-FUNC(boolean, KSTACK_CODE)	    KnxADR_IsAddressed(Knx_AddressType searched_addr, 
-    P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) tsap
-);
-FUNC(boolean, KSTACK_CODE)	    KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr);
+FUNC(boolean, KSTACK_CODE)      KnxADR_InProgrammingMode(void);
+FUNC(boolean, KSTACK_CODE)      KnxADR_IsAddressed(Knx_AddressType searched_addr,
+                                                   P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) tsap
+                                                   );
+FUNC(boolean, KSTACK_CODE)      KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr);
 FUNC(Knx_AddressType, KSTACK_CODE)  KnxADR_GetPhysAddr(void);
-FUNC(void, KSTACK_CODE)		    KnxADR_SetPhysAddr(Knx_AddressType addr);
-FUNC(void, KSTACK_CODE)		    KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number);
+FUNC(void, KSTACK_CODE)         KnxADR_SetPhysAddr(Knx_AddressType addr);
+FUNC(void, KSTACK_CODE)         KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number);
 #else
-boolean KnxADR_InProgrammingMode(void);
-boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap);
-boolean KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr);
+boolean         KnxADR_InProgrammingMode(void);
+boolean         KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap);
+boolean         KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr);
 Knx_AddressType KnxADR_GetPhysAddr(void);
 void            KnxADR_SetPhysAddr(Knx_AddressType addr);
 void            KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number);
+
+
 #endif /* KSTACK_MEMORY_MAPPING */
-
-
 
 #if defined(__cplusplus)
 }

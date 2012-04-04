@@ -32,13 +32,12 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-#define KNX_BIG_ENDIAN	/* TODO: config. */
+#define KNX_BIG_ENDIAN /* TODO: config. */
 
-#if 0	
+#if 0
     #define DISABLE_ALL_INTERRUPTS()
     #define ENABLE_ALL_INTERRUPTS()
 #endif
-
 
 /*
 ** Global defines.

@@ -31,7 +31,6 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 #if defined(__HIWARE__)
 #define KNX_BIG_ENDIAN
 #undef  KNX_LITTLE_ENDIAN
@@ -48,7 +47,6 @@ extern "C"
 
 /* #define btohs(w)    MAKEWORD(LOBYTE((w)),HIBYTE((w))) */
 
-
 /*
 ** Global functions.
 */
@@ -63,7 +61,9 @@ uint16  LongToDPT9(sint32 value);
 uint16  FloatToDPT9(float64 value);
 float64 DPT9ToFloat(uint16 value);
 sint32  DPT9ToLong(uint16 value);
-uint16 btohs(uint16 w);
+uint16  btohs(uint16 w);
+
+
 #endif /* KSTACK_MEMORY_MAPPING */
 
 #define htobs(w) btohs(w)

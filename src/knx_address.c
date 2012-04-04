@@ -45,7 +45,6 @@
    };
  */
 
-
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
     #include "MemMap.h"
@@ -58,9 +57,10 @@
 **  todo: this Fkt. is hardware-dependent !!!
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-
+FUNC(boolean, KSTACK_CODE) KnxADR_InProgrammingMode(void)
 #else
 boolean KnxADR_InProgrammingMode(void)
+#endif /* KSTACK_MEMORY_MAPPING */
 {
     return TRUE;
 }
@@ -71,9 +71,9 @@ boolean KnxADR_InProgrammingMode(void)
 */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE)  KnxADR_IsAddressed(Knx_AddressType searched_addr, 
-	P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) tsap
-)
+FUNC(boolean, KSTACK_CODE)  KnxADR_IsAddressed(Knx_AddressType searched_addr,
+                                               P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) tsap
+                                               )
 #else
 boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap)
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -154,9 +154,9 @@ void KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr)     /* todo: Macro!!! */
+FUNC(boolean, KSTACK_CODE) KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr)   /* todo: Macro!!! */
 #else
-boolean KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr)     /* todo: Macro!!! */
+boolean KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr)                      /* todo: Macro!!! */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return KnxADR_GetPhysAddr() == addr;

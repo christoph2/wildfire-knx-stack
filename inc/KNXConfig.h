@@ -29,11 +29,10 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 ** Global defines.
 */
-#define KNX_STANDALONE	/* TODO: STD_ON | STD_OFF */
+#define KNX_STANDALONE  /* TODO: STD_ON | STD_OFF */
 #define KNX_CLIENT_LIB
 #define KNX_USE_CONFIMATIONS
 #define KNX_BUSACCESS_TPUART

@@ -96,10 +96,10 @@ typedef enum tagKNX_LSMStateType {
 STATIC const uint8 LS_Table[4][5] = {
 /*  NOP                     START_LOAD          LOAD_COMPLETE       SEGMENT             UNLOAD                  */
 /*  ----------------------------------------------------------------------------------------------------------- */
-    {LSM_STATE_UNLOADED, LSM_STATE_LOADING,   LSM_STATE_UNLOADED,   LSM_STATE_UNLOADED,    LSM_STATE_UNLOADED                           },  /* UNLOADED */
-    {LSM_STATE_LOADED,   LSM_STATE_LOADING,   LSM_STATE_LOADED,     LSM_STATE_LOADED,      LSM_STATE_UNLOADED                           },  /* LOADED */
-    {LSM_STATE_LOADING,  LSM_STATE_LOADING,   LSM_STATE_LOADED,     LSM_STATE_LOADING,     LSM_STATE_UNLOADED                           },  /* LOADING */
-    {LSM_STATE_ERROR,    LSM_STATE_ERROR,     LSM_STATE_ERROR,      LSM_STATE_ERROR,       LSM_STATE_UNLOADED                           },  /* ERROR */
+    {LSM_STATE_UNLOADED, LSM_STATE_LOADING,   LSM_STATE_UNLOADED,   LSM_STATE_UNLOADED,    LSM_STATE_UNLOADED                                 },    /* UNLOADED */
+    {LSM_STATE_LOADED,   LSM_STATE_LOADING,   LSM_STATE_LOADED,     LSM_STATE_LOADED,      LSM_STATE_UNLOADED                                 },    /* LOADED */
+    {LSM_STATE_LOADING,  LSM_STATE_LOADING,   LSM_STATE_LOADED,     LSM_STATE_LOADING,     LSM_STATE_UNLOADED                                 },    /* LOADING */
+    {LSM_STATE_ERROR,    LSM_STATE_ERROR,     LSM_STATE_ERROR,      LSM_STATE_ERROR,       LSM_STATE_UNLOADED                                 },    /* ERROR */
 };
 
 typedef uint8 LoadEventType[10];
@@ -142,9 +142,9 @@ KNX_LSCType KNX_SystemLSC[KNX_NUM_SYS_LSCS];    /* System-Load-/State-Controls. 
 
 /* todo: als Makro!!! */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-
-#else
 FUNC(boolean, KSTACK_CODE) LSM_IsAppLoaded(void)
+#else
+boolean LSM_IsAppLoaded(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return KNX_SystemLSC[KNX_LSC_APP] == LSM_STATE_LOADED;
@@ -152,9 +152,9 @@ FUNC(boolean, KSTACK_CODE) LSM_IsAppLoaded(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-
+FUNC(boolean, KSTACK_CODE) LSM_IsGrATLoaded(void)   /* Address-Table. */
 #else
-FUNC(boolean, KSTACK_CODE) LSM_IsGrATLoaded(void)     /* Address-Table. */
+boolean LSM_IsGrATLoaded(void)                      /* Address-Table. */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return KNX_SystemLSC[KNX_LSC_GRAT] == LSM_STATE_LOADED;
@@ -162,9 +162,9 @@ FUNC(boolean, KSTACK_CODE) LSM_IsGrATLoaded(void)     /* Address-Table. */
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-
+FUNC(boolean, KSTACK_CODE) LSM_IsGrOATLoaded(void)  /* Assoc-Table. */
 #else
-FUNC(boolean, KSTACK_CODE) LSM_IsGrOATLoaded(void)    /* Assoc-Table. */
+boolean LSM_IsGrOATLoaded(void)                     /* Assoc-Table. */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return KNX_SystemLSC[KNX_LSC_GROAT] == LSM_STATE_LOADED;
@@ -175,9 +175,9 @@ FUNC(boolean, KSTACK_CODE) LSM_IsGrOATLoaded(void)    /* Assoc-Table. */
 **
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-
-#else
 FUNC(void, KSTACK_CODE) LSM_Init(void)
+#else
+void LSM_Init(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
 
@@ -185,9 +185,11 @@ FUNC(void, KSTACK_CODE) LSM_Init(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-
+FUNC(void, KSTACK_CODE) LSM_Dispatch(P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) record,
+                                     /*LSM_State*/ P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) ls_var
+                                     )
 #else
-FUNC(void, KSTACK_CODE) LSM_Dispatch(uint8 * record, /*LSM_State*/ uint8 * ls_var)
+void LSM_Dispatch(uint8 * record, /*LSM_State*/ uint8 * ls_var)
 #endif /* KSTACK_MEMORY_MAPPING */
 /*
 **      record: Pointer auf das 10-Byte-Load-Control.
@@ -216,9 +218,9 @@ FUNC(void, KSTACK_CODE) LSM_Dispatch(uint8 * record, /*LSM_State*/ uint8 * ls_va
 /* static uint8 app_rec[10]; */
 /*static LSM_Stateuint8 app_lsc; */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-
-#else
 FUNC(void, KSTACK_CODE) LSM_Test(void)
+#else
+void LSM_Test(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 i;
@@ -233,6 +235,7 @@ FUNC(void, KSTACK_CODE) LSM_Test(void)
         KNX_SystemLSC[i] = LSM_STATE_LOADED;
     }
 }
+
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_STOP_SEC_CODE

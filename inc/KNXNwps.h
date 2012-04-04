@@ -34,14 +34,12 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 ** Global types.
 */typedef enum tagNWPSServiceType {
-    NWPS_READ, 
+    NWPS_READ,
     NWPS_WRITE
 } NWPSServiceType;
-
 
 #if defined(__cplusplus)
 }

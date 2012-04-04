@@ -35,7 +35,6 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 **  TPCI-Codings.
 */

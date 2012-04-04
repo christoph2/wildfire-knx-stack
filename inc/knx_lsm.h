@@ -31,28 +31,24 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 ** Global defines.
-*/	
+*/
 #define KNX_LSC_APP         ((uint8)0)
 #define KNX_LSC_GRAT        ((uint8)1)
 #define KNX_LSC_GROAT       ((uint8)2)
 
 #define KNX_NUM_SYS_LSCS    ((uint8)3)
 
-	
 /*
 ** Global types.
-*/	
+*/
 typedef uint8 KNX_LSCType;
-
 
 /*
 ** Global variables.
 */
 extern KNX_LSCType KNX_SystemLSC[];
-
 
 /*
 ** Global functions.
@@ -60,9 +56,9 @@ extern KNX_LSCType KNX_SystemLSC[];
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE)    LSM_Init(void);
 FUNC(void, KSTACK_CODE)    LSM_Dispatch(
-    P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) record, 
+    P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) record,
     /*LSM_State*/ P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) ls_var
-);
+    );
 FUNC(boolean, KSTACK_CODE) LSM_IsAppLoaded(void);
 FUNC(boolean, KSTACK_CODE) LSM_IsGrATLoaded(void);
 FUNC(boolean, KSTACK_CODE) LSM_IsGrOATLoaded(void);
@@ -74,8 +70,9 @@ boolean LSM_IsAppLoaded(void);
 boolean LSM_IsGrATLoaded(void);
 boolean LSM_IsGrOATLoaded(void);
 void    LSM_Test(void);
-#endif /* KSTACK_MEMORY_MAPPING */
 
+
+#endif /* KSTACK_MEMORY_MAPPING */
 
 #if defined(__cplusplus)
 }

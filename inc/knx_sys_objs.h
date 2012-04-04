@@ -33,13 +33,11 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 ** Global variables.
 */
 extern const uint8                              Knx_SystemInterfaceObjCount;
 extern Knx_InterfaceObjectType const * const    Knx_SystemInterfaceObjs[];
-
 
 #if defined(__cplusplus)
 }

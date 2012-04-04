@@ -32,20 +32,19 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 **
 ** Global defines.
 **
-*/ 
-#define PROP_RO         ((uint8)0)
-#define PROP_RW         ((uint8)1)
-#define PROP_NO_ARR     ((uint8)0)
-#define PROP_ARR        ((uint8)1)
-#define PROP_VALUE      ((uint8)0)
-#define PROP_PTR        ((uint8)1)
-#define PROP_NO_FUNC    ((uint8)0)
-#define PROP_FUNC       ((uint8)1)
+*/
+#define PROP_RO                             ((uint8)0)
+#define PROP_RW                             ((uint8)1)
+#define PROP_NO_ARR                         ((uint8)0)
+#define PROP_ARR                            ((uint8)1)
+#define PROP_VALUE                          ((uint8)0)
+#define PROP_PTR                            ((uint8)1)
+#define PROP_NO_FUNC                        ((uint8)0)
+#define PROP_FUNC                           ((uint8)1)
 
 /*
 **  System Interface Objects.
@@ -151,8 +150,7 @@ extern "C"
 
    #define PDT_WR_EN                               0x80
    #define FUNCTION_FLAG                           0x40
-*/	
-
+ */
 
 /*
 ** Global function-like macros.
@@ -161,10 +159,9 @@ extern "C"
                       type)             (((write) & 0x01) << 7) | (((array) & 0x01) << 6) | (((ptr) & 0x01) << 5) | ((type) & 0x1f)
 #define MAKE_OBJ_ACCESS(read, write)    (((read) & 0x0f) << 4) | ((write) & 0x0f)
 
-
 /*
 ** Global types.
-*/	
+*/
 typedef enum tagKnx_IOS_ServiceType {
     IOS_PROP_READ,
     IOS_PROP_WRITE,
@@ -210,28 +207,29 @@ typedef struct tagKNX_InterfaceObjectType {
    } INTERFACE_ROOT;
  */
 
-
 /*
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(Knx_InterfaceObjectType const *, KSTACK_CODE)  IOS_GetInterfaceObjectByIndex(uint16 object_index);
-FUNC(Knx_PropertyType const *, KSTACK_CODE)	    IOS_FindProperty(
-    P2CONST(Knx_InterfaceObjectType, AUTOMATIC, KSTACK_APPL_DATA) pobj, 
+FUNC(Knx_PropertyType const *, KSTACK_CODE)     IOS_FindProperty(
+    P2CONST(Knx_InterfaceObjectType, AUTOMATIC, KSTACK_APPL_DATA) pobj,
     uint16 prop_id
-);
+    );
 FUNC(Knx_PropertyType const *, KSTACK_CODE)         IOS_GetPropertyByIndex(
-    P2CONST(Knx_InterfaceObjectType, AUTOMATIC, KSTACK_APPL_DATA) pobj, 
+    P2CONST(Knx_InterfaceObjectType, AUTOMATIC, KSTACK_APPL_DATA) pobj,
     uint16 prop_index
-);
-FUNC(void, KSTACK_CODE)				    IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, 
-    uint8 service, boolean connected
-);
+    );
+FUNC(void, KSTACK_CODE)                 IOS_Dispatch(const KnxMSG_BufferPtr pBuffer,
+                                                     uint8 service, boolean connected
+                                                     );
 #else
 Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_index);
 Knx_PropertyType const *        IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id);
 Knx_PropertyType const *        IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16 prop_index);
-void				IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connected);
+void                            IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connected);
+
+
 #endif /* KSTACK_MEMORY_MAPPING */
 
 /*

@@ -28,22 +28,20 @@
 */
 KnxMSG_BufferPtr KnxMSG_ScratchBufferPtr;
 
-
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
 
-
 /*
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxDisp_DispatchLayer(const uint8 LayerID, 
-    CONSTP2CONST(Knx_LayerServicesType, AUTOMATIC, KSTACK_APPL_DATA) ServiceTable
-);
+FUNC(void, KSTACK_CODE) KnxDisp_DispatchLayer(const uint8 LayerID,
+                                              CONSTP2CONST(Knx_LayerServicesType, AUTOMATIC, KSTACK_APPL_DATA) ServiceTable
+                                              );
 #else
-void KnxDisp_DispatchLayer(const uint8 LayerID, const Knx_LayerServicesType * ServiceTable);
+void KnxDisp_DispatchLayer(const uint8 LayerID, const Knx_LayerServicesType * ServiceTable)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8 entry;
@@ -58,11 +56,12 @@ void KnxDisp_DispatchLayer(const uint8 LayerID, const Knx_LayerServicesType * Se
                 /* todo: _ASSERT() Function-Pointer!=NULL !!! */
                 ServiceTable->Functions[entry]();
             } else {
-                (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+                KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
             }
         }
     } while (KnxMSG_ScratchBufferPtr != (KnxMSG_BufferPtr)NULL);
 }
+
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_STOP_SEC_CODE

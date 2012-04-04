@@ -32,11 +32,15 @@
 **	Local function prototypes.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(void, KSTACK_CODE) Disp_A_DataGroupReq(void), Disp_A_PollDataReq(void), Disp_T_PollDataCon(void);
-STATIC FUNC(void, KSTACK_CODE) Disp_T_DataGroupInd(void), Disp_T_DataGroupCon(void);
+STATIC  FUNC(void, KSTACK_CODE) Disp_A_DataGroupReq(void), Disp_A_PollDataReq(void), Disp_T_PollDataCon(void);
+STATIC  FUNC(void, KSTACK_CODE) Disp_T_DataGroupInd(void), Disp_T_DataGroupCon(void);
+
+
 #else
-void Disp_A_DataGroupReq(void), Disp_A_PollDataReq(void), Disp_T_PollDataCon(void);
-void Disp_T_DataGroupInd(void), Disp_T_DataGroupCon(void);
+void    Disp_A_DataGroupReq(void), Disp_A_PollDataReq(void), Disp_T_PollDataCon(void);
+void    Disp_T_DataGroupInd(void), Disp_T_DataGroupCon(void);
+
+
 #endif /* KSTACK_MEMORY_MAPPING */
 
 STATIC const Knx_LayerServiceFunctionType ALG_Services[] = {
@@ -141,11 +145,12 @@ STATIC uint8 ALG_NumQueuedGroupMessages;
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) KnxALG_Task(void)
 #else
-FUNC(void, KSTACK_CODE) KnxALG_Task(void)
+void KnxALG_Task(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxDisp_DispatchLayer(TASK_AL_ID, ALG_ServiceTable);
 }
+
 
 /*
 **
@@ -168,12 +173,12 @@ STATIC void Disp_T_DataGroupInd(void)
                 /* When the Application Layer of a device receives an A_GroupValue_Write-Service, it searches the */
                 /* TSAP in all entries of the association-table and informs all the associated ASAP. */
                 KnxALG_UpdateAssociatedASAPs(KnxMSG_ScratchBufferPtr, (KNX_OBJ_COMM_ENABLE | KNX_OBJ_WRITE_ENABLE));
-                (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+                KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
                 break;
             case apciGROUP_VALUE_RESP:
                 KnxALG_UpdateAssociatedASAPs(KnxMSG_ScratchBufferPtr,
                                              (KNX_OBJ_COMM_ENABLE | KNX_OBJ_WRITE_ENABLE | KNX_OBJ_UPDATE_ENABLE));
-                (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+                KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
                 break;
             case apciGROUP_VALUE_READ:
                 /*  When the Application Layer of a device receives an A_GroupValue_Read-Service, it searches the */
@@ -182,12 +187,12 @@ STATIC void Disp_T_DataGroupInd(void)
                 break;
             default:
                 /* invalid APCI. */
-                (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+                KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
                 break;
         }
     } else {
         /* AssocTab not loaded. */
-        (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+        KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
     }
 }
 
@@ -252,7 +257,8 @@ void KnxALG_Init(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio)
+FUNC(void, KSTACK_CODE) A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
+                                              Knx_PriorityType prio)
 #else
 void A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio)
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -270,9 +276,11 @@ void A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
-                            P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) data,
-                            uint8 len)
+FUNC(void, KSTACK_CODE) A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
+                                               Knx_PriorityType prio,
+                                               P2VAR(uint8, AUTOMATIC,
+                                                     KSTACK_APPL_DATA) data,
+                                               uint8 len)
 #else
 void A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
                             uint8 * data,
@@ -390,7 +398,6 @@ uint8 * KnxALG_GetObjectDataPointer(uint8 objectNr)
     }
 }
 
-
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) KnxALG_SetRAMFlags(uint16 objectNr, uint8 flags)
 #else
@@ -431,7 +438,6 @@ uint8 * KnxALG_GetRAMFlagPointer(void)
 {
     return (uint8 *)&APP_RAMFlags;
 }
-
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8 testFlags)
@@ -491,6 +497,7 @@ void KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8 testFlags)
         }
     }
 }
+
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_STOP_SEC_CODE

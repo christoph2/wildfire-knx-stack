@@ -54,24 +54,24 @@
 /* #include <stdio.h> */
 #endif
 
-#include "knx_tpuart.h"
+#include "link-layer/knx_tpuart.h"
 #include "knx_messaging.h"
-
 
 /*
 ** Local defines.
 */
-#define ACK_INFORMATION    ((uint8)0x10)
-#define ACK_ADDRESSED       ((uint8)0x01)
-#define ACK_BUSY                ((uint8)0x02)
-#define ACK_NACK                ((uint8)0x04)
-
+#define ACK_INFORMATION ((uint8)0x10)
+#define ACK_ADDRESSED   ((uint8)0x01)
+#define ACK_BUSY        ((uint8)0x02)
+#define ACK_NACK        ((uint8)0x04)
 
 /*
 ** Local functions prototypes.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
 STATIC FUNC(void, KSTACK_CODE) Disp_L_DataReq(void), Disp_L_PollDataReq(void);
+
+
 FUNC(uint8, KSTACK_CODE)    CalculateChecksum(KnxMSG_BufferPtr ptr);
 FUNC(void, KSTACK_CODE)    PH_AckInformation_req(uint8 flags);
 FUNC(void, KSTACK_CODE)    DBG_DUMP(KnxMSG_BufferPtr ptr);
@@ -81,15 +81,16 @@ FUNC(void, KSTACK_CODE)    StopTimeout(void);
 FUNC(void, KSTACK_CODE)    OnTimeout(void);        /* Callback. */
 #else
 STATIC void Disp_L_DataReq(void), Disp_L_PollDataReq(void);
-uint8   CalculateChecksum(KnxMSG_BufferPtr ptr);
-void    PH_AckInformation_req(uint8 flags);
-void    DBG_DUMP(KnxMSG_BufferPtr ptr);
-void decode(uint8 b);
-void    StartTimeout(void);
-void    StopTimeout(void);
-void    OnTimeout(void);        /* Callback. */
-#endif /* KSTACK_MEMORY_MAPPING */
+uint8       CalculateChecksum(KnxMSG_BufferPtr ptr);
+void        PH_AckInformation_req(uint8 flags);
+void        DBG_DUMP(KnxMSG_BufferPtr ptr);
+void        decode(uint8 b);
+void        StartTimeout(void);
+void        StopTimeout(void);
+void        OnTimeout(void);    /* Callback. */
 
+
+#endif /* KSTACK_MEMORY_MAPPING */
 
 /*
 ** Local constants.
@@ -151,7 +152,6 @@ const uint8 T2[] = {
 };
 /* T_Disconnect (01.01.100 ==> 01.01.001). */
 
-
 /*
 ** Local variables.
 */
@@ -170,7 +170,6 @@ uint8 TpuartRcvBuf[BUF_LEN];
 KnxMSG_BufferPtr pBuffer;
 
 uint8 AckService;
-
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
@@ -492,7 +491,7 @@ STATIC void Disp_L_DataReq(void)
 
     chk = CalculateChecksum(KnxMSG_ScratchBufferPtr);
 
-    (void)KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
     DBG_DUMP(KnxMSG_ScratchBufferPtr);
 }
 
@@ -523,7 +522,6 @@ uint8 CalculateChecksum(KnxMSG_BufferPtr ptr)
 
     return chk;
 }
-
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON

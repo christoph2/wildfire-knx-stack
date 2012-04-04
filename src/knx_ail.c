@@ -30,7 +30,6 @@
 
 #include "knx_ail.h"
 
-
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
     #include "MemMap.h"

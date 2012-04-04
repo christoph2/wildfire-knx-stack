@@ -32,7 +32,6 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 ** Global types.
 */

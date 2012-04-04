@@ -33,14 +33,15 @@ FUNC(uint8, KSTACK_CODE)                  GetBufferNumber(const KnxMSG_BufferPtr
 FUNC(void, KSTACK_CODE)                  ClearMessageBuffer(uint8 buf_num);
 #else
 KnxMSG_BufferPtr    GetBufferAddress(uint8 buf_num);
-uint8                     GetBufferNumber(const KnxMSG_BufferPtr buffer);
-void                     ClearMessageBuffer(uint8 buf_num);
+uint8               GetBufferNumber(const KnxMSG_BufferPtr buffer);
+void                ClearMessageBuffer(uint8 buf_num);
+
+
 #endif /* KSTACK_MEMORY_MAPPING */
 
-
 STATIC const uint8 KnxMSG_MessageRedirectionTable[16] = {
-    TASK_FREE_ID, TASK_LL_ID,   TASK_NL_ID,   TASK_TL_ID,   TASK_TC_ID,     TASK_FREE_ID,   TASK_FREE_ID,   TASK_AL_ID,
-    TASK_MG_ID,   TASK_MG_ID,   TASK_PM_ID,   TASK_LC_ID,   TASK_FREE_ID,   TASK_US_ID,     TASK_US_ID,     TASK_US_ID
+    TASK_FREE_ID, TASK_LL_ID,   TASK_NL_ID,   TASK_TL_ID,   TASK_TC_ID,     TASK_FREE_ID,     TASK_FREE_ID,   TASK_AL_ID,
+    TASK_MG_ID,   TASK_MG_ID,   TASK_PM_ID,   TASK_LC_ID,   TASK_FREE_ID,   TASK_US_ID,       TASK_US_ID,     TASK_US_ID
 };
 
 STATIC uint8            KnxMSG_Queues[MSG_NUM_TASKS];
@@ -146,9 +147,9 @@ KnxMSG_BufferPtr KnxMSG_AllocateBuffer(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
+FUNC(void, KSTACK_CODE) KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
 #else
-boolean KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
+void KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8   buf_num;
@@ -158,8 +159,9 @@ boolean KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
     DISABLE_ALL_INTERRUPTS();
 
     if ((buf_num = GetBufferNumber(ptr)) == MSG_INVALID_BUFFER) {
+        /* TODO: call error-handler */
         ENABLE_ALL_INTERRUPTS();
-        return FALSE;
+        return;
     }
 
     ReleaseCount++;
@@ -170,7 +172,8 @@ boolean KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
     while (t_fp != MSG_NO_NEXT) {
         if (t_fp == buf_num) {
             ENABLE_ALL_INTERRUPTS();
-            return FALSE;   /* not allocated. */
+            /* TODO: call error-handler */
+            return;   /* not allocated. */
         }
 
         t_fp = KnxMSG_Buffers[t_fp].next;
@@ -182,7 +185,6 @@ boolean KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
 
     ptr = (KnxMSG_BufferPtr)NULL;  /* invalidate Buffer. */
     ENABLE_ALL_INTERRUPTS();
-    return TRUE;
 }
 
 

@@ -32,12 +32,10 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 ** Global defines.
 */
 #define KNX_DEFAULT_HOP_COUNT ((uint8)6)
-
 
 /*
 ** Global functions.
@@ -45,11 +43,12 @@ extern "C"
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) KnxNL_Task(void);
 FUNC(void, KSTACK_CODE) KnxNL_Init(void);
-#else	
+#else
 void    KnxNL_Task(void);
 void    KnxNL_Init(void);
-#endif /* KSTACK_MEMORY_MAPPING */
 
+
+#endif /* KSTACK_MEMORY_MAPPING */
 
 #if defined(__cplusplus)
 }

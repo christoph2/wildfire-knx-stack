@@ -23,7 +23,6 @@
  */
 #include "KNXNwps.h"
 
-
 /*
 ** Function prototypes.
 */
@@ -33,10 +32,12 @@ FUNC(boolean, KSTACK_CODE) NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer);
 FUNC(boolean, KSTACK_CODE) NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer);
 FUNC(boolean, KSTACK_CODE) NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer);
 #else
-void        NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*/);
-boolean    NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer);
-boolean    NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer);
-boolean   NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer);
+void    NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*/);
+boolean NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer);
+boolean NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer);
+boolean NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer);
+
+
 #endif /* KSTACK_MEMORY_MAPPING */
 
 /*
@@ -93,7 +94,6 @@ boolean   NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer);
     Value:          11..21
  */
 
-
 /*
 ** Local types.
 */
@@ -106,14 +106,13 @@ typedef struct tagNWPSFunctions {
     NWPS_FUNC   func;
 } NWPSFunctions;
 
-
 /*
 ** Local constants.
 */
 STATIC NWPSFunctions NWPSReadFunctions[] = {
-    {KNX_OT_ADDRESSTABLE_OBJECT, KNX_OT_ADDRESSTABLE_OBJECT,     KNX_PID_GROUP_ADDRESS_LIST,           NWPS_GroupAddressCheck                                                        },
-    {(uint8)50,                  (uint16)50000,                  KNX_PID_OBJECT_TYPE,                  NWPS_FunctionalBlockScan                                                      },
-    {KNX_OT_DEVICE_OBJECT,       KNX_OT_DEVICE_OBJECT,           KNX_PID_SERIAL_NUMBER,                NWPS_GetSerialNumber                                                          }
+    {KNX_OT_ADDRESSTABLE_OBJECT, KNX_OT_ADDRESSTABLE_OBJECT,     KNX_PID_GROUP_ADDRESS_LIST,           NWPS_GroupAddressCheck                                                                         },
+    {(uint8)50,                  (uint16)50000,                  KNX_PID_OBJECT_TYPE,                  NWPS_FunctionalBlockScan                                                                       },
+    {KNX_OT_DEVICE_OBJECT,       KNX_OT_DEVICE_OBJECT,           KNX_PID_SERIAL_NUMBER,                NWPS_GetSerialNumber                                                                           }
 };
 
 /* A_NetworkParameter_Read.req(hop_count_type, parameter_type, priority, test_info); */
@@ -149,7 +148,7 @@ void NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*
     } else if (service == NWPS_WRITE) {
 
     } else {
-        (void)KnxMSG_ReleaseBuffer(pBuffer);
+        KnxMSG_ReleaseBuffer(pBuffer);
     }
 }
 
@@ -182,6 +181,7 @@ boolean NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer)
 {
     return TRUE;
 }
+
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_STOP_SEC_CODE

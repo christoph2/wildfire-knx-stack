@@ -32,10 +32,9 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /* TODO: Config. */
-#define MAX_REP_COUNT   ((uint8)3)
-#define TL_STYLE        3   /* [1,2,3] - Transport-Layer-Styles gem. KNX-Handbuch 3/3/4. */
+#define MAX_REP_COUNT           ((uint8)3)
+#define TL_STYLE                3 /* [1,2,3] - Transport-Layer-Styles gem. KNX-Handbuch 3/3/4. */
 #define TLC_CONNECTION_TIMEOUT  ((TM_TickType)6)
 #define TLC_ACKNOWLEDGE_TIMEOUT ((TM_TickType)3)
 /*  #define Def_Rep_Count               ((uint8)3) */
@@ -91,17 +90,18 @@ typedef struct tagKnxTLC_ActionListType {
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)		    KnxTLC_StateMachine(KNX_TlcEventType event);
+FUNC(void, KSTACK_CODE)         KnxTLC_StateMachine(KNX_TlcEventType event);
 
 FUNC(KnxTLC_StateType, KSTACK_CODE) KnxTLC_GetState(void);
-FUNC(void, KSTACK_CODE)		    KnxTLC_SetState(KnxTLC_StateType State);
+FUNC(void, KSTACK_CODE)         KnxTLC_SetState(KnxTLC_StateType State);
 #else
-void		    KnxTLC_StateMachine(KNX_TlcEventType event);
+void KnxTLC_StateMachine(KNX_TlcEventType event);
 
 KnxTLC_StateType    KnxTLC_GetState(void);
 void                KnxTLC_SetState(KnxTLC_StateType State);
-#endif /* KSTACK_MEMORY_MAPPING */
 
+
+#endif /* KSTACK_MEMORY_MAPPING */
 
 #if defined(__cplusplus)
 }

@@ -44,6 +44,7 @@ uint16 btohs(uint16 w)
     return MAKEWORD(LOBYTE(w), HIBYTE(w));
 }
 
+
 #endif  /* defined(KNX_LITTLE_ENDIAN) */
 
 #define COMW(w) ((~(w)) + 1)
@@ -180,6 +181,7 @@ sint32 DPT9ToLong(uint16 value)
 
     return Res;
 }
+
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_STOP_SEC_CODE
