@@ -245,7 +245,8 @@ void KnxTMR_SystemTimeHandler(void)
                     tm->state = TM_STATE_EXPIRED;
                 }
             } else if (tm->base == TM_BASE_SEC) {
-                if ((SecondChanged == TRUE) && (--tm->expire_counter == (uint32)0UL)) {
+                tm->expire_counter -= (uint32)1UL;
+                if ((SecondChanged == TRUE) && (tm->expire_counter == (uint32)0UL)) {
                     tm->state = TM_STATE_EXPIRED;
                 }
             }

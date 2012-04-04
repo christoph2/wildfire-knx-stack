@@ -76,7 +76,9 @@ FUNC(boolean, KSTACK_CODE) KnxAIL_GetObject(uint16 objectNr, P2VAR(void, AUTOMAT
 boolean KnxAIL_GetObject(uint16 objectNr, void * dst)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if ((objectNr < KnxALG_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
+    boolean appLoaded = LSM_IsAppLoaded();
+
+    if ((objectNr < KnxALG_GetNumCommObjs()) && appLoaded) {
         Utl_MemCopy(dst, KnxALG_GetObjectDataPointer(objectNr),
                     KnxALG_GetObjLen(KnxALG_GetCommObjDescr(objectNr)->Type));
         return TRUE;
@@ -127,7 +129,9 @@ FUNC(boolean, KSTACK_CODE) KnxAIL_SetObject(uint16 objectNr, P2VAR(void, AUTOMAT
 boolean KnxAIL_SetObject(uint16 objectNr, void * src)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if ((objectNr < KnxALG_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
+    boolean appLoaded = LSM_IsAppLoaded();
+
+    if ((objectNr < KnxALG_GetNumCommObjs()) && appLoaded) {
         Utl_MemCopy(KnxALG_GetObjectDataPointer(objectNr), src, KnxALG_GetObjLen(KnxALG_GetCommObjDescr(objectNr)->Type));
         return TRUE;
     } else {
@@ -142,7 +146,9 @@ FUNC(boolean, KSTACK_CODE) KnxAIL_ReadObject(uint16 objectNr)
 boolean KnxAIL_ReadObject(uint16 objectNr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if (objectNr < KnxALG_GetNumCommObjs() && LSM_IsAppLoaded()) {
+    boolean appLoaded = LSM_IsAppLoaded();
+
+    if (objectNr < KnxALG_GetNumCommObjs() && appLoaded) {
         if (KnxALG_IsObjectTransmitting(objectNr)) {
             return FALSE;
         } else {
@@ -161,7 +167,9 @@ FUNC(boolean, KSTACK_CODE) KnxAIL_GetRAMFlags(uint16 objectNr, P2VAR(uint8, AUTO
 boolean KnxAIL_GetRAMFlags(uint16 objectNr, uint8 * flags)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if (objectNr < KnxALG_GetNumCommObjs() && LSM_IsAppLoaded()) {
+    boolean appLoaded = LSM_IsAppLoaded();
+
+    if (objectNr < KnxALG_GetNumCommObjs() && appLoaded) {
         *flags = KnxALG_GetRAMFlags(objectNr);
         return TRUE;
     }
@@ -179,8 +187,9 @@ uint8 KnxAIL_SetRAMFlags(uint16 objectNr, uint8 flags)
     uint8   value;
     uint8   mask;
     uint8   tmp = (uint8)0x00;
+    boolean appLoaded = LSM_IsAppLoaded();
 
-    if ((objectNr < KnxALG_GetNumCommObjs()) && (LSM_IsAppLoaded())) {
+    if ((objectNr < KnxALG_GetNumCommObjs()) && appLoaded) {
         value  = (flags & (uint8)0x0f);
         mask   = (flags & (uint8)0xf0) >> (uint8)4;
 /*        tmp=APP_RAMFlags[objectNr>>1];    */
