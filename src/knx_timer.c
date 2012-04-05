@@ -30,10 +30,11 @@
    DWORD TickerThreadID;
  */
 
-#if 0
-#define DISABLE_ALL_INTERRUPTS()
-#define ENABLE_ALL_INTERRUPTS()
-#endif
+#include "CPU_Primitives.h"
+
+#define DISABLE_ALL_INTERRUPTS()    CPU_DISABLE_ALL_INTERRUPTS()
+#define ENABLE_ALL_INTERRUPTS()     CPU_ENABLE_ALL_INTERRUPTS()
+
 
 /*
 ** Local variables.

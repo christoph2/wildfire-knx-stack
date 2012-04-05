@@ -94,7 +94,8 @@ uint16 MM_MapAddressFromTarget(uint16 Address)
  */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) CompMem(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p1, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p2, uint16 len)
+FUNC(boolean, KSTACK_CODE) CompMem(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p1, P2VAR(void, AUTOMATIC,
+                                                                                      KSTACK_APPL_DATA) p2, uint16 len)
 #else
 boolean CompMem(void * p1, void * p2, uint16 len)
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -141,7 +142,6 @@ void CopyRAM(void * d, void * s, uint16 len)
 }
 
 
-
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) ZeroRAM(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p, uint16 len)
 #else
@@ -154,6 +154,7 @@ void ZeroRAM(void * p, uint16 len)
         *bp++ = (uint8)0;
     }
 }
+
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_STOP_SEC_CODE

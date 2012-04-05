@@ -543,12 +543,8 @@ void A_DomainAddress_Write_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
 {
     uint8 data[2];
 
-/*
-    data[0]=domain_ddress[0];
-    data[1]=domain_ddress[1];
- */
-
-    *(uint16 *)data[0] = domain_ddress;
+    data[0] = HIBYTE(domain_ddress);
+    data[1] = LOBYTE(domain_ddress);
 
     A_Broadcast_Req(pBuffer, source, A_DOMAINADDRESS_WRITE, (uint8 *)data, (uint8)2);
 }
@@ -566,14 +562,11 @@ void A_DomainAddressSelective_Read_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType
 {
     uint8 data[5];
 
-    *(uint16 *)data[0] = domain_ddress;
-    *(uint16 *)data[2] = start_address;
-/*
-    data[0]=domain_ddress[0];
-    data[1]=domain_ddress[1];
-    data[2]=start_address[0];
-    data[3]=start_address[1];
- */
+    data[0]=HIBYTE(domain_ddress);
+    data[1]=LOBYTE(domain_ddress);
+    data[2]=HIBYTE(start_address);
+    data[3]=LOBYTE(start_address);
+
     data[4] = range;
 
     A_Broadcast_Req(pBuffer, source, A_DOMAINADDRESSSELECTIVE_READ, (uint8 *)data, (uint8)5);

@@ -29,7 +29,6 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-
 /*
 ** Global function-like macros.
 */

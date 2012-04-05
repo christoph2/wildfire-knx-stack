@@ -106,7 +106,7 @@ boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap)
             if (searched_addr == ca) {
                 *tsap  = mid + (uint16)1;
                 ack    = TRUE;
-                break;
+                break;  /*!MISRA 1998 Rule 58 ('non-switch break used') Exception: the alternative would be a 'goto' statement ;-) */
             } else if (searched_addr < ca) {
                 right = (sint16)(mid - (uint16)1);
             } else {

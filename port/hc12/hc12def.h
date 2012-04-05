@@ -4,33 +4,31 @@
 **
 */
 
+#ifndef __HC12DEF_H
+#define __HC12DEF_H
 
-#ifndef	__HC12DEF_H
-#define	__HC12DEF_H
-
-#ifndef	BYTE
-	typedef	unsigned char BYTE;
+#ifndef BYTE
+typedef unsigned char BYTE;
 #endif
 
-#ifndef	WORD
-	typedef	unsigned int WORD;
+#ifndef WORD
+typedef unsigned int WORD;
 #endif
 
-#ifndef	DWORD
-	typedef	unsigned long DWORD;
+#ifndef DWORD
+typedef unsigned long DWORD;
 #endif
 
-#ifndef	LOBYTE
-	#define LOBYTE(w)	((w) & 0x00ff)
+#ifndef LOBYTE
+    #define LOBYTE(w)       ((w) & 0x00ff)
 #endif
 
-#ifndef	HIBYTE
-	#define LOBYTE(w)	(((w) & 0xff00)>>8)
+#ifndef HIBYTE
+    #define LOBYTE(w)       (((w) & 0xff00) >> 8)
 #endif
 
 #ifndef MAKEWORD
-	#define MAKEWORD(l,h)	((((h) & 0xff)<<8) | ((l) & 0xff))
+    #define MAKEWORD(l, h)  ((((h) & 0xff) << 8) | ((l) & 0xff))
 #endif
 
-
-#endif	// __HC12DEF_H
+#endif  /* __HC12DEF_H */

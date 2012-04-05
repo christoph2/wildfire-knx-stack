@@ -132,6 +132,7 @@ STATIC boolean KnxSched_PreLinkLayerTest(void)
     trigger watchdog
     trigger timer-system (cyclic refresh of system timer)
  */
+    return TRUE;
 }
 
 
@@ -144,6 +145,7 @@ STATIC boolean KnxSched_PostLinkLayerTest(void)
 /*
 TODO: check if system-state is changed (busmonitor mode).
  */
+    return TRUE;
 }
 
 
@@ -156,6 +158,7 @@ STATIC boolean KnxSched_PreUserApplicationTest(void)
 /*
 TODO: check entry conditions for application
  */
+    return TRUE;
 }
 
 #if KSTACK_MEMORY_MAPPING == STD_ON

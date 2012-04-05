@@ -235,6 +235,7 @@ void DEV_Init(void)
  */
 }
 
+
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(uint8 , KSTACK_CODE) DEV_GetHopCount(void)
 #else
@@ -245,4 +246,5 @@ uint8 DEV_GetHopCount(void)
 
     return ((hc < 1) || (hc > KNX_DEFAULT_HOP_COUNT)) ? KNX_DEFAULT_HOP_COUNT : hc;
 }
+
 
