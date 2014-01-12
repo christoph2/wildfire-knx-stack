@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -24,7 +24,7 @@
 #if !defined(__KNX_TYPES_H)
 #define __KNX_TYPES_H
 
-#include "Std_Types.h"
+#include "kdk/common/Std_Types.h"
 #include "knx_imi.h"
 
 #if defined(__cplusplus)

@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -28,6 +28,8 @@
 #include "knx_tlg.h"
 #include "knx_layer_application.h"
 
+
+void KnxUser_App(); /* TODO: Create module!!! */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 STATIC FUNC(boolean, KSTACK_CODE)  KnxSched_PreLinkLayerTest(void);
@@ -96,7 +98,7 @@ void KnxSched_Task(void)
     KnxALM_Task();
 
     if (KnxSched_PreUserApplicationTest()) {
-
+        KnxUser_App();
     }
 
     KnxALG_PollCycle();

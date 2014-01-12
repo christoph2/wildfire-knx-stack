@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -30,7 +30,7 @@
    DWORD TickerThreadID;
  */
 
-#include "CPU_Primitives.h"
+#include "kdk/common/CPU_Primitives.h"
 
 #define DISABLE_ALL_INTERRUPTS()    CPU_DISABLE_ALL_INTERRUPTS()
 #define ENABLE_ALL_INTERRUPTS()     CPU_ENABLE_ALL_INTERRUPTS()
