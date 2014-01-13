@@ -232,7 +232,7 @@ void KnxTmr_SystemTickHandler(void)
     uint8           idx;
     boolean         SecondChanged = FALSE;
 
-    Tmr_SysMsCounter++;
+    Tmr_SysMsCounter += TMR_TICK_RESOLUTION;
 
     if ((Tmr_SysMsCounter % (uint32)1000UL) == (uint32)0UL) {
         Tmr_SysSecondCounter++;
