@@ -83,11 +83,11 @@ FUNC(void, KSTACK_CODE) KnxTLC_Task(void)
 void KnxTLC_Task(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if (KnxTMR_IsExpired(TM_TIMER_TLC_CON_TIMEOUT)) {
+    if (KnxTmr_IsExpired(TMR_TIMER_TLC_CON_TIMEOUT)) {
         KnxTLC_StateMachine(tlcTIMEOUT_CON);
     }
 
-    if (KnxTMR_IsExpired(TM_TIMER_TLC_ACK_TIMEOUT)) {
+    if (KnxTmr_IsExpired(TMR_TIMER_TLC_ACK_TIMEOUT)) {
         KnxTLC_StateMachine(tlcTIMEOUT_ACK);
     }
 

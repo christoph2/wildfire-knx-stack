@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -35,8 +35,8 @@ extern "C"
 /* TODO: Config. */
 #define MAX_REP_COUNT           ((uint8)3)
 #define TL_STYLE                3 /* [1,2,3] - Transport-Layer-Styles gem. KNX-Handbuch 3/3/4. */
-#define TLC_CONNECTION_TIMEOUT  ((TM_TickType)6)
-#define TLC_ACKNOWLEDGE_TIMEOUT ((TM_TickType)3)
+#define TLC_CONNECTION_TIMEOUT  ((Tmr_TickType)6)
+#define TLC_ACKNOWLEDGE_TIMEOUT ((Tmr_TickType)3)
 /*  #define Def_Rep_Count               ((uint8)3) */
 
 /*

@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <chris@konnex-tools.de,
+ *  (C) 2007-2014 by Christoph Schueler <chris@konnex-tools.de,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -373,7 +373,7 @@ STATIC FUNC(void, KSTACK_CODE) StartConnectionTimeoutTimer(void)
 STATIC void StartConnectionTimeoutTimer(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxTMR_Start(TM_TIMER_TLC_CON_TIMEOUT, TM_BASE_SEC, TLC_CONNECTION_TIMEOUT);
+    (void)KnxTmr_Start(TMR_TIMER_TLC_CON_TIMEOUT, TMR_RESOLUTION_SEC, TLC_CONNECTION_TIMEOUT);
 }
 
 
@@ -383,8 +383,8 @@ STATIC FUNC(void, KSTACK_CODE) RestartConnectionTimeoutTimer(void)
 STATIC void RestartConnectionTimeoutTimer(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxTMR_Stop(TM_TIMER_TLC_CON_TIMEOUT);
-    (void)KnxTMR_Start(TM_TIMER_TLC_CON_TIMEOUT, TM_BASE_SEC, TLC_CONNECTION_TIMEOUT);
+    (void)KnxTmr_Stop(TMR_TIMER_TLC_CON_TIMEOUT);
+    (void)KnxTmr_Start(TMR_TIMER_TLC_CON_TIMEOUT, TMR_RESOLUTION_SEC, TLC_CONNECTION_TIMEOUT);
 }
 
 
@@ -394,7 +394,7 @@ STATIC FUNC(void, KSTACK_CODE) StopConnectionTimeoutTimer(void)
 STATIC void StopConnectionTimeoutTimer(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxTMR_Stop(TM_TIMER_TLC_CON_TIMEOUT);
+    (void)KnxTmr_Stop(TMR_TIMER_TLC_CON_TIMEOUT);
 }
 
 
@@ -404,7 +404,7 @@ STATIC FUNC(void, KSTACK_CODE) StartAcknowledgementTimeoutTimer(void)
 STATIC void StartAcknowledgementTimeoutTimer(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxTMR_Start(TM_TIMER_TLC_ACK_TIMEOUT, TM_BASE_SEC, TLC_ACKNOWLEDGE_TIMEOUT);
+    (void)KnxTmr_Start(TMR_TIMER_TLC_ACK_TIMEOUT, TMR_RESOLUTION_SEC, TLC_ACKNOWLEDGE_TIMEOUT);
 }
 
 
@@ -414,7 +414,7 @@ STATIC FUNC(void, KSTACK_CODE) StopAcknowledgementTimeoutTimer(void)
 STATIC void StopAcknowledgementTimeoutTimer(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    (void)KnxTMR_Stop(TM_TIMER_TLC_ACK_TIMEOUT);
+    (void)KnxTmr_Stop(TMR_TIMER_TLC_ACK_TIMEOUT);
 }
 
 

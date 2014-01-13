@@ -34,77 +34,77 @@ extern "C"
 /*
 ** Global defines.
 */
-#define TM_TIMER_TLC_CON_TIMEOUT    ((uint8)0)
-#define TM_TIMER_TLC_ACK_TIMEOUT    ((uint8)1)
+#define TMR_TIMER_TLC_CON_TIMEOUT    ((uint8)0)
+#define TMR_TIMER_TLC_ACK_TIMEOUT    ((uint8)1)
 
-#define TM_NUM_TIMERS               5
+#define TMR_NUM_TIMERS               5  /* TODO: Config! */
 
-#if TM_NUM_TIMERS < 3
+#if TMR_NUM_TIMERS < 3
     #error "ERROR: Number of timers must be at least two!!!"
 #endif
 
 /*
 ** Global types.
 */
-typedef uint32 TM_TickType, * TM_TickRefType;
+typedef uint32 Tmr_TickType, * Tmr_TickRefType;
 
-typedef enum tagTM_BaseType {
-    TM_BASE_MS,
-    TM_BASE_SEC
-} TM_BaseType;
+typedef enum tagTmr_ResolutionType {
+    TMR_RESOLUTION_MS,
+    TMR_RESOLUTION_SEC
+} Tmr_ResolutionType;
 
-typedef enum tagTM_StateType {              /* Constants for Timer-State-Machines. */
-    TM_STATE_STOPPED,
-    TM_STATE_RUNNING,
-    TM_STATE_EXPIRED
-} TM_StateType;
+typedef enum tagTmr_StateType {              /* Constants for Timer-State-Machines. */
+    TMR_STATE_STOPPED,
+    TMR_STATE_RUNNING,
+    TMR_STATE_EXPIRED
+} Tmr_StateType;
 
-typedef struct tagTM_TimerType {
-    TM_StateType    state;
-    TM_BaseType     base;
-    TM_TickType     expire_counter;
-} TM_TimerType;
+typedef struct tagTmr_TimerType {
+    Tmr_StateType state;
+    Tmr_ResolutionType base;
+    Tmr_TickType expire_counter;
+} Tmr_TimerType;
 
 /*
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)     KnxTMR_Init(void);
+FUNC(void, KSTACK_CODE)     KnxTmr_Init(void);
 
-FUNC(boolean, KSTACK_CODE)  KnxTMR_Start(uint8 timer, TM_BaseType base, TM_TickType ticks);
-FUNC(boolean, KSTACK_CODE)  KnxTMR_Stop(uint8 timer);
+FUNC(boolean, KSTACK_CODE)  KnxTmr_Start(uint8 timer, Tmr_ResolutionType base, Tmr_TickType ticks);
+FUNC(boolean, KSTACK_CODE)  KnxTmr_Stop(uint8 timer);
 
-FUNC(boolean, KSTACK_CODE)  KnxTMR_IsExpired(uint8 timer);
-FUNC(boolean, KSTACK_CODE)  KnxTMR_IsRunning(uint8 timer);
+FUNC(boolean, KSTACK_CODE)  KnxTmr_IsExpired(uint8 timer);
+FUNC(boolean, KSTACK_CODE)  KnxTmr_IsRunning(uint8 timer);
 
-FUNC(boolean, KSTACK_CODE)  KnxTMR_GetRemainder(uint8 timer, TM_TickRefType remainder);
+FUNC(boolean, KSTACK_CODE)  KnxTmr_GetRemainder(uint8 timer, Tmr_TickRefType remainder);
 
-FUNC(TM_TickType, KSTACK_CODE) TM_TickType KnxTMR_GetSystemTime(TM_BaseType base);
+FUNC(Tmr_TickType, KSTACK_CODE) Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base);
 
 
-FUNC(void, KSTACK_CODE)     KnxTMR_Delay(TM_TickType ms);
-FUNC(void, KSTACK_CODE)     KnxTMR_DelayHMS(uint16 H, uint16 M, uint16 S);
+FUNC(void, KSTACK_CODE)     KnxTmr_Delay(Tmr_TickType ms);
+FUNC(void, KSTACK_CODE)     KnxTmr_DelayHMS(uint16 H, uint16 M, uint16 S);
 
-FUNC(void, KSTACK_CODE)     KnxTMR_SystemTimeHandler(void);
-FUNC(void, KSTACK_CODE)     KnxTMR_SecondCallback(void);
+FUNC(void, KSTACK_CODE)     KnxTmr_SystemTimeHandler(void);
+FUNC(void, KSTACK_CODE)     KnxTmr_SecondCallback(void);
 #else
-void KnxTMR_Init(void);
+void KnxTmr_Init(void);
 
-boolean KnxTMR_Start(uint8 timer, TM_BaseType base, TM_TickType ticks);
-boolean KnxTMR_Stop(uint8 timer);
+boolean KnxTmr_Start(uint8 timer, Tmr_ResolutionType base, Tmr_TickType ticks);
+boolean KnxTmr_Stop(uint8 timer);
 
-boolean KnxTMR_IsExpired(uint8 timer);
-boolean KnxTMR_IsRunning(uint8 timer);
+boolean KnxTmr_IsExpired(uint8 timer);
+boolean KnxTmr_IsRunning(uint8 timer);
 
-boolean KnxTMR_GetRemainder(uint8 timer, TM_TickRefType remainder);
+boolean KnxTmr_GetRemainder(uint8 timer, Tmr_TickRefType remainder);
 
-TM_TickType KnxTMR_GetSystemTime(TM_BaseType base);
+Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base);
 
-void    KnxTMR_Delay(TM_TickType ms);
-void    KnxTMR_DelayHMS(uint16 H, uint16 M, uint16 S);
+void    KnxTmr_Delay(Tmr_TickType ms);
+void    KnxTmr_DelayHMS(uint16 H, uint16 M, uint16 S);
 
-void    KnxTMR_SystemTimeHandler(void);
-void    KnxTMR_SecondCallback(void);
+void    KnxTmr_SystemTimeHandler(void);
+void    KnxTmr_SecondCallback(void);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -114,4 +114,3 @@ void    KnxTMR_SecondCallback(void);
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_TIMER_H */
-

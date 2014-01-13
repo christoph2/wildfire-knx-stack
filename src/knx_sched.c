@@ -71,7 +71,7 @@ void KnxSched_Init(void)
     KnxTLC_Init();
     KnxMSG_Init();
     KnxALG_Init();
-    KnxTMR_Init();
+    KnxTmr_Init();
 }
 
 
