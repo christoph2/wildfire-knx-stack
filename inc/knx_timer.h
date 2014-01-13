@@ -85,7 +85,7 @@ FUNC(Tmr_TickType, KSTACK_CODE) Tmr_TickType KnxTmr_GetSystemTime(Tmr_Resolution
 FUNC(void, KSTACK_CODE)     KnxTmr_Delay(Tmr_TickType ms);
 FUNC(void, KSTACK_CODE)     KnxTmr_DelayHMS(uint16 H, uint16 M, uint16 S);
 
-FUNC(void, KSTACK_CODE)     KnxTmr_SystemTimeHandler(void);
+FUNC(void, KSTACK_CODE)     KnxTmr_SystemTickHandler(void);
 FUNC(void, KSTACK_CODE)     KnxTmr_SecondCallback(void);
 #else
 void KnxTmr_Init(void);
@@ -103,7 +103,7 @@ Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base);
 void    KnxTmr_Delay(Tmr_TickType ms);
 void    KnxTmr_DelayHMS(uint16 H, uint16 M, uint16 S);
 
-void    KnxTmr_SystemTimeHandler(void);
+void    KnxTmr_SystemTickHandler(void);
 void    KnxTmr_SecondCallback(void);
 
 

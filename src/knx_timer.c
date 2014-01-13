@@ -35,6 +35,9 @@
 #define DISABLE_ALL_INTERRUPTS()    CPU_DISABLE_ALL_INTERRUPTS()
 #define ENABLE_ALL_INTERRUPTS()     CPU_ENABLE_ALL_INTERRUPTS()
 
+#define TMR_LOCK()      DISABLE_ALL_INTERRUPTS()
+#define TMR_UNLOCK()    ENABLE_ALL_INTERRUPTS()
+
 
 /*
 ** Local variables.
@@ -220,9 +223,9 @@ void KnxTmr_SecondCallback(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxTmr_SystemTimeHandler(void)
+FUNC(void, KSTACK_CODE) KnxTmr_SystemTickHandler(void)
 #else
-void KnxTmr_SystemTimeHandler(void)
+void KnxTmr_SystemTickHandler(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     Tmr_TimerType *  tm;
@@ -279,24 +282,6 @@ void KnxTmr_SystemTimeHandler(void)
    Comment:
     Before a call of ‘TmAddStart’ there must be at least one
     call of ‘TmStart’.
- */
-
-/*
-   DWORD WINAPI MSTickerThread(LPVOID *lpThreadParm)
-   {
-   //      struct timeval tv;
-   //      tv.tv_sec = 0;
-   //      tv.tv_usec = 35000;     // 35000 Mikrosekunden = 35 Millisekunden
-   //      select(0, NULL, NULL, NULL, &tv);
-    UNREFERENCED_PARAMETER(lpThreadParm);
-
-    while (TRUE) {
-        Sleep(1);
-        Tmr_Ticker_Callback();
-    }
-
-    return 0;
-   }
  */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
