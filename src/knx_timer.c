@@ -24,20 +24,7 @@
 
 #include "knx_timer.h"
 
-/*
-   DWORD WINAPI MSTickerThread(LPVOID *lpThreadParm);
-   HANDLE hTickerThread;
-   DWORD TickerThreadID;
- */
-
 #include "kdk/common/CPU_Primitives.h"
-
-#define DISABLE_ALL_INTERRUPTS()    CPU_DISABLE_ALL_INTERRUPTS()
-#define ENABLE_ALL_INTERRUPTS()     CPU_ENABLE_ALL_INTERRUPTS()
-
-#define TMR_LOCK()      DISABLE_ALL_INTERRUPTS()
-#define TMR_UNLOCK()    ENABLE_ALL_INTERRUPTS()
-
 
 /*
 ** Local variables.
@@ -64,7 +51,7 @@ void KnxTmr_Init(void)
 
     Tmr_SysMsCounter = Tmr_SysSecondCounter = (uint32)0UL;
 
-    DISABLE_ALL_INTERRUPTS();
+    TMR_LOCK();
 
     for (idx = (uint8)0; idx < TMR_NUM_TIMERS; idx++) {
         KNX_Timer[idx].expire_counter  = (uint32)0UL;
@@ -72,7 +59,7 @@ void KnxTmr_Init(void)
         KNX_Timer[idx].base            = TMR_RESOLUTION_MS;
     }
 
-    ENABLE_ALL_INTERRUPTS();
+    TMR_UNLOCK();
 }
 
 
@@ -84,11 +71,11 @@ boolean KnxTmr_Start(uint8 timer, Tmr_ResolutionType base, Tmr_TickType ticks)
 {
     if (timer < TMR_NUM_TIMERS) {
         if (!(KNX_Timer[timer].state & TMR_STATE_RUNNING)) {
-            DISABLE_ALL_INTERRUPTS();
+            TMR_LOCK();
             KNX_Timer[timer].expire_counter    = ticks;
             KNX_Timer[timer].state             = TMR_STATE_RUNNING;
             KNX_Timer[timer].base              = base;
-            ENABLE_ALL_INTERRUPTS();
+            TMR_UNLOCK();
             return TRUE;
         } else {
             return FALSE;
@@ -106,9 +93,9 @@ boolean KnxTmr_Stop(uint8 timer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TMR_NUM_TIMERS) {
-        DISABLE_ALL_INTERRUPTS();
+        TMR_LOCK();
         KNX_Timer[timer].state = TMR_STATE_STOPPED;
-        ENABLE_ALL_INTERRUPTS();
+        TMR_UNLOCK();
         return TRUE;
     } else {
         return FALSE;
@@ -125,11 +112,11 @@ boolean KnxTmr_IsExpired(uint8 timer)
     Tmr_StateType state;
 
     if (timer < TMR_NUM_TIMERS) {
-        DISABLE_ALL_INTERRUPTS();
+        TMR_LOCK();
         state                      = KNX_Timer[timer].state;
         KNX_Timer[timer].state    &= (~TMR_STATE_EXPIRED);  /* TODO: FixMe */
 
-        ENABLE_ALL_INTERRUPTS();
+        TMR_UNLOCK();
         return (state & TMR_STATE_EXPIRED) == TMR_STATE_EXPIRED;
     } else {
         return FALSE;   /* Invalid Timer. */
@@ -161,9 +148,9 @@ boolean KnxTmr_GetRemainder(uint8 timer, Tmr_TickRefType remainder)
         if (!(KNX_Timer[timer].state & TMR_STATE_RUNNING)) {
             return FALSE;
         } else {
-            DISABLE_ALL_INTERRUPTS();
+            TMR_LOCK();
             *remainder = KNX_Timer[timer].expire_counter;
-            ENABLE_ALL_INTERRUPTS();
+            TMR_UNLOCK();
             return TRUE;
         }
     } else {
@@ -180,7 +167,7 @@ Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base)
 {
     Tmr_TickType t;
 
-    DISABLE_ALL_INTERRUPTS();
+    TMR_LOCK();
 
     if (base == TMR_RESOLUTION_MS) {
         t = Tmr_SysMsCounter;
@@ -188,7 +175,7 @@ Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base)
         t = Tmr_SysSecondCounter;
     }
 
-    ENABLE_ALL_INTERRUPTS();
+    TMR_UNLOCK();
 
     return t;
 }
@@ -204,11 +191,11 @@ Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base)
    {
     Tmr_TickType delay_time,end_time;
 
-    delay_time=((Tmr_TickType)H*60*60)+((Tmr_TickType)M*60)+((Tmr_TickType)S);	// in Seconds !!!
+    delay_time=((Tmr_TickType)H*60*60)+((Tmr_TickType)M*60)+((Tmr_TickType)S);  // in Seconds !!!
 
     end_time=delay_time+Tmr_SysSecondCounter;
 
-   //	while
+   //   while
    }
  */
 
@@ -236,6 +223,7 @@ void KnxTmr_SystemTickHandler(void)
 
     if ((Tmr_SysMsCounter % (uint32)1000UL) == (uint32)0UL) {
         Tmr_SysSecondCounter++;
+        printf("Second elapsed [%u].\n", Tmr_SysSecondCounter);
         SecondChanged = TRUE;
         KnxTmr_SecondCallback();
     }
@@ -288,3 +276,4 @@ void KnxTmr_SystemTickHandler(void)
     #define KSTACK_STOP_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
+
