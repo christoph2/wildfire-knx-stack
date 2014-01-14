@@ -237,13 +237,16 @@ void KnxTmr_SystemTickHandler(void)
                     tm->state = TMR_STATE_EXPIRED;
                 }
             } else if (tm->base == TMR_RESOLUTION_SEC) {
-                tm->expire_counter -= (uint32)1UL;
-                if ((SecondChanged == TRUE) && (tm->expire_counter == (uint32)0UL)) {
-                    tm->state = TMR_STATE_EXPIRED;
+                if (SecondChanged == TRUE)  {
+                    tm->expire_counter -= (uint32)1UL;
+                    if (tm->expire_counter == (uint32)0UL) {
+                        tm->state = TMR_STATE_EXPIRED;
+                    }
                 }
             }
         }
     }
+    SecondChanged = FALSE;
 }
 
 
