@@ -29,7 +29,9 @@
 #include "knx_layer_application.h"
 
 
-void KnxUser_App(); /* TODO: Create module!!! */
+void KnxUser_Main(void); /* TODO: Create module!!! */
+void KnxUser_Init(void);
+void KnxUser_Save(void);
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 STATIC FUNC(boolean, KSTACK_CODE)  KnxSched_PreLinkLayerTest(void);
@@ -72,6 +74,7 @@ void KnxSched_Init(void)
     KnxMSG_Init();
     KnxALG_Init();
     KnxTmr_Init();
+    KnxUser_Init(); /* TODO: Check preconditions. */
 }
 
 
@@ -98,7 +101,7 @@ void KnxSched_Task(void)
     KnxALM_Task();
 
     if (KnxSched_PreUserApplicationTest()) {
-        KnxUser_App();
+        KnxUser_Main();
     }
 
     KnxALG_PollCycle();
