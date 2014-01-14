@@ -34,8 +34,9 @@ extern "C"
 /*
 ** Global defines.
 */
-#define TMR_TIMER_TLC_CON_TIMEOUT    ((uint8)0)
-#define TMR_TIMER_TLC_ACK_TIMEOUT    ((uint8)1)
+#define TMR_TIMER_TLC_CON_TIMEOUT   ((uint8)0)
+#define TMR_TIMER_TLC_ACK_TIMEOUT   ((uint8)1)
+#define TMR_TIMER_USER0             ((uint8)2)
 
 #include "k-ps/config.h"
 
