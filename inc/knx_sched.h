@@ -46,8 +46,13 @@ extern "C"
 FUNC(void, KSTACK_CODE)	KnxSched_Task(void);
 FUNC(void, KSTACK_CODE)	KnxSched_Init(void);
 #else	
-void    KnxSched_Task(void);
-void    KnxSched_Init(void);
+void KnxSched_Task(void);
+void KnxSched_Init(void);
+
+void KnxUser_Main(void);    /* CHECK: Separate module? */
+void KnxUser_Init(void);
+void KnxUser_Save(void);
+
 #endif /* KSTACK_MEMORY_MAPPING */
 
 
