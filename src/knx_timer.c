@@ -114,8 +114,6 @@ boolean KnxTmr_IsExpired(uint8 timer)
     if (timer < TMR_NUM_TIMERS) {
         TMR_LOCK();
         state                      = KNX_Timer[timer].state;
-        KNX_Timer[timer].state    &= (~TMR_STATE_EXPIRED);  /* TODO: FixMe */
-
         TMR_UNLOCK();
         return (state & TMR_STATE_EXPIRED) == TMR_STATE_EXPIRED;
     } else {
@@ -223,7 +221,6 @@ void KnxTmr_SystemTickHandler(void)
 
     if ((Tmr_SysMsCounter % (uint32)1000UL) == (uint32)0UL) {
         Tmr_SysSecondCounter++;
-        printf("Second elapsed [%u].\n", Tmr_SysSecondCounter);
         SecondChanged = TRUE;
         KnxTmr_SecondCallback();
     }
