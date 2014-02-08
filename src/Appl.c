@@ -157,7 +157,7 @@ const Knx_PollGroupSettingType KNX_DEV_POLLGROUP_SETTINGS = {0xffff, 0xff};
     }
 
 #define IMPLEMENT_USER_PROPERY(PropName, propID, propType) \
-    {(propID), MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, (propType)), PROP_NO_FUNC, (ADDR_T)KNX_OT_ASSOCIATIONTABLE_OBJECT},
+    {(propID), MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, (propType)), PROP_NO_FUNC, (Knx_AddressType)KNX_OT_ASSOCIATIONTABLE_OBJECT},
 
 #define END_USER_INTERFACE_OBJECTS()
 
@@ -225,8 +225,8 @@ void DEV_Init(void)
     IOS_GetUserObjTable(&descr);
 
    //    KNX_UserObjDescr 0 setzen, falls 0xffff,0xff.
-    if ((descr.obj_ptr==(ADDR_T)~0) && (descr.obj_count==(uint8)0xff)) {
-        descr.obj_ptr=(ADDR_T)0;
+    if ((descr.obj_ptr==(Knx_AddressType)~0) && (descr.obj_count==(uint8)0xff)) {
+        descr.obj_ptr=(Knx_AddressType)0;
         descr.obj_count=(uint8)0;
         IOS_SetUserObjTable(descr);
     }

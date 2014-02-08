@@ -183,7 +183,7 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connect
 
     if (service == IOS_PROP_READ) {
         if (type == KNX_PDT_CONTROL) {
-            if ((!IS_POINTER_TO_FUNC(pprop)) || (pprop->property_var == /*(ADDR_T)*/ (uint16)NULL)) {
+            if ((!IS_POINTER_TO_FUNC(pprop)) || (pprop->property_var == /*(Knx_AddressType)*/ (uint16)NULL)) {
                 goto invalid;
             }
 

@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -55,33 +55,31 @@
    #endif
  */
 
-typedef SizeType ADDR_T;
-
 const Knx_PropertyType Knx_DeviceProperties[] = {
     {KNX_PID_OBJECT_TYPE,
-     MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, KNX_PDT_UNSIGNED_INT),        PROP_NO_FUNC, (ADDR_T)KNX_OT_DEVICE_OBJECT             },
+     MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, KNX_PDT_UNSIGNED_INT),        PROP_NO_FUNC, (Knx_AddressType)KNX_OT_DEVICE_OBJECT             },
     {KNX_PID_DEVICE_CONTROL,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_01),          PROP_NO_FUNC, (ADDR_T)NULL                             },
+     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_01),          PROP_NO_FUNC, (Knx_AddressType)NULL                             },
     {KNX_PID_SERVICE_CONTROL,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_INT),        PROP_NO_FUNC, (ADDR_T)NULL                             },
+     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_INT),        PROP_NO_FUNC, (Knx_AddressType)NULL                             },
     {KNX_PID_FIRMWARE_REVISION,
      MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_PTR,
                    KNX_PDT_UNSIGNED_CHAR),       PROP_NO_FUNC, (const void *)&KNX_DEV_FIRMWARE_REV      },
     {KNX_PID_SERIAL_NUMBER,
      MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_06),          PROP_NO_FUNC, (const void *)KNX_DEV_SERIAL_NUM         },
     {KNX_PID_MANUFACTURER_ID,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_INT),        PROP_NO_FUNC, (ADDR_T)NULL                             },
+     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_INT),        PROP_NO_FUNC, (Knx_AddressType)NULL                             },
     {KNX_PID_ORDER_INFO,
      MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_10),          PROP_NO_FUNC, (const void *)KNX_DEV_ORDER_INFO         },
     {KNX_PID_PEI_TYPE,
-     MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, KNX_PDT_UNSIGNED_CHAR),       PROP_NO_FUNC, (ADDR_T)0x00                             }, /* measured PEI-Type.*/
+     MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, KNX_PDT_UNSIGNED_CHAR),       PROP_NO_FUNC, (Knx_AddressType)0x00                             }, /* measured PEI-Type.*/
     {KNX_PID_POLL_GROUP_SETTINGS,
      MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,
                    KNX_PDT_POLL_GROUP_SETTINGS), PROP_NO_FUNC, (const void *)&KNX_DEV_POLLGROUP_SETTINGS},
     {KNX_PID_PORT_CONFIGURATION,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_CHAR),       PROP_NO_FUNC, (ADDR_T)NULL                             },
+     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_CHAR),       PROP_NO_FUNC, (Knx_AddressType)NULL                             },
     {KNX_PID_MANUFACTURER_DATA,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_04),          PROP_NO_FUNC, (ADDR_T)NULL                             },
+     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_04),          PROP_NO_FUNC, (Knx_AddressType)NULL                             },
 };
 
 const Knx_PropertyType Knx_AddrTabProperties[] = {
@@ -112,10 +110,10 @@ const Knx_PropertyType Knx_AppPrgProperties[] = {
     {KNX_PID_LOAD_STATE_CONTROL,
      MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,
                    KNX_PDT_CONTROL),       PROP_FUNC,    (const void *)&KNX_SystemLSC[KNX_LSC_APP]     },
-    {KNX_PID_RUN_STATE_CONTROL,  MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_CONTROL),       PROP_FUNC,    (ADDR_T)NULL                                  }, /* todo: Adresse der RSM-Variablen!!! */
-    {KNX_PID_PEI_TYPE,           MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_CHAR), PROP_NO_FUNC, (ADDR_T)NULL                                  }, /* required PEI-Type. */
-    {KNX_PID_PROGRAM_VERSION,    MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_05),    PROP_NO_FUNC, (ADDR_T)NULL                                  },
-    {KNX_PID_TABLE_REFERENCE,    MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_INT),  PROP_NO_FUNC, (ADDR_T)NULL                                  }, /* check: CommObjs??? */
+    {KNX_PID_RUN_STATE_CONTROL,  MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_CONTROL),       PROP_FUNC,    (Knx_AddressType)NULL                                  }, /* todo: Adresse der RSM-Variablen!!! */
+    {KNX_PID_PEI_TYPE,           MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_CHAR), PROP_NO_FUNC, (Knx_AddressType)NULL                                  }, /* required PEI-Type. */
+    {KNX_PID_PROGRAM_VERSION,    MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_05),    PROP_NO_FUNC, (Knx_AddressType)NULL                                  },
+    {KNX_PID_TABLE_REFERENCE,    MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_INT),  PROP_NO_FUNC, (Knx_AddressType)NULL                                  }, /* check: CommObjs??? */
 };
 
 /* Hinweis: wo ist eigentlich die ObjectID ??? */
