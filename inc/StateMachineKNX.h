@@ -49,7 +49,7 @@ typedef enum tagKnxTLC_StateType {
     CONNECTING
 } KnxTLC_StateType;
 
-typedef enum {
+typedef enum tagKNX_TlcEventType {
     tlcCONNECT_IND,
     tlcDISCONNECT_IND,
     tlcDATA_CONNECTED_IND,
