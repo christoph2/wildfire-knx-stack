@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2011 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -25,7 +25,7 @@
 #define __MEMORY_H
 
 /* #include "target.h" */
-#include <Std_Types.h>
+#include "kdk/common/Std_Types.h"
 
 #if defined(__cplusplus)
 extern "C"
@@ -68,4 +68,3 @@ void    ZeroRAM(void * p, uint16 len);
 #endif  /* __cplusplus */
 
 #endif  /* __MEMORY_H */
-
