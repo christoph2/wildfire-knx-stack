@@ -360,8 +360,7 @@ FUNC(void, KSTACK_CODE) KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, u
                                           P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) data, uint8_t len
                                           )
 #else
-void KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset,
-                       P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA)data, uint8_t len
+void KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset, uint8_t * data, uint8_t len
                        )
 #endif /* KSTACK_MEMORY_MAPPING */
 {

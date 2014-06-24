@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -80,7 +80,7 @@ boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8_t * tsap)
 {
     uint8_t   len;
     uint16_t  mid;
-    sint16  left, right;
+    int16_t  left, right;
     boolean ack;
     uint16_t  ca, * ap;
 
@@ -96,8 +96,8 @@ boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8_t * tsap)
     if (len > (uint8_t)1) {
         ap = KnxADR_GrATBasePtr();
 
-        left   = (sint16)0;
-        right  = len - (sint16)1;
+        left   = (int16_t)0;
+        right  = len - (int16_t)1;
 
         do {
             mid    = (uint16_t)(left + right) >> 1;
@@ -108,9 +108,9 @@ boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8_t * tsap)
                 ack    = TRUE;
                 break;  /*!MISRA 1998 Rule 58 ('non-switch break used') Exception: the alternative would be a 'goto' statement ;-) */
             } else if (searched_addr < ca) {
-                right = (sint16)(mid - (uint16_t)1);
+                right = (int16_t)(mid - (uint16_t)1);
             } else {
-                left = (sint16)(mid + (uint16_t)1);
+                left = (int16_t)(mid + (uint16_t)1);
             }
         } while (left <= right);
     } else if (len == (uint8_t)0) {

@@ -199,7 +199,7 @@ const Knx_InterfaceObjectType * * Knx_UserInterfaceObjPtr = (const Knx_Interface
  **********************************************************************
  **********************************************************************/
 
-const uint32 KNX_DEV_ACCESS_KEYTABLE[3]; /* check: uint8_t? */
+const uint32_t KNX_DEV_ACCESS_KEYTABLE[3]; /* check: uint8_t? */
 
 #if     defined(__HIWARE__)
         #pragma CONST_SEG DEFAULT

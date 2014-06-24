@@ -273,7 +273,7 @@ FUNC(Knx_PropertyType const *, KSTACK_CODE) IOS_FindProperty(Knx_InterfaceObject
 Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16_t prop_id)                     /* todo: binary search!? */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8_least                 idx;
+    uint8_t                 idx;
     Knx_PropertyType const *    pprop = (Knx_PropertyType const *)NULL;
 
     for (idx = 0; idx < pobj->property_count; idx++) {

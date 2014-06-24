@@ -25,7 +25,7 @@
 #define __KNX_DEFS_H
 
 #include "knx_types.h"
-#include "kdk/common/Utl.h"
+#include "knx_utl.h"
 
 #if defined(__cplusplus)
 extern "C"

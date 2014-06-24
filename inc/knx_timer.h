@@ -47,7 +47,7 @@ extern "C"
 /*
 ** Global types.
 */
-typedef uint32 Tmr_TickType, * Tmr_TickRefType;
+typedef uint32_t Tmr_TickType, * Tmr_TickRefType;
 
 typedef enum tagTmr_ResolutionType {
     TMR_RESOLUTION_MS,

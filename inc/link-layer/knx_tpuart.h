@@ -35,7 +35,7 @@ extern "C"
 /*
 ** Global defines.
 */
-#define BUF_LEN ((SizeType)0x1f)
+#define BUF_LEN ((uint8_t)0x1f)
 
 /*
 **    7 6 5 4 3  2  1 0
@@ -45,12 +45,12 @@ extern "C"
 **    1 1 1 1 0  0  0 0       L_Poll_Data.ind
 */
 
-#define DATA_SERVICE_MASK       ((uint8)0x10)
-#define L_DATA_IND_MASK         ((uint8)0x90)
-#define L_LONG_DATA_IND_MASK    ((uint8)0x10)
-#define L_POLL_DATA_IND_MASK    ((uint8)0xf0)
-#define PRIO_MASK               ((uint8)0x0C)
-#define REPEATED_MASK           ((uint8)0x20)
+#define DATA_SERVICE_MASK       ((uint8_t)0x10)
+#define L_DATA_IND_MASK         ((uint8_t)0x90)
+#define L_LONG_DATA_IND_MASK    ((uint8_t)0x10)
+#define L_POLL_DATA_IND_MASK    ((uint8_t)0xf0)
+#define PRIO_MASK               ((uint8_t)0x0C)
+#define REPEATED_MASK           ((uint8_t)0x20)
 
 /*
 **      Immediate Acknowledge Services
@@ -60,9 +60,9 @@ extern "C"
 **      1 1 0 0 0 0 0 0         Busy fram
 */
 
-#define IACK_IND                ((uint8)0xCC)
-#define INACK_IND               ((uint8)0x0C)
-#define IBUSY_IND               ((uint8)0xC0)
+#define IACK_IND                ((uint8_t)0xCC)
+#define INACK_IND               ((uint8_t)0x0C)
+#define IBUSY_IND               ((uint8_t)0xC0)
 
 /*
 **      EIBUART-Control-Services
@@ -72,7 +72,7 @@ extern "C"
 **      x 0 0 0 1 0 1 1         L_DATA.confirm x = 1 Positive
 */
 
-#define RESET_IND               ((uint8)0x03)
+#define RESET_IND               ((uint8_t)0x03)
 
 
 /*

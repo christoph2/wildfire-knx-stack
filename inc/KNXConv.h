@@ -57,10 +57,10 @@ FUNC(float64, KSTACK_CODE)  DPT9ToFloat(uint16_t value);
 FUNC(sint32, KSTACK_CODE)   DPT9ToLong(uint16_t value);
 FUNC(uint16_t, KSTACK_CODE)   btohs(uint16_t w);
 #else
-uint16_t  LongToDPT9(sint32 value);
+uint16_t  LongToDPT9(int32_t value);
 uint16_t  FloatToDPT9(float64 value);
 float64 DPT9ToFloat(uint16_t value);
-sint32  DPT9ToLong(uint16_t value);
+int32_t  DPT9ToLong(uint16_t value);
 uint16_t  btohs(uint16_t w);
 
 

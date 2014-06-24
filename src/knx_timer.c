@@ -24,7 +24,7 @@
 
 #include "knx_timer.h"
 
-#include "kdk/common/CPU_Primitives.h"
+//#include "kdk/common/CPU_Primitives.h"
 
 /*
 ** Local variables.
@@ -47,14 +47,14 @@ FUNC(void, KSTACK_CODE) KnxTmr_Init(void)
 void KnxTmr_Init(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8_least idx;
+    uint8_t idx;
 
-    Tmr_SysMsCounter = Tmr_SysSecondCounter = (uint32)0UL;
+    Tmr_SysMsCounter = Tmr_SysSecondCounter = (uint32_t)0UL;
 
     TMR_LOCK();
 
     for (idx = (uint8_t)0; idx < TMR_NUM_TIMERS; idx++) {
-        KNX_Timer[idx].expire_counter  = (uint32)0UL;
+        KNX_Timer[idx].expire_counter  = (uint32_t)0UL;
         KNX_Timer[idx].state           = TMR_STATE_STOPPED;
         KNX_Timer[idx].base            = TMR_RESOLUTION_MS;
     }
@@ -219,7 +219,7 @@ void KnxTmr_SystemTickHandler(void)
 
     Tmr_SysMsCounter += TMR_TICK_RESOLUTION;
 
-    if ((Tmr_SysMsCounter % (uint32)1000UL) == (uint32)0UL) {
+    if ((Tmr_SysMsCounter % (uint32_t)1000UL) == (uint32_t)0UL) {
         Tmr_SysSecondCounter++;
         SecondChanged = TRUE;
         KnxTmr_SecondCallback();
@@ -230,13 +230,13 @@ void KnxTmr_SystemTickHandler(void)
 
         if ((tm->state & TMR_STATE_RUNNING) == TMR_STATE_RUNNING) {
             if (tm->base == TMR_RESOLUTION_MS) {
-                if (--tm->expire_counter == (uint32)0UL) {
+                if (--tm->expire_counter == (uint32_t)0UL) {
                     tm->state = TMR_STATE_EXPIRED;
                 }
             } else if (tm->base == TMR_RESOLUTION_SEC) {
                 if (SecondChanged == TRUE)  {
-                    tm->expire_counter -= (uint32)1UL;
-                    if (tm->expire_counter == (uint32)0UL) {
+                    tm->expire_counter -= (uint32_t)1UL;
+                    if (tm->expire_counter == (uint32_t)0UL) {
                         tm->state = TMR_STATE_EXPIRED;
                     }
                 }

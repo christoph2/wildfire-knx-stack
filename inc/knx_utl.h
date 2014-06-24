@@ -1,0 +1,137 @@
+/*
+ *   KONNEX/EIB-Protocol-Stack.
+ *
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+ *                                       cpu12.gems@googlemail.com>
+ *
+ *   All Rights Reserved
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+#if !defined(__KNX_UTL_H)
+#define __KNX_UTL_H
+
+#include "knx_types.h"
+//#include "kdk/common/CPU_Primitives.h"
+
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
+
+/*
+**  Global Types.
+*/
+typedef enum tagUtl_EndianessType {
+    UTL_BIG_ENDIAN,
+    UTL_LITTLE_ENDIAN
+} Utl_EndianessType;
+
+typedef struct tagUtl_DivremType {
+    uint16_t  div;
+    uint16_t  rem;
+} Utl_DivremType;
+
+#if 0
+typedef struct tagUtl_JumpBufType {
+    SizeType    pc;
+    SizeType    sp;
+} Utl_JumpBufType;
+#endif
+
+/* typedef sint8 (*Utl_CompareFuncType)(void const * lhs,void const * rhs); */
+
+/*
+**  Global Constants.
+*/
+extern const uint8_t  Utl_SetBitTab8[];
+extern const uint8_t  Utl_ClearBitTab8[];
+extern const uint16_t Utl_SetBitTab16[];
+extern const uint16_t Utl_ClearBitTab16[];
+
+/*
+**  Global Functions.
+*/
+Utl_EndianessType Utl_CheckEndianess(void);
+
+boolean         Utl_BitGet(uint16_t w, uint8_t num);
+uint16_t          Utl_BitSet(uint16_t w, uint8_t num);
+uint16_t          Utl_BitReset(uint16_t w, uint8_t num);
+uint16_t          Utl_BitToggle(uint16_t w, uint8_t num);
+uint16_t          Utl_BitGetHighest(uint16_t w);
+uint16_t          Utl_BitGetLowest(uint16_t w);
+uint16_t          Utl_BitSetLowest(uint16_t w);
+uint16_t          Utl_BitResetLowest(uint16_t w);
+uint8_t           Utl_Log2(uint16_t num);
+uint16_t          Utl_Sqrt16(uint16_t x);
+uint32_t          Utl_Sqrt32(uint32_t x);
+
+void            Utl_Itoa(int32_t value, uint8_t base, uint8_t * buf);
+void            Utl_MemCopy(void *  dst, void * src, uint16_t len);
+void            Utl_MemSet(void * dest, uint8_t fill_char, uint16_t len);
+uint16_t        Utl_StrLen(const uint8_t * src);
+void            Utl_StrCat(/*@out@*/ uint8_t * dst, /*@in@*/ const uint8_t * src);
+void            Utl_StrCpy(/*@out@*/ uint8_t * dst, /*@in@*/ const uint8_t * src);
+void            Utl_StrNCpy(/*@out@*/ uint8_t * dst, /*@in@*/ const uint8_t * src, uint16_t maxlen);
+void            Utl_StrRev(/*@in@*//*@out@*/ uint8_t * str);
+const uint8_t *   Utl_StrChr(/*@in@*/ const uint8_t * str, uint8_t ch);
+
+
+/* void const * Utl_BinSearch(void const * key,void const * base,uint16_t num_elems,uint16_t elem_size,Utl_CompareFuncType compare_func); */
+void    Utl_Divrem(uint16_t dividend, uint16_t divisor, /*@out@*/ Utl_DivremType * res);
+boolean Utl_FloatsAreNearlyEqual(float32 lhs, float32 rhs, int32_t max_difference);
+void    Utl_Randomize(uint16_t seed);
+uint16_t  Utl_Random(void);
+#if 0
+void    Utl_LongJump(Utl_JumpBufType * buf, sint16 val);
+uint16_t  Utl_SetJump(Utl_JumpBufType * buf);
+#endif
+
+/*@nullwhentrue@*/ boolean  Utl_IsNull(void * Ptr);
+uint16_t                      Utl_Swap16(uint16_t * w);
+uint32_t                      Utl_Swap32(uint32_t * dw);
+
+
+/*
+**  Global Function-like Macros.
+*/
+#define UTL_BIT_GET8(value, bit)        ((( (value) & Utl_SetBitTab8[(bit)]) != (uint8_t)0x00) ? Std_High : Std_Low)
+#define UTL_BIT_SET8(value, bit)        ((value)  |= Utl_SetBitTab8[(bit)])
+#define UTL_BIT_RESET8(value, bit)      ((value)  &= Utl_ClearBitTab8[(bit)])
+#define UTL_BIT_TOGGLE8(value, bit)     ((value)  ^= Utl_SetBitTab8[(bit)])
+
+#define UTL_BIT_GET16(value, bit)       ((( (value) & Utl_SetBitTab16[(bit)]) != (uint16_t)0x0000) ? Std_High : Std_Low)
+#define UTL_BIT_SET16(value, bit)       ((value)  |= Utl_SetBitTab16[(bit)])
+#define UTL_BIT_RESET16(value, bit)     ((value)  &= Utl_ClearBitTab16[(bit)])
+#define UTL_BIT_TOGGLE16(value, bit)    ((value)  ^= Utl_SetBitTab16[(bit)])
+
+#define ASSERT_IS_NOT_NULL(ptr)         ASSERT(!Utl_IsNull((ptr)))
+#if 0
+#define ASSERT_IS_NOT_NULL(ptr)   \
+    _BEGIN_BLOCK                  \
+    if (Utl_IsNull((ptr))) {      \
+        CPU_SOFTWARE_INTERRUPT(); \
+        return;                   \
+    }                             \
+    _END_BLOCK
+#endif
+
+#define Utl_PlainCharIsSigned()         ((int)((char)0x80) < 0)
+
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
+
+#endif  /* __KNX_UTL_H */

@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -52,7 +52,7 @@ uint16_t btohs(uint16_t w)
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(uint16_t, KSTACK_CODE) LongToDPT9(sint32 value)
 #else
-uint16_t LongToDPT9(sint32 value)
+uint16_t LongToDPT9(int32_t value)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16_t  Mantissa;
@@ -68,7 +68,7 @@ uint16_t LongToDPT9(sint32 value)
         value = -value;
     }
 
-    while (value > (sint32)0x07ffL) {
+    while (value > (int32_t)0x07ffL) {
         value    >>= 1;
         Exponent  += (uint8_t)1;
     }
@@ -156,13 +156,13 @@ float64 DPT9ToFloat(uint16_t value)
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(sint32, KSTACK_CODE) DPT9ToLong(uint16_t value)
 #else
-sint32 DPT9ToLong(uint16_t value)
+int32_t DPT9ToLong(uint16_t value)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16_t  Mantissa;
     uint8_t   Exponent;
     boolean Sign;
-    sint32  Res;
+    int32_t  Res;
 
     Sign       = (HIBYTE(value) & (uint8_t)0x80) == (uint8_t)0x80;
     Mantissa   = value & 0x7ff;
@@ -173,7 +173,7 @@ sint32 DPT9ToLong(uint16_t value)
 
     Exponent = (HIBYTE(value) & (uint8_t)0x78) >> 3;
 
-    Res = (sint32)((Mantissa << Exponent) /*/100.0*/);
+    Res = (int32_t)((Mantissa << Exponent) /*/100.0*/);
 
     if (Sign) {
         Res = -Res;

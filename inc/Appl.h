@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -46,7 +46,7 @@ extern const Knx_SerialNumberType   KNX_DEV_SERIAL_NUM;
 extern const uint8_t                  KNX_DEV_ORDER_INFO[10];
 
 extern const Knx_PollGroupSettingType   KNX_DEV_POLLGROUP_SETTINGS;
-extern const uint32                     KNX_DEV_ACCESS_KEYTABLE[3];
+extern const uint32_t                     KNX_DEV_ACCESS_KEYTABLE[3];
 
 extern uint8_t const * const  __LOG_EEPROM_START;
 extern uint8_t const * const  __PHYS_EEPROM_START;
@@ -67,4 +67,3 @@ void DEV_Init(void);
 #endif  /* __cplusplus */
 
 #endif  /* __APPL_H */
-
