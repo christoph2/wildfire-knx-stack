@@ -36,10 +36,10 @@ extern "C"
 #define KNX_CLIENT_LIB
 #define KNX_USE_CONFIMATIONS
 #define KNX_BUSACCESS_TPUART
-#define KNX_TL_STYLE    ((uint8)3)
+#define KNX_TL_STYLE    ((uint8_t)3)
 #undef  KNX_TL_RATIONALIZE
 #define KNX_USER_OBJECTS
-#define KNX_MASK_TYPE   ((uint8)21)
+#define KNX_MASK_TYPE   ((uint8_t)21)
 
 #if defined(__cplusplus)
 }

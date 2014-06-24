@@ -33,25 +33,25 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-#define APP_NUM_OF_COM_OBJS     ((uint8)3)
+#define APP_NUM_OF_COM_OBJS     ((uint8_t)3)
 /* todo: NUM_ASSOCS */
 
-#define APP_OBJECT_DATA_SIZE    ((uint8)8)
+#define APP_OBJECT_DATA_SIZE    ((uint8_t)8)
 
-extern const uint8 KNX_DEV_FIRMWARE_REV;
+extern const uint8_t KNX_DEV_FIRMWARE_REV;
 
-extern const uint8 DEV_EEPROM_HEADER[0x16];
+extern const uint8_t DEV_EEPROM_HEADER[0x16];
 
 extern const Knx_SerialNumberType   KNX_DEV_SERIAL_NUM;
-extern const uint8                  KNX_DEV_ORDER_INFO[10];
+extern const uint8_t                  KNX_DEV_ORDER_INFO[10];
 
 extern const Knx_PollGroupSettingType   KNX_DEV_POLLGROUP_SETTINGS;
 extern const uint32                     KNX_DEV_ACCESS_KEYTABLE[3];
 
-extern uint8 const * const  __LOG_EEPROM_START;
-extern uint8 const * const  __PHYS_EEPROM_START;
+extern uint8_t const * const  __LOG_EEPROM_START;
+extern uint8_t const * const  __PHYS_EEPROM_START;
 
-extern const uint8                          Knx_UserInterfaceObjCount;
+extern const uint8_t                          Knx_UserInterfaceObjCount;
 extern const Knx_InterfaceObjectType * *    Knx_UserInterfaceObjPtr;
 
 #if KSTACK_MEMORY_MAPPING == STD_ON

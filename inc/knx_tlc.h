@@ -46,23 +46,23 @@ FUNC(void, KSTACK_CODE) T_Disconnect_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressTy
                                          );
 
 FUNC(void, KSTACK_CODE) T_Ack_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
-                                  Knx_AddressType dest, uint8 SeqNo
+                                  Knx_AddressType dest, uint8_t SeqNo
                                   );
 FUNC(void, KSTACK_CODE) T_Nak_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
-                                  Knx_AddressType dest, uint8 SeqNo
+                                  Knx_AddressType dest, uint8_t SeqNo
                                   );
 
-FUNC(uint8, KSTACK_CODE)    KnxTLC_GetSequenceNumberSend(void);
-FUNC(uint8, KSTACK_CODE)    KnxTLC_GetSequenceNumberReceived(void);
-FUNC(uint8, KSTACK_CODE)    KnxTLC_GetRepetitionCount(void);
-FUNC(uint8, KSTACK_CODE)    KnxTLC_GetSequenceNumberOfPDU(void);
+FUNC(uint8_t, KSTACK_CODE)    KnxTLC_GetSequenceNumberSend(void);
+FUNC(uint8_t, KSTACK_CODE)    KnxTLC_GetSequenceNumberReceived(void);
+FUNC(uint8_t, KSTACK_CODE)    KnxTLC_GetRepetitionCount(void);
+FUNC(uint8_t, KSTACK_CODE)    KnxTLC_GetSequenceNumberOfPDU(void);
 FUNC(Knx_AddressType, KSTACK_CODE)  KnxTLC_GetSourceAddress(void);
 FUNC(Knx_AddressType, KSTACK_CODE)  KnxTLC_GetConnectionAddress(void);
 
-FUNC(void, KSTACK_CODE) KnxTLC_SetSequenceNumberSend(uint8 SequenceNumberSend);
-FUNC(void, KSTACK_CODE) KnxTLC_SetSequenceNumberReceived(uint8 SequenceNumberReceived);
-FUNC(void, KSTACK_CODE) KnxTLC_SetRepetitionCount(uint8 RepetitionCount);
-FUNC(void, KSTACK_CODE) KnxTLC_SetSequenceNumberOfPDU(uint8 SequenceNumberOfPDU);
+FUNC(void, KSTACK_CODE) KnxTLC_SetSequenceNumberSend(uint8_t SequenceNumberSend);
+FUNC(void, KSTACK_CODE) KnxTLC_SetSequenceNumberReceived(uint8_t SequenceNumberReceived);
+FUNC(void, KSTACK_CODE) KnxTLC_SetRepetitionCount(uint8_t RepetitionCount);
+FUNC(void, KSTACK_CODE) KnxTLC_SetSequenceNumberOfPDU(uint8_t SequenceNumberOfPDU);
 FUNC(void, KSTACK_CODE) KnxTLC_SetSourceAddress(Knx_AddressType SourceAddress);
 FUNC(void, KSTACK_CODE) KnxTLC_SetConnectionAddress(Knx_AddressType ConnectionAddress);
 #else
@@ -72,20 +72,20 @@ void    KnxTLC_Task(void);
 void    T_Connect_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
 void    T_Disconnect_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
 
-void    T_Ack_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 SeqNo);
-void    T_Nak_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 SeqNo);
+void    T_Ack_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo);
+void    T_Nak_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo);
 
-uint8           KnxTLC_GetSequenceNumberSend(void);
-uint8           KnxTLC_GetSequenceNumberReceived(void);
-uint8           KnxTLC_GetRepetitionCount(void);
-uint8           KnxTLC_GetSequenceNumberOfPDU(void);
+uint8_t           KnxTLC_GetSequenceNumberSend(void);
+uint8_t           KnxTLC_GetSequenceNumberReceived(void);
+uint8_t           KnxTLC_GetRepetitionCount(void);
+uint8_t           KnxTLC_GetSequenceNumberOfPDU(void);
 Knx_AddressType KnxTLC_GetSourceAddress(void);
 Knx_AddressType KnxTLC_GetConnectionAddress(void);
 
-void    KnxTLC_SetSequenceNumberSend(uint8 SequenceNumberSend);
-void    KnxTLC_SetSequenceNumberReceived(uint8 SequenceNumberReceived);
-void    KnxTLC_SetRepetitionCount(uint8 RepetitionCount);
-void    KnxTLC_SetSequenceNumberOfPDU(uint8 SequenceNumberOfPDU);
+void    KnxTLC_SetSequenceNumberSend(uint8_t SequenceNumberSend);
+void    KnxTLC_SetSequenceNumberReceived(uint8_t SequenceNumberReceived);
+void    KnxTLC_SetRepetitionCount(uint8_t RepetitionCount);
+void    KnxTLC_SetSequenceNumberOfPDU(uint8_t SequenceNumberOfPDU);
 void    KnxTLC_SetSourceAddress(Knx_AddressType SourceAddress);
 void    KnxTLC_SetConnectionAddress(Knx_AddressType ConnectionAddress);
 

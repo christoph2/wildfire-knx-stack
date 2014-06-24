@@ -36,8 +36,8 @@ extern "C"
 /*
 **  Global variables.
 */
-extern const uint8  APP_AddressTable[];
-extern const uint8  APP_AssociationTable[];
+extern const uint8_t  APP_AddressTable[];
+extern const uint8_t  APP_AssociationTable[];
 
 /*
 **  Global function-like macros.
@@ -47,16 +47,16 @@ extern const uint8  APP_AssociationTable[];
 
 /* *INDENT-OFF* */
 #define START_ADDRESS_TABLE(n)      \
-const uint8 APP_AddressTable[]={    \
-(uint8)((n)+1),
+const uint8_t APP_AddressTable[]={    \
+(uint8_t)((n)+1),
 
 #define END_ADDRESS_TABLE()\
 };
 /* *INDENT-ON*  */
 
 #define IMPLEMENT_ADDRESS_TABLE(n)     \
-    const uint8 APP_AddressTable[] = { \
-        (uint8)((n) + 1),              \
+    const uint8_t APP_AddressTable[] = { \
+        (uint8_t)((n) + 1),              \
         IMPLEMENT_ADDRESSES()          \
     }
 
@@ -66,8 +66,8 @@ const uint8 APP_AddressTable[]={    \
 
 /* *INDENT-OFF* */
 #define START_ASSOCIATION_TABLE(n)      \
-const uint8 APP_AssociationTable[]={    \
-    (uint8)((n)),
+const uint8_t APP_AssociationTable[]={    \
+    (uint8_t)((n)),
 
 #define END_ASSOCIATION_TABLE() };
 /* *INDENT-ON*  */
@@ -76,25 +76,25 @@ const uint8 APP_AssociationTable[]={    \
 
 /* *INDENT-OFF* */
 #define START_COMMOBJ_TABLE(n,r)    \
-const uint8 APP_CommObjTab[]={      \
-        (uint8)((n)),(uint8)((r)),
+const uint8_t APP_CommObjTab[]={      \
+        (uint8_t)((n)),(uint8_t)((r)),
 
 #define END_COMMOBJ_TABLE()  };
 /* *INDENT-ON*  */
 
 #define IMPLEMENT_COMMOBJ(dp, config, type) (dp), (config), (type),
 
-#define MAKE_PHYS_ADDR(a, b, c)             ((((a) & (uint8)0x0f) << 12) | (((b) & (uint8)0x0f) << 8) | ((c) & (uint8)0xff))
-#define MAKE_GROUP_ADDR(a, b, c)            ((((a) & (uint8)0x1f) << 11) | (((b) & (uint8)0x07) << 8) | ((c) & (uint8)0xff))
+#define MAKE_PHYS_ADDR(a, b, c)             ((((a) & (uint8_t)0x0f) << 12) | (((b) & (uint8_t)0x0f) << 8) | ((c) & (uint8_t)0xff))
+#define MAKE_GROUP_ADDR(a, b, c)            ((((a) & (uint8_t)0x1f) << 11) | (((b) & (uint8_t)0x07) << 8) | ((c) & (uint8_t)0xff))
 
-#define KnxADR_GrATLength()                 ((uint8)APP_AddressTable[0])
-#define KnxADR_GrOATLength()                ((uint8)APP_AssociationTable[0])
+#define KnxADR_GrATLength()                 ((uint8_t)APP_AddressTable[0])
+#define KnxADR_GrOATLength()                ((uint8_t)APP_AssociationTable[0])
 
-#define KnxADR_GrATBasePtr()                (uint16 *)((uint8 *)&APP_AddressTable + 3)
-#define KnxADR_GrOATBasePtr()               (uint16 *)((uint8 *)&APP_AssociationTable + 1)
+#define KnxADR_GrATBasePtr()                (uint16_t *)((uint8_t *)&APP_AddressTable + 3)
+#define KnxADR_GrOATBasePtr()               (uint16_t *)((uint8_t *)&APP_AssociationTable + 1)
 
-#define KnxADR_GetGroupAddress(n)           (btohs(*(uint16 *)(KnxADR_GrATBasePtr() + ((n) - 1))))
-#define KnxADR_GetAssoc(n)                  (btohs(*(uint16 *)(KnxADR_GrOATBasePtr() + (n))))
+#define KnxADR_GetGroupAddress(n)           (btohs(*(uint16_t *)(KnxADR_GrATBasePtr() + ((n) - 1))))
+#define KnxADR_GetAssoc(n)                  (btohs(*(uint16_t *)(KnxADR_GrOATBasePtr() + (n))))
 
 #define KnxADR_IsBroadcastAddress(addr)     ((addr) == (Knx_AddressType)0x0000)
 
@@ -104,7 +104,7 @@ const uint8 APP_CommObjTab[]={      \
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(boolean, KSTACK_CODE)      KnxADR_InProgrammingMode(void);
 FUNC(boolean, KSTACK_CODE)      KnxADR_IsAddressed(Knx_AddressType searched_addr,
-                                                   P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) tsap
+                                                   P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) tsap
                                                    );
 FUNC(boolean, KSTACK_CODE)      KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr);
 FUNC(Knx_AddressType, KSTACK_CODE)  KnxADR_GetPhysAddr(void);
@@ -112,7 +112,7 @@ FUNC(void, KSTACK_CODE)         KnxADR_SetPhysAddr(Knx_AddressType addr);
 FUNC(void, KSTACK_CODE)         KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number);
 #else
 boolean         KnxADR_InProgrammingMode(void);
-boolean         KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap);
+boolean         KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8_t * tsap);
 boolean         KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr);
 Knx_AddressType KnxADR_GetPhysAddr(void);
 void            KnxADR_SetPhysAddr(Knx_AddressType addr);

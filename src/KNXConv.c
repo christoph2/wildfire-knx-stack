@@ -36,9 +36,9 @@
 
 #if defined(KNX_LITTLE_ENDIAN)
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint16, KSTACK_CODE) btohs(uint16 w)
+FUNC(uint16_t, KSTACK_CODE) btohs(uint16_t w)
 #else
-uint16 btohs(uint16 w)
+uint16_t btohs(uint16_t w)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return MAKEWORD(LOBYTE(w), HIBYTE(w));
@@ -50,18 +50,18 @@ uint16 btohs(uint16 w)
 #define COMW(w) ((~(w)) + 1)
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint16, KSTACK_CODE) LongToDPT9(sint32 value)
+FUNC(uint16_t, KSTACK_CODE) LongToDPT9(sint32 value)
 #else
-uint16 LongToDPT9(sint32 value)
+uint16_t LongToDPT9(sint32 value)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint16  Mantissa;
-    uint8   Exponent;
+    uint16_t  Mantissa;
+    uint8_t   Exponent;
     boolean Sign;
-    uint16  Res;
+    uint16_t  Res;
 
-    Exponent   = (uint8)0;
-    Res        = (uint16)0U;
+    Exponent   = (uint8_t)0;
+    Res        = (uint16_t)0U;
     Sign       = (value < 0);
 
     if (Sign) {
@@ -70,35 +70,35 @@ uint16 LongToDPT9(sint32 value)
 
     while (value > (sint32)0x07ffL) {
         value    >>= 1;
-        Exponent  += (uint8)1;
+        Exponent  += (uint8_t)1;
     }
 
-    Mantissa = (uint16)value;
+    Mantissa = (uint16_t)value;
 
     if (Sign) {
-        Mantissa   = (COMW(Mantissa)) & (uint16)0x07ffU;
-        Res       |= (uint16)0x8000U;
+        Mantissa   = (COMW(Mantissa)) & (uint16_t)0x07ffU;
+        Res       |= (uint16_t)0x8000U;
     }
 
-    Res |= ((((Exponent << 3) & (uint16)0x0078U) * (uint16)0x0100U) | Mantissa);
+    Res |= ((((Exponent << 3) & (uint16_t)0x0078U) * (uint16_t)0x0100U) | Mantissa);
 
     return Res;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint16, KSTACK_CODE) FloatToDPT9(float64 value)
+FUNC(uint16_t, KSTACK_CODE) FloatToDPT9(float64 value)
 #else
-uint16 FloatToDPT9(float64 value)
+uint16_t FloatToDPT9(float64 value)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint16  Mantissa;
-    uint8   Exponent;
+    uint16_t  Mantissa;
+    uint8_t   Exponent;
     boolean Sign;
-    uint16  Res;
+    uint16_t  Res;
 
-    Exponent   = (uint8)0;
-    Res        = (uint16)0U;
+    Exponent   = (uint8_t)0;
+    Res        = (uint16_t)0U;
     Sign       = (value < (float)0.0);
 
     if (Sign) {
@@ -107,41 +107,41 @@ uint16 FloatToDPT9(float64 value)
 
     while (value > (float)20.47) {
         value     /= (float)2.0;
-        Exponent  += (uint8)1;
+        Exponent  += (uint8_t)1;
     }
 
-    Mantissa = (uint16)(value * (float)100.0);
+    Mantissa = (uint16_t)(value * (float)100.0);
 
     if (Sign) {
-        Mantissa   = (COMW(Mantissa)) & (uint16)0x07ffU;
-        Res       |= (uint16)0x8000;
+        Mantissa   = (COMW(Mantissa)) & (uint16_t)0x07ffU;
+        Res       |= (uint16_t)0x8000;
     }
 
-    Res |= ((((Exponent << 3) & (uint16)0x0078U) * (uint16)0x0100U) | Mantissa);
+    Res |= ((((Exponent << 3) & (uint16_t)0x0078U) * (uint16_t)0x0100U) | Mantissa);
 
     return Res;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(float64, KSTACK_CODE) DPT9ToFloat(uint16 value)
+FUNC(float64, KSTACK_CODE) DPT9ToFloat(uint16_t value)
 #else
-float64 DPT9ToFloat(uint16 value)
+float64 DPT9ToFloat(uint16_t value)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint16  Mantissa;
-    uint8   Exponent;
+    uint16_t  Mantissa;
+    uint8_t   Exponent;
     boolean Sign;
     float   Res;
 
-    Sign       = (HIBYTE(value) & (uint8)0x80) == (uint8)0x80;
-    Mantissa   = value & (uint16)0x07ffU;
+    Sign       = (HIBYTE(value) & (uint8_t)0x80) == (uint8_t)0x80;
+    Mantissa   = value & (uint16_t)0x07ffU;
 
     if (Sign) {
-        Mantissa = (COMW(Mantissa)) & (uint16)0x07ffU;
+        Mantissa = (COMW(Mantissa)) & (uint16_t)0x07ffU;
     }
 
-    Exponent = (HIBYTE(value) & (uint8)0x78) >> 3;
+    Exponent = (HIBYTE(value) & (uint8_t)0x78) >> 3;
 
     Res = (float)((Mantissa << Exponent) / (float)100.0);
 
@@ -154,24 +154,24 @@ float64 DPT9ToFloat(uint16 value)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(sint32, KSTACK_CODE) DPT9ToLong(uint16 value)
+FUNC(sint32, KSTACK_CODE) DPT9ToLong(uint16_t value)
 #else
-sint32 DPT9ToLong(uint16 value)
+sint32 DPT9ToLong(uint16_t value)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint16  Mantissa;
-    uint8   Exponent;
+    uint16_t  Mantissa;
+    uint8_t   Exponent;
     boolean Sign;
     sint32  Res;
 
-    Sign       = (HIBYTE(value) & (uint8)0x80) == (uint8)0x80;
+    Sign       = (HIBYTE(value) & (uint8_t)0x80) == (uint8_t)0x80;
     Mantissa   = value & 0x7ff;
 
     if (Sign) {
-        Mantissa = (COMW(Mantissa)) & (uint16)0x07ffU;
+        Mantissa = (COMW(Mantissa)) & (uint16_t)0x07ffU;
     }
 
-    Exponent = (HIBYTE(value) & (uint8)0x78) >> 3;
+    Exponent = (HIBYTE(value) & (uint8_t)0x78) >> 3;
 
     Res = (sint32)((Mantissa << Exponent) /*/100.0*/);
 

@@ -37,10 +37,10 @@
 /*
 ** Global variables.
 */
-uint8 UserLowRAM[0x23];
+uint8_t UserLowRAM[0x23];
 
 MemoryControlBlock MCBs[NUM_MCBs] = {
-    {(uint16)0x00BDU, &UserLowRAM, (uint8)0x23, mtRAM, (uint8)0x00},
+    {(uint16_t)0x00BDU, &UserLowRAM, (uint8_t)0x23, mtRAM, (uint8_t)0x00},
 };
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
@@ -62,32 +62,32 @@ void MM_ClearMCBs(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint16, KSTACK_CODE) MM_MapAddressToTarget(uint16 Address)
+FUNC(uint16_t, KSTACK_CODE) MM_MapAddressToTarget(uint16_t Address)
 #else
-uint16 MM_MapAddressToTarget(uint16 Address)
+uint16_t MM_MapAddressToTarget(uint16_t Address)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    return (uint16)0xffffU;
+    return (uint16_t)0xffffU;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint16, KSTACK_CODE) MM_MapAddressFromTarget(uint16 Address)
+FUNC(uint16_t, KSTACK_CODE) MM_MapAddressFromTarget(uint16_t Address)
 #else
-uint16 MM_MapAddressFromTarget(uint16 Address)
+uint16_t MM_MapAddressFromTarget(uint16_t Address)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    return (uint16)0xffffU;
+    return (uint16_t)0xffffU;
 }
 
 
 /*
-   int MM_SetByte(uint16 Address,uint8 value)
+   int MM_SetByte(uint16_t Address,uint8_t value)
    {
         return 0;
    }
 
-   int MM_GetByte(uint16 Address,uint8 *value)
+   int MM_GetByte(uint16_t Address,uint8_t *value)
    {
         return 1;
    }
@@ -95,13 +95,13 @@ uint16 MM_MapAddressFromTarget(uint16 Address)
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(boolean, KSTACK_CODE) CompMem(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p1, P2VAR(void, AUTOMATIC,
-                                                                                      KSTACK_APPL_DATA) p2, uint16 len)
+                                                                                      KSTACK_APPL_DATA) p2, uint16_t len)
 #else
-boolean CompMem(void * p1, void * p2, uint16 len)
+boolean CompMem(void * p1, void * p2, uint16_t len)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 * bp1    = (uint8 *)p1;
-    uint8 * bp2    = (uint8 *)p2;
+    uint8_t * bp1    = (uint8_t *)p1;
+    uint8_t * bp2    = (uint8_t *)p2;
 
     while (len--) {
         if ((*bp1++) != (*bp2++)) {
@@ -114,12 +114,12 @@ boolean CompMem(void * p1, void * p2, uint16 len)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) FillRAM(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p, uint8 b, uint16 len)
+FUNC(void, KSTACK_CODE) FillRAM(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p, uint8_t b, uint16_t len)
 #else
-void FillRAM(void * p, uint8 b, uint16 len)
+void FillRAM(void * p, uint8_t b, uint16_t len)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 * bp = (uint8 *)p;
+    uint8_t * bp = (uint8_t *)p;
 
     while (len--) {
         *bp++ = b;
@@ -128,13 +128,13 @@ void FillRAM(void * p, uint8 b, uint16 len)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) CopyRAM(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) d, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) s, uint16 len)
+FUNC(void, KSTACK_CODE) CopyRAM(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) d, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) s, uint16_t len)
 #else
-void CopyRAM(void * d, void * s, uint16 len)
+void CopyRAM(void * d, void * s, uint16_t len)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 * bd = (uint8 *)d;
-    uint8 * bs = (uint8 *)s;
+    uint8_t * bd = (uint8_t *)d;
+    uint8_t * bs = (uint8_t *)s;
 
     while (len--) {
         *bd++ = *bs++;
@@ -143,15 +143,15 @@ void CopyRAM(void * d, void * s, uint16 len)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) ZeroRAM(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p, uint16 len)
+FUNC(void, KSTACK_CODE) ZeroRAM(P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) p, uint16_t len)
 #else
-void ZeroRAM(void * p, uint16 len)
+void ZeroRAM(void * p, uint16_t len)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 * bp = (uint8 *)p;
+    uint8_t * bp = (uint8_t *)p;
 
     while (len--) {
-        *bp++ = (uint8)0;
+        *bp++ = (uint8_t)0;
     }
 }
 

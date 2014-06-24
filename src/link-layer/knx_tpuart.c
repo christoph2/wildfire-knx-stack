@@ -60,10 +60,10 @@
 /*
 ** Local defines.
 */
-#define ACK_INFORMATION ((uint8)0x10)
-#define ACK_ADDRESSED   ((uint8)0x01)
-#define ACK_BUSY        ((uint8)0x02)
-#define ACK_NACK        ((uint8)0x04)
+#define ACK_INFORMATION ((uint8_t)0x10)
+#define ACK_ADDRESSED   ((uint8_t)0x01)
+#define ACK_BUSY        ((uint8_t)0x02)
+#define ACK_NACK        ((uint8_t)0x04)
 
 /*
 ** Local functions prototypes.
@@ -72,19 +72,19 @@
 STATIC FUNC(void, KSTACK_CODE) Disp_L_DataReq(void), Disp_L_PollDataReq(void);
 
 
-FUNC(uint8, KSTACK_CODE)    CalculateChecksum(KnxMSG_BufferPtr ptr);
-FUNC(void, KSTACK_CODE)    PH_AckInformation_req(uint8 flags);
+FUNC(uint8_t, KSTACK_CODE)    CalculateChecksum(KnxMSG_BufferPtr ptr);
+FUNC(void, KSTACK_CODE)    PH_AckInformation_req(uint8_t flags);
 FUNC(void, KSTACK_CODE)    DBG_DUMP(KnxMSG_BufferPtr ptr);
-FUNC(void, KSTACK_CODE)    decode(uint8 b);
+FUNC(void, KSTACK_CODE)    decode(uint8_t b);
 FUNC(void, KSTACK_CODE)    StartTimeout(void);
 FUNC(void, KSTACK_CODE)    StopTimeout(void);
 FUNC(void, KSTACK_CODE)    OnTimeout(void);        /* Callback. */
 #else
 STATIC void Disp_L_DataReq(void), Disp_L_PollDataReq(void);
-uint8       CalculateChecksum(KnxMSG_BufferPtr ptr);
-void        PH_AckInformation_req(uint8 flags);
+uint8_t       CalculateChecksum(KnxMSG_BufferPtr ptr);
+void        PH_AckInformation_req(uint8_t flags);
 void        DBG_DUMP(KnxMSG_BufferPtr ptr);
-void        decode(uint8 b);
+void        decode(uint8_t b);
 void        StartTimeout(void);
 void        StopTimeout(void);
 void        OnTimeout(void);    /* Callback. */
@@ -114,41 +114,41 @@ STATIC const Knx_LayerServicesType LL_ServiceTable[] = {
 **  medium."
 */
 
-/* const uint8 T0[]={0xbc,0x11,0x64,0x09,0x01,0xe3,0x00,0x80,0x0d,0x14,0x44}; */
+/* const uint8_t T0[]={0xbc,0x11,0x64,0x09,0x01,0xe3,0x00,0x80,0x0d,0x14,0x44}; */
 /*      ==> EIS5-Telegramm (26.00) */
 /*      von     1.01.100 nach 1/1/001 */
 
-/* const uint8 T[]={0xbc,0x11,0x01,0x49,0x01,0xe2,0x00,0x80,0x5f,0x26}; */
+/* const uint8_t T[]={0xbc,0x11,0x01,0x49,0x01,0xe2,0x00,0x80,0x5f,0x26}; */
 /*      (01.01.001==>09/1/001 Val: 103) */
 
-/*uint8 T1[]={0xbc,0x11,0x64,0x11,0x01,0x61,0x43,0x80,0x84}; */
+/*uint8_t T1[]={0xbc,0x11,0x64,0x11,0x01,0x61,0x43,0x80,0x84}; */
 /* A_Restart. */
 
-/*uint8 T1[]={0xb0,0x11,0x64,0x00,0x00,0xE3,0x00,0xC0,0xaf,0xfe,0x48}; */
+/*uint8_t T1[]={0xb0,0x11,0x64,0x00,0x00,0xE3,0x00,0xC0,0xaf,0xfe,0x48}; */
 /* A_PhysAddr_Write(0xAFFE). */
 
-/*uint8 T1[]={0xb0,0x11,0x64,0x00,0x00,0xE1,0x01,0x00,0xda}; */
+/*uint8_t T1[]={0xb0,0x11,0x64,0x00,0x00,0xE1,0x01,0x00,0xda}; */
 /* A_PhysAddr_Read(). */
 
-/*uint8 T1[]={0xb0,0x11,0x64,0x11,0x01,0x65,0x03,0xd5,0x01,0x05,0x10,0x00,0x8d}; */
+/*uint8_t T1[]={0xb0,0x11,0x64,0x11,0x01,0x65,0x03,0xd5,0x01,0x05,0x10,0x00,0x8d}; */
 /* A_PropertyValueRead(). */
 
-/* const uint8 T1[]={0xb0,0x11,0x64,0x11,0x01,0x64,0x03,0xd8,0x00,0x00,0x06,0x93}; */
+/* const uint8_t T1[]={0xb0,0x11,0x64,0x11,0x01,0x64,0x03,0xd8,0x00,0x00,0x06,0x93}; */
 /* A_PropertyDescriptionRead(). */
 
-const uint8 T0[] = {
-    (uint8)0xbc, (uint8)0x11, (uint8)0x64, (uint8)0x11, (uint8)0x01, (uint8)0x60, (uint8)0x80, (uint8)0xc6
+const uint8_t T0[] = {
+    (uint8_t)0xbc, (uint8_t)0x11, (uint8_t)0x64, (uint8_t)0x11, (uint8_t)0x01, (uint8_t)0x60, (uint8_t)0x80, (uint8_t)0xc6
 };
 /* T_Connect (01.01.100 ==> 01.01.001). */
 
-const uint8 T1[] = {
-    (uint8)0xbc, (uint8)0x11, (uint8)0x64, (uint8)0x11, (uint8)0x01, (uint8)0x67, (uint8)0x42, (uint8)0x84,
-    (uint8)0x01, (uint8)0x80, (uint8)0xaa, (uint8)0xbb, (uint8)0xcc, (uint8)0xdd, (uint8)0x06
+const uint8_t T1[] = {
+    (uint8_t)0xbc, (uint8_t)0x11, (uint8_t)0x64, (uint8_t)0x11, (uint8_t)0x01, (uint8_t)0x67, (uint8_t)0x42, (uint8_t)0x84,
+    (uint8_t)0x01, (uint8_t)0x80, (uint8_t)0xaa, (uint8_t)0xbb, (uint8_t)0xcc, (uint8_t)0xdd, (uint8_t)0x06
 };
 /* A_MemoryWrite */
 
-const uint8 T2[] = {
-    (uint8)0xbc, (uint8)0x11, (uint8)0x64, (uint8)0x11, (uint8)0x01, (uint8)0x60, (uint8)0x81, (uint8)0xc7
+const uint8_t T2[] = {
+    (uint8_t)0xbc, (uint8_t)0x11, (uint8_t)0x64, (uint8_t)0x11, (uint8_t)0x01, (uint8_t)0x60, (uint8_t)0x81, (uint8_t)0xc7
 };
 /* T_Disconnect (01.01.100 ==> 01.01.001). */
 
@@ -158,18 +158,18 @@ const uint8 T2[] = {
 TPUART_RCV_STATE    rcvState;
 TPUART_RCV_SERVICE  rcvService;
 
-uint8           RcvLen;
-uint8           RcvIdx;
-uint8           Checksum;
-uint8           tsap;
+uint8_t           RcvLen;
+uint8_t           RcvIdx;
+uint8_t           Checksum;
+uint8_t           tsap;
 Knx_AddressType dest_addr;
 boolean         addressed;
 
-uint8 TpuartRcvBuf[BUF_LEN];
+uint8_t TpuartRcvBuf[BUF_LEN];
 
 KnxMSG_BufferPtr pBuffer;
 
-uint8 AckService;
+uint8_t AckService;
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
@@ -183,8 +183,8 @@ void KnxLL_Init(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     rcvState   = TPSR_WAIT_RESET_IND;
-    RcvLen     = RcvIdx = (uint8)0x00;
-    AckService = (uint8)0x00;
+    RcvLen     = RcvIdx = (uint8_t)0x00;
+    AckService = (uint8_t)0x00;
     rcvService = SERVICE_NONE;
     Utl_MemSet(TpuartRcvBuf, 0, BUF_LEN);
     rcvState = TPSR_WAIT;
@@ -201,35 +201,35 @@ void TPTest(void)
     static int  cnt;
 
     switch (cnt) {
-        case (uint8)0:
+        case (uint8_t)0:
             len = sizeof(T0);
 
-            for (b = (uint8)0; b < len; b++) {
+            for (b = (uint8_t)0; b < len; b++) {
                 decode(T0[b]);
             }
 
             cnt++;
             break;
-        case (uint8)1:
+        case (uint8_t)1:
             len = sizeof(T1);
 
-            for (b = (uint8)0; b < len; b++) {
+            for (b = (uint8_t)0; b < len; b++) {
                 decode(T1[b]);
             }
 
             cnt++;
             break;
-        case (uint8)2:
+        case (uint8_t)2:
             len = sizeof(T2);
 
-            for (b = (uint8)0; b < len; b++) {
+            for (b = (uint8_t)0; b < len; b++) {
                 decode(T2[b]);
             }
 
             cnt++;
             break;
         default:
-            cnt = (uint8)0;
+            cnt = (uint8_t)0;
             break;
     }
 
@@ -244,12 +244,12 @@ void TPTest(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) decode(uint8 b)
+FUNC(void, KSTACK_CODE) decode(uint8_t b)
 #else
-void decode(uint8 b)
+void decode(uint8_t b)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 state;
+    uint8_t state;
 
     boolean stop;
 
@@ -263,7 +263,7 @@ void decode(uint8 b)
    ////////////////////////////////////////
    ////////////////////////////////////////
  */
-            if ((b & (uint8)0x13) == DATA_SERVICE_MASK) {
+            if ((b & (uint8_t)0x13) == DATA_SERVICE_MASK) {
                 StartTimeout();
 
 /*                      prio=(b & PRIO_MASK)>>2; */
@@ -272,15 +272,15 @@ void decode(uint8 b)
 
 /*                      rcvService=SERVICE_DATA; */
 
-                if ((b & (uint8)0xd0) == L_DATA_IND_MASK) {
-                    RcvLen     = (uint8)5;
-                    tsap       = (uint8)0x00;      /* 0xFE */
+                if ((b & (uint8_t)0xd0) == L_DATA_IND_MASK) {
+                    RcvLen     = (uint8_t)5;
+                    tsap       = (uint8_t)0x00;      /* 0xFE */
                     Checksum   = b;
                     rcvState   = TPSR_DATA_CONT1;
-                } else if ((b & (uint8)0xd0) == L_LONG_DATA_IND_MASK) {
+                } else if ((b & (uint8_t)0xd0) == L_LONG_DATA_IND_MASK) {
 /*                              rcvState=TPSR_LONG_DATA; */
                     rcvState = TPSR_WAIT;
-                } else if ((b & (uint8)0xff) == L_POLL_DATA_IND_MASK) {
+                } else if ((b & (uint8_t)0xff) == L_POLL_DATA_IND_MASK) {
                     rcvState = TPSR_POLL_DATA;
                 } else {                    /* Errornous Byte. */
                     rcvState   = TPSR_WAIT; /* wait for valid Service. */
@@ -292,20 +292,20 @@ void decode(uint8 b)
             } else if ((b == IACK_IND) || (b == INACK_IND) || (b == IBUSY_IND)) {
                 rcvState   = TPSR_WAIT;         /* wait for next Service. */
                 rcvService = SERVICE_IACK;
-                RcvIdx     = (uint8)0;
+                RcvIdx     = (uint8_t)0;
                 AckService = b;
-            } else if ((b & (uint8)0x03) == (uint8)0x03) {
+            } else if ((b & (uint8_t)0x03) == (uint8_t)0x03) {
                 rcvState   = TPSR_WAIT;         /* wait for next Service. */
                 rcvService = SERVICE_CONTROL;
-                RcvIdx     = (uint8)0;
+                RcvIdx     = (uint8_t)0;
 
                 if (b == RESET_IND) {
 
-                } else if ((b & (uint8)0x7f) == (uint8)0x0b) {
+                } else if ((b & (uint8_t)0x7f) == (uint8_t)0x0b) {
 
-                } else if ((b & (uint8)0x07) == (uint8)0x07) {
+                } else if ((b & (uint8_t)0x07) == (uint8_t)0x07) {
 
-                    state = (b & (uint8)0xf8) >> 3;
+                    state = (b & (uint8_t)0xf8) >> 3;
                 } else {                /* Errornous Byte. */
                     rcvService = SERVICE_NONE;
 #if !defined(__HIWARE__)
@@ -324,10 +324,10 @@ void decode(uint8 b)
         case TPSR_DATA_CONT1:
             Checksum ^= b;
 
-            if ((--RcvLen) == (uint8)0x00) {
+            if ((--RcvLen) == (uint8_t)0x00) {
                 /* if (!PassthroughEveryTelegramm()) // RouteEvery */
 
-                dest_addr = btohs(*(uint16 *)&TpuartRcvBuf[3]);
+                dest_addr = btohs(*(uint16_t *)&TpuartRcvBuf[3]);
 
                 if ((TpuartRcvBuf[5] & atMULTICAST)) {
                     addressed = KnxADR_IsAddressed(dest_addr, &tsap);
@@ -339,24 +339,24 @@ void decode(uint8 b)
                     PH_AckInformation_req(ACK_ADDRESSED);
                 }
 
-                RcvLen     = (b & (uint8)0x0f) + 2;        /* todo: Limit. */
+                RcvLen     = (b & (uint8_t)0x0f) + 2;        /* todo: Limit. */
                 rcvState   = TPSR_DATA_CONT2;
             }
 
             break;
         case TPSR_DATA_CONT2:
 
-            if ((--RcvLen) == (uint8)0x00) {           /* O.K., complete Telegram receeived. */
-                Checksum ^= (uint8)0xff;
+            if ((--RcvLen) == (uint8_t)0x00) {           /* O.K., complete Telegram receeived. */
+                Checksum ^= (uint8_t)0xff;
 
-                if ((Checksum == TpuartRcvBuf[RcvIdx - (uint8)1])) {             /* Checksum valid? */
+                if ((Checksum == TpuartRcvBuf[RcvIdx - (uint8_t)1])) {             /* Checksum valid? */
                     if (addressed) {
                         pBuffer = KnxMSG_AllocateBuffer();
 
                         if (pBuffer != (KnxMSG_BufferPtr)NULL) {
                             pBuffer->service   = L_DATA_IND;
                             pBuffer->sap       = tsap;
-                            pBuffer->len       = RcvLen = (TpuartRcvBuf[5] & (uint8)0x0f) + (uint8)7;
+                            pBuffer->len       = RcvLen = (TpuartRcvBuf[5] & (uint8_t)0x0f) + (uint8_t)7;
 
                             Utl_MemCopy((void *)pBuffer->msg, (void *)TpuartRcvBuf, RcvLen);
                             (void)KnxMSG_Post(pBuffer);
@@ -374,7 +374,7 @@ void decode(uint8 b)
 
                 rcvService = SERVICE_DATA;
                 rcvState   = TPSR_WAIT;
-                RcvIdx     = (uint8)0;
+                RcvIdx     = (uint8_t)0;
             } else {
                 Checksum ^= b;
             }
@@ -431,15 +431,15 @@ FUNC(void, KSTACK_CODE) DBG_DUMP(KnxMSG_BufferPtr ptr)
 void DBG_DUMP(KnxMSG_BufferPtr ptr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 i /*,chk*/;
+    uint8_t i /*,chk*/;
 
 #if     !defined(__HIWARE__)
 
-    for (i = (uint8)0; i < ptr->len; i++) {
+    for (i = (uint8_t)0; i < ptr->len; i++) {
 
 /*        printf("%02X ",ptr->msg[i]);  */
 
-        if (i == (uint8)6) {
+        if (i == (uint8_t)6) {
 /*            printf("["); */
         }
     }
@@ -450,9 +450,9 @@ void DBG_DUMP(KnxMSG_BufferPtr ptr)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) PH_AckInformation_req(uint8 flags)
+FUNC(void, KSTACK_CODE) PH_AckInformation_req(uint8_t flags)
 #else
-void PH_AckInformation_req(uint8 flags)
+void PH_AckInformation_req(uint8_t flags)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
 /* PutSCI(ACK_INFORMATION | flags); */
@@ -480,13 +480,13 @@ STATIC FUNC(void, KSTACK_CODE) Disp_L_DataReq(void)
 STATIC void Disp_L_DataReq(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 chk;
+    uint8_t chk;
 
     KnxMSG_SetFrameType(KnxMSG_ScratchBufferPtr, ftStandard);
 
     /* PREPARE_CONTROL_FIELD() */
-    KnxMSG_ScratchBufferPtr->msg[0]   |= (uint8)0x30;   /* fixed one bit + repeated. */
-    KnxMSG_ScratchBufferPtr->msg[0]   &= (~(uint8)3);   /* clear two LSBs. */
+    KnxMSG_ScratchBufferPtr->msg[0]   |= (uint8_t)0x30;   /* fixed one bit + repeated. */
+    KnxMSG_ScratchBufferPtr->msg[0]   &= (~(uint8_t)3);   /* clear two LSBs. */
     /**/
 
     chk = CalculateChecksum(KnxMSG_ScratchBufferPtr);
@@ -508,15 +508,15 @@ STATIC void Disp_L_PollDataReq(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint8, KSTACK_CODE) CalculateChecksum(KnxMSG_BufferPtr ptr)
+FUNC(uint8_t, KSTACK_CODE) CalculateChecksum(KnxMSG_BufferPtr ptr)
 #else
-uint8 CalculateChecksum(KnxMSG_BufferPtr ptr)
+uint8_t CalculateChecksum(KnxMSG_BufferPtr ptr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8   chk = (uint8)0xff;
-    uint8   i;
+    uint8_t   chk = (uint8_t)0xff;
+    uint8_t   i;
 
-    for (i = (uint8)0; i < ptr->len; i++) {
+    for (i = (uint8_t)0; i < ptr->len; i++) {
         chk ^= ptr->msg[i];
     }
 

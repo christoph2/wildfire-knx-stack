@@ -33,18 +33,18 @@
 #include "knx_sys_objs.h"
 #include "knx_layer_application.h"
 
-const uint8 KNX_PDT_LEN_TAB[32] = {
-    (uint8)0, (uint8)1, (uint8)1,  (uint8)2,  (uint8)2,   (uint8)2,   (uint8)3,   (uint8)3,
-    (uint8)4, (uint8)4, (uint8)4,  (uint8)8,  (uint8)10,  (uint8)3,   (uint8)5,   (uint8)0,
-    (uint8)0, (uint8)1, (uint8)2,  (uint8)3,  (uint8)4,   (uint8)5,   (uint8)6,   (uint8)7,
-    (uint8)8, (uint8)9, (uint8)10, (uint8)0,  (uint8)0,   (uint8)0,   (uint8)0,   (uint8)0
+const uint8_t KNX_PDT_LEN_TAB[32] = {
+    (uint8_t)0, (uint8_t)1, (uint8_t)1,  (uint8_t)2,  (uint8_t)2,   (uint8_t)2,   (uint8_t)3,   (uint8_t)3,
+    (uint8_t)4, (uint8_t)4, (uint8_t)4,  (uint8_t)8,  (uint8_t)10,  (uint8_t)3,   (uint8_t)5,   (uint8_t)0,
+    (uint8_t)0, (uint8_t)1, (uint8_t)2,  (uint8_t)3,  (uint8_t)4,   (uint8_t)5,   (uint8_t)6,   (uint8_t)7,
+    (uint8_t)8, (uint8_t)9, (uint8_t)10, (uint8_t)0,  (uint8_t)0,   (uint8_t)0,   (uint8_t)0,   (uint8_t)0
 };
 
-#define OBJECT_READ_ALLOWED(o)      (((((o)->access_level & (uint8)0xf0) >> 4) >= DEV_Current_Accesslevel) ? TRUE : FALSE)
-#define OBJECT_WRITE_ALLOWED(o)     ((((o)->access_level & (uint8)0x0f) >= DEV_Current_Accesslevel) ? TRUE : FALSE)
+#define OBJECT_READ_ALLOWED(o)      (((((o)->access_level & (uint8_t)0xf0) >> 4) >= DEV_Current_Accesslevel) ? TRUE : FALSE)
+#define OBJECT_WRITE_ALLOWED(o)     ((((o)->access_level & (uint8_t)0x0f) >= DEV_Current_Accesslevel) ? TRUE : FALSE)
 
 #define GET_PROPERTY_CONTROL(p)     (((p)->property_ctrl) >> 5)
-#define GET_PROPERTY_TYPE(p)        (((p)->property_ctrl) & (uint8)0x1f)
+#define GET_PROPERTY_TYPE(p)        (((p)->property_ctrl) & (uint8_t)0x1f)
 
 #define GET_TYPE_LEN(t)             KNX_PDT_LEN_TAB[(t)]
 
@@ -52,16 +52,16 @@ const uint8 KNX_PDT_LEN_TAB[32] = {
 #define IS_PROP_CTL_VALID(p)        (((GET_PROPERTY_CONTROL(p) & 0x03) != 0x02) ? TRUE : FALSE)
 #define IS_ARRAY_VARIABLE(p)        (((GET_PROPERTY_CONTROL(p) & 0x03) == 0x03) ? TRUE : FALSE)
 
-#define IS_POINTER_TO_FUNC(p)       ((((GET_PROPERTY_CONTROL(p) & (uint8)0x03) == (uint8)0x01) && \
-                                      ((p)->property_func == (uint8)0x01)) ? TRUE : FALSE)
+#define IS_POINTER_TO_FUNC(p)       ((((GET_PROPERTY_CONTROL(p) & (uint8_t)0x03) == (uint8_t)0x01) && \
+                                      ((p)->property_func == (uint8_t)0x01)) ? TRUE : FALSE)
 
-#define GET_START_INDEX(m)          ((*(uint16 *)&(m)->num_elems) & (uint16)0x0fffu)
+#define GET_START_INDEX(m)          ((*(uint16_t *)&(m)->num_elems) & (uint16_t)0x0fffu)
 #define GET_NUM_ELEMS(m)            (((m)->num_elems) >> 4)
 
 /* Property_Handling. */
-#define PH_VALUE_INPLACE    ((uint8)0x00)
-#define PH_PTR_TO_VAL_FN    ((uint8)0x01)
-#define PH_PTR_TO_ARRAY     ((uint8)0x03)
+#define PH_VALUE_INPLACE    ((uint8_t)0x00)
+#define PH_PTR_TO_VAL_FN    ((uint8_t)0x01)
+#define PH_PTR_TO_ARRAY     ((uint8_t)0x03)
 
 typedef void (*PROPERTY_FUNC)(KnxMSG_BufferPtr pBuffer, boolean write);
 
@@ -79,20 +79,20 @@ void ios_test(void);
 #endif /* KSTACK_MEMORY_MAPPING */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connected)
+FUNC(void, KSTACK_CODE) IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8_t service, boolean connected)
 #else
-void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connected)
+void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8_t service, boolean connected)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8                           data[MAX_PROP_DATA_LEN];
+    uint8_t                           data[MAX_PROP_DATA_LEN];
     KNX_PropertyFrameRefType        pmsg;
     Knx_InterfaceObjectType const * pobj;
     Knx_PropertyType const *        pprop;
-    uint8                           num_elems;
-    uint16                          start_index;
-    uint8                           type;
-    uint8                           type_len;
-    uint8                           ctl;
+    uint8_t                           num_elems;
+    uint16_t                          start_index;
+    uint8_t                           type;
+    uint8_t                           type_len;
+    uint8_t                           ctl;
     PROPERTY_FUNC                   pf;
     Knx_AddressType                 source;
     Knx_AddressType                 dest;
@@ -130,13 +130,13 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connect
         dest   = KnxMSG_GetSourceAddress(pBuffer);
 
         A_PropertyDescription_Read_Res(pBuffer, source, dest, pmsg->obj_id, pprop->property_id,
-                                       pmsg->num_elems, GET_PROPERTY_TYPE(pprop), (uint8)1, pobj->access_level);
+                                       pmsg->num_elems, GET_PROPERTY_TYPE(pprop), (uint8_t)1, pobj->access_level);
         return;
     }
 
     num_elems = GET_NUM_ELEMS(pmsg);
 
-    if (num_elems == (uint8)0) {
+    if (num_elems == (uint8_t)0) {
         goto empty_answer;
     }
 
@@ -173,7 +173,7 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connect
         goto invalid;
     }
 
-    if (((start_index != (uint8)0) || (num_elems > (uint8)1)) && (!IS_ARRAY_VARIABLE(pprop))) {
+    if (((start_index != (uint8_t)0) || (num_elems > (uint8_t)1)) && (!IS_ARRAY_VARIABLE(pprop))) {
         goto empty_answer;
     }
 
@@ -183,20 +183,20 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connect
 
     if (service == IOS_PROP_READ) {
         if (type == KNX_PDT_CONTROL) {
-            if ((!IS_POINTER_TO_FUNC(pprop)) || (pprop->property_var == /*(Knx_AddressType)*/ (uint16)NULL)) {
+            if ((!IS_POINTER_TO_FUNC(pprop)) || (pprop->property_var == /*(Knx_AddressType)*/ (uint16_t)NULL)) {
                 goto invalid;
             }
 
             pf = (PROPERTY_FUNC)pprop->property_var;
             pf(pBuffer, FALSE);
         } else if (type_len > 0) {
-            switch (GET_PROPERTY_CONTROL(pprop) & (uint8)0x03) {
+            switch (GET_PROPERTY_CONTROL(pprop) & (uint8_t)0x03) {
                 case PH_VALUE_INPLACE:
                     Utl_MemCopy((void *)data, (void *)&pprop->property_var, type_len);
                     break;
                 case PH_PTR_TO_VAL_FN:
 
-                    if (pprop->property_func == (uint8)0x00) {
+                    if (pprop->property_func == (uint8_t)0x00) {
                         Utl_MemCopy((void *)data, (void *)pprop->property_var, type_len);
                     } else {
                     }
@@ -219,7 +219,7 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8 service, boolean connect
         }
 
         if (type == KNX_PDT_CONTROL) {
-        } else if (type_len > (uint8)0) {
+        } else if (type_len > (uint8_t)0) {
         }  else {
             goto empty_answer;
         }
@@ -245,14 +245,14 @@ invalid:
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(Knx_InterfaceObjectType const *, KSTACK_CODE)  IOS_GetInterfaceObjectByIndex(uint16 object_index)
+FUNC(Knx_InterfaceObjectType const *, KSTACK_CODE)  IOS_GetInterfaceObjectByIndex(uint16_t object_index)
 #else
-Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_index)
+Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16_t object_index)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (object_index < Knx_SystemInterfaceObjCount) {
         return *((Knx_SystemInterfaceObjs) + object_index);
-    } else if ((Knx_UserInterfaceObjCount != (uint8)0) && ((Knx_InterfaceObjectType * *)Knx_UserInterfaceObjPtr !=
+    } else if ((Knx_UserInterfaceObjCount != (uint8_t)0) && ((Knx_InterfaceObjectType * *)Knx_UserInterfaceObjPtr !=
                                                            (Knx_InterfaceObjectType * *)NULL))
     {
         object_index -= Knx_SystemInterfaceObjCount;
@@ -268,9 +268,9 @@ Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16 object_inde
 }
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(Knx_PropertyType const *, KSTACK_CODE) IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id)  /* todo: binary search!? */
+FUNC(Knx_PropertyType const *, KSTACK_CODE) IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16_t prop_id)  /* todo: binary search!? */
 #else
-Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16 prop_id)                     /* todo: binary search!? */
+Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16_t prop_id)                     /* todo: binary search!? */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_least                 idx;
@@ -288,12 +288,12 @@ Knx_PropertyType const * IOS_FindProperty(Knx_InterfaceObjectType const * pobj, 
 }
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(Knx_PropertyType const *, KSTACK_CODE) IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16 prop_index)
+FUNC(Knx_PropertyType const *, KSTACK_CODE) IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16_t prop_index)
 #else
-Knx_PropertyType const * IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16 prop_index)
+Knx_PropertyType const * IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16_t prop_index)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if (prop_index > pobj->property_count - (uint8)1) {
+    if (prop_index > pobj->property_count - (uint8_t)1) {
         return (Knx_PropertyType const *)NULL;
     } else {
         return &pobj->properties[prop_index];
@@ -351,7 +351,7 @@ void ios_test(void)
 
         addr[0]=0xff;
         addr[1]=0xff;
-        // Check: gibt es keine 'SetAddr'-Funktion mit einem uint16-Parameter.
+        // Check: gibt es keine 'SetAddr'-Funktion mit einem uint16_t-Parameter.
         //  Set Physical-Address to 0xFFFF.
         ADR_SetPhysAddr(addr);
     }
@@ -360,9 +360,9 @@ void ios_test(void)
 
 /* boolean IOS_IsArrayProperty(KNX_INTERFACE_OBJ* pobj,KNX_PROPERTY *pprop); */
 
-/* uint16 IOS_GetPropertyMaxElementCount(KNX_INTERFACE_OBJ* pobj,KNX_PROPERTY *pprop); */
+/* uint16_t IOS_GetPropertyMaxElementCount(KNX_INTERFACE_OBJ* pobj,KNX_PROPERTY *pprop); */
 
-/* uint16 IOS_GetPropertyActualElementCount(KNX_INTERFACE_OBJ* pobj,KNX_PROPERTY *pprop); */
+/* uint16_t IOS_GetPropertyActualElementCount(KNX_INTERFACE_OBJ* pobj,KNX_PROPERTY *pprop); */
 
 /*void IOS_GetPropertyDescription(KNX_INTERFACE_OBJ* pobj,KNX_PROPERTY *pprop,??? *pdescr); */
 /* type,max_elem,RdAcc,WrAccc */

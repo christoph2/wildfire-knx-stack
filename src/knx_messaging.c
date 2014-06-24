@@ -24,31 +24,31 @@
 
 #include "knx_messaging.h"
 
-#define HOP_COUNT ((uint8)6)
+#define HOP_COUNT ((uint8_t)6)
 
 /* check: 'static' ??? */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(KnxMSG_BufferPtr, KSTACK_CODE) GetBufferAddress(uint8 buf_num);
-FUNC(uint8, KSTACK_CODE)                  GetBufferNumber(const KnxMSG_BufferPtr buffer);
-FUNC(void, KSTACK_CODE)                  ClearMessageBuffer(uint8 buf_num);
+FUNC(KnxMSG_BufferPtr, KSTACK_CODE) GetBufferAddress(uint8_t buf_num);
+FUNC(uint8_t, KSTACK_CODE)                  GetBufferNumber(const KnxMSG_BufferPtr buffer);
+FUNC(void, KSTACK_CODE)                  ClearMessageBuffer(uint8_t buf_num);
 #else
-KnxMSG_BufferPtr    GetBufferAddress(uint8 buf_num);
-uint8               GetBufferNumber(const KnxMSG_BufferPtr buffer);
-void                ClearMessageBuffer(uint8 buf_num);
+KnxMSG_BufferPtr    GetBufferAddress(uint8_t buf_num);
+uint8_t               GetBufferNumber(const KnxMSG_BufferPtr buffer);
+void                ClearMessageBuffer(uint8_t buf_num);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
 
-STATIC const uint8 KnxMSG_MessageRedirectionTable[16] = {
+STATIC const uint8_t KnxMSG_MessageRedirectionTable[16] = {
     TASK_FREE_ID, TASK_LL_ID,   TASK_NL_ID,   TASK_TL_ID,   TASK_TC_ID,     TASK_FREE_ID,     TASK_FREE_ID,   TASK_AL_ID,
     TASK_MG_ID,   TASK_MG_ID,   TASK_PM_ID,   TASK_LC_ID,   TASK_FREE_ID,   TASK_US_ID,       TASK_US_ID,     TASK_US_ID
 };
 
-STATIC uint8            KnxMSG_Queues[MSG_NUM_TASKS];
+STATIC uint8_t            KnxMSG_Queues[MSG_NUM_TASKS];
 STATIC KnxMSG_Buffer    KnxMSG_Buffers[MSG_NUM_BUFFERS];
 
 /*  Get Destination Queue from Message-Code. */
-#define KnxMSG_GetQueueForService(service) ((uint8)KnxMSG_MessageRedirectionTable[(service) >> 4])
+#define KnxMSG_GetQueueForService(service) ((uint8_t)KnxMSG_MessageRedirectionTable[(service) >> 4])
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
@@ -56,9 +56,9 @@ STATIC KnxMSG_Buffer    KnxMSG_Buffers[MSG_NUM_BUFFERS];
 #endif /* KSTACK_MEMORY_MAPPING */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(KnxMSG_BufferPtr, KSTACK_CODE) GetBufferAddress(uint8 buf_num)
+FUNC(KnxMSG_BufferPtr, KSTACK_CODE) GetBufferAddress(uint8_t buf_num)
 #else
-KnxMSG_BufferPtr GetBufferAddress(uint8 buf_num)
+KnxMSG_BufferPtr GetBufferAddress(uint8_t buf_num)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (buf_num >= MSG_NUM_BUFFERS) {
@@ -70,15 +70,15 @@ KnxMSG_BufferPtr GetBufferAddress(uint8 buf_num)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint8, KSTACK_CODE) GetBufferNumber(const KnxMSG_BufferPtr buffer)
+FUNC(uint8_t, KSTACK_CODE) GetBufferNumber(const KnxMSG_BufferPtr buffer)
 #else
-uint8 GetBufferNumber(const KnxMSG_BufferPtr buffer)
+uint8_t GetBufferNumber(const KnxMSG_BufferPtr buffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_BufferPtr    tmp_buf;
-    uint8               idx;
+    uint8_t               idx;
 
-    for (idx = (uint8)0; idx < MSG_NUM_BUFFERS; idx++) {
+    for (idx = (uint8_t)0; idx < MSG_NUM_BUFFERS; idx++) {
         tmp_buf = &KnxMSG_Buffers[idx];
 
         if (tmp_buf == buffer) {
@@ -91,13 +91,13 @@ uint8 GetBufferNumber(const KnxMSG_BufferPtr buffer)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) ClearMessageBuffer(uint8 buf_num)
+FUNC(void, KSTACK_CODE) ClearMessageBuffer(uint8_t buf_num)
 #else
-void ClearMessageBuffer(uint8 buf_num)
+void ClearMessageBuffer(uint8_t buf_num)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMSG_BufferPtr    ptr;
-    uint8 *             pb;
+    uint8_t *             pb;
 
     ptr = GetBufferAddress(buf_num);
 
@@ -105,14 +105,14 @@ void ClearMessageBuffer(uint8 buf_num)
         return;
     }
 
-    pb = (uint8 *)ptr;
+    pb = (uint8_t *)ptr;
     pb++;
 
-    Utl_MemSet(pb, '\0', (uint16)sizeof(KnxMSG_Buffer) - (uint16)1);
+    Utl_MemSet(pb, '\0', (uint16_t)sizeof(KnxMSG_Buffer) - (uint16_t)1);
 }
 
 
-STATIC uint16 AllocCount = (uint16)0, ReleaseCount = (uint16)0;
+STATIC uint16_t AllocCount = (uint16_t)0, ReleaseCount = (uint16_t)0;
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(KnxMSG_BufferPtr, KSTACK_CODE) KnxMSG_AllocateBuffer(void)
@@ -120,7 +120,7 @@ FUNC(KnxMSG_BufferPtr, KSTACK_CODE) KnxMSG_AllocateBuffer(void)
 KnxMSG_BufferPtr KnxMSG_AllocateBuffer(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8               fp;
+    uint8_t               fp;
     KnxMSG_BufferPtr    ptr;
 
     DISABLE_ALL_INTERRUPTS();
@@ -152,9 +152,9 @@ FUNC(void, KSTACK_CODE) KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
 void KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8   buf_num;
-    uint8   old_fp;
-    uint8   t_fp;
+    uint8_t   buf_num;
+    uint8_t   old_fp;
+    uint8_t   t_fp;
 
     DISABLE_ALL_INTERRUPTS();
 
@@ -194,13 +194,13 @@ FUNC(boolean, KSTACK_CODE) KnxMSG_ClearBuffer(KnxMSG_BufferPtr ptr)
 boolean KnxMSG_ClearBuffer(KnxMSG_BufferPtr ptr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 * pb;
+    uint8_t * pb;
 
     if (ptr == (KnxMSG_BufferPtr)NULL) {
         return FALSE;
     }
 
-    pb = (uint8 *)ptr;
+    pb = (uint8_t *)ptr;
     pb++;
 
     Utl_MemSet(pb, '\0', sizeof(KnxMSG_Buffer) - 1);
@@ -215,9 +215,9 @@ FUNC(boolean, KSTACK_CODE) KnxMSG_Post(KnxMSG_BufferPtr ptr)
 boolean KnxMSG_Post(KnxMSG_BufferPtr ptr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8   queue;
-    uint8   buf_num;
-    uint8   qp;
+    uint8_t   queue;
+    uint8_t   buf_num;
+    uint8_t   qp;
 
     if ((buf_num = GetBufferNumber(ptr)) == MSG_INVALID_BUFFER) {
         return FALSE;
@@ -245,12 +245,12 @@ boolean KnxMSG_Post(KnxMSG_BufferPtr ptr)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(KnxMSG_BufferPtr, KSTACK_CODE) KnxMSG_Get(uint8 task)
+FUNC(KnxMSG_BufferPtr, KSTACK_CODE) KnxMSG_Get(uint8_t task)
 #else
-KnxMSG_BufferPtr KnxMSG_Get(uint8 task)
+KnxMSG_BufferPtr KnxMSG_Get(uint8_t task)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 qp;
+    uint8_t qp;
 
     if ((task < 1) || (task > MSG_NUM_TASKS)) {
         return (KnxMSG_BufferPtr)NULL;
@@ -278,41 +278,41 @@ FUNC(void, KSTACK_CODE) KnxMSG_Init(void)
 void KnxMSG_Init(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 t;
+    uint8_t t;
 
-    for (t = (uint8)0; t < MSG_NUM_BUFFERS; t++) {
+    for (t = (uint8_t)0; t < MSG_NUM_BUFFERS; t++) {
         ClearMessageBuffer(t);
     }
 
-    KnxMSG_Queues[TASK_FREE_ID] = (uint8)0x00;      /* the first Queue contains the Freelist. */
+    KnxMSG_Queues[TASK_FREE_ID] = (uint8_t)0x00;      /* the first Queue contains the Freelist. */
 
-    for (t = (uint8)0; t <= MSG_NUM_BUFFERS; t++) { /* Setup Freelist. */
-        KnxMSG_Buffers[t].next = t + (uint8)1;
+    for (t = (uint8_t)0; t <= MSG_NUM_BUFFERS; t++) { /* Setup Freelist. */
+        KnxMSG_Buffers[t].next = t + (uint8_t)1;
     }
 
     KnxMSG_Buffers[MSG_NUM_BUFFERS - 1].next = MSG_NO_NEXT;
 
-    for (t = (uint8)1; t < MSG_NUM_TASKS; t++) {
+    for (t = (uint8_t)1; t < MSG_NUM_TASKS; t++) {
         KnxMSG_Queues[t] = MSG_QUEUE_EMPTY;
     }
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxMSG_SetLen(KnxMSG_BufferPtr pBuffer, uint8 len)
+FUNC(void, KSTACK_CODE) KnxMSG_SetLen(KnxMSG_BufferPtr pBuffer, uint8_t len)
 #else
-void KnxMSG_SetLen(KnxMSG_BufferPtr pBuffer, uint8 len)
+void KnxMSG_SetLen(KnxMSG_BufferPtr pBuffer, uint8_t len)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     pBuffer->len                           = len;
-    KnxMSG_GetMessagePtr(pBuffer)->ncpi   |= ((len - (uint8)7) & (uint8)0x0f);
+    KnxMSG_GetMessagePtr(pBuffer)->ncpi   |= ((len - (uint8_t)7) & (uint8_t)0x0f);
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint8, KSTACK_CODE) KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer)
+FUNC(uint8_t, KSTACK_CODE) KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer)
 #else
-uint8 KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer)
+uint8_t KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return pBuffer->len;
@@ -320,12 +320,12 @@ uint8 KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer)
 
 
 /*
-   void MSG_SetHopCount(PMSG_Buffer pBuffer,uint8 hop_count)
+   void MSG_SetHopCount(PMSG_Buffer pBuffer,uint8_t hop_count)
    {
     MSG_GetMessagePtr(pBuffer)->ncpi|=((hop_count & 0x07)<<4);
    }
 
-   void MSG_GetHopCount(PMSG_Buffer pBuffer,uint8 *hop_count)
+   void MSG_GetHopCount(PMSG_Buffer pBuffer,uint8_t *hop_count)
    {
    *hop_count=((MSG_GetMessagePtr(pBuffer)->ncpi) & 0x70)>>4;
    }
@@ -337,30 +337,30 @@ FUNC(void, KSTACK_CODE) KnxMSG_SetRoutingCount(KnxMSG_BufferPtr pBuffer)
 void KnxMSG_SetRoutingCount(KnxMSG_BufferPtr pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8   ctrl;
-    uint8   hop_count;
+    uint8_t   ctrl;
+    uint8_t   hop_count;
 
     ctrl = KnxMSG_GetMessagePtr(pBuffer)->ctrl;
 
-    if ((ctrl & (uint8)0x02) == (uint8)0x02) {
+    if ((ctrl & (uint8_t)0x02) == (uint8_t)0x02) {
         hop_count                              = MSG_NO_ROUTING_CTRL;
-        ctrl                                  &= ~(uint8)0x02;
+        ctrl                                  &= ~(uint8_t)0x02;
         KnxMSG_GetMessagePtr(pBuffer)->ctrl    = ctrl;
     } else {
         hop_count = HOP_COUNT;
     }
 
-    KnxMSG_GetMessagePtr(pBuffer)->ncpi |= ((hop_count & (uint8)0x07) << 4);
+    KnxMSG_GetMessagePtr(pBuffer)->ncpi |= ((hop_count & (uint8_t)0x07) << 4);
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint8, KSTACK_CODE) KnxMSG_GetRoutingCount(const KnxMSG_BufferPtr pBuffer)
+FUNC(uint8_t, KSTACK_CODE) KnxMSG_GetRoutingCount(const KnxMSG_BufferPtr pBuffer)
 #else
-uint8 KnxMSG_GetRoutingCount(const KnxMSG_BufferPtr pBuffer)
+uint8_t KnxMSG_GetRoutingCount(const KnxMSG_BufferPtr pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    return ((KnxMSG_GetMessagePtr(pBuffer)->ncpi) & (uint8)0x70) >> 4;
+    return ((KnxMSG_GetMessagePtr(pBuffer)->ncpi) & (uint8_t)0x70) >> 4;
 }
 
 
@@ -370,9 +370,9 @@ FUNC(void, KSTACK_CODE) KnxMSG_SetRoutingCtrl(KnxMSG_BufferPtr pBuffer, boolean 
 void KnxMSG_SetRoutingCtrl(KnxMSG_BufferPtr pBuffer, boolean on)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 r;
+    uint8_t r;
 
-    (on == TRUE) ? (r = (uint8)0x02) : (r = (uint8)0x00);
+    (on == TRUE) ? (r = (uint8_t)0x02) : (r = (uint8_t)0x00);
     KnxMSG_GetMessagePtr(pBuffer)->ctrl |= r;
 }
 
@@ -385,12 +385,12 @@ void KnxMSG_SetRoutingCtrl(KnxMSG_BufferPtr pBuffer, boolean on)
  */
 
 /*
-   uint8 MSG_GetLSDULen(PMSG_Buffer pBuffer)
+   uint8_t MSG_GetLSDULen(PMSG_Buffer pBuffer)
    {
     return MSG_GetMessagePtr(pBuffer)->ncpi & 0x0f;
    }
 
-   void MSG_SetLSDULen(PMSG_Buffer pBuffer,uint8 len_lsdu)
+   void MSG_SetLSDULen(PMSG_Buffer pBuffer,uint8_t len_lsdu)
    {
     MSG_GetMessagePtr(pBuffer)->ncpi=(len_lsdu & 0x0f);
    }

@@ -148,7 +148,7 @@ Knx_InterfaceObjectType const * const Knx_SystemInterfaceObjs[] = {
     &Knx_IO_AppPrg
 };
 
-const uint8 Knx_SystemInterfaceObjCount = SIZEOF_ARRAY(Knx_SystemInterfaceObjs);
+const uint8_t Knx_SystemInterfaceObjCount = SIZEOF_ARRAY(Knx_SystemInterfaceObjs);
 
 /*
    #if     defined(__HIWARE__)

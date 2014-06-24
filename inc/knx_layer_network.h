@@ -35,7 +35,7 @@ extern "C"
 /*
 ** Global defines.
 */
-#define KNX_DEFAULT_HOP_COUNT ((uint8)6)
+#define KNX_DEFAULT_HOP_COUNT ((uint8_t)6)
 
 /*
 ** Global functions.

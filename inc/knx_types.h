@@ -24,7 +24,7 @@
 #if !defined(__KNX_TYPES_H)
 #define __KNX_TYPES_H
 
-#include "kdk/common/Std_Types.h"
+#include <stdint.h>
 #include "knx_imi.h"
 
 #if defined(__cplusplus)
@@ -33,31 +33,54 @@ extern "C"
 #endif  /* __cplusplus */
 
 /*
+ *
+ * Basic Types.
+ *
+ */
+#if __STDC_VERSION__ >= 199901L
+typedef _Bool boolean;
+#else
+typedef unsigned char boolean;
+#endif
+
+#if !defined(NULL)
+    #define NULL    ((void *) 0)
+#endif
+
+#if !defined(TRUE)
+    #define TRUE    (1u)
+#endif
+
+#if !defined(FALSE)
+    #define FALSE   (0u)
+#endif
+
+/*
 ** Global types.
 */
-typedef uint16  Knx_AddressType;
-typedef uint8   Knx_SerialNumberType[6];
+typedef uint16_t  Knx_AddressType;
+typedef uint8_t   Knx_SerialNumberType[6];
 
 typedef struct tagKnx_PollGroupSettingType {
-    uint16  group_addr;
-    uint8   slot_no;
+    uint16_t  group_addr;
+    uint8_t   slot_no;
 } Knx_PollGroupSettingType;
 
 typedef struct tagKnx_CommObjDescriptorType {
-    uint8   DataPtr;
-    uint8   Config;
-    uint8   Type;
+    uint8_t   DataPtr;
+    uint8_t   Config;
+    uint8_t   Type;
 } Knx_CommObjDescriptorType;
 
 typedef enum tagKnx_DafType {
-    atINDIVIDUAL   = ((uint8) 0x00),
-    atMULTICAST    = ((uint8) 0x80)
+    atINDIVIDUAL   = ((uint8_t) 0x00),
+    atMULTICAST    = ((uint8_t) 0x80)
 } Knx_DafType;
 
 typedef enum tagKnx_FrameTypeType {
-    ftExtended = ((uint8) 0x00),
-    ftStandard = ((uint8) 0x80),
-    ftPolling  = ((uint8) 0xC0)
+    ftExtended = ((uint8_t) 0x00),
+    ftStandard = ((uint8_t) 0x80),
+    ftPolling  = ((uint8_t) 0xC0)
 } Knx_FrameTypeType;
 
 typedef enum tagKnx_ObjectType {
@@ -65,7 +88,7 @@ typedef enum tagKnx_ObjectType {
     otUINT8, otUINT16, otBYTE3, otFLOAT, otDATA6, otDOUBLE, otDATA10, otMAXDATA, otVARDATA
 } Knx_ObjectType;    /* Type-Byte / Object-Descriptor. */
 
-typedef uint8 Knx_PriorityType;
+typedef uint8_t Knx_PriorityType;
 
 /*
 **  START: LAYER-Dispatching-Functions.
@@ -78,8 +101,8 @@ typedef struct tagKnx_ServiceEntryType {
 } Knx_ServiceEntryType;
 
 typedef struct tagKnx_LayerServicesType {
-    uint8                                   LayerOffset;
-    uint8                                   NumServices;
+    uint8_t                                   LayerOffset;
+    uint8_t                                   NumServices;
     const Knx_LayerServiceFunctionType *    Functions;
 } Knx_LayerServicesType;
 /*
@@ -93,7 +116,7 @@ typedef struct tagKnx_LayerServicesType {
    } KNX_PriorityType;
  */
 
-typedef uint8 Knx_HopCountType;
+typedef uint8_t Knx_HopCountType;
 
 #if defined(__cplusplus)
 }

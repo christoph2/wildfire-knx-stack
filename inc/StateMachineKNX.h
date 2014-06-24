@@ -33,11 +33,11 @@ extern "C"
 #endif  /* __cplusplus */
 
 /* TODO: Config. */
-#define MAX_REP_COUNT           ((uint8)3)
+#define MAX_REP_COUNT           ((uint8_t)3)
 #define TL_STYLE                3 /* [1,2,3] - Transport-Layer-Styles gem. KNX-Handbuch 3/3/4. */
 #define TLC_CONNECTION_TIMEOUT  ((Tmr_TickType)6)
 #define TLC_ACKNOWLEDGE_TIMEOUT ((Tmr_TickType)3)
-/*  #define Def_Rep_Count               ((uint8)3) */
+/*  #define Def_Rep_Count               ((uint8_t)3) */
 
 /*
 ** Global types.
@@ -76,7 +76,7 @@ typedef struct tagKnxTLC_ActionType {
 } KnxTLC_ActionType;
 
 typedef struct tagKnxTLC_ActionListType {
-/*    const uint8 num; */
+/*    const uint8_t num; */
 #if (TL_STYLE == 1) || (TL_STYLE == 2)
     const KnxTLC_ActionType Action[3];
 #elif TL_STYLE == 3

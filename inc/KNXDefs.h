@@ -42,8 +42,8 @@ extern "C"
 /*
 ** Global defines.
 */
-#define IAK_OK                  ((uint8)0x00)
-#define IAK_NOT_OK              ((uint8)0x01)
+#define IAK_OK                  ((uint8_t)0x00)
+#define IAK_NOT_OK              ((uint8_t)0x01)
 
 /*
    #define MSG_NO_ROUTING_CTRL ((BYTE)7)
@@ -51,32 +51,32 @@ extern "C"
  */
 
 /* RunError-Codes. */
-#define KNX_RUNERROR_SYS3_ERR   ((uint8)0x40)           /* internal system error (not for each default MCB [ROM] an. */
+#define KNX_RUNERROR_SYS3_ERR   ((uint8_t)0x40)           /* internal system error (not for each default MCB [ROM] an. */
                                                         /* MCB [EEPROM] exists with the same start address). */
-#define KNX_RUNERROR_SYS2_ERR   ((uint8)0x20)           /* internal system error (stuck/ overheat detection). */
-#define KNX_RUNERROR_OBJ_ERR    ((uint8)0x10)           /* RAM flag table error (*PTR not in ZPAGE range). */
-#define KNX_RUNERROR_STK_OVL    ((uint8)0x08)           /* stack overflow was detected. */
-#define KNX_RUNERROR_EEPROM_ERR ((uint8)0x04)           /* EEPROM check detected an CRC error. */
-#define KNX_RUNERROR_SYS1_ERR   ((uint8)0x02)           /* internal system error (parity bit in SystemState is corrupt). */
-#define KNX_RUNERROR_SYS0_ERR   ((uint8)0x01)           /* internal system error (msg buffer offset corrupt). */
+#define KNX_RUNERROR_SYS2_ERR   ((uint8_t)0x20)           /* internal system error (stuck/ overheat detection). */
+#define KNX_RUNERROR_OBJ_ERR    ((uint8_t)0x10)           /* RAM flag table error (*PTR not in ZPAGE range). */
+#define KNX_RUNERROR_STK_OVL    ((uint8_t)0x08)           /* stack overflow was detected. */
+#define KNX_RUNERROR_EEPROM_ERR ((uint8_t)0x04)           /* EEPROM check detected an CRC error. */
+#define KNX_RUNERROR_SYS1_ERR   ((uint8_t)0x02)           /* internal system error (parity bit in SystemState is corrupt). */
+#define KNX_RUNERROR_SYS0_ERR   ((uint8_t)0x01)           /* internal system error (msg buffer offset corrupt). */
 
 /*
 ** Config-Byte / Object-Descriptor.
 */
-#define KNX_OBJ_UPDATE_ENABLE   ((uint8)0x80)               /* GroupValueRead()_Res wird verarbeitet - nur Mask 0020h, 0021h. */
-#define KNX_OBJ_TRANSMIT_ENABLE ((uint8)0x40)               /* Lese- und Schreib-Anforderungen (Requests) vom App.-Layer werden verarbeitet. */
-#define KNX_OBJ_EEPROM_VALUE    ((uint8)0x20)               /* Objektwert steht im EEPROM (statt im RAM). */
-#define KNX_OBJ_WRITE_ENABLE    ((uint8)0x10)               /* Objektwert kann über den Bus geschrieben werden. */
-#define KNX_OBJ_READ_ENABLE     ((uint8)0x08)               /* Objektwert kann über den Bus gelesen werden. */
-#define KNX_OBJ_COMM_ENABLE     ((uint8)0x04)               /* "Mainswitch" for Communikation. */
+#define KNX_OBJ_UPDATE_ENABLE   ((uint8_t)0x80)               /* GroupValueRead()_Res wird verarbeitet - nur Mask 0020h, 0021h. */
+#define KNX_OBJ_TRANSMIT_ENABLE ((uint8_t)0x40)               /* Lese- und Schreib-Anforderungen (Requests) vom App.-Layer werden verarbeitet. */
+#define KNX_OBJ_EEPROM_VALUE    ((uint8_t)0x20)               /* Objektwert steht im EEPROM (statt im RAM). */
+#define KNX_OBJ_WRITE_ENABLE    ((uint8_t)0x10)               /* Objektwert kann über den Bus geschrieben werden. */
+#define KNX_OBJ_READ_ENABLE     ((uint8_t)0x08)               /* Objektwert kann über den Bus gelesen werden. */
+#define KNX_OBJ_COMM_ENABLE     ((uint8_t)0x04)               /* "Mainswitch" for Communikation. */
 
 /*
 **  Config-Byte / Priorities.
 */
-#define KNX_OBJ_PRIO_SYSTEM     ((uint8)0)
-#define KNX_OBJ_PRIO_URGENT     ((uint8)2)
-#define KNX_OBJ_PRIO_NORMAL     ((uint8)1)
-#define KNX_OBJ_PRIO_LOW        ((uint8)3)
+#define KNX_OBJ_PRIO_SYSTEM     ((uint8_t)0)
+#define KNX_OBJ_PRIO_URGENT     ((uint8_t)2)
+#define KNX_OBJ_PRIO_NORMAL     ((uint8_t)1)
+#define KNX_OBJ_PRIO_LOW        ((uint8_t)3)
 
 /*
     Transmission Priorities
@@ -91,24 +91,24 @@ extern "C"
 ** Comm-Flags.
 */
 
-#define KNX_OBJ_UPDATED                 ((uint8)0x08)
-#define KNX_OBJ_DATA_REQUEST            ((uint8)0x04)
+#define KNX_OBJ_UPDATED                 ((uint8_t)0x08)
+#define KNX_OBJ_DATA_REQUEST            ((uint8_t)0x04)
 
 /*
 ** Transmission-Status
 */
-#define KNX_OBJ_IDLE_OK                 ((uint8)0x00)
-#define KNX_OBJ_IDLE_ERROR              ((uint8)0x01)
-#define KNX_OBJ_TRANSMITTING            ((uint8)0x02)
-#define KNX_OBJ_TRANSMIT_REQ            ((uint8)0x03)
+#define KNX_OBJ_IDLE_OK                 ((uint8_t)0x00)
+#define KNX_OBJ_IDLE_ERROR              ((uint8_t)0x01)
+#define KNX_OBJ_TRANSMITTING            ((uint8_t)0x02)
+#define KNX_OBJ_TRANSMIT_REQ            ((uint8_t)0x03)
 
-#define BCU20_PRIVILEGE_CONFIGURATION   ((uint8)0)
-#define BCU20_PRIVILEGE_SERVICE         ((uint8)1)
-#define BCU20_PRIVILEGE_USER            ((uint8)2)
-#define BCU20_PRIVILEGE_NO              ((uint8)3)
+#define BCU20_PRIVILEGE_CONFIGURATION   ((uint8_t)0)
+#define BCU20_PRIVILEGE_SERVICE         ((uint8_t)1)
+#define BCU20_PRIVILEGE_USER            ((uint8_t)2)
+#define BCU20_PRIVILEGE_NO              ((uint8_t)3)
 
-#define KNX_UNUSED_TSAP                 ((uint8)0xfe)
-#define KNX_INVALID_TSAP                ((uint8)0x00)
+#define KNX_UNUSED_TSAP                 ((uint8_t)0xfe)
+#define KNX_INVALID_TSAP                ((uint8_t)0x00)
 
 #if defined(__cplusplus)
 }

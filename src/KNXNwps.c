@@ -27,12 +27,12 @@
 ** Function prototypes.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)     NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*/);
+FUNC(void, KSTACK_CODE)     NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8_t service /*,boolean connected*/);
 FUNC(boolean, KSTACK_CODE) NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer);
 FUNC(boolean, KSTACK_CODE) NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer);
 FUNC(boolean, KSTACK_CODE) NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer);
 #else
-void    NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*/);
+void    NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8_t service /*,boolean connected*/);
 boolean NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer);
 boolean NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer);
 boolean NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer);
@@ -100,9 +100,9 @@ boolean NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer);
 typedef boolean (*NWPS_FUNC)(KnxMSG_BufferPtr pBuffer);
 
 typedef struct tagNWPSFunctions {
-    uint16      objectTypeFrom;
-    uint16      objectTypeTo;
-    uint8       pid;
+    uint16_t      objectTypeFrom;
+    uint16_t      objectTypeTo;
+    uint8_t       pid;
     NWPS_FUNC   func;
 } NWPSFunctions;
 
@@ -111,7 +111,7 @@ typedef struct tagNWPSFunctions {
 */
 STATIC NWPSFunctions NWPSReadFunctions[] = {
     {KNX_OT_ADDRESSTABLE_OBJECT, KNX_OT_ADDRESSTABLE_OBJECT,     KNX_PID_GROUP_ADDRESS_LIST,           NWPS_GroupAddressCheck                                                                         },
-    {(uint8)50,                  (uint16)50000,                  KNX_PID_OBJECT_TYPE,                  NWPS_FunctionalBlockScan                                                                       },
+    {(uint8_t)50,                  (uint16_t)50000,                  KNX_PID_OBJECT_TYPE,                  NWPS_FunctionalBlockScan                                                                       },
     {KNX_OT_DEVICE_OBJECT,       KNX_OT_DEVICE_OBJECT,           KNX_PID_SERIAL_NUMBER,                NWPS_GetSerialNumber                                                                           }
 };
 
@@ -126,19 +126,19 @@ STATIC NWPSFunctions NWPSReadFunctions[] = {
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*/)
+FUNC(void, KSTACK_CODE) NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8_t service /*,boolean connected*/)
 #else
-void NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8 service /*,boolean connected*/)
+void NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8_t service /*,boolean connected*/)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KNX_StandardFrameRefType    pmsg;
-    uint8                       len;
-    uint8                       pid;
-    uint16                      objectType;
+    uint8_t                       len;
+    uint8_t                       pid;
+    uint16_t                      objectType;
 
     pmsg = KnxMSG_GetMessagePtr(pBuffer);
 
-    objectType = btohs((uint16)pmsg->data[0]);
+    objectType = btohs((uint16_t)pmsg->data[0]);
     pid        = pmsg->data[2];
 
     len = KnxMSG_GetLSDULen(pBuffer);

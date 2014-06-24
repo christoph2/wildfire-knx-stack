@@ -51,17 +51,17 @@ extern "C"
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint16, KSTACK_CODE)   LongToDPT9(sint32 value);
-FUNC(uint16, KSTACK_CODE)   FloatToDPT9(float64 value);
-FUNC(float64, KSTACK_CODE)  DPT9ToFloat(uint16 value);
-FUNC(sint32, KSTACK_CODE)   DPT9ToLong(uint16 value);
-FUNC(uint16, KSTACK_CODE)   btohs(uint16 w);
+FUNC(uint16_t, KSTACK_CODE)   LongToDPT9(sint32 value);
+FUNC(uint16_t, KSTACK_CODE)   FloatToDPT9(float64 value);
+FUNC(float64, KSTACK_CODE)  DPT9ToFloat(uint16_t value);
+FUNC(sint32, KSTACK_CODE)   DPT9ToLong(uint16_t value);
+FUNC(uint16_t, KSTACK_CODE)   btohs(uint16_t w);
 #else
-uint16  LongToDPT9(sint32 value);
-uint16  FloatToDPT9(float64 value);
-float64 DPT9ToFloat(uint16 value);
-sint32  DPT9ToLong(uint16 value);
-uint16  btohs(uint16 w);
+uint16_t  LongToDPT9(sint32 value);
+uint16_t  FloatToDPT9(float64 value);
+float64 DPT9ToFloat(uint16_t value);
+sint32  DPT9ToLong(uint16_t value);
+uint16_t  btohs(uint16_t w);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */

@@ -25,7 +25,7 @@
 #include "knx_address.h"
 
 /*
-   static const uint8 KNX_OBJTYPESIZE[16]={ // Hinweis: auch als 'KNX_OBJ_LEN_TAB' definiert!?
+   static const uint8_t KNX_OBJTYPESIZE[16]={ // Hinweis: auch als 'KNX_OBJ_LEN_TAB' definiert!?
     1,   // UINT1
     1,   // UINT2
     1,   // UINT3
@@ -72,17 +72,17 @@ boolean KnxADR_InProgrammingMode(void)
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(boolean, KSTACK_CODE)  KnxADR_IsAddressed(Knx_AddressType searched_addr,
-                                               P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) tsap
+                                               P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) tsap
                                                )
 #else
-boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap)
+boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8_t * tsap)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8   len;
-    uint16  mid;
+    uint8_t   len;
+    uint16_t  mid;
     sint16  left, right;
     boolean ack;
-    uint16  ca, * ap;
+    uint16_t  ca, * ap;
 
     ack    = FALSE;
     *tsap  = KNX_INVALID_TSAP;
@@ -93,27 +93,27 @@ boolean KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8 * tsap)
 
     len = KnxADR_GrATLength();
 
-    if (len > (uint8)1) {
+    if (len > (uint8_t)1) {
         ap = KnxADR_GrATBasePtr();
 
         left   = (sint16)0;
         right  = len - (sint16)1;
 
         do {
-            mid    = (uint16)(left + right) >> 1;
+            mid    = (uint16_t)(left + right) >> 1;
             ca     = btohs(*(ap + mid));
 
             if (searched_addr == ca) {
-                *tsap  = mid + (uint16)1;
+                *tsap  = mid + (uint16_t)1;
                 ack    = TRUE;
                 break;  /*!MISRA 1998 Rule 58 ('non-switch break used') Exception: the alternative would be a 'goto' statement ;-) */
             } else if (searched_addr < ca) {
-                right = (sint16)(mid - (uint16)1);
+                right = (sint16)(mid - (uint16_t)1);
             } else {
-                left = (sint16)(mid + (uint16)1);
+                left = (sint16)(mid + (uint16_t)1);
             }
         } while (left <= right);
-    } else if (len == (uint8)0) {
+    } else if (len == (uint8_t)0) {
         ack = TRUE; /* passthru of every Frame. */
     } else {        /* len==1. */
         ack = FALSE;
@@ -129,7 +129,7 @@ FUNC(Knx_AddressType, KSTACK_CODE) KnxADR_GetPhysAddr(void)
 Knx_AddressType KnxADR_GetPhysAddr(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    return btohs(*(uint16 *)&APP_AddressTable[1]);
+    return btohs(*(uint16_t *)&APP_AddressTable[1]);
 }
 
 
@@ -139,7 +139,7 @@ FUNC(void, KSTACK_CODE) KnxADR_SetPhysAddr(Knx_AddressType addr)
 void KnxADR_SetPhysAddr(Knx_AddressType addr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    *(uint16 *)APP_AddressTable[1] = htobs(addr);    /* todo: use Memory-Server!!! */
+    *(uint16_t *)APP_AddressTable[1] = htobs(addr);    /* todo: use Memory-Server!!! */
 }
 
 
@@ -149,7 +149,7 @@ FUNC(void, KSTACK_CODE) KnxADR_GetSerialNumber(Knx_SerialNumberType serial_numbe
 void KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-/*CopyMem((uint8*)serial_number,(uint8*)DEV_SERIAL_NUM,sizeof(KNX_SerialNumberType)); */
+/*CopyMem((uint8_t*)serial_number,(uint8_t*)DEV_SERIAL_NUM,sizeof(KNX_SerialNumberType)); */
 }
 
 

@@ -53,7 +53,7 @@ void KnxTmr_Init(void)
 
     TMR_LOCK();
 
-    for (idx = (uint8)0; idx < TMR_NUM_TIMERS; idx++) {
+    for (idx = (uint8_t)0; idx < TMR_NUM_TIMERS; idx++) {
         KNX_Timer[idx].expire_counter  = (uint32)0UL;
         KNX_Timer[idx].state           = TMR_STATE_STOPPED;
         KNX_Timer[idx].base            = TMR_RESOLUTION_MS;
@@ -64,9 +64,9 @@ void KnxTmr_Init(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxTmr_Start(uint8 timer, Tmr_ResolutionType base, Tmr_TickType ticks)
+FUNC(boolean, KSTACK_CODE) KnxTmr_Start(uint8_t timer, Tmr_ResolutionType base, Tmr_TickType ticks)
 #else
-boolean KnxTmr_Start(uint8 timer, Tmr_ResolutionType base, Tmr_TickType ticks)
+boolean KnxTmr_Start(uint8_t timer, Tmr_ResolutionType base, Tmr_TickType ticks)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TMR_NUM_TIMERS) {
@@ -87,9 +87,9 @@ boolean KnxTmr_Start(uint8 timer, Tmr_ResolutionType base, Tmr_TickType ticks)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxTmr_Stop(uint8 timer)
+FUNC(boolean, KSTACK_CODE) KnxTmr_Stop(uint8_t timer)
 #else
-boolean KnxTmr_Stop(uint8 timer)
+boolean KnxTmr_Stop(uint8_t timer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TMR_NUM_TIMERS) {
@@ -104,9 +104,9 @@ boolean KnxTmr_Stop(uint8 timer)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxTmr_IsExpired(uint8 timer)
+FUNC(boolean, KSTACK_CODE) KnxTmr_IsExpired(uint8_t timer)
 #else
-boolean KnxTmr_IsExpired(uint8 timer)
+boolean KnxTmr_IsExpired(uint8_t timer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     Tmr_StateType state;
@@ -123,9 +123,9 @@ boolean KnxTmr_IsExpired(uint8 timer)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxTmr_IsRunning(uint8 timer)
+FUNC(boolean, KSTACK_CODE) KnxTmr_IsRunning(uint8_t timer)
 #else
-boolean KnxTmr_IsRunning(uint8 timer)
+boolean KnxTmr_IsRunning(uint8_t timer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TMR_NUM_TIMERS) {
@@ -137,9 +137,9 @@ boolean KnxTmr_IsRunning(uint8 timer)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxTmr_GetRemainder(uint8 timer, Tmr_TickRefType remainder)
+FUNC(boolean, KSTACK_CODE) KnxTmr_GetRemainder(uint8_t timer, Tmr_TickRefType remainder)
 #else
-boolean KnxTmr_GetRemainder(uint8 timer, Tmr_TickRefType remainder)
+boolean KnxTmr_GetRemainder(uint8_t timer, Tmr_TickRefType remainder)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TMR_NUM_TIMERS) {
@@ -214,7 +214,7 @@ void KnxTmr_SystemTickHandler(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     Tmr_TimerType *  tm;
-    uint8           idx;
+    uint8_t           idx;
     boolean         SecondChanged = FALSE;
 
     Tmr_SysMsCounter += TMR_TICK_RESOLUTION;
@@ -225,7 +225,7 @@ void KnxTmr_SystemTickHandler(void)
         KnxTmr_SecondCallback();
     }
 
-    for (idx = (uint8)0; idx < TMR_NUM_TIMERS; idx++) {
+    for (idx = (uint8_t)0; idx < TMR_NUM_TIMERS; idx++) {
         tm = &KNX_Timer[idx];
 
         if ((tm->state & TMR_STATE_RUNNING) == TMR_STATE_RUNNING) {

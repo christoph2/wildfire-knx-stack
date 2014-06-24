@@ -40,8 +40,8 @@ void NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer);
 **  ERROR-Flag ist Bit #0.
 */
 
-#define CONF_OK     ((uint8)0x00)
-#define CONF_ERROR  ((uint8)0x01)
+#define CONF_OK     ((uint8_t)0x00)
+#define CONF_ERROR  ((uint8_t)0x01)
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 STATIC  FUNC(void, KSTACK_CODE) Disp_N_DataIndividualReq(void), Disp_N_DataGroupReq(void), Disp_N_PollDataReq(void);
@@ -72,7 +72,7 @@ static const Knx_LayerServiceFunctionType NL_Services[] = {
 };
 
 static const Knx_LayerServicesType NL_ServiceTable[] = {
-    {KNX_NL_SERVICES, (uint8)8, NL_Services}
+    {KNX_NL_SERVICES, (uint8_t)8, NL_Services}
 };
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
@@ -111,7 +111,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_L_DataInd(void)
 STATIC void Disp_L_DataInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if ((KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->ncpi & (uint8)0x80) == (uint8)0x80) {
+    if ((KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->ncpi & (uint8_t)0x80) == (uint8_t)0x80) {
         if (KnxADR_IsBroadcastAddress(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->dest)) {
             /* Broadcast-Communication. */
             KnxMSG_ScratchBufferPtr->service = N_DATA_BROADCAST_IND;

@@ -31,16 +31,16 @@
 
 #include "Appl.h"
 
-uint8 DEV_GetHopCount(void);
+uint8_t DEV_GetHopCount(void);
 
 
-uint8   DEV_Device_Control;
-uint8   DEV_Current_Accesslevel;
-uint8   DEV_SystemState;
+uint8_t   DEV_Device_Control;
+uint8_t   DEV_Current_Accesslevel;
+uint8_t   DEV_SystemState;
 
-const uint8                 KNX_DEV_FIRMWARE_REV   = 0x00;
+const uint8_t                 KNX_DEV_FIRMWARE_REV   = 0x00;
 const Knx_SerialNumberType  KNX_DEV_SERIAL_NUM     = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
-const uint8                 KNX_DEV_ORDER_INFO[10] = {0x0a, 0x09, 0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01};
+const uint8_t                 KNX_DEV_ORDER_INFO[10] = {0x0a, 0x09, 0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01};
 
 #if defined(_MSC_VER)
     #pragma data_seg(push, ".__EEPROM")
@@ -56,13 +56,13 @@ const uint8                 KNX_DEV_ORDER_INFO[10] = {0x0a, 0x09, 0x08, 0x07, 0x
    typedef struct
    {
    USHORT AIBVersion;            // At the moment 0x0001 has to be specified.
-   uint8 ApplFirmwareVersion;      // Property (3/204).
-   uint8 ApplFirmwareSubVersion;   // Property (3/205). - both Versions free to App.
+   uint8_t ApplFirmwareVersion;      // Property (3/204).
+   uint8_t ApplFirmwareSubVersion;   // Property (3/205). - both Versions free to App.
    void (*AppMain) (void);
    void (*AppSave) (void);
    void (*AppUnload) (void);
    const CObjPtr* pCObjects;
-   uint8* pRAMFlags;
+   uint8_t* pRAMFlags;
    TIMER_TAB* pUserTimerTab;      // if no User-Timers ==> NULL.
    const INTERFACE_ROOT* pUsrIntObjRoot;   // User-Interface-Objects.
    ParamMgmt* pUsrParamMgmt;
@@ -70,7 +70,7 @@ const uint8                 KNX_DEV_ORDER_INFO[10] = {0x0a, 0x09, 0x08, 0x07, 0x
    } AppInfoBlock;
  */
 
-/*static*/ const uint8 DEV_EEPROM_HEADER[0x16] = {
+/*static*/ const uint8_t DEV_EEPROM_HEADER[0x16] = {
     0xff,   /* OptionReg (HC05 EEPROM Option Register).         */
     0x00,   /* ManData (2 Bytes).   */
     0x00,
@@ -130,7 +130,7 @@ const Knx_PollGroupSettingType KNX_DEV_POLLGROUP_SETTINGS = {0xffff, 0xff};
     &Knx_IO_AppPrg
    };
 
-   const uint8 KNX_SystemInterfaceObjCount=sizeof(KNX_SystemInterfaceObjs)/(sizeof(KNX_INTERFACE_OBJ*));
+   const uint8_t KNX_SystemInterfaceObjCount=sizeof(KNX_SystemInterfaceObjs)/(sizeof(KNX_INTERFACE_OBJ*));
  */
 
 /*********************************************************************
@@ -189,7 +189,7 @@ END_USER_INTERFACE_OBJECTS()
     #define Knx_UserInterfaceObjs NULL
 #endif
 
-const uint8 Knx_UserInterfaceObjCount = 0; /* sizeof(KNX_UserInterfaceObjs)/(sizeof(KNX_INTERFACE_OBJ*)); */
+const uint8_t Knx_UserInterfaceObjCount = 0; /* sizeof(KNX_UserInterfaceObjs)/(sizeof(KNX_INTERFACE_OBJ*)); */
 
 /* Knx_InterfaceObjectType ** Knx_UserInterfaceObjPtr=(Knx_InterfaceObjectType ** )Knx_UserInterfaceObjs; */
 
@@ -199,7 +199,7 @@ const Knx_InterfaceObjectType * * Knx_UserInterfaceObjPtr = (const Knx_Interface
  **********************************************************************
  **********************************************************************/
 
-const uint32 KNX_DEV_ACCESS_KEYTABLE[3]; /* check: uint8? */
+const uint32 KNX_DEV_ACCESS_KEYTABLE[3]; /* check: uint8_t? */
 
 #if     defined(__HIWARE__)
         #pragma CONST_SEG DEFAULT
@@ -210,8 +210,8 @@ const uint32 KNX_DEV_ACCESS_KEYTABLE[3]; /* check: uint8? */
         #pragma data_seg(pop)
 #endif
 
-uint8 const * const __LOG_EEPROM_START     = (uint8 *)0x0100;
-uint8 const * const __PHYS_EEPROM_START    = (const uint8 *)&DEV_EEPROM_HEADER;
+uint8_t const * const __LOG_EEPROM_START     = (uint8_t *)0x0100;
+uint8_t const * const __PHYS_EEPROM_START    = (const uint8_t *)&DEV_EEPROM_HEADER;
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) DEV_Init(void)
@@ -225,9 +225,9 @@ void DEV_Init(void)
     IOS_GetUserObjTable(&descr);
 
    //    KNX_UserObjDescr 0 setzen, falls 0xffff,0xff.
-    if ((descr.obj_ptr==(Knx_AddressType)~0) && (descr.obj_count==(uint8)0xff)) {
+    if ((descr.obj_ptr==(Knx_AddressType)~0) && (descr.obj_count==(uint8_t)0xff)) {
         descr.obj_ptr=(Knx_AddressType)0;
-        descr.obj_count=(uint8)0;
+        descr.obj_count=(uint8_t)0;
         IOS_SetUserObjTable(descr);
     }
     // APP_Init();
@@ -237,12 +237,12 @@ void DEV_Init(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint8 , KSTACK_CODE) DEV_GetHopCount(void)
+FUNC(uint8_t , KSTACK_CODE) DEV_GetHopCount(void)
 #else
-uint8 DEV_GetHopCount(void)
+uint8_t DEV_GetHopCount(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 hc = DEV_EEPROM_HEADER[0x0e] >> 4;
+    uint8_t hc = DEV_EEPROM_HEADER[0x0e] >> 4;
 
     return ((hc < 1) || (hc > KNX_DEFAULT_HOP_COUNT)) ? KNX_DEFAULT_HOP_COUNT : hc;
 }

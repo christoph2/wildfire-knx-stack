@@ -43,8 +43,8 @@ STATIC void Disp_N_DataBroadcastInd(void), Disp_N_DataIndividualCon(void), Disp_
 /*
 ** Local variables.
 */
-STATIC uint8            KnxTLC_SequenceNumberSend, KnxTLC_SequenceNumberReceived;
-STATIC uint8            KnxTLC_RepetitionCount, KnxTLC_SequenceNumberOfPDU;
+STATIC uint8_t            KnxTLC_SequenceNumberSend, KnxTLC_SequenceNumberReceived;
+STATIC uint8_t            KnxTLC_RepetitionCount, KnxTLC_SequenceNumberOfPDU;
 STATIC Knx_AddressType  KnxTLC_SourceAddress, KnxTLC_ConnectionAddress;
 
 /*
@@ -101,10 +101,10 @@ FUNC(void, KSTACK_CODE) KnxTLC_Init(void)
 void KnxTLC_Init(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxTLC_SetSequenceNumberSend((uint8)0);
-    KnxTLC_SetSequenceNumberReceived((uint8)0);
-    KnxTLC_SetRepetitionCount((uint8)0);
-    KnxTLC_SetSequenceNumberOfPDU((uint8)0);
+    KnxTLC_SetSequenceNumberSend((uint8_t)0);
+    KnxTLC_SetSequenceNumberReceived((uint8_t)0);
+    KnxTLC_SetRepetitionCount((uint8_t)0);
+    KnxTLC_SetSequenceNumberOfPDU((uint8_t)0);
 
     KnxTLC_SetState(CLOSED);
 }
@@ -120,7 +120,7 @@ void T_Connect_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Address
     KnxMSG_SetSourceAddress(pBuffer, source);
     KnxMSG_SetDestAddress(pBuffer, dest);
     KnxMSG_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
-    KnxMSG_SetLen(pBuffer, (uint8)7);
+    KnxMSG_SetLen(pBuffer, (uint8_t)7);
     pBuffer->service = N_DATA_INDIVIDUAL_REQ; /* T_CONNECT_REQ; */
 
     (void)KnxMSG_Post(pBuffer);
@@ -145,12 +145,12 @@ void T_Disconnect_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) T_Ack_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 SeqNo)
+FUNC(void, KSTACK_CODE) T_Ack_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo)
 #else
-void T_Ack_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 SeqNo)
+void T_Ack_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMSG_SetTPCI(pBuffer, T_ACK_PDU | ((SeqNo & (uint8)0x0f) << 2));
+    KnxMSG_SetTPCI(pBuffer, T_ACK_PDU | ((SeqNo & (uint8_t)0x0f) << 2));
     KnxMSG_SetSourceAddress(pBuffer, source);
     KnxMSG_SetDestAddress(pBuffer, dest);
     KnxMSG_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
@@ -162,12 +162,12 @@ void T_Ack_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) T_Nak_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 SeqNo)
+FUNC(void, KSTACK_CODE) T_Nak_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo)
 #else
-void T_Nak_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8 SeqNo)
+void T_Nak_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMSG_SetTPCI(pBuffer, T_NAK_PDU | ((SeqNo & (uint8)0x0f) << 2));
+    KnxMSG_SetTPCI(pBuffer, T_NAK_PDU | ((SeqNo & (uint8_t)0x0f) << 2));
     KnxMSG_SetSourceAddress(pBuffer, source);
     KnxMSG_SetDestAddress(pBuffer, dest);
     KnxMSG_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
@@ -179,9 +179,9 @@ void T_Nak_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint8, KSTACK_CODE) KnxTLC_GetSequenceNumberSend(void)
+FUNC(uint8_t, KSTACK_CODE) KnxTLC_GetSequenceNumberSend(void)
 #else
-uint8 KnxTLC_GetSequenceNumberSend(void)
+uint8_t KnxTLC_GetSequenceNumberSend(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return KnxTLC_SequenceNumberSend;
@@ -189,9 +189,9 @@ uint8 KnxTLC_GetSequenceNumberSend(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint8, KSTACK_CODE) KnxTLC_GetSequenceNumberReceived(void)
+FUNC(uint8_t, KSTACK_CODE) KnxTLC_GetSequenceNumberReceived(void)
 #else
-uint8 KnxTLC_GetSequenceNumberReceived(void)
+uint8_t KnxTLC_GetSequenceNumberReceived(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return KnxTLC_SequenceNumberReceived;
@@ -199,9 +199,9 @@ uint8 KnxTLC_GetSequenceNumberReceived(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint8, KSTACK_CODE) KnxTLC_GetRepetitionCount(void)
+FUNC(uint8_t, KSTACK_CODE) KnxTLC_GetRepetitionCount(void)
 #else
-uint8 KnxTLC_GetRepetitionCount(void)
+uint8_t KnxTLC_GetRepetitionCount(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return KnxTLC_RepetitionCount;
@@ -209,9 +209,9 @@ uint8 KnxTLC_GetRepetitionCount(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint8, KSTACK_CODE) KnxTLC_GetSequenceNumberOfPDU(void)
+FUNC(uint8_t, KSTACK_CODE) KnxTLC_GetSequenceNumberOfPDU(void)
 #else
-uint8 KnxTLC_GetSequenceNumberOfPDU(void)
+uint8_t KnxTLC_GetSequenceNumberOfPDU(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return KnxTLC_SequenceNumberOfPDU;
@@ -239,29 +239,29 @@ Knx_AddressType KnxTLC_GetConnectionAddress(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxTLC_SetSequenceNumberSend(uint8 SequenceNumberSend)
+FUNC(void, KSTACK_CODE) KnxTLC_SetSequenceNumberSend(uint8_t SequenceNumberSend)
 #else
-void KnxTLC_SetSequenceNumberSend(uint8 SequenceNumberSend)
+void KnxTLC_SetSequenceNumberSend(uint8_t SequenceNumberSend)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxTLC_SequenceNumberSend = (SequenceNumberSend & ((uint8)0x0f));
+    KnxTLC_SequenceNumberSend = (SequenceNumberSend & ((uint8_t)0x0f));
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxTLC_SetSequenceNumberReceived(uint8 SequenceNumberReceived)
+FUNC(void, KSTACK_CODE) KnxTLC_SetSequenceNumberReceived(uint8_t SequenceNumberReceived)
 #else
-void KnxTLC_SetSequenceNumberReceived(uint8 SequenceNumberReceived)
+void KnxTLC_SetSequenceNumberReceived(uint8_t SequenceNumberReceived)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxTLC_SequenceNumberReceived = (SequenceNumberReceived & ((uint8)0x0f));
+    KnxTLC_SequenceNumberReceived = (SequenceNumberReceived & ((uint8_t)0x0f));
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)  KnxTLC_SetRepetitionCount(uint8 RepetitionCount)
+FUNC(void, KSTACK_CODE)  KnxTLC_SetRepetitionCount(uint8_t RepetitionCount)
 #else
-void KnxTLC_SetRepetitionCount(uint8 RepetitionCount)
+void KnxTLC_SetRepetitionCount(uint8_t RepetitionCount)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxTLC_RepetitionCount = RepetitionCount;
@@ -269,9 +269,9 @@ void KnxTLC_SetRepetitionCount(uint8 RepetitionCount)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxTLC_SetSequenceNumberOfPDU(uint8 SequenceNumberOfPDU)
+FUNC(void, KSTACK_CODE) KnxTLC_SetSequenceNumberOfPDU(uint8_t SequenceNumberOfPDU)
 #else
-void KnxTLC_SetSequenceNumberOfPDU(uint8 SequenceNumberOfPDU)
+void KnxTLC_SetSequenceNumberOfPDU(uint8_t SequenceNumberOfPDU)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxTLC_SequenceNumberOfPDU = SequenceNumberOfPDU;
@@ -313,11 +313,11 @@ STATIC FUNC(void, KSTACK_CODE) Disp_N_Data_IndividualInd(void)
 STATIC void Disp_N_Data_IndividualInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 tpci;
+    uint8_t tpci;
 
     KnxTLC_SetSourceAddress(KnxMSG_GetSourceAddress(KnxMSG_ScratchBufferPtr)); /* todo: !!! TESTEN !!! */
 
-    tpci = KnxMSG_GetTPCI(KnxMSG_ScratchBufferPtr) & (uint8)0xc0;
+    tpci = KnxMSG_GetTPCI(KnxMSG_ScratchBufferPtr) & (uint8_t)0xc0;
 
     switch (tpci) {
         case TPCI_UDT:   /* Unnumbered Data (1:1-Connection-Less). */
@@ -343,7 +343,7 @@ STATIC void Disp_N_Data_IndividualInd(void)
 
             break;
         case TPCI_NCD:                                                      /* Numbered Control (TACK|TNACK). */
-            tpci = KnxMSG_GetTPCI(KnxMSG_ScratchBufferPtr) & (uint8)0xC3;   /* 0x03 */
+            tpci = KnxMSG_GetTPCI(KnxMSG_ScratchBufferPtr) & (uint8_t)0xC3;   /* 0x03 */
             KnxTLC_SetSequenceNumberOfPDU(KnxMSG_GetSeqNo(KnxMSG_ScratchBufferPtr));
 
             if (tpci == T_ACK_PDU) {

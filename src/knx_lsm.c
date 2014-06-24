@@ -93,7 +93,7 @@ typedef enum tagKNX_LSMStateType {
     LSM_STATE_ERROR, LSM_STATE_LAST
 } KNX_LSMStateType;
 
-STATIC const uint8 LS_Table[4][5] = {
+STATIC const uint8_t LS_Table[4][5] = {
 /*  NOP                     START_LOAD          LOAD_COMPLETE       SEGMENT             UNLOAD                  */
 /*  ----------------------------------------------------------------------------------------------------------- */
     {LSM_STATE_UNLOADED, LSM_STATE_LOADING,   LSM_STATE_UNLOADED,   LSM_STATE_UNLOADED,    LSM_STATE_UNLOADED                                 },    /* UNLOADED */
@@ -102,10 +102,10 @@ STATIC const uint8 LS_Table[4][5] = {
     {LSM_STATE_ERROR,    LSM_STATE_ERROR,     LSM_STATE_ERROR,      LSM_STATE_ERROR,       LSM_STATE_UNLOADED                                 },    /* ERROR */
 };
 
-typedef uint8 LoadEventType[10];
+typedef uint8_t LoadEventType[10];
 
-#define LE_EVENT    ((uint8)0)
-#define LE_SUBCODE  ((uint8)1)
+#define LE_EVENT    ((uint8_t)0)
+#define LE_SUBCODE  ((uint8_t)1)
 
 /*
    typedef void (*ACTIONFUNC)(void);
@@ -113,7 +113,7 @@ typedef uint8 LoadEventType[10];
    void Nop();
 
    typedef struct tagAction {
-        uint8 next_state;
+        uint8_t next_state;
         ACTIONFUNC f;
    } ACTION;
 
@@ -185,19 +185,19 @@ void LSM_Init(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) LSM_Dispatch(P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) record,
-                                     /*LSM_State*/ P2VAR(uint8, AUTOMATIC, KSTACK_APPL_DATA) ls_var
+FUNC(void, KSTACK_CODE) LSM_Dispatch(P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) record,
+                                     /*LSM_State*/ P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) ls_var
                                      )
 #else
-void LSM_Dispatch(uint8 * record, /*LSM_State*/ uint8 * ls_var)
+void LSM_Dispatch(uint8_t * record, /*LSM_State*/ uint8_t * ls_var)
 #endif /* KSTACK_MEMORY_MAPPING */
 /*
 **      record: Pointer auf das 10-Byte-Load-Control.
 **      ls_var: Zeiger auf die Load-State-Variable.
 */
 {
-    /*LSM_State*/ uint8 new_state;
-    /*LSM_Event*/ uint8 event;
+    /*LSM_State*/ uint8_t new_state;
+    /*LSM_Event*/ uint8_t event;
 
     event = record[0];
 
@@ -215,7 +215,7 @@ void LSM_Dispatch(uint8 * record, /*LSM_State*/ uint8 * ls_var)
 }
 
 
-/* static uint8 app_rec[10]; */
+/* static uint8_t app_rec[10]; */
 /*static LSM_Stateuint8 app_lsc; */
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) LSM_Test(void)
@@ -223,7 +223,7 @@ FUNC(void, KSTACK_CODE) LSM_Test(void)
 void LSM_Test(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 i;
+    uint8_t i;
 
 /*
         app_lsc=LSM_STATE_UNLOADED;
@@ -231,7 +231,7 @@ void LSM_Test(void)
                 LSM_Dispatch(app_rec,&app_lsc);
         }
  */
-    for (i = (uint8)0; i < KNX_NUM_SYS_LSCS; i++) {
+    for (i = (uint8_t)0; i < KNX_NUM_SYS_LSCS; i++) {
         KNX_SystemLSC[i] = LSM_STATE_LOADED;
     }
 }

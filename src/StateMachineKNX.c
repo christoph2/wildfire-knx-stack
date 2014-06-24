@@ -39,7 +39,7 @@ STATIC Knx_MessageType  _StoredMsg;    /* Client-only. */
 /*
 ** Local types.
 */
-typedef uint8 (*EVENT_FUNC)(void);
+typedef uint8_t (*EVENT_FUNC)(void);
 
 /*
 ** Local function prototypes.
@@ -51,12 +51,12 @@ STATIC  FUNC(void, KSTACK_CODE)     StopConnectionTimeoutTimer(void);
 STATIC  FUNC(void, KSTACK_CODE)     StartAcknowledgementTimeoutTimer(void);
 STATIC  FUNC(void, KSTACK_CODE)     StopAcknowledgementTimeoutTimer(void);
 
-STATIC  FUNC(uint8, KSTACK_CODE)    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
-STATIC  FUNC(uint8, KSTACK_CODE)    EventAckInd(void), EventNakInd(void), EventConnectReq(void);
-STATIC  FUNC(uint8, KSTACK_CODE)    EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
-STATIC  FUNC(uint8, KSTACK_CODE)    EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
-STATIC  FUNC(uint8, KSTACK_CODE)    EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
-STATIC  FUNC(uint8, KSTACK_CODE)    EventUndefined(void);
+STATIC  FUNC(uint8_t, KSTACK_CODE)    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
+STATIC  FUNC(uint8_t, KSTACK_CODE)    EventAckInd(void), EventNakInd(void), EventConnectReq(void);
+STATIC  FUNC(uint8_t, KSTACK_CODE)    EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
+STATIC  FUNC(uint8_t, KSTACK_CODE)    EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
+STATIC  FUNC(uint8_t, KSTACK_CODE)    EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
+STATIC  FUNC(uint8_t, KSTACK_CODE)    EventUndefined(void);
 
 STATIC  FUNC(void, KSTACK_CODE)     A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
 STATIC  FUNC(void, KSTACK_CODE)     A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(
@@ -72,12 +72,12 @@ STATIC void StopConnectionTimeoutTimer(void);
 STATIC void StartAcknowledgementTimeoutTimer(void);
 STATIC void StopAcknowledgementTimeoutTimer(void);
 
-STATIC uint8    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
-STATIC uint8    EventAckInd(void), EventNakInd(void), EventConnectReq(void);
-STATIC uint8    EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
-STATIC uint8    EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
-STATIC uint8    EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
-STATIC uint8    EventUndefined(void);
+STATIC uint8_t    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
+STATIC uint8_t    EventAckInd(void), EventNakInd(void), EventConnectReq(void);
+STATIC uint8_t    EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
+STATIC uint8_t    EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
+STATIC uint8_t    EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
+STATIC uint8_t    EventUndefined(void);
 
 STATIC void A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
 STATIC void A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(void);
@@ -311,10 +311,10 @@ void T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
     KnxMSG_SetSourceAddress(pBuffer, source);
     KnxMSG_SetDestAddress(pBuffer, dest);
 
-    KnxMSG_GetMessagePtr(pBuffer)->ctrl    = (uint8)0xB0; /* short-cuts... */
-    KnxMSG_GetMessagePtr(pBuffer)->ncpi    = (uint8)0x60;
+    KnxMSG_GetMessagePtr(pBuffer)->ctrl    = (uint8_t)0xB0; /* short-cuts... */
+    KnxMSG_GetMessagePtr(pBuffer)->ncpi    = (uint8_t)0x60;
 
-    KnxMSG_SetLen(pBuffer, (uint8)7);
+    KnxMSG_SetLen(pBuffer, (uint8_t)7);
     pBuffer->service = T_DISCONNECT_IND;
 
     (void)KnxMSG_Post(pBuffer);
@@ -331,10 +331,10 @@ void T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
     KnxMSG_SetSourceAddress(pBuffer, source);
     KnxMSG_SetDestAddress(pBuffer, dest);
 
-    KnxMSG_GetMessagePtr(pBuffer)->ctrl    = (uint8)0xb0; /* short-cuts... */
-    KnxMSG_GetMessagePtr(pBuffer)->ncpi    = (uint8)0x60;
+    KnxMSG_GetMessagePtr(pBuffer)->ctrl    = (uint8_t)0xb0; /* short-cuts... */
+    KnxMSG_GetMessagePtr(pBuffer)->ncpi    = (uint8_t)0x60;
 
-    KnxMSG_SetLen(pBuffer, (uint8)7);
+    KnxMSG_SetLen(pBuffer, (uint8_t)7);
     pBuffer->service = T_DISCONNECT_CON;
 
     (void)KnxMSG_Post(pBuffer);
@@ -347,7 +347,7 @@ FUNC(void, KSTACK_CODE) KnxTLC_StateMachine(KNX_TlcEventType event)
 void KnxTLC_StateMachine(KNX_TlcEventType event)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8               event_num;
+    uint8_t               event_num;
     KnxTLC_ActionType   action;
 
     if (event < tlcUNDEFINED) {
@@ -443,8 +443,8 @@ STATIC void A1(void)
     KnxMSG_ScratchBufferPtr->service = T_CONNECT_IND;
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 
-    KnxTLC_SetSequenceNumberSend((uint8)0);
-    KnxTLC_SetSequenceNumberReceived((uint8)0);
+    KnxTLC_SetSequenceNumberSend((uint8_t)0);
+    KnxTLC_SetSequenceNumberReceived((uint8_t)0);
     StartConnectionTimeoutTimer();
 }
 
@@ -582,7 +582,7 @@ STATIC void A7(void)   /* Nur local-user (Client only). */
     KnxMSG_SetSeqNo(KnxMSG_ScratchBufferPtr, KnxTLC_GetSequenceNumberSend());
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 
-    KnxTLC_SetRepetitionCount((uint8)0);
+    KnxTLC_SetRepetitionCount((uint8_t)0);
 
     StartAcknowledgementTimeoutTimer();
     RestartConnectionTimeoutTimer();
@@ -596,7 +596,7 @@ STATIC void A8(void)  /* only local-user (Client only). */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     StopAcknowledgementTimeoutTimer();
-    KnxTLC_SetSequenceNumberSend(KnxTLC_GetSequenceNumberSend() + (uint8)1);
+    KnxTLC_SetSequenceNumberSend(KnxTLC_GetSequenceNumberSend() + (uint8_t)1);
 
     RestoreMessage();
 
@@ -617,7 +617,7 @@ STATIC void A8b(void)        /* only local-user (Client only). */
 {
     KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
     StopAcknowledgementTimeoutTimer();
-    KnxTLC_SetSequenceNumberSend(KnxTLC_GetSequenceNumberSend() + (uint8)1);
+    KnxTLC_SetSequenceNumberSend(KnxTLC_GetSequenceNumberSend() + (uint8_t)1);
     RestartConnectionTimeoutTimer();
 }
 
@@ -640,7 +640,7 @@ STATIC void A9(void)  /* only local-user (Client only). */
     KnxMSG_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_REQ;
     (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
 
-    KnxTLC_SetRepetitionCount(KnxTLC_GetRepetitionCount() + (uint8)1);
+    KnxTLC_SetRepetitionCount(KnxTLC_GetRepetitionCount() + (uint8_t)1);
 
     StartAcknowledgementTimeoutTimer();
     RestartConnectionTimeoutTimer();
@@ -692,8 +692,8 @@ STATIC void A12(void)                                              /* (Client on
     (void)KnxMSG_ClearBuffer(KnxMSG_ScratchBufferPtr);
     T_Connect_Req(KnxMSG_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTLC_GetConnectionAddress());
 
-    KnxTLC_SetSequenceNumberSend((uint8)0);
-    KnxTLC_SetSequenceNumberReceived((uint8)0);
+    KnxTLC_SetSequenceNumberSend((uint8_t)0);
+    KnxTLC_SetSequenceNumberReceived((uint8_t)0);
     StartConnectionTimeoutTimer();
 }
 
@@ -759,55 +759,55 @@ STATIC void A15(void)   /* only local-user (Client only). */
 **
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventConnectInd(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventConnectInd(void)
 #else
-STATIC uint8 EventConnectInd(void)
+STATIC uint8_t EventConnectInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
-        return (uint8)0;
+        return (uint8_t)0;
     } else {
-        return (uint8)1;
+        return (uint8_t)1;
     }
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventDisconnectInd(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventDisconnectInd(void)
 #else
-STATIC uint8 EventDisconnectInd(void)
+STATIC uint8_t EventDisconnectInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
-        return (uint8)2;
+        return (uint8_t)2;
     } else {
-        return (uint8)3;
+        return (uint8_t)3;
     }
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventDataConnectedInd(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventDataConnectedInd(void)
 #else
-STATIC uint8 EventDataConnectedInd(void)
+STATIC uint8_t EventDataConnectedInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 event_num;
+    uint8_t event_num;
 
     if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
         if (KnxTLC_GetSequenceNumberOfPDU() == KnxTLC_GetSequenceNumberReceived()) {
-            event_num = (uint8)4;
-        } else if (KnxTLC_GetSequenceNumberOfPDU() == ((KnxTLC_GetSequenceNumberReceived() - (uint8)1) & (uint8)0x0f)) {
-            event_num = (uint8)5;
-        } else if ((KnxTLC_GetSequenceNumberOfPDU() != KnxTLC_GetSequenceNumberReceived() - (uint8)1)
-                   && (KnxTLC_GetSequenceNumberOfPDU() != ((KnxTLC_GetSequenceNumberReceived() - (uint8)1) & (uint8)0x0f)))
+            event_num = (uint8_t)4;
+        } else if (KnxTLC_GetSequenceNumberOfPDU() == ((KnxTLC_GetSequenceNumberReceived() - (uint8_t)1) & (uint8_t)0x0f)) {
+            event_num = (uint8_t)5;
+        } else if ((KnxTLC_GetSequenceNumberOfPDU() != KnxTLC_GetSequenceNumberReceived() - (uint8_t)1)
+                   && (KnxTLC_GetSequenceNumberOfPDU() != ((KnxTLC_GetSequenceNumberReceived() - (uint8_t)1) & (uint8_t)0x0f)))
         {
-            event_num = (uint8)6;
+            event_num = (uint8_t)6;
         } else {
-            event_num = (uint8)27;
+            event_num = (uint8_t)27;
         }
     } else {
-        event_num = (uint8)7;
+        event_num = (uint8_t)7;
     }
 
     return event_num;
@@ -815,21 +815,21 @@ STATIC uint8 EventDataConnectedInd(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventAckInd(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventAckInd(void)
 #else
-STATIC uint8 EventAckInd(void)
+STATIC uint8_t EventAckInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 event_num;
+    uint8_t event_num;
 
     if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
         if (KnxTLC_GetSequenceNumberOfPDU() == KnxTLC_GetSequenceNumberSend()) {
-            event_num = (uint8)8;
+            event_num = (uint8_t)8;
         } else {
-            event_num = (uint8)9;
+            event_num = (uint8_t)9;
         }
     } else {
-        event_num = (uint8)10;
+        event_num = (uint8_t)10;
     }
 
     return event_num;
@@ -837,25 +837,25 @@ STATIC uint8 EventAckInd(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventNakInd(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventNakInd(void)
 #else
-STATIC uint8 EventNakInd(void)
+STATIC uint8_t EventNakInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8 event_num;
+    uint8_t event_num;
 
     if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
         if (KnxTLC_GetSequenceNumberOfPDU() != KnxTLC_GetSequenceNumberSend()) {
-            event_num = (uint8)11;
+            event_num = (uint8_t)11;
         } else {
             if (KnxTLC_GetRepetitionCount() < MAX_REP_COUNT) {
-                event_num = (uint8)12;
+                event_num = (uint8_t)12;
             } else {
-                event_num = (uint8)13;
+                event_num = (uint8_t)13;
             }
         }
     } else {
-        event_num = (uint8)14;
+        event_num = (uint8_t)14;
     }
 
     return event_num;
@@ -863,132 +863,132 @@ STATIC uint8 EventNakInd(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventConnectReq(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventConnectReq(void)
 #else
-STATIC uint8 EventConnectReq(void)
+STATIC uint8_t EventConnectReq(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Client-only. */
     /* Event 25.    */
-    return (uint8)25;
+    return (uint8_t)25;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventDisconnectReq(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventDisconnectReq(void)
 #else
-STATIC uint8 EventDisconnectReq(void)
+STATIC uint8_t EventDisconnectReq(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Client-only. */
     /* Event 26.    */
-    return (uint8)26;
+    return (uint8_t)26;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventDataConnectedReq(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventDataConnectedReq(void)
 #else
-STATIC uint8 EventDataConnectedReq(void)
+STATIC uint8_t EventDataConnectedReq(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Client-only. */
     /* Event 15.    */
-    return (uint8)15;
+    return (uint8_t)15;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventConnectCon(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventConnectCon(void)
 #else
-STATIC uint8 EventConnectCon(void)
+STATIC uint8_t EventConnectCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Client only.         */
     /* Events 19 und 20.    */
     if (KnxMSG_GetIAK(KnxMSG_ScratchBufferPtr) == IAK_OK) {
-        return (uint8)19;
+        return (uint8_t)19;
     } else {
-        return (uint8)20;
+        return (uint8_t)20;
     }
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventDisconnectCon(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventDisconnectCon(void)
 #else
-STATIC uint8 EventDisconnectCon(void)
+STATIC uint8_t EventDisconnectCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Event 21.    */
-    return (uint8)21;
+    return (uint8_t)21;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventDataConnectedCon(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventDataConnectedCon(void)
 #else
-STATIC uint8 EventDataConnectedCon(void)
+STATIC uint8_t EventDataConnectedCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Event 22.    */
-    return (uint8)22;
+    return (uint8_t)22;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventAckCon(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventAckCon(void)
 #else
-STATIC uint8 EventAckCon(void)
+STATIC uint8_t EventAckCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Event 23.    */
-    return (uint8)23;
+    return (uint8_t)23;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventNakCon(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventNakCon(void)
 #else
-STATIC uint8 EventNakCon(void)
+STATIC uint8_t EventNakCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Event 24.    */
-    return (uint8)24;
+    return (uint8_t)24;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventTimeoutCon(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventTimeoutCon(void)
 #else
-STATIC uint8 EventTimeoutCon(void)
+STATIC uint8_t EventTimeoutCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    return (uint8)16;
+    return (uint8_t)16;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventTimeoutAck(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventTimeoutAck(void)
 #else
-STATIC uint8 EventTimeoutAck(void)
+STATIC uint8_t EventTimeoutAck(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (KnxTLC_GetRepetitionCount() < MAX_REP_COUNT) {
-        return (uint8)17;
+        return (uint8_t)17;
     } else {
-        return (uint8)18;
+        return (uint8_t)18;
     }
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(uint8, KSTACK_CODE) EventUndefined(void)
+STATIC FUNC(uint8_t, KSTACK_CODE) EventUndefined(void)
 #else
-STATIC uint8 EventUndefined(void)
+STATIC uint8_t EventUndefined(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    return (uint8)27;
+    return (uint8_t)27;
 }
 
 
