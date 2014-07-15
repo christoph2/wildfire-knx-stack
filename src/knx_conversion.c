@@ -22,9 +22,7 @@
  *
  */
 
-/* TODO: rename to 'knx_conversion'.*/
-
-#include "KNXConv.h"
+#include "knx_conversion.h"
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
