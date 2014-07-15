@@ -26,6 +26,7 @@
 
 #include "knx_types.h"
 #include "knx_utl.h"
+#include "knx_tracelog.h"
 
 #if defined(__cplusplus)
 extern "C"
@@ -110,9 +111,15 @@ extern "C"
 #define KNX_UNUSED_TSAP                 ((uint8_t)0xfe)
 #define KNX_INVALID_TSAP                ((uint8_t)0x00)
 
+/**
+ * Supported Bus Interfaces.
+ */
+#define KNX_BIF_TPUART_1                (0)
+#define KNX_BIF_TPUART_2                (1)
+#define KNX_BIF_TPUART_NCN5120          (2)
+
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_DEFS_H */
-

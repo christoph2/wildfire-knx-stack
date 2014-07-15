@@ -26,6 +26,7 @@
 
 #include "KNXDefs.h"
 #include "knx_address.h"
+#include "k-ps/config.h"
 
 #if defined(__cplusplus)
 extern "C"
