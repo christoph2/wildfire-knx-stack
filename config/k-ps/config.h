@@ -50,6 +50,11 @@ void Port_TimerUnlock(void);
 #define TMR_LOCK()      Port_TimerLock()
 #define TMR_UNLOCK()    Port_TimerUnlock()
 
+#define ENABLE_ALL_INTERRUPTS()
+#define DISABLE_ALL_INTERRUPTS()
+
+#define KNX_BUS_INTERFACE       KNX_BIF_TPUART_1
+
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */

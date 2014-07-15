@@ -33,7 +33,7 @@ FUNC(uint8_t, KSTACK_CODE)                  GetBufferNumber(const KnxMSG_BufferP
 FUNC(void, KSTACK_CODE)                  ClearMessageBuffer(uint8_t buf_num);
 #else
 KnxMSG_BufferPtr    GetBufferAddress(uint8_t buf_num);
-uint8_t               GetBufferNumber(const KnxMSG_BufferPtr buffer);
+uint8_t             GetBufferNumber(const KnxMSG_BufferPtr buffer);
 void                ClearMessageBuffer(uint8_t buf_num);
 
 
