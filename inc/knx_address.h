@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -26,7 +26,7 @@
 #define __KNX_ADDRESS_H
 
 #include "KNXDefs.h"
-#include "KNXConv.h"
+#include "knx_conversion.h"
 
 #if defined(__cplusplus)
 extern "C"
@@ -126,4 +126,3 @@ void            KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number);
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_ADDRESS_H */
-

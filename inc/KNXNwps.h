@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- * (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ * (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                      cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -27,7 +27,7 @@
 #include "KNXDefs.h"
 #include "knx_ios.h"
 #include "knx_messaging.h"
-#include "KNXConv.h"
+#include "knx_conversion.h"
 
 #if defined(__cplusplus)
 extern "C"
@@ -46,4 +46,3 @@ extern "C"
 #endif  /* __cplusplus */
 
 #endif  /* __KNXNWPS_H */
-
