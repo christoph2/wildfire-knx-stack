@@ -34,14 +34,15 @@ extern "C"
 /*
 ** Global defines.
 */
-#define TMR_TIMER_TLC_CON_TIMEOUT   ((uint8_t)0)
-#define TMR_TIMER_TLC_ACK_TIMEOUT   ((uint8_t)1)
-#define TMR_TIMER_USER0             ((uint8_t)2)
+#define TMR_TIMER_LLC_TIMEOUT       ((uint8_t)0)
+#define TMR_TIMER_TLC_CON_TIMEOUT   ((uint8_t)1)
+#define TMR_TIMER_TLC_ACK_TIMEOUT   ((uint8_t)2)
+#define TMR_TIMER_USER0             ((uint8_t)3)
 
 #include "k-ps/config.h"
 
-#if TMR_NUM_TIMERS < 3
-    #error "ERROR: Number of timers must be at least two!!!"
+#if TMR_NUM_TIMERS < 4
+    #error "ERROR: Number of timers must be at least three!"
 #endif
 
 /*
