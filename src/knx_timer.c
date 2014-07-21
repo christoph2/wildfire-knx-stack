@@ -52,13 +52,11 @@ void KnxTmr_Init(void)
     Tmr_SysMsCounter = Tmr_SysSecondCounter = (uint32_t)0UL;
 
     TMR_LOCK();
-
     for (idx = (uint8_t)0; idx < TMR_NUM_TIMERS; idx++) {
         KNX_Timer[idx].expire_counter  = (uint32_t)0UL;
         KNX_Timer[idx].state           = TMR_STATE_STOPPED;
         KNX_Timer[idx].base            = TMR_RESOLUTION_MS;
     }
-
     TMR_UNLOCK();
 }
 

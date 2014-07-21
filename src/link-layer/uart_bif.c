@@ -90,6 +90,7 @@ static boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t len
 static uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length);
 static void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount);
 static void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length);
+
 /*!
  *
  *  Global Functions.
@@ -108,11 +109,15 @@ void KnxLL_Init(void)
     Utl_MemSet(&KnxLL_Expectation, '\x00', sizeof(KnxLL_ExpectationType));
 }
 
-void KnxLL_FeedReceiver(uint8_t byte)
+void KnxLL_FeedReceiver(uint8_t octet)
 {
     if (KnxLL_State == KNX_LL_STATE_AWAITING_RESPONSE_LOCAL) {
-        KnxLL_State = KNX_LL_STATE_IDLE;
-        KnxLL_Buffer[0] = byte;
+        if (KnxLL_Expectation.ExpectedService == (octet & KnxLL_Expectation.ExpectedMask)) {
+            if (KnxLL_Expectation.ExpectedByteCount == 1) {
+                KnxLL_State = KNX_LL_STATE_IDLE;
+            }
+        }
+        KnxLL_Buffer[0] = octet;
     } else {
         /* Ignore anything else for now. */
     }
