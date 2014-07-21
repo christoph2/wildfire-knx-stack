@@ -21,12 +21,11 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-#include "Win_Serial.h"
+
 #include "Port_Serial.h"
+#include "win\Win_SerialProxy.h"
 
-extern Win_SerialType SerialPortParams;
-
-uint8_t Port_WriteToBusInterface(uint8_t  * frame, uint16_t length)
+uint8_t Port_WriteToBusInterface(uint8_t * frame, uint16_t length)
 {
-    return Serial_Write(&SerialPortParams, frame, length);
+    return Serial_Write(Serial_TransmitterSocket, frame, length);
 }
