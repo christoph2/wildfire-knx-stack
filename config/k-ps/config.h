@@ -48,6 +48,8 @@ void Port_TimerUnlockMainTimer(void);
 
 #define TMR_LOCK_MAIN_TIMER()       Port_TimerLockMainTimer()
 #define TMR_UNLOCK_MAIN_TIMER()     Port_TimerUnlockMainTimer()
+#define TMR_LOCK_DL_TIMER()         Port_TimerLockDLTimer()
+#define TMR_UNLOCK_DL_TIMER()       Port_TimerUnlockDLTimer()
 
 #define ENABLE_ALL_INTERRUPTS()
 #define DISABLE_ALL_INTERRUPTS()

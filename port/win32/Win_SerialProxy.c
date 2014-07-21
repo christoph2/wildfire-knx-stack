@@ -40,7 +40,7 @@
 #define BUFFER_SIZE (128U)
 
 void Error_Check(void);
-//void Serial_Receiver(void * param);
+void Serial_Receiver(void * context);
 void Serial_Marshal(char * blob, uint8_t const * arr, uint16_t length);
 void Serial_Unmarshal(char * blob, uint8_t * arr, uint16_t * length);
 
