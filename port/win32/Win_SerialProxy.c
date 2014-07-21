@@ -126,21 +126,25 @@ boolean Serial_Write(void * so, uint8_t const * arr, uint16_t length)
     uint16_t resultLength;    
     char buffer[BUFFER_SIZE];
     uint8_t resultArray[BUFFER_SIZE] = {0};
+    boolean result = TRUE;
 
     Serial_Marshal(buffer, arr, length);
     rc = zmq_send(so, buffer, length + 2, 0);
     if (rc == -1) {
         Error_Check();
+        result = FALSE;
     }
 
     nbytes = zmq_recv(so, buffer, BUFFER_SIZE, 0);
     if (nbytes == -1) {
         Error_Check();
+        result = FALSE;
     } else {
         Serial_Unmarshal(buffer, resultArray, &resultLength);
         printf("RES: ");
         Dbg_DumpHex(resultArray, resultLength);
     }
+    return result;
 }
 
 void Serial_Unmarshal(char * blob, uint8_t * arr, uint16_t * length)
