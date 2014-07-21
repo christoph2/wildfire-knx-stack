@@ -51,13 +51,13 @@ void KnxTmr_Init(void)
 
     Tmr_SysMsCounter = Tmr_SysSecondCounter = (uint32_t)0UL;
 
-    TMR_LOCK();
+    TMR_LOCK_MAIN_TIMER();
     for (idx = (uint8_t)0; idx < TMR_NUM_TIMERS; idx++) {
         KNX_Timer[idx].expire_counter  = (uint32_t)0UL;
         KNX_Timer[idx].state           = TMR_STATE_STOPPED;
         KNX_Timer[idx].base            = TMR_RESOLUTION_MS;
     }
-    TMR_UNLOCK();
+    TMR_UNLOCK_MAIN_TIMER();
 }
 
 
@@ -69,11 +69,11 @@ boolean KnxTmr_Start(uint8_t timer, Tmr_ResolutionType base, Tmr_TickType ticks)
 {
     if (timer < TMR_NUM_TIMERS) {
         if (!(KNX_Timer[timer].state & TMR_STATE_RUNNING)) {
-            TMR_LOCK();
+            TMR_LOCK_MAIN_TIMER();
             KNX_Timer[timer].expire_counter    = ticks;
             KNX_Timer[timer].state             = TMR_STATE_RUNNING;
             KNX_Timer[timer].base              = base;
-            TMR_UNLOCK();
+            TMR_UNLOCK_MAIN_TIMER();
             return TRUE;
         } else {
             return FALSE;
@@ -91,9 +91,9 @@ boolean KnxTmr_Stop(uint8_t timer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TMR_NUM_TIMERS) {
-        TMR_LOCK();
+        TMR_LOCK_MAIN_TIMER();
         KNX_Timer[timer].state = TMR_STATE_STOPPED;
-        TMR_UNLOCK();
+        TMR_UNLOCK_MAIN_TIMER();
         return TRUE;
     } else {
         return FALSE;
@@ -110,9 +110,9 @@ boolean KnxTmr_IsExpired(uint8_t timer)
     Tmr_StateType state;
 
     if (timer < TMR_NUM_TIMERS) {
-        TMR_LOCK();
+        TMR_LOCK_MAIN_TIMER();
         state                      = KNX_Timer[timer].state;
-        TMR_UNLOCK();
+        TMR_UNLOCK_MAIN_TIMER();
         return (state & TMR_STATE_EXPIRED) == TMR_STATE_EXPIRED;
     } else {
         return FALSE;   /* Invalid Timer. */
@@ -144,9 +144,9 @@ boolean KnxTmr_GetRemainder(uint8_t timer, Tmr_TickRefType remainder)
         if (!(KNX_Timer[timer].state & TMR_STATE_RUNNING)) {
             return FALSE;
         } else {
-            TMR_LOCK();
+            TMR_LOCK_MAIN_TIMER();
             *remainder = KNX_Timer[timer].expire_counter;
-            TMR_UNLOCK();
+            TMR_UNLOCK_MAIN_TIMER();
             return TRUE;
         }
     } else {
@@ -163,7 +163,7 @@ Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base)
 {
     Tmr_TickType t;
 
-    TMR_LOCK();
+    TMR_LOCK_MAIN_TIMER();
 
     if (base == TMR_RESOLUTION_MS) {
         t = Tmr_SysMsCounter;
@@ -171,7 +171,7 @@ Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base)
         t = Tmr_SysSecondCounter;
     }
 
-    TMR_UNLOCK();
+    TMR_UNLOCK_MAIN_TIMER();
 
     return t;
 }

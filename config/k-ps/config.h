@@ -40,19 +40,19 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-void Port_TimerLock(void);
-void Port_TimerUnlock(void);
+void Port_TimerLockMainTimer(void);
+void Port_TimerUnlockMainTimer(void);
 
 #define TMR_NUM_TIMERS      5
 #define TMR_TICK_RESOLUTION 10  /* Note: 1000 must be divisible by TMR_TICK_RESOLUTION without remainder! */
 
-#define TMR_LOCK()      Port_TimerLock()
-#define TMR_UNLOCK()    Port_TimerUnlock()
+#define TMR_LOCK_MAIN_TIMER()       Port_TimerLockMainTimer()
+#define TMR_UNLOCK_MAIN_TIMER()     Port_TimerUnlockMainTimer()
 
 #define ENABLE_ALL_INTERRUPTS()
 #define DISABLE_ALL_INTERRUPTS()
 
-#define KNX_BUS_INTERFACE       KNX_BIF_TPUART_NCN5120
+#define KNX_BUS_INTERFACE           KNX_BIF_TPUART_NCN5120
 
 #if defined(__cplusplus)
 }
