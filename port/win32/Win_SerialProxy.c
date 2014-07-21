@@ -23,6 +23,7 @@
  */
 
 #include "win\Win_SerialProxy.h"
+#include "link-layer\uart_bif.h"
 #include "knx_debug.h"
 
 #include <zmq.h>
@@ -48,11 +49,17 @@ void * Serial_TransmitterSocket;
 
 static void * Serial_Context;
 
+/**
+ *  'Simulates' an Rx-Interrupt.
+ *
+ *
+ */
 void Serial_Receiver(void * context)
 {
     void * Serial_ReceiverSocket;
     int rc;
     int nbytes;
+    uint16_t idx;
     char buffer[BUFFER_SIZE];
     uint8_t resultArray[BUFFER_SIZE] = {0};
     uint16_t resultLength;
@@ -68,6 +75,9 @@ void Serial_Receiver(void * context)
         nbytes = zmq_recv(Serial_ReceiverSocket, buffer, BUFFER_SIZE, 0);
         Serial_Unmarshal(buffer, resultArray, &resultLength);        
         printf("IND: ");
+        for (idx = 0; idx < resultLength; ++idx) {
+            KnxLL_FeedReceiver(resultArray[idx]);
+        }
         Dbg_DumpHex(resultArray, resultLength);
         resultArray[0] = ACK;
         Serial_Marshal(buffer, resultArray, 1);
