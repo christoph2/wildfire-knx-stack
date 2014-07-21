@@ -48,12 +48,17 @@ typedef enum tagKnxLL_StateType {
     KNX_LL_STATE_TIMED_OUT
 } KnxLL_StateType;
 
-
 typedef enum tagKnxLL_EventType {
     KNX_LL_EVENT_REQUEST,
     KNX_LL_EVENT_INDICATION,
     KNX_LL_EVENT_TIMEOUT,
 } KnxLL_EventType;
+
+typedef struct tagKnxLL_ExpectationType {
+    uint8_t ExpectedByteCount;
+    uint8_t ExpectedService;
+    uint8_t ExpectedMask;
+} KnxLL_ExpectationType;
 
 /*!
  *
@@ -66,9 +71,12 @@ static uint8_t KnxLL_SequenceNo;
 
 static uint8_t KnxLL_Buffer[KNX_LL_BUF_SIZE];
 
+static KnxLL_ExpectationType KnxLL_Expectation = {0};
+#if 0
 static uint8_t KnxLL_ExpectedByteCount;
 static uint8_t KnxLL_ExpectedService;
 static uint8_t KnxLL_ExpectedMask;
+#endif
 
 /*!
  *
@@ -88,11 +96,16 @@ static void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length);
  *
  */
 
+
+/**
+ * Initialises ...
+ *
+ */
 void KnxLL_Init(void)
 {
     KnxLL_State = KNX_LL_STATE_IDLE;
     KnxLL_SequenceNo = (uint8_t)0x00;
-    KnxLL_ExpectedByteCount = (uint8_t)0x00;
+    Utl_MemSet(&KnxLL_Expectation, '\x00', sizeof(KnxLL_ExpectationType));
 }
 
 void KnxLL_FeedReceiver(uint8_t byte)
@@ -159,9 +172,9 @@ static boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t len
 
 static void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount)
 {
-    KnxLL_ExpectedService = service;
-    KnxLL_ExpectedMask = mask;
-    KnxLL_ExpectedByteCount = byteCount;
+    KnxLL_Expectation.ExpectedService = service;
+    KnxLL_Expectation.ExpectedMask = mask;
+    KnxLL_Expectation.ExpectedByteCount = byteCount;
 }
 
 static uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length)
