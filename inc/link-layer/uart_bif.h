@@ -139,6 +139,7 @@ void KnxLL_FeedReceiver(uint8_t byte);
 void KnxLL_Init(void);
 void KnxLL_Task(void);
 boolean KnxLL_Transmit(uint8_t const * frame, uint8_t length);
+void KnxLL_TimeoutCB(void);
 
 /**
  *  Local confirmed services.

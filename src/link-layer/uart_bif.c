@@ -99,7 +99,7 @@ static void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length);
 
 
 /**
- * Initialises ...
+ * Initialises the Data-Link-Layer.
  *
  */
 void KnxLL_Init(void)
@@ -107,6 +107,16 @@ void KnxLL_Init(void)
     KnxLL_State = KNX_LL_STATE_IDLE;
     KnxLL_SequenceNo = (uint8_t)0x00;
     Utl_MemSet(&KnxLL_Expectation, '\x00', sizeof(KnxLL_ExpectationType));
+}
+
+
+/**
+ *  Gets called from interrupt-context if a timeout occured.
+ *
+ */
+void KnxLL_TimeoutCB(void)
+{
+    KnxLL_State = KNX_LL_STATE_TIMED_OUT;
 }
 
 void KnxLL_FeedReceiver(uint8_t octet)
@@ -118,6 +128,8 @@ void KnxLL_FeedReceiver(uint8_t octet)
             }
         }
         KnxLL_Buffer[0] = octet;
+    } else if (KnxLL_State == KNX_LL_STATE_TIMED_OUT) {
+
     } else {
         /* Ignore anything else for now. */
     }
