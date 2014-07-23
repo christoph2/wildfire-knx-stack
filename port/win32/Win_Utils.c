@@ -24,10 +24,18 @@
 
 #include "win\Win_Utils.h"
 #include <malloc.h>
-#include <stdio.h>/** *  @file Win_Utils.c *  @brief Collection of unsorted functions related to Windows. * */
+#include <stdio.h>
+
+/**
+ *  @file Win_Utils.c
+ *  @brief Collection of unsorted functions related to Windows.
+ *
+ */
+
 #if !defined(STATUS_POSSIBLE_DEADLOCK)
     #define STATUS_POSSIBLE_DEADLOCK (0xC0000194)
-#endif
+#endif
+
 void Win_Error(char * function)
 {
     char * szBuf;

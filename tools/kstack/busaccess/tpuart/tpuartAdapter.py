@@ -33,6 +33,7 @@ __version__ = '0.1.0'
 
 import struct
 import threading
+import types
 import sys
 import time
 from optparse import OptionParser
@@ -112,9 +113,10 @@ class Receiver(Thread):
         data = self.port.read(32)
         if data:
             print "R: '%s'" % utils.hexDump(data)
-            self.socket.send(marshall(data))
-            resp = self.socket.recv()
-            print "ACK: ", resp
+            if not self.context.closed:
+                self.socket.send(marshall(data))
+                resp = self.socket.recv()
+                print "ACK: ", resp
 
 def main():
     parser = OptionParser()
@@ -123,7 +125,7 @@ def main():
     options, args = parser.parse_args()
 
     port = options.port
-    if port.isnumeric():
+    if isinstance(port, types.StringType) and port.isdigit():
         port = int(port)
 
     ctx = zmq.Context()
@@ -153,3 +155,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
