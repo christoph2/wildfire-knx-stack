@@ -29,7 +29,7 @@
  */
 
 #include "link-layer\uart_bif.h"
-#include "Port_Serial.h"
+#include "knx_platform.h"
 
 #define KNX_LL_BUF_SIZE     (0xff)
 
@@ -83,7 +83,6 @@ static uint8_t KnxLL_ExpectedMask;
  *  Local Function Prototypes.
  *
  */
-
 static boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxLL_StateType desiredState);
 static boolean KnxLL_InternalCommandUnconfirmed(uint8_t const * frame, uint8_t length);
 static boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t length);
@@ -124,6 +123,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
     if (KnxLL_State == KNX_LL_STATE_AWAITING_RESPONSE_LOCAL) {
         if (KnxLL_Expectation.ExpectedService == (octet & KnxLL_Expectation.ExpectedMask)) {
             if (KnxLL_Expectation.ExpectedByteCount == 1) {
+                TMR_STOP_DL_TIMER();
                 KnxLL_State = KNX_LL_STATE_IDLE;
             }
         }
@@ -173,6 +173,7 @@ static boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxL
     //KnxLL_State = KNX_LL_STATE_SENDING;
     KnxLL_State = desiredState;
     result = (boolean)Port_WriteToBusInterface(frame, length);
+    TMR_START_DL_TIMER();
     //KnxLL_State = desiredState;
     return result;
 }

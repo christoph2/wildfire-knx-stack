@@ -24,8 +24,6 @@
 
 #include "knx_timer.h"
 
-//#include "kdk/common/CPU_Primitives.h"
-
 /*
 ** Local variables.
 */

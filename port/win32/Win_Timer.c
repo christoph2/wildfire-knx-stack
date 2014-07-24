@@ -46,21 +46,27 @@ static void Port_TimerDelete(HANDLE timerHandle);
 
 static HANDLE TimerQueue;
 static HANDLE MainTimer;
-static HANDLE DL_Timer;
+static HANDLE DLTimer;
 static CRITICAL_SECTION mainTimerCS;
 static CRITICAL_SECTION dlTimerCS;
-static unsigned ChannelNumber;
 
 void KnxTmr_SystemTickHandler(void);
 
 static void CALLBACK TimerProc(void * lpParameter, BOOLEAN TimerOrWaitFired)
 {
+    static unsigned channelNumber;
+
     UNREFERENCED_PARAMETER(TimerOrWaitFired);
 
-    ChannelNumber = (unsigned)lpParameter;
-    Port_TimerLockMainTimer();
-    KnxTmr_SystemTickHandler();
-    Port_TimerUnlockMainTimer();
+    channelNumber = (unsigned)lpParameter;
+    if (channelNumber == MAIN_TIMER) {
+        Port_TimerLockMainTimer();
+        KnxTmr_SystemTickHandler();
+        Port_TimerUnlockMainTimer();
+    }
+    else if (channelNumber == DL_TIMER) {
+        printf("Data-Link Timer expired!!!");
+    }
 }
 
 void Port_TimerInit(void)
@@ -72,6 +78,18 @@ void Port_TimerInit(void)
     if (!Port_TimerCreate(&MainTimer, MAIN_TIMER, TMR_TICK_RESOLUTION, TMR_TICK_RESOLUTION)) {
         Win_Error("Port_TimerCreate");
     }
+}
+
+void Port_StartDLTimer(void)
+{
+    if (!Port_TimerCreate(&DLTimer, DL_TIMER, 20, 0)) {
+        Win_Error("Port_TimerCreate");
+    }
+}
+
+void Port_StopDLTimer(void)
+{
+    Port_TimerCancel(&DLTimer);
 }
 
 static BOOL Port_TimerCreate(HANDLE * timerHandle, unsigned int number, unsigned int first, unsigned int period)
