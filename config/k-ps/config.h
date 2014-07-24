@@ -41,16 +41,42 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-void Port_TimerLockMainTimer(void);
-void Port_TimerUnlockMainTimer(void);
 
-#define TMR_NUM_TIMERS      5
-#define TMR_TICK_RESOLUTION 10  /* Note: 1000 must be divisible by TMR_TICK_RESOLUTION without remainder! */
+#define TMR_NUM_TIMERS              5
+#define TMR_TICK_RESOLUTION         10  /* Note: 1000 must be divisible by TMR_TICK_RESOLUTION without remainder! */
+
+/** Specifies if the controller module gets powered by the bus or an auxiliary power supply.
+ *
+ *  Possible values:
+ *  @li @c KNX_MODULE_POWER_BY_BUS
+ *  @li @c KNX_MODULE_POWER_BY_AUXILIARY_SUPPLY
+ *
+ */
+#define KNX_MODULE_POWER            KNX_MODULE_POWER_BY_AUXILIARY_SUPPLY
+
+/**
+ * Defines the kind of bus interface (transceiver).
+ *
+ * Possible values:
+ *  @li @c KNX_BIF_TPUART_1
+ *  @li @c KNX_BIF_TPUART_2
+ *  @li @c KNX_BIF_TPUART_NCN5120
+ *  
+ */
+#define KNX_BUS_INTERFACE           KNX_BIF_TPUART_NCN5120
+
+/** @fn KNX_LL_TIMEOUT_NOTIFICATION
+ *  @brief  Can be used if application needs to be informed about a link-layer 
+ *          time-out (this may be an indication for a bus power outage).
+ *
+ *          Called from interrupt context.
+ *
+ */
+/* #define KNX_LL_TIMEOUT_NOTIFICATION() */
+
 
 #define ENABLE_ALL_INTERRUPTS()
 #define DISABLE_ALL_INTERRUPTS()
-
-#define KNX_BUS_INTERFACE           KNX_BIF_TPUART_NCN5120
 
 #if defined(__cplusplus)
 }

@@ -51,6 +51,7 @@ static CRITICAL_SECTION mainTimerCS;
 static CRITICAL_SECTION dlTimerCS;
 
 void KnxTmr_SystemTickHandler(void);
+void KnxLL_TimeoutCB(void);
 
 static void CALLBACK TimerProc(void * lpParameter, BOOLEAN TimerOrWaitFired)
 {
@@ -65,6 +66,7 @@ static void CALLBACK TimerProc(void * lpParameter, BOOLEAN TimerOrWaitFired)
         Port_TimerUnlockMainTimer();
     }
     else if (channelNumber == DL_TIMER) {
+        KnxLL_TimeoutCB();
         printf("Data-Link Timer expired!!!");
     }
 }
