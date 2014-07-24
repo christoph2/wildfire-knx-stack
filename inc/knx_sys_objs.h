@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -24,7 +24,6 @@
 #if !defined(__KNX_SYS_OBJS_H)
 #define __KNX_SYS_OBJS_H
 
-#include "KNXDefs.h"
 #include "knx_lsm.h"
 #include "Appl.h"
 

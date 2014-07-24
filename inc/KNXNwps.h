@@ -24,7 +24,6 @@
 #if !defined(__KNXNWPS_H)
 #define __KNXNWPS_H
 
-#include "KNXDefs.h"
 #include "knx_ios.h"
 #include "knx_messaging.h"
 #include "knx_conversion.h"

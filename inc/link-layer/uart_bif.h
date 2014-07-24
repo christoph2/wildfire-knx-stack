@@ -24,8 +24,6 @@
 #if !defined(__UART_BIF_H)
 #define __UART_BIF_H
 
-//#include "knx_disp.h"
-
 #if defined(__cplusplus)
 extern "C"
 {
@@ -33,8 +31,6 @@ extern "C"
 
 
 #include "k-ps/config.h"
-//#include "Port.h"
-
 
 /**
  *

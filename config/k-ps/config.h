@@ -33,7 +33,7 @@
 #if !defined(__KPS_CONFIG_H)
 #define __KPS_CONFIG_H
 
-#include "KNXDefs.h"
+#include "knx_defs.h"
 #include "knx_platform.h"
 
 #if defined(__cplusplus)
