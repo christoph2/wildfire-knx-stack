@@ -34,6 +34,7 @@
 #define __KPS_CONFIG_H
 
 #include "KNXDefs.h"
+#include "knx_platform.h"
 
 #if defined(__cplusplus)
 extern "C"
@@ -45,11 +46,6 @@ void Port_TimerUnlockMainTimer(void);
 
 #define TMR_NUM_TIMERS      5
 #define TMR_TICK_RESOLUTION 10  /* Note: 1000 must be divisible by TMR_TICK_RESOLUTION without remainder! */
-
-#define TMR_LOCK_MAIN_TIMER()       Port_TimerLockMainTimer()
-#define TMR_UNLOCK_MAIN_TIMER()     Port_TimerUnlockMainTimer()
-#define TMR_LOCK_DL_TIMER()         Port_TimerLockDLTimer()
-#define TMR_UNLOCK_DL_TIMER()       Port_TimerUnlockDLTimer()
 
 #define ENABLE_ALL_INTERRUPTS()
 #define DISABLE_ALL_INTERRUPTS()
