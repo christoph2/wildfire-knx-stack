@@ -24,8 +24,6 @@
 #if !defined(__KNX_TIMER_H)
 #define __KNX_TIMER_H
 
-//#include "kdk/common/Std_Types.h"
-
 #if defined(__cplusplus)
 extern "C"
 {

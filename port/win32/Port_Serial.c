@@ -25,7 +25,7 @@
 #include "Port_Serial.h"
 #include "win\Win_SerialProxy.h"
 
-uint8_t Port_WriteToBusInterface(uint8_t * frame, uint16_t length)
+uint8_t Port_WriteToBusInterface(uint8_t const * frame, uint16_t length)
 {
     return Serial_Write(Serial_TransmitterSocket, frame, length);
 }

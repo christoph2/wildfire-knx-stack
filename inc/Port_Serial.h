@@ -32,7 +32,7 @@ extern "C"
 #include "k-ps/config.h"
 #include <stdint.h>
 
-uint8_t Port_WriteToBusInterface(uint8_t  * frame, uint16_t length);
+uint8_t Port_WriteToBusInterface(uint8_t  const * frame, uint16_t length);
 
 #if defined(__cplusplus)
 }

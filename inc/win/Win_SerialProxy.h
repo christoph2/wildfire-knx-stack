@@ -1,4 +1,3 @@
-
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *

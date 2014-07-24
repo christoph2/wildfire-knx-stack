@@ -69,7 +69,7 @@ void Serial_Receiver(void * context)
     if (rc == -1) {
         Error_Check();
     }
-    printf("Hello from Serial_Receiver!");
+    //printf("Hello from Serial_Receiver!");
 
     while (TRUE) {
         nbytes = zmq_recv(Serial_ReceiverSocket, buffer, BUFFER_SIZE, 0);
