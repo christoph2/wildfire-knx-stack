@@ -70,9 +70,13 @@ class Serial(object):
         data = self.port.read(length)
         return bytearray(data)
 
+    @property
+    def closed(self):
+        return self.port.closed
+
     def close(self):
         if self.port is not None:
-            if not self.port.closed:
+            if not self.closed:
                 self.port.close()
 
 for k, v in ((a, getattr(serial, a)) for a in dir(serial) if a.isupper()):
