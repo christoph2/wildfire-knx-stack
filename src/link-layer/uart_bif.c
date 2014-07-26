@@ -120,6 +120,8 @@ void KnxLL_TimeoutCB(void)
 
 void KnxLL_FeedReceiver(uint8_t octet)
 {
+    boolean foo;
+
     if (KnxLL_State == KNX_LL_STATE_AWAITING_RESPONSE_LOCAL) {
         if (KnxLL_Expectation.ExpectedService == (octet & KnxLL_Expectation.ExpectedMask)) {
             if (KnxLL_Expectation.ExpectedByteCount == 1) {
@@ -131,7 +133,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
     } else if (KnxLL_State == KNX_LL_STATE_TIMED_OUT) {
 
     } else {
-        /* Ignore anything else for now. */
+        foo = TRUE; /* Ignore anything else for now. */
     }
 
 }

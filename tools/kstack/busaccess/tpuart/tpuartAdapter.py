@@ -41,10 +41,9 @@ import Queue
 import zmq
 
 
-from knxReTk.busaccess.tpuart import serialport
-from knxReTk.busaccess.tpuart import utils
+from kstack.busaccess.tpuart import serialport
+from kstack.busaccess.tpuart import utils
 
-ACK = 0xe5
 
 def marshall(arr):
     length = len(arr)
@@ -93,7 +92,12 @@ class Thread(threading.Thread):
             signal = self.quitEvent.wait(timeout = 0.01)
             if signal == True:
                 break
-            self.execute()
+            try:
+                if not self.execute():
+                    break
+            except Exception as e:
+                print e
+                break
         print "Exiting {0} thread.".format(self.getName())
 
     def execute(self):
@@ -106,17 +110,35 @@ class Receiver(Thread):
         super(Receiver, self).__init__()
         self.port = port
         self.context = context
-        self.socket = self.context.socket(zmq.REQ)
+        self.socket = self.context.socket(zmq.PUSH)
+        #self.socket.setsockopt(zmq.RCVTIMEO, 100)
+        #self.socket.setsockopt(zmq.SNDTIMEO, 100)
+        self.socket.setsockopt(zmq.IDENTITY, "TPUART_ADAPTER_SENDER")
+        self.socket.setsockopt(zmq.LINGER, 0)
+        self.socket.setsockopt(zmq.SNDHWM, 1)
         self.socket.connect("tcp://localhost:5557")
 
     def execute(self):
-        data = self.port.read(32)
-        if data:
-            print "R: '%s'" % utils.hexDump(data)
-            if not self.context.closed:
-                self.socket.send(marshall(data))
-                resp = self.socket.recv()
-                print "ACK: ", resp
+        result = True
+        if not self.port.closed:
+            try:
+                data = self.port.read(32)
+            except serialport.SerialException:
+                data = None
+                result = False
+            if data:
+                print "R: '%s'" % utils.hexDump(data)
+                if not self.context.closed:
+                    try:
+                        self.socket.send(marshall(data))
+                    except zmq.error.Again:
+                        pass
+                    except zmq.error.ZMQError as e:
+                        print "ZMQ-Error:", e
+                        result = False
+                    except Exception as e:
+                        print str(e)
+        return result
 
 def main():
     parser = OptionParser()
@@ -129,29 +151,43 @@ def main():
         port = int(port)
 
     ctx = zmq.Context()
-    socket = ctx.socket(zmq.REP)
+    socket = ctx.socket(zmq.PULL)
     socket.bind("tcp://*:5556")
+    socket.setsockopt(zmq.IDENTITY, "TPUART_ADAPTER_RESPONDER")
+    #socket.setsockopt(zmq.RCVTIMEO, 100)
+    #socket.setsockopt(zmq.SNDTIMEO, 100)
+    #socket.setsockopt(zmq.LINGER, 0)
     print "Server now listening."
 
-    port = connectSerial(port)
+    try:
+        port = connectSerial(port)
+    except Exception as e:
+        print "\n", str(e), "\nexiting."
+        socket.close()
+        ctx.term()
+        sys.exit(1)
+
     receiver = Receiver(port, ctx)
-    print "Starting receiver thread."
     receiver.start()
+    poller = zmq.Poller()
+    poller.register(socket, zmq.POLLIN)
     while True:
         try:
-            request = unmarshall(socket.recv())
-            port.write(request)
-            print "REQ: ", request
+            result = dict(poller.poll(50))
+            if result.get(socket):
+                print "POLL-IN: ", result
+                request = unmarshall(socket.recv())
+                print "REQUEST: ", request
+                port.write(request)
         except KeyboardInterrupt:
             print "*** Keyboard Interrupt, exiting ***"
             break
-        time.sleep(.5)
-        socket.send(marshall([ACK]))
+
+    port.close()
     print "Exiting server..."
     socket.close()
     ctx.term()
     Thread.quitAll()
-    port.close()
 
 if __name__ == '__main__':
     main()

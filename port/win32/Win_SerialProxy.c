@@ -34,9 +34,7 @@
 #include <process.h>
 #include <Windows.h>
 
-// ØMQ
 
-#define ACK         (0xe5)
 #define BUFFER_SIZE (128U)
 
 void Error_Check(void);
@@ -44,10 +42,11 @@ void Serial_Receiver(void * context);
 void Serial_Marshal(char * blob, uint8_t const * arr, uint16_t length);
 void Serial_Unmarshal(char * blob, uint8_t * arr, uint16_t * length);
 
-
 void * Serial_TransmitterSocket;
-
 static void * Serial_Context;
+
+static const char * IDSerialReceiver = "TPUART_CLIENT_REQUESTOR";
+static const char * IDSerialTransmitter = "TPUART_CLIENT_TRANSMITTER";
 
 /**
  *  'Simulates' an Rx-Interrupt.
@@ -63,25 +62,41 @@ void Serial_Receiver(void * context)
     char buffer[BUFFER_SIZE];
     uint8_t resultArray[BUFFER_SIZE] = {0};
     uint16_t resultLength;
+    zmq_pollitem_t items[1];
+    int timeout = 100;
 
-    Serial_ReceiverSocket = zmq_socket(context, ZMQ_REP);
+    Serial_ReceiverSocket = zmq_socket(context, ZMQ_PULL);
     rc = zmq_bind(Serial_ReceiverSocket, "tcp://*:5557");
     if (rc == -1) {
         Error_Check();
     }
-    //printf("Hello from Serial_Receiver!");
+    rc = zmq_setsockopt(Serial_ReceiverSocket, ZMQ_IDENTITY, IDSerialReceiver, strlen(IDSerialReceiver));
+    if (rc == -1) {
+        Error_Check();
+    }
 
+    ZeroMemory((void *)&items, sizeof(items));
+
+    items[0].socket = socket;
+    items[0].events = ZMQ_POLLIN;
     while (TRUE) {
+#if 0
+        rc = zmq_poll(items, 1, 500UL);
+        if (rc == -1) {
+            Error_Check();
+        }
+        if (items[0].revents & ZMQ_POLLIN) {
+            printf("Received something!!!");
+        }
+        continue;
+#endif
         nbytes = zmq_recv(Serial_ReceiverSocket, buffer, BUFFER_SIZE, 0);
         Serial_Unmarshal(buffer, resultArray, &resultLength);        
-        printf("IND: ");
+        printf("IND: %u bytes", resultLength);
         for (idx = 0; idx < resultLength; ++idx) {
             KnxLL_FeedReceiver(resultArray[idx]);
         }
         Dbg_DumpHex(resultArray, resultLength);
-        resultArray[0] = ACK;
-        Serial_Marshal(buffer, resultArray, 1);
-        rc = zmq_send(Serial_ReceiverSocket, buffer, 3, 0);
     }
     rc = zmq_close(Serial_ReceiverSocket);
 }
@@ -91,6 +106,7 @@ void Serial_Init(void)
     int major, minor, patch;    
     uint8_t arr[BUFFER_SIZE] = {0};
     int rc;
+    int timeout = 250;
        
     zmq_version(&major, &minor, &patch);
     Serial_Context = zmq_ctx_new();
@@ -98,11 +114,26 @@ void Serial_Init(void)
     //rc = zmq_socket_monitor(Serial_TransmitterSocket, "inproc://monitor.rep", ZMQ_EVENT_ALL);
     _beginthread(Serial_Receiver, 0, Serial_Context);
     
-    Serial_TransmitterSocket = zmq_socket(Serial_Context, ZMQ_REQ);
+    Serial_TransmitterSocket = zmq_socket(Serial_Context, ZMQ_PUSH);
     rc = zmq_connect(Serial_TransmitterSocket, "tcp://localhost:5556");
     if (rc == -1) {
         Error_Check();
     }
+#if 0
+    rc = zmq_setsockopt(Serial_TransmitterSocket, ZMQ_RCVTIMEO, &timeout, sizeof(int));
+    if (rc == -1) {
+        Error_Check();
+    }
+#endif
+    rc = zmq_setsockopt(Serial_TransmitterSocket, ZMQ_SNDTIMEO, &timeout, sizeof(int));
+    if (rc == -1) {
+        Error_Check();
+    }
+    rc = zmq_setsockopt(Serial_TransmitterSocket, ZMQ_IDENTITY, IDSerialTransmitter, strlen(IDSerialTransmitter));
+    if (rc == -1) {
+        Error_Check();
+    }
+
 }
 
 void Serial_Deinit(void)
@@ -131,19 +162,11 @@ boolean Serial_Write(void * so, uint8_t const * arr, uint16_t length)
     Serial_Marshal(buffer, arr, length);
     rc = zmq_send(so, buffer, length + 2, 0);
     if (rc == -1) {
+        printf("SerialWrite/send: ");
         Error_Check();
         result = FALSE;
     }
 
-    nbytes = zmq_recv(so, buffer, BUFFER_SIZE, 0);
-    if (nbytes == -1) {
-        Error_Check();
-        result = FALSE;
-    } else {
-        Serial_Unmarshal(buffer, resultArray, &resultLength);
-        printf("RES: ");
-        Dbg_DumpHex(resultArray, resultLength);
-    }
     return result;
 }
 
