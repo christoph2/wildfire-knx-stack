@@ -49,6 +49,7 @@ static HANDLE MainTimer;
 static HANDLE DLTimer;
 static CRITICAL_SECTION mainTimerCS;
 static CRITICAL_SECTION dlTimerCS;
+static BOOL isDLTimerRunning = FALSE;
 
 void KnxTmr_SystemTickHandler(void);
 void KnxLL_TimeoutCB(void);
@@ -66,8 +67,8 @@ static void CALLBACK TimerProc(void * lpParameter, BOOLEAN TimerOrWaitFired)
         Port_TimerUnlockMainTimer();
     }
     else if (channelNumber == DL_TIMER) {
+        Port_StopDLTimer();
         KnxLL_TimeoutCB();
-        printf("Data-Link Timer expired!!!");
     }
 }
 
@@ -87,11 +88,15 @@ void Port_StartDLTimer(void)
     if (!Port_TimerCreate(&DLTimer, DL_TIMER, 20, 0)) {
         Win_Error("Port_TimerCreate");
     }
+    isDLTimerRunning = TRUE;
 }
 
 void Port_StopDLTimer(void)
 {
-    Port_TimerCancel(&DLTimer);
+    if (isDLTimerRunning == TRUE) {
+        Port_TimerCancel(DLTimer);
+        isDLTimerRunning = FALSE;
+    }
 }
 
 static BOOL Port_TimerCreate(HANDLE * timerHandle, unsigned int number, unsigned int first, unsigned int period)
