@@ -36,6 +36,8 @@
     #define STATUS_POSSIBLE_DEADLOCK (0xC0000194)
 #endif
 
+static volatile BOOL exitApplication = FALSE;
+
 void Win_Error(char * function)
 {
     char * szBuf;
@@ -103,3 +105,33 @@ boolean Port_InCriticalSection(CRITICAL_SECTION * criticalSection)
     }
     //return criticalSection.LockCount > 0UL;
 }
+
+
+BOOL WINAPI ConsoleCtrlHandler(DWORD signal)
+{
+    switch (signal) {
+    case CTRL_C_EVENT:
+    case CTRL_BREAK_EVENT:
+    case CTRL_CLOSE_EVENT:
+        exitApplication = TRUE;
+        return TRUE;
+    default:
+        /* Pass signal on to the next handler. */
+        return FALSE;
+    }
+    return TRUE;
+}
+
+boolean Port_InstallExitHandler(void)
+{
+    if (!SetConsoleCtrlHandler((PHANDLER_ROUTINE)ConsoleCtrlHandler, TRUE)) {
+        Win_Error("SetConsoleCtrlHandler");
+        return FALSE;
+    }
+}
+
+boolean Port_ExitRequest(void)
+{
+    return exitApplication;
+}
+

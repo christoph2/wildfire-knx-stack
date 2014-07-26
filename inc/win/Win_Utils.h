@@ -43,7 +43,8 @@ void Port_DeleteCriticalSection(CRITICAL_SECTION * criticalSection);
 void Port_EnterCriticalSection(CRITICAL_SECTION * criticalSection);
 void Port_LeaveCriticalSection(CRITICAL_SECTION * criticalSection);
 boolean Port_InCriticalSection(CRITICAL_SECTION * criticalSection);
-
+boolean Port_InstallExitHandler();
+boolean Port_ExitRequest(void);
 
 #if defined(__cplusplus)
 }
