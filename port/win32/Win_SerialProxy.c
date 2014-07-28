@@ -92,8 +92,9 @@ void Serial_Receiver(void * context)
 #endif
         nbytes = zmq_recv(Serial_ReceiverSocket, buffer, BUFFER_SIZE, 0);
         Serial_Unmarshal(buffer, resultArray, &resultLength);        
-        printf("IND: %u bytes", resultLength);
+        printf("IND: %u bytes: ", resultLength);
         for (idx = 0; idx < resultLength; ++idx) {
+            printf("0x%02x ", resultArray[idx]);
             KnxLL_FeedReceiver(resultArray[idx]);
         }
         Dbg_DumpHex(resultArray, resultLength);

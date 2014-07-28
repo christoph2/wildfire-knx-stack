@@ -67,8 +67,10 @@ static void CALLBACK TimerProc(void * lpParameter, BOOLEAN TimerOrWaitFired)
         Port_TimerUnlockMainTimer();
     }
     else if (channelNumber == DL_TIMER) {
+        Port_TimerLockDLTimer();
         Port_StopDLTimer();
         KnxLL_TimeoutCB();
+        Port_TimerUnlockDLTimer();
     }
 }
 
@@ -85,7 +87,7 @@ void Port_TimerInit(void)
 
 void Port_StartDLTimer(void)
 {
-    if (!Port_TimerCreate(&DLTimer, DL_TIMER, 20, 0)) {
+    if (!Port_TimerCreate(&DLTimer, DL_TIMER, 50, 0)) {
         Win_Error("Port_TimerCreate");
     }
     isDLTimerRunning = TRUE;
