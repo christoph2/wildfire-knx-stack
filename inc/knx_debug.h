@@ -35,8 +35,13 @@ extern "C"
 
 #if defined(WIN32) || defined(WIN64)
 void Dbg_DumpHex(uint8_t * frame, uint16_t length);
+
+#define DBG_PRINT(msg)      printf("%s", (msg))
+#define DBG_PRINTLN(msg)    printf("%s\n", (msg))
 #else
 #define Dbg_DumpHex(frame, length)
+#define DBG_PRINT(msg)
+#define DBG_PRINTLN(msg)
 #endif
 
 

@@ -127,9 +127,9 @@ void KnxLL_FeedReceiver(uint8_t octet)
     if (KnxLL_State == KNX_LL_STATE_AWAITING_RESPONSE_LOCAL) {
         if (KnxLL_Expectation.ExpectedService == (octet & KnxLL_Expectation.ExpectedMask)) {
             if (KnxLL_Expectation.ExpectedByteCount == 1) {
+                printf("fo: 0x%02x\n", octet);
                 TMR_STOP_DL_TIMER();
-                KnxLL_State = KNX_LL_STATE_IDLE;
-                printf("\nOK! 0x%02x\n", octet);
+                KnxLL_State = KNX_LL_STATE_IDLE;            
             }
         }
         KnxLL_Buffer[0] = octet;
@@ -255,6 +255,7 @@ static void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length)
  */
 void U_ActivateBusmon_req(void)
 {
+    DBG_PRINTLN("U_ActivateBusmon_req");
     KnxLL_Buffer[0] = U_BUSMON_REQ;
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
 }
@@ -262,12 +263,14 @@ void U_ActivateBusmon_req(void)
 #if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
 void U_ActivateBusyMode_req(void)
 {
+    DBG_PRINTLN("U_ActivateBusyMode_req");
     KnxLL_Buffer[0] = U_SETBUSY_REQ;
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
 }
 
 void U_ResetBusyMode_req(void)
 {
+    DBG_PRINTLN("U_ResetBusyMode_req");
     KnxLL_Buffer[0] = U_QUITBUSY_REQ;
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
 }
@@ -276,18 +279,21 @@ void U_ResetBusyMode_req(void)
 #if KNX_BUS_INTERFACE == KNX_BIF_TPUART_2
 void U_ActivateBusyMode_req(void)
 {
+    DBG_PRINTLN("U_ActivateBusyMode_req");
     KnxLL_Buffer[0] = U_ACTIVATEBUSYMODE_REQ;
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
 }
 
 void U_ResetBusyMode_req(void)
 {
+    DBG_PRINTLN("U_ResetBusyMode_req");
     KnxLL_Buffer[0] = U_RESETBUSYMODE_REQ;
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
 }
 
 void U_SetRepetition_req(uint8_t rst)
 {
+    DBG_PRINTLN("U_SetRepetition_req");
     KnxLL_Buffer[0] = U_MXRSTCNT_REQ;
     KnxLL_Buffer[1] = rst;
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 2);
@@ -295,12 +301,14 @@ void U_SetRepetition_req(uint8_t rst)
 
 void U_ActivateCRC_req(void)
 {
+    DBG_PRINTLN("U_ActivateCRC_req");
     KnxLL_Buffer[0] = U_ACTIVATECRC_REQ;
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
 }
 
 void U_SetAddress_req(uint16_t address)
 {
+    DBG_PRINTLN("U_SetAddress_req");
     KnxLL_Buffer[0] = U_SETADDRESS_REQ;
     KnxLL_Buffer[1] = HIBYTE(address);
     KnxLL_Buffer[2] = LOBYTE(address);
@@ -311,6 +319,7 @@ void U_SetAddress_req(uint16_t address)
 #if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
 void U_SetRepetition_req(uint8_t rst)
 {
+    DBG_PRINTLN("U_SetRepetition_req");
     KnxLL_Buffer[0] = U_SETREPETITION_REQ;
     KnxLL_Buffer[1] = rst;
     KnxLL_Buffer[2] = 0x00; /* Dummy */
@@ -327,6 +336,7 @@ void U_SetRepetition_req(uint8_t rst)
 
 void U_Reset_req(void)
 {
+    DBG_PRINTLN("U_Reset_req");
     KnxLL_Buffer[0] = U_RESET_REQ;
     KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
     KnxLL_Expect(U_RESET_IND, 0xff, 1);
@@ -334,6 +344,7 @@ void U_Reset_req(void)
 
 void U_State_req(void)
 {
+    DBG_PRINTLN("U_State_req");
     KnxLL_Buffer[0] = U_STATE_REQ;
     KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
     KnxLL_Expect(U_STATE_IND, 0x07, 1);
@@ -342,6 +353,7 @@ void U_State_req(void)
 #if KNX_BUS_INTERFACE == KNX_BIF_TPUART_2
 void U_ProductID_req(void)
 {
+    DBG_PRINTLN("U_ProductID_req");
     KnxLL_Buffer[0] = U_PRODUCTID_REQUEST;
     KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
     KnxLL_Expect(0x00, 0x00, 1);    /* Expect any single byte value. */
@@ -351,6 +363,7 @@ void U_ProductID_req(void)
 #if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
 void U_SetAddress_req(uint16_t address) /* NB: TPUART2's SetAddress is unconfirmed! */
 {
+    DBG_PRINTLN("U_SetAddress_req");
     KnxLL_Buffer[0] = U_SETADDRESS_REQ;
     KnxLL_Buffer[1] = HIBYTE(address);
     KnxLL_Buffer[2] = LOBYTE(address);
@@ -368,6 +381,7 @@ void U_SetAddress_req(uint16_t address) /* NB: TPUART2's SetAddress is unconfirm
 #if 0
 void U_SystemState_req(void)
 {
+    DBG_PRINTLN("U_SystemState_req");
     KnxLL_Buffer[0] = U_SYSTEMSTAT_REQ;
     KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 2);
     KnxLL_Expect(U_SYSTEMSTAT_IND, 0xff, 2);
@@ -375,6 +389,7 @@ void U_SystemState_req(void)
 
 void U_StopMode_req(void)
 {
+    DBG_PRINTLN("U_StopMode_req");
     KnxLL_Buffer[0] = U_STOPMODE_REQ;
     KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
     KnxLL_Expect(U_STOPMODE_IND, 0xff, 1);
@@ -382,6 +397,7 @@ void U_StopMode_req(void)
 
 void U_ExitStopMode_req(void)
 {
+    DBG_PRINTLN("U_ExitStopMode_req");
     KnxLL_Buffer[0] = U_EXITSTOPMODE_REQ;
     KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
     KnxLL_Expect(U_RESET_IND, 0xff, 1);
@@ -389,13 +405,15 @@ void U_ExitStopMode_req(void)
 
 void U_Configure_req(uint8_t conf)
 {
+    DBG_PRINTLN("U_Configure_req");
     KnxLL_Buffer[0] = U_CONFIGURE_REQ | (conf & 0x07);
-    KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
+    KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
     KnxLL_Expect(U_CONFIGURE_IND, 0xff, 1);
 }
 
 void U_IntRegWr_req(uint8_t addr, uint8_t value)
 {
+    DBG_PRINTLN("U_IntRegWr_req");
     KnxLL_Buffer[0] = U_INTREGWR_REQ | (addr & 0x03);
     KnxLL_Buffer[1] = value;
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 2);
@@ -403,6 +421,7 @@ void U_IntRegWr_req(uint8_t addr, uint8_t value)
 
 void U_IntRegRd_req(uint8_t addr)
 {
+    DBG_PRINTLN("U_IntRegRd_req");
     KnxLL_Buffer[0] = U_INTREGRD_REQ;
     KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
     KnxLL_Expect(0x00, 0x00, 1);

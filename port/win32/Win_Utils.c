@@ -128,6 +128,7 @@ boolean Port_InstallExitHandler(void)
         Win_Error("SetConsoleCtrlHandler");
         return FALSE;
     }
+    return TRUE;
 }
 
 boolean Port_ExitRequest(void)
