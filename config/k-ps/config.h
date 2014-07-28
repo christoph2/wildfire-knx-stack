@@ -42,8 +42,8 @@ extern "C"
 #endif  /* __cplusplus */
 
 
-#define TMR_NUM_TIMERS              5
-#define TMR_TICK_RESOLUTION         10  /* Note: 1000 must be divisible by TMR_TICK_RESOLUTION without remainder! */
+#define TMR_NUM_TIMERS              (5)
+#define TMR_TICK_RESOLUTION         (10)  /* Note: 1000 must be divisible by TMR_TICK_RESOLUTION without remainder! */
 
 /** Specifies if the controller module gets powered by the bus or an auxiliary power supply.
  *

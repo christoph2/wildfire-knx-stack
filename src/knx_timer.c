@@ -25,11 +25,32 @@
 #include "knx_timer.h"
 
 /*
+** Local Constants.
+*/
+
+/** Link-Layer Timeout in Milli-Seconds.
+*
+*/
+#if defined(_WIN32) || defined(_WIN64)
+#define KNX_LL_TIMEOUT  (20000)
+#else
+#define KNX_LL_TIMEOUT  (25)
+#endif
+
+/*
 ** Local variables.
 */
 static Tmr_TimerType KNX_Timer[TMR_NUM_TIMERS];
 static Tmr_TickType  Tmr_SysMsCounter;
 static Tmr_TickType  Tmr_SysSecondCounter;
+static uint16_t      Tmr_DataLinkCounter;
+static boolean       Tmr_DataLinkTimerRunning;
+
+
+/*
+** Required Interfaces.
+*/
+void KnxLL_TimeoutCB(void);
 
 /*
 ** Global functions.
@@ -47,7 +68,9 @@ void KnxTmr_Init(void)
 {
     uint8_t idx;
 
-    Tmr_SysMsCounter = Tmr_SysSecondCounter = (uint32_t)0UL;
+    Tmr_SysMsCounter = Tmr_SysSecondCounter = (Tmr_TickType)0;
+    Tmr_DataLinkCounter = (uint16_t)0U;
+    Tmr_DataLinkTimerRunning = FALSE;
 
     TMR_LOCK_MAIN_TIMER();
     for (idx = (uint8_t)0; idx < TMR_NUM_TIMERS; idx++) {
@@ -202,6 +225,40 @@ void KnxTmr_SecondCallback(void)
 
 }
 
+/*
+**
+** Functions related to Data-Link Timer.
+**
+*/
+void KnxTmr_DataLinkTimerStart(void)
+{
+    TMR_LOCK_DL_TIMER();
+    if (!KnxTmr_DataLinkTimerIsRunning()) {
+        Tmr_DataLinkCounter = (uint16_t)0U;
+        Tmr_DataLinkTimerRunning = TRUE;
+    }
+    TMR_UNLOCK_DL_TIMER();
+}
+
+void KnxTmr_DataLinkTimerStop(void)
+{
+    TMR_LOCK_DL_TIMER();
+    if (KnxTmr_DataLinkTimerIsRunning()) {
+        Tmr_DataLinkTimerRunning = FALSE;
+    }
+    TMR_UNLOCK_DL_TIMER();
+}
+
+boolean KnxTmr_DataLinkTimerIsRunning(void)
+{
+    boolean result;
+
+    TMR_LOCK_DL_TIMER();
+    result = Tmr_DataLinkTimerRunning;
+    TMR_UNLOCK_DL_TIMER();
+    return result;
+}
+
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) KnxTmr_SystemTickHandler(void)
@@ -215,6 +272,17 @@ void KnxTmr_SystemTickHandler(void)
 
     Tmr_SysMsCounter += TMR_TICK_RESOLUTION;
 
+    if (KnxTmr_DataLinkTimerIsRunning()) {
+        TMR_LOCK_DL_TIMER();
+        Tmr_DataLinkCounter += TMR_TICK_RESOLUTION;
+        if (Tmr_DataLinkCounter >= KNX_LL_TIMEOUT) {
+            DBG_PRINTLN("DL-TIMED-OUT!");
+            KnxLL_TimeoutCB();  // Link-Layer timed out.
+            KnxTmr_DataLinkTimerStop();
+        }
+        TMR_UNLOCK_DL_TIMER();
+    }
+  
     if ((Tmr_SysMsCounter % (uint32_t)1000UL) == (uint32_t)0UL) {
         Tmr_SysSecondCounter++;
         SecondChanged = TRUE;

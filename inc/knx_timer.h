@@ -100,6 +100,10 @@ boolean KnxTmr_GetRemainder(uint8_t timer, Tmr_TickRefType remainder);
 
 Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base);
 
+boolean KnxTmr_DataLinkTimerIsRunning(void);
+void KnxTmr_DataLinkTimerStart(void);
+void KnxTmr_DataLinkTimerStop(void);
+
 void    KnxTmr_Delay(Tmr_TickType ms);
 void    KnxTmr_DelayHMS(uint16_t H, uint16_t M, uint16_t S);
 

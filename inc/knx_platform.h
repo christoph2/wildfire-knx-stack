@@ -30,6 +30,7 @@ extern "C"
 #endif  /* __cplusplus */
 
 #include "k-ps/config.h"
+#include "knx_debug.h"
 #include <stdint.h>
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -44,11 +45,11 @@ extern "C"
 #define TMR_LOCK_DL_TIMER()         Port_TimerLockDLTimer()
 #define TMR_UNLOCK_DL_TIMER()       Port_TimerUnlockDLTimer()
 
-#define TMR_START_DL_TIMER()        Port_StartDLTimer()
-#define TMR_STOP_DL_TIMER()         Port_StopDLTimer()
+#define TMR_START_DL_TIMER()        KnxTmr_DataLinkTimerStart(50)
+#define TMR_STOP_DL_TIMER()         KnxTmr_DataLinkTimerStop()
 
-#define PORT_LOCK_TASK_LEVEL()      Port_Lock_TaskLevel()
-#define PORT_UNLOCK_TASK_LEVEL()    Port_Unlock_TaskLevel()
+#define PORT_LOCK_TASK_LEVEL()      //Port_Lock_TaskLevel()
+#define PORT_UNLOCK_TASK_LEVEL()    //Port_Unlock_TaskLevel()
 
 #if defined(__cplusplus)
 }

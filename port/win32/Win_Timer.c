@@ -65,6 +65,7 @@ void Port_Init(void)
     Port_InitializeCriticalSection(&isrCS);
 }
 
+//#if 0
 void Port_Lock_TaskLevel(void)
 {
     Port_EnterCriticalSection(&isrCS);
@@ -82,6 +83,7 @@ void Port_Unlock_TaskLevel(void)
     ResumeThread(hMainThread);
 #endif
 }
+//#endif
 
 
 //////
@@ -99,13 +101,16 @@ static void CALLBACK TimerProc(void * lpParameter, BOOLEAN TimerOrWaitFired)
         KnxTmr_SystemTickHandler();
         Port_TimerUnlockMainTimer();
     }
+#if 0
     else if (channelNumber == DL_TIMER) {
         Port_TimerLockDLTimer();
+        printf("DL-TIMEOUT!\n");
         Port_StopDLTimer();
         KnxLL_TimeoutCB();
         Port_TimerUnlockDLTimer();
     }
     //PORT_UNLOCK_TASK_LEVEL();
+#endif
 }
 
 void Port_TimerInit(void)
@@ -119,26 +124,10 @@ void Port_TimerInit(void)
     }
 }
 
-void Port_StartDLTimer(void)
-{
-    if (!Port_TimerCreate(&DLTimer, DL_TIMER, 50, 0)) {
-        Win_Error("Port_TimerCreate");
-    }
-    isDLTimerRunning = TRUE;
-}
-
-void Port_StopDLTimer(void)
-{
-    if (isDLTimerRunning == TRUE) {
-        Port_TimerCancel(DLTimer);
-        isDLTimerRunning = FALSE;
-    }
-}
-
 static BOOL Port_TimerCreate(HANDLE * timerHandle, unsigned int number, unsigned int first, unsigned int period)
 {
     return CreateTimerQueueTimer(timerHandle, TimerQueue, TimerProc, (void *)number,
-        (DWORD)first, (DWORD)period, WT_EXECUTEINTIMERTHREAD/*   WT_EXECUTEINIOTHREAD*/
+        (DWORD)first, (DWORD)period, 0/*   WT_EXECUTEINTIMERTHREAD  WT_EXECUTEINIOTHREAD*/
     );
 }
 

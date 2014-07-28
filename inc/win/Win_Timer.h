@@ -39,8 +39,6 @@ void Port_TimerLockMainTimer(void);
 void Port_TimerUnlockMainTimer(void);
 void Port_TimerLockDLTimer(void);
 void Port_TimerUnlockDLTimer(void);
-void Port_StartDLTimer(void);
-void Port_StopDLTimer(void);
 
 #if defined(__cplusplus)
 }
