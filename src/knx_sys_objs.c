@@ -57,63 +57,106 @@
 
 const Knx_PropertyType Knx_DeviceProperties[] = {
     {KNX_PID_OBJECT_TYPE,
-     MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, KNX_PDT_UNSIGNED_INT),        PROP_NO_FUNC, (Knx_AddressType)KNX_OT_DEVICE_OBJECT             },
+        MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, KNX_PDT_UNSIGNED_INT),
+        PROP_NO_FUNC, (void const * )KNX_OT_DEVICE_OBJECT
+    },
     {KNX_PID_DEVICE_CONTROL,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_01),          PROP_NO_FUNC, (Knx_AddressType)NULL                             },
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_GENERIC_01),
+        PROP_NO_FUNC, (void const * )NULL
+    },
     {KNX_PID_SERVICE_CONTROL,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_INT),        PROP_NO_FUNC, (Knx_AddressType)NULL                             },
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_UNSIGNED_INT),
+        PROP_NO_FUNC, (void const * )NULL
+    },
     {KNX_PID_FIRMWARE_REVISION,
-     MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_PTR,
-                   KNX_PDT_UNSIGNED_CHAR),       PROP_NO_FUNC, (const void *)&KNX_DEV_FIRMWARE_REV      },
+        MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_PTR, KNX_PDT_UNSIGNED_CHAR),
+        PROP_NO_FUNC, (const void *)&KNX_DEV_FIRMWARE_REV
+    },
     {KNX_PID_SERIAL_NUMBER,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_06),          PROP_NO_FUNC, (const void *)KNX_DEV_SERIAL_NUM         },
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_GENERIC_06),
+        PROP_NO_FUNC, (void const * )KNX_DEV_SERIAL_NUM
+    },
     {KNX_PID_MANUFACTURER_ID,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_INT),        PROP_NO_FUNC, (Knx_AddressType)NULL                             },
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_UNSIGNED_INT),
+        PROP_NO_FUNC, (void const * )NULL
+    },
     {KNX_PID_ORDER_INFO,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_10),          PROP_NO_FUNC, (const void *)KNX_DEV_ORDER_INFO         },
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_GENERIC_10),
+        PROP_NO_FUNC, (const void *)KNX_DEV_ORDER_INFO
+    },
     {KNX_PID_PEI_TYPE,
-     MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, KNX_PDT_UNSIGNED_CHAR),       PROP_NO_FUNC, (Knx_AddressType)0x00                             }, /* measured PEI-Type.*/
+        MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, KNX_PDT_UNSIGNED_CHAR),
+        PROP_NO_FUNC, (void const * )0x00
+    }, /* measured PEI-Type.*/
     {KNX_PID_POLL_GROUP_SETTINGS,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,
-                   KNX_PDT_POLL_GROUP_SETTINGS), PROP_NO_FUNC, (const void *)&KNX_DEV_POLLGROUP_SETTINGS},
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_POLL_GROUP_SETTINGS),
+        PROP_NO_FUNC, (const void *)&KNX_DEV_POLLGROUP_SETTINGS
+    },
     {KNX_PID_PORT_CONFIGURATION,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_CHAR),       PROP_NO_FUNC, (Knx_AddressType)NULL                             },
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_UNSIGNED_CHAR),
+        PROP_NO_FUNC, (void const * )NULL
+    },
     {KNX_PID_MANUFACTURER_DATA,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_04),          PROP_NO_FUNC, (Knx_AddressType)NULL                             },
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_GENERIC_04),
+        PROP_NO_FUNC, (void const * )NULL
+    },
 };
 
 const Knx_PropertyType Knx_AddrTabProperties[] = {
     {KNX_PID_OBJECT_TYPE,
-     MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, KNX_PDT_UNSIGNED_INT), PROP_NO_FUNC, (const void *)KNX_OT_ADDRESSTABLE_OBJECT              },
+        MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, KNX_PDT_UNSIGNED_INT),
+        PROP_NO_FUNC, (const void *)KNX_OT_ADDRESSTABLE_OBJECT
+    },
     {KNX_PID_LOAD_STATE_CONTROL,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,
-                   KNX_PDT_CONTROL),      PROP_FUNC,    (const void *)&KNX_SystemLSC[KNX_LSC_GRAT]            },
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_CONTROL),
+        PROP_FUNC, (const void *)&KNX_SystemLSC[KNX_LSC_GRAT]
+    },
     {KNX_PID_TABLE_REFERENCE,
-     MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_INT), PROP_NO_FUNC, (const void *)APP_AddressTable /*__PHYS_EEPROM_START*/},
+        MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_PTR, KNX_PDT_UNSIGNED_INT),
+        PROP_NO_FUNC, (const void *)APP_AddressTable /*__PHYS_EEPROM_START*/
+    },
 };
 
 const Knx_PropertyType Knx_AssocTabProperties[] = {
     {KNX_PID_OBJECT_TYPE,
-     MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE,
-                   KNX_PDT_UNSIGNED_INT), PROP_NO_FUNC, (const void *)KNX_OT_ASSOCIATIONTABLE_OBJECT},
+        MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, KNX_PDT_UNSIGNED_INT),
+        PROP_NO_FUNC, (const void *)KNX_OT_ASSOCIATIONTABLE_OBJECT
+    },
     {KNX_PID_LOAD_STATE_CONTROL,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,
-                   KNX_PDT_CONTROL),      PROP_FUNC,    (const void *)&KNX_SystemLSC[KNX_LSC_GROAT] },
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_CONTROL),
+        PROP_FUNC,    (const void *)&KNX_SystemLSC[KNX_LSC_GROAT]
+    },
     {KNX_PID_TABLE_REFERENCE,
-     MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_INT), PROP_NO_FUNC, (const void *)APP_AssociationTable          },
+        MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_PTR, KNX_PDT_UNSIGNED_INT),
+        PROP_NO_FUNC, (const void *)APP_AssociationTable
+    },
 };
 
 const Knx_PropertyType Knx_AppPrgProperties[] = {
     {KNX_PID_OBJECT_TYPE,
-     MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE,
-                   KNX_PDT_UNSIGNED_INT),  PROP_NO_FUNC, (const void *)KNX_OT_APPLICATIONPROGRAM_OBJECT},
+        MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_VALUE, KNX_PDT_UNSIGNED_INT),
+        PROP_NO_FUNC, (const void *)KNX_OT_APPLICATIONPROGRAM_OBJECT
+    },
     {KNX_PID_LOAD_STATE_CONTROL,
-     MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,
-                   KNX_PDT_CONTROL),       PROP_FUNC,    (const void *)&KNX_SystemLSC[KNX_LSC_APP]     },
-    {KNX_PID_RUN_STATE_CONTROL,  MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_CONTROL),       PROP_FUNC,    (Knx_AddressType)NULL                                  }, /* todo: Adresse der RSM-Variablen!!! */
-    {KNX_PID_PEI_TYPE,           MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_CHAR), PROP_NO_FUNC, (Knx_AddressType)NULL                                  }, /* required PEI-Type. */
-    {KNX_PID_PROGRAM_VERSION,    MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR,   KNX_PDT_GENERIC_05),    PROP_NO_FUNC, (Knx_AddressType)NULL                                  },
-    {KNX_PID_TABLE_REFERENCE,    MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_PTR,   KNX_PDT_UNSIGNED_INT),  PROP_NO_FUNC, (Knx_AddressType)NULL                                  }, /* check: CommObjs??? */
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_CONTROL),
+        PROP_FUNC,    (const void *)&KNX_SystemLSC[KNX_LSC_APP]
+    },
+    {KNX_PID_RUN_STATE_CONTROL,
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_CONTROL),
+        PROP_FUNC,    (void const * )NULL
+    }, /* todo: Adresse der RSM-Variablen!!! */
+    {KNX_PID_PEI_TYPE,
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_UNSIGNED_CHAR),
+        PROP_NO_FUNC, (void const * )NULL
+    }, /* required PEI-Type. */
+    {KNX_PID_PROGRAM_VERSION,
+        MAKE_PROP_CTL(PROP_RW, PROP_NO_ARR, PROP_PTR, KNX_PDT_GENERIC_05),
+        PROP_NO_FUNC, (void const * )NULL
+    },
+    {KNX_PID_TABLE_REFERENCE,
+        MAKE_PROP_CTL(PROP_RO, PROP_NO_ARR, PROP_PTR, KNX_PDT_UNSIGNED_INT),
+        PROP_NO_FUNC, (void const * )NULL
+    }, /* check: CommObjs??? */
 };
 
 /* Hinweis: wo ist eigentlich die ObjectID ??? */
@@ -160,3 +203,4 @@ const uint8_t Knx_SystemInterfaceObjCount = SIZEOF_ARRAY(Knx_SystemInterfaceObjs
    #endif
 
  */
+
