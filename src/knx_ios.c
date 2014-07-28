@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -84,18 +84,18 @@ FUNC(void, KSTACK_CODE) IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8_t ser
 void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8_t service, boolean connected)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8_t                           data[MAX_PROP_DATA_LEN];
-    KNX_PropertyFrameRefType        pmsg;
+    uint8_t data[MAX_PROP_DATA_LEN];
+    KNX_PropertyFrameRefType pmsg;
     Knx_InterfaceObjectType const * pobj;
-    Knx_PropertyType const *        pprop;
-    uint8_t                           num_elems;
-    uint16_t                          start_index;
-    uint8_t                           type;
-    uint8_t                           type_len;
-    uint8_t                           ctl;
-    PROPERTY_FUNC                   pf;
-    Knx_AddressType                 source;
-    Knx_AddressType                 dest;
+    Knx_PropertyType const * pprop;
+    uint8_t num_elems;
+    uint16_t start_index;
+    uint8_t type;
+    uint8_t type_len;
+    PROPERTY_FUNC pf;
+    Knx_AddressType source;
+    Knx_AddressType dest;
+    uint8_t ctl;
 
     if (pBuffer == (KnxMSG_BufferPtr)NULL) {
         return;
@@ -183,7 +183,7 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8_t service, boolean conne
 
     if (service == IOS_PROP_READ) {
         if (type == KNX_PDT_CONTROL) {
-            if ((!IS_POINTER_TO_FUNC(pprop)) || (pprop->property_var == /*(Knx_AddressType)*/ (uint16_t)NULL)) {
+            if ((!IS_POINTER_TO_FUNC(pprop)) || (pprop->property_var == NULL)) {
                 goto invalid;
             }
 
