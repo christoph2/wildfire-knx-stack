@@ -47,6 +47,9 @@ extern "C"
 #define TMR_START_DL_TIMER()        Port_StartDLTimer()
 #define TMR_STOP_DL_TIMER()         Port_StopDLTimer()
 
+#define PORT_LOCK_TASK_LEVEL()      Port_Lock_TaskLevel()
+#define PORT_UNLOCK_TASK_LEVEL()    Port_Unlock_TaskLevel()
+
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */

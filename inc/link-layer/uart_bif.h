@@ -135,6 +135,7 @@ void KnxLL_FeedReceiver(uint8_t byte);
 void KnxLL_Init(void);
 void KnxLL_Task(void);
 boolean KnxLL_Transmit(uint8_t const * frame, uint8_t length);
+boolean KnxLL_IsBusy(void);
 void KnxLL_TimeoutCB(void);
 
 /**

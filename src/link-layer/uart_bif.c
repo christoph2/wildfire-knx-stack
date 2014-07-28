@@ -31,6 +31,8 @@
 #include "link-layer\uart_bif.h"
 #include "knx_platform.h"
 
+#include <stdio.h>
+
 #define KNX_LL_BUF_SIZE     (0xff)
 
 /*!
@@ -127,6 +129,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
             if (KnxLL_Expectation.ExpectedByteCount == 1) {
                 TMR_STOP_DL_TIMER();
                 KnxLL_State = KNX_LL_STATE_IDLE;
+                printf("\nOK! 0x%02x\n", octet);
             }
         }
         KnxLL_Buffer[0] = octet;
@@ -149,6 +152,16 @@ boolean KnxLL_Transmit(uint8_t const * frame, uint8_t length)
     return TRUE;
 }
 
+boolean KnxLL_IsBusy(void)
+{
+    boolean result;
+
+    PORT_LOCK_TASK_LEVEL();
+    result = KnxLL_State;
+    PORT_UNLOCK_TASK_LEVEL();
+    return result;
+}
+
 
 /*!
  *
@@ -169,12 +182,15 @@ static boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxL
 {
     boolean result;
 
+    PORT_LOCK_TASK_LEVEL();
     if (KnxLL_State != KNX_LL_STATE_IDLE) {
+        PORT_UNLOCK_TASK_LEVEL();
         return FALSE;
     }
     //KnxLL_State = KNX_LL_STATE_SENDING;
     KnxLL_State = desiredState;
     result = (boolean)Port_WriteToBusInterface(frame, length);
+    PORT_UNLOCK_TASK_LEVEL();
     TMR_START_DL_TIMER();
     //KnxLL_State = desiredState;
     return result;
