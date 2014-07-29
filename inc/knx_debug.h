@@ -31,17 +31,38 @@ extern "C"
 #endif  /* __cplusplus */
 
 #include "k-ps/config.h"
-#include <stdint.h>
 
-#if defined(WIN32) || defined(WIN64)
+#if defined(_WIN32) || defined(_WIN64)
+
+typedef struct tagDbg_TimerType {
+    __int64 start;
+    __int64 stop;
+    boolean running;
+} Dbg_TimerType;
+
 void Dbg_DumpHex(uint8_t * frame, uint16_t length);
 
 #define DBG_PRINT(msg)      printf("%s", (msg))
 #define DBG_PRINTLN(msg)    printf("%s\n", (msg))
+
+void Dbg_Init(void);
+boolean Dbg_IsHRTAvailable(void);
+void Dbg_TimerInit(Dbg_TimerType * timerContext);
+void Dbg_TimerStart(Dbg_TimerType * timerContext);
+void Dbg_TimerStop(Dbg_TimerType * timerContext);
+__int64 Dbg_TimerElapsedTime(Dbg_TimerType const * timerContext);
+
 #else
 #define Dbg_DumpHex(frame, length)
 #define DBG_PRINT(msg)
 #define DBG_PRINTLN(msg)
+
+#define Dbg_Init()
+#define Dbg_IsHRTAvailable()    (FALSE)
+#define Dbg_TimerInit(timerContext)
+#define Dbg_TimerStart(timerContext)
+#define Dbg_TimerStop(timerContext)
+#define Dbg_TimerElapsedTime(timerContext)
 #endif
 
 
