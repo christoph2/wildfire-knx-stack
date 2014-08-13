@@ -61,8 +61,22 @@ static CRITICAL_SECTION isrCS;
 
 void Port_Init(void)
 {
+
+
     hMainThread = GetCurrentThread();
+
+    Port_SetThreadAffinity(hMainThread, 0x00000001);
+
     Port_InitializeCriticalSection(&isrCS);
+}
+
+void Port_SetThreadAffinity(HANDLE thread, DWORD_PTR mask)
+{
+    DWORD_PTR resultMask;
+
+    if (SetThreadAffinityMask(hMainThread, mask) == 0) {
+        Win_Error("Port_SetThreadAffinity");
+    }
 }
 
 //#if 0

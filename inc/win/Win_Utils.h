@@ -45,6 +45,7 @@ void Port_LeaveCriticalSection(CRITICAL_SECTION * criticalSection);
 boolean Port_InCriticalSection(CRITICAL_SECTION * criticalSection);
 boolean Port_InstallExitHandler();
 boolean Port_ExitRequest(void);
+void Port_SetThreadAffinity(HANDLE thread, DWORD_PTR mask);
 
 #if defined(__cplusplus)
 }

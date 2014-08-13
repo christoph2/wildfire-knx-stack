@@ -32,7 +32,7 @@
 *
 */
 #if defined(_WIN32) || defined(_WIN64)
-#define KNX_LL_TIMEOUT  (20000)
+#define KNX_LL_TIMEOUT  (5000)
 #else
 #define KNX_LL_TIMEOUT  (25)
 #endif

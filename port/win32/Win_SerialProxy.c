@@ -42,6 +42,7 @@ void Serial_Receiver(void * context);
 void Serial_Marshal(char * blob, uint8_t const * arr, uint16_t length);
 void Serial_Unmarshal(char * blob, uint8_t * arr, uint16_t * length);
 
+static uintptr_t serialThread;
 void * Serial_TransmitterSocket;
 static void * Serial_Context;
 
@@ -92,10 +93,10 @@ void Serial_Receiver(void * context)
 #endif
         nbytes = zmq_recv(Serial_ReceiverSocket, buffer, BUFFER_SIZE, 0);
         Serial_Unmarshal(buffer, resultArray, &resultLength);        
-        printf("IND: %u bytes: ", resultLength);
+        //printf("IND: %u bytes: ", resultLength);
         for (idx = 0; idx < resultLength; ++idx) {
             PORT_LOCK_TASK_LEVEL();
-            printf("0x%02x ", resultArray[idx]);
+            //printf("0x%02x ", resultArray[idx]);
             KnxLL_FeedReceiver(resultArray[idx]);
             PORT_UNLOCK_TASK_LEVEL();
         }
@@ -115,7 +116,10 @@ void Serial_Init(void)
     Serial_Context = zmq_ctx_new();
 
     //rc = zmq_socket_monitor(Serial_TransmitterSocket, "inproc://monitor.rep", ZMQ_EVENT_ALL);
-    _beginthread(Serial_Receiver, 0, Serial_Context);
+    serialThread = _beginthread(Serial_Receiver, 0, Serial_Context);
+
+
+    Port_SetThreadAffinity(serialThread, 0x00000001);
     
     Serial_TransmitterSocket = zmq_socket(Serial_Context, ZMQ_PUSH);
     rc = zmq_connect(Serial_TransmitterSocket, "tcp://localhost:5556");
