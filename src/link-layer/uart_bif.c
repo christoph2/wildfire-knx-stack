@@ -120,11 +120,12 @@ void KnxLL_Init(void)
  */
 void KnxLL_TimeoutCB(void)
 {
-    DBG_PRINTLN("L2 TIMEOUT.");
+    DBG_PRINTLN("\gL2 TIMEOUT.");
     KnxLL_State = KNX_LL_STATE_TIMED_OUT;
     KnxLL_FeedReceiver(0x00);
 }
 
+// This constitutes the link-layer statemachine.
 void KnxLL_FeedReceiver(uint8_t octet)
 {
     uint8_t service;
@@ -167,12 +168,13 @@ void KnxLL_FeedReceiver(uint8_t octet)
                 DBG_PRINTLN("Receiver Error!\n");
             } else if ((octet & L_DATA_CON) == L_DATA_CON) {
                 printf("ACK: 0x%02x\n", octet);
+                KnxLL_State = KNX_LL_STATE_IDLE;
             } else if ((octet & 0x10) == 0x10) {    /* Weak check. */
                 printf("Control-Field: 0x%02x\n", octet);
             }
         } else if (KnxLL_ReceiverIndex == KnxLL_Expectation.ExpectedByteCount) {
             printf("Finished. [0x%02x]\n", octet);
-            KnxLL_ReceiverIndex = (uint8_t)0x00;
+            KnxLL_ReceiverIndex = (uint8_t)0x00;            
         }
     } else if (KnxLL_State == KNX_LL_STATE_TIMED_OUT) {
         // TODO: Callback/Callout.
@@ -231,7 +233,7 @@ boolean KnxLL_IsBusy(void)
     boolean result;
 
     PORT_LOCK_TASK_LEVEL();
-    result = KnxLL_State;
+    result = (KnxLL_State != KNX_LL_STATE_IDLE);
     PORT_UNLOCK_TASK_LEVEL();
     return result;
 }
