@@ -127,7 +127,7 @@ class Receiver(Thread):
                 data = None
                 result = False
             if data:
-                print "R: '%s'" % utils.hexDump(data)
+                print "RCV: '%s'" % utils.hexDump(data)
                 if not self.context.closed:
                     try:
                         self.socket.send(marshall(data))
@@ -171,13 +171,16 @@ def main():
     receiver.start()
     poller = zmq.Poller()
     poller.register(socket, zmq.POLLIN)
+
+    #CONNECT_REQ = (0x80, 0xbc, 0x81, 0xaf, 0x82, 0xfe, 0x83, 0x10, 0x84, 0x01, 0x85, 0x60, 0x86, 0x80, 0x47, 0xe3)
+    #port.write(CONNECT_REQ)
+
     while True:
         try:
             result = dict(poller.poll(50))
             if result.get(socket):
-                print "POLL-IN: ", result
                 request = unmarshall(socket.recv())
-                print "REQUEST: ", request
+                print "REQ: ", utils.hexDump(request)
                 port.write(request)
         except KeyboardInterrupt:
             print "*** Keyboard Interrupt, exiting ***"
