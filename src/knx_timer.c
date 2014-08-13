@@ -32,7 +32,7 @@
 *
 */
 #if defined(_WIN32) || defined(_WIN64)
-#define KNX_LL_TIMEOUT  (5000)
+#define KNX_LL_TIMEOUT  (1000)
 #else
 #define KNX_LL_TIMEOUT  (25)
 #endif
@@ -275,8 +275,7 @@ void KnxTmr_SystemTickHandler(void)
     if (KnxTmr_DataLinkTimerIsRunning()) {
         TMR_LOCK_DL_TIMER();
         Tmr_DataLinkCounter += TMR_TICK_RESOLUTION;
-        if (Tmr_DataLinkCounter >= KNX_LL_TIMEOUT) {
-            DBG_PRINTLN("DL-TIMED-OUT!");
+        if (Tmr_DataLinkCounter >= KNX_LL_TIMEOUT) {            
             KnxLL_TimeoutCB();  // Link-Layer timed out.
             KnxTmr_DataLinkTimerStop();
         }

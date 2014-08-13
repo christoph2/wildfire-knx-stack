@@ -74,6 +74,7 @@ static uint8_t KnxLL_SequenceNo;
 static uint8_t KnxLL_Buffer[KNX_LL_BUF_SIZE];
 
 static KnxLL_ExpectationType KnxLL_Expectation = {0};
+static uint8_t KnxLL_ReceiverIndex;
 #if 0
 static uint8_t KnxLL_ExpectedByteCount;
 static uint8_t KnxLL_ExpectedService;
@@ -90,7 +91,8 @@ static boolean KnxLL_InternalCommandUnconfirmed(uint8_t const * frame, uint8_t l
 static boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t length);
 static uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length);
 static void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount);
-static void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length);
+
+void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length);
 
 /*!
  *
@@ -107,6 +109,7 @@ void KnxLL_Init(void)
 {
     KnxLL_State = KNX_LL_STATE_IDLE;
     KnxLL_SequenceNo = (uint8_t)0x00;
+    KnxLL_ReceiverIndex = (uint8_t)0x00;
     Utl_MemSet(&KnxLL_Expectation, '\x00', sizeof(KnxLL_ExpectationType));
 }
 
@@ -117,26 +120,97 @@ void KnxLL_Init(void)
  */
 void KnxLL_TimeoutCB(void)
 {
+    DBG_PRINTLN("L2 TIMEOUT.");
     KnxLL_State = KNX_LL_STATE_TIMED_OUT;
+    KnxLL_FeedReceiver(0x00);
 }
 
 void KnxLL_FeedReceiver(uint8_t octet)
 {
-    boolean foo;
+    uint8_t service;
+
+#if 0
+    static void U_Reset_res(void);
+    static void U_Reset_ind(void);
+    static void U_State_res(void);
+    static void U_State_ind(void);
+    static void L_Data_con(void);
+    static void L_DataExtended_ind(void);
+    static void L_DataStandard_ind(void);
+    static void L_PollData_ind(void);
+#endif
 
     if (KnxLL_State == KNX_LL_STATE_AWAITING_RESPONSE_LOCAL) {
         if (KnxLL_Expectation.ExpectedService == (octet & KnxLL_Expectation.ExpectedMask)) {
             if (KnxLL_Expectation.ExpectedByteCount == 1) {
-                printf("fo: 0x%02x\n", octet);
+                //printf("fo: 0x%02x\n", octet);
                 TMR_STOP_DL_TIMER();
-                KnxLL_State = KNX_LL_STATE_IDLE;            
+                KnxLL_State = KNX_LL_STATE_IDLE;
+                switch (KnxLL_Expectation.ExpectedService) {
+                case U_RESET_IND:
+                    DBG_PRINTLN("U_Reset_Res");
+                    break;
+                case U_STATE_IND:
+                    DBG_PRINTLN("U_State_Res");
+                    break;
+                default:
+                    break;
+                }
             }
         }
-        KnxLL_Buffer[0] = octet;
+        // KnxLL_Buffer[0] = octet;
+    } else if (KnxLL_State == KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION) {
+        //printf("Tx-REQ Response: 0x%02x\n", octet);
+        KnxLL_ReceiverIndex++;
+        if (KnxLL_ReceiverIndex == 0x01) {
+            if ((octet & U_STATE_IND) == U_STATE_IND) {
+                DBG_PRINTLN("Receiver Error!\n");
+            } else if ((octet & L_DATA_CON) == L_DATA_CON) {
+                printf("ACK: 0x%02x\n", octet);
+            } else if ((octet & 0x10) == 0x10) {    /* Weak check. */
+                printf("Control-Field: 0x%02x\n", octet);
+            }
+        } else if (KnxLL_ReceiverIndex == KnxLL_Expectation.ExpectedByteCount) {
+            printf("Finished. [0x%02x]\n", octet);
+            KnxLL_ReceiverIndex = (uint8_t)0x00;
+        }
     } else if (KnxLL_State == KNX_LL_STATE_TIMED_OUT) {
+        // TODO: Callback/Callout.
+        KnxLL_State = KNX_LL_STATE_IDLE;
+    } else if (KnxLL_State == KNX_LL_STATE_IDLE) {
+        if ((octet & U_STATE_IND) == U_STATE_IND) {
+            DBG_PRINTLN("U_State_Ind");
+        } else if ((octet & 0x7f) == L_DATA_CON) {
+            DBG_PRINTLN("L_Data_Con");    // ???
+        } else if ((octet & 0xd3) == L_DATA_EXTENDED_IND) { // #if defined()
+            DBG_PRINTLN("L_DataExtended_Ind");
+        } else if ((octet & 0xd3) == L_DATA_STANDARD_IND)  {
+            DBG_PRINTLN("L_DataStandard_Ind");
+        } else if (octet == U_RESET_IND) {
+            DBG_PRINTLN("U_Reset_Ind");
+        } else if (octet == L_POLL_DATA_IND) { // #if defined()
+            DBG_PRINTLN("L_PollData_Ind");
+        }
+#if 0
+    MASK: 0x00
+        U_ProductID.response == > xxxxxxxx[0x00]
+    MASK: 0x07
+          State.response / indication == > xxxxx111[0x07]
+      MASK: 0x7f
+            L_DATA.confirm == > x0001011[0x0b]
+        MASK: 0xd3
+              L_EXT_DATA.req == > 00x1xx00[0x10]
+              L_DATA.req == > 10x1xx00[0x90]
+          MASK: 0xff
+                Reset - Indication == > 00000011[0x03]
+                NotAcknowledge frame == > 00001100[0x0c]
+                Busy frame == > 11000000[0xc0]
+                Acknowledge frame == > 11001100[0xcc]
+                L_POLLDATA.req == > 11110000[0xf0]
+#endif
 
     } else {
-        foo = TRUE; /* Ignore anything else for now. */
+       /* Ignore anything else. */
     }
 
 }
@@ -225,26 +299,29 @@ static uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length)
     return checksum;
 }
 
-#include <stdio.h>
-#define WRITE(ch)   printf("%02x ", (ch))
+#define WRITE(ch)   \
+    printf("0x%02x ", ch);   \
+    Port_WriteToBusInterface((uint8_t*)&ch, 1)
 
-static void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length)
+void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length)
 {
     uint8_t idx;
     uint8_t checksum;
+    char buffer[128];
 
     checksum = KnxLL_Checksum(frame, length);
-    WRITE(U_L_DATASTART_REQ);
-    WRITE(frame[0]);
-    printf(" ");
-    for (idx = 1; idx < length; ++idx) {
-        WRITE(U_L_DATACONT_REQ | idx);
-        WRITE(frame[idx]);
-        printf(" ");
+    buffer[0] = U_L_DATASTART_REQ;
+    buffer[1] = frame[0];
+    for (idx = 2; idx < (length << 1); idx += 2) {
+        buffer[idx] = U_L_DATACONT_REQ | (idx >> 1);
+        buffer[idx + 1] = frame[idx >> 1];
     }
-    WRITE(U_L_DATAEND_REQ | idx);
-    WRITE(checksum);
-    printf("\n");
+    buffer[idx] = U_L_DATAEND_REQ | (idx >> 1);
+    buffer[idx + 1] = checksum;
+    Port_WriteToBusInterface(buffer, idx + 2);
+    KnxLL_Expect(0x00, 0x00, length + 1);
+    KnxLL_State = KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION;
+    KnxLL_ReceiverIndex = (uint8_t)0x00;
 }
 
 
@@ -283,6 +360,7 @@ void U_ActivateBusyMode_req(void)
     KnxLL_Buffer[0] = U_ACTIVATEBUSYMODE_REQ;
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
 }
+
 
 void U_ResetBusyMode_req(void)
 {
