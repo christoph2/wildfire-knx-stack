@@ -129,6 +129,22 @@ void U_SetRepetition_req(uint8_t rst);
 #endif /* KNX_BUS_INTERFACE */
 
 /**
+ *  Global Function-like Macros.
+ */
+
+
+/**
+ * Wait for availability of link-layer.
+ *
+ * Services shall never be issued while link-layer is busy.
+ */
+#define KNX_LL_BUSY_WAIT()          \
+    do {                            \
+        while (KnxLL_IsBusy()) {    \
+        }                           \
+    } while (0)
+
+/**
  *  Global Functions.
  */
 void KnxLL_FeedReceiver(uint8_t byte);
