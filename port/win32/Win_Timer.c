@@ -115,16 +115,6 @@ static void CALLBACK TimerProc(void * lpParameter, BOOLEAN TimerOrWaitFired)
         KnxTmr_SystemTickHandler();
         Port_TimerUnlockMainTimer();
     }
-#if 0
-    else if (channelNumber == DL_TIMER) {
-        Port_TimerLockDLTimer();
-        printf("DL-TIMEOUT!\n");
-        Port_StopDLTimer();
-        KnxLL_TimeoutCB();
-        Port_TimerUnlockDLTimer();
-    }
-    //PORT_UNLOCK_TASK_LEVEL();
-#endif
 }
 
 void Port_TimerInit(void)

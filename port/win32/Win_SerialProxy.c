@@ -81,26 +81,14 @@ void Serial_Receiver(void * context)
     items[0].socket = socket;
     items[0].events = ZMQ_POLLIN;
     while (TRUE) {
-#if 0
-        rc = zmq_poll(items, 1, 500UL);
-        if (rc == -1) {
-            Error_Check();
-        }
-        if (items[0].revents & ZMQ_POLLIN) {
-            printf("Received something!!!");
-        }
-        continue;
-#endif
         nbytes = zmq_recv(Serial_ReceiverSocket, buffer, BUFFER_SIZE, 0);
         Serial_Unmarshal(buffer, resultArray, &resultLength);        
-        //printf("IND: %u bytes: ", resultLength);
         for (idx = 0; idx < resultLength; ++idx) {
             PORT_LOCK_TASK_LEVEL();
-            //printf("0x%02x ", resultArray[idx]);
             KnxLL_FeedReceiver(resultArray[idx]);
             PORT_UNLOCK_TASK_LEVEL();
         }
-        Dbg_DumpHex(resultArray, resultLength);
+        //Dbg_DumpHex(resultArray, resultLength);
     }
     rc = zmq_close(Serial_ReceiverSocket);
 }
@@ -165,9 +153,6 @@ boolean Serial_Write(void * so, uint8_t const * arr, uint16_t length)
     char buffer[BUFFER_SIZE];
     uint8_t resultArray[BUFFER_SIZE] = {0};
     boolean result = TRUE;
-
-    //printf("WRITE: ");
-    //Dbg_DumpHex(arr, length);
 
     Serial_Marshal(buffer, arr, length);
     rc = zmq_send(so, buffer, length + 2, 0);
