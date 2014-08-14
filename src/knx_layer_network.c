@@ -111,7 +111,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_L_DataInd(void)
 STATIC void Disp_L_DataInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if ((KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->ncpi & (uint8_t)0x80) == (uint8_t)0x80) {
+    if ((KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->npci & (uint8_t)0x80) == (uint8_t)0x80) {
         if (KnxADR_IsBroadcastAddress(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->dest)) {
             /* Broadcast-Communication. */
             KnxMSG_ScratchBufferPtr->service = N_DATA_BROADCAST_IND;

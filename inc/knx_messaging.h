@@ -84,12 +84,12 @@ extern "C"
 #define KnxMSG_SetPriority(pBuffer, priority)   (KnxMSG_GetMessagePtr((pBuffer))->ctrl |= (((priority) & (uint8_t)0x03) << 2))
 
 /* check: Daf-Type, DestionationAddressType??? */
-#define KnxMSG_GetAddressType(pBuffer)          ((uint8_t)KnxMSG_GetMessagePtr((pBuffer))->ncpi & (uint8_t)0x80)
-#define KnxMSG_SetAddressType(pBuffer, at)      (KnxMSG_GetMessagePtr((pBuffer))->ncpi |= ((at) & (uint8_t)0x80))
+#define KnxMSG_GetAddressType(pBuffer)          ((uint8_t)KnxMSG_GetMessagePtr((pBuffer))->npci & (uint8_t)0x80)
+#define KnxMSG_SetAddressType(pBuffer, at)      (KnxMSG_GetMessagePtr((pBuffer))->npci |= ((at) & (uint8_t)0x80))
 
 /* check: ist 'LSDU' richtig??? */
-#define KnxMSG_GetLSDULen(pBuffer)              (KnxMSG_GetMessagePtr((pBuffer))->ncpi & (uint8_t)0x0f)
-#define KnxMSG_SetLSDULen(pBuffer, len_lsdu)    (KnxMSG_GetMessagePtr((pBuffer))->ncpi = ((len_lsdu) & (uint8_t)0x0f))
+#define KnxMSG_GetLSDULen(pBuffer)              (KnxMSG_GetMessagePtr((pBuffer))->npci & (uint8_t)0x0f)
+#define KnxMSG_SetLSDULen(pBuffer, len_lsdu)    (KnxMSG_GetMessagePtr((pBuffer))->npci = ((len_lsdu) & (uint8_t)0x0f))
 
 #define KnxMSG_GetTPCI(pBuffer)                 ((uint8_t)KnxMSG_GetMessagePtr((pBuffer))->tpci)
 #define KnxMSG_SetTPCI(pBuffer, tp)             (KnxMSG_GetMessagePtr((pBuffer))->tpci |= (tp))
@@ -121,7 +121,7 @@ typedef struct tagKNX_StandardFrameType {
     uint8_t   ctrl;
     uint8_t   source[2];
     uint8_t   dest[2];
-    uint8_t   ncpi;
+    uint8_t   npci;
     uint8_t   tpci;
     uint8_t   apci;
     uint8_t   data[MAX_ADPU_LEN];
@@ -131,7 +131,7 @@ typedef struct tagKNX_PropertyFrameType {
     uint8_t   ctrl;
     uint8_t   source[2];
     uint8_t   dest[2];
-    uint8_t   ncpi;
+    uint8_t   npci;
     uint8_t   tpci;
     uint8_t   apci;
     uint8_t   obj_id;

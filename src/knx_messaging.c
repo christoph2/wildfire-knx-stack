@@ -305,7 +305,7 @@ void KnxMSG_SetLen(KnxMSG_BufferPtr pBuffer, uint8_t len)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     pBuffer->len                           = len;
-    KnxMSG_GetMessagePtr(pBuffer)->ncpi   |= ((len - (uint8_t)7) & (uint8_t)0x0f);
+    KnxMSG_GetMessagePtr(pBuffer)->npci   |= ((len - (uint8_t)7) & (uint8_t)0x0f);
 }
 
 
@@ -322,12 +322,12 @@ uint8_t KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer)
 /*
    void MSG_SetHopCount(PMSG_Buffer pBuffer,uint8_t hop_count)
    {
-    MSG_GetMessagePtr(pBuffer)->ncpi|=((hop_count & 0x07)<<4);
+    MSG_GetMessagePtr(pBuffer)->npci|=((hop_count & 0x07)<<4);
    }
 
    void MSG_GetHopCount(PMSG_Buffer pBuffer,uint8_t *hop_count)
    {
-   *hop_count=((MSG_GetMessagePtr(pBuffer)->ncpi) & 0x70)>>4;
+   *hop_count=((MSG_GetMessagePtr(pBuffer)->npci) & 0x70)>>4;
    }
  */
 
@@ -350,7 +350,7 @@ void KnxMSG_SetRoutingCount(KnxMSG_BufferPtr pBuffer)
         hop_count = HOP_COUNT;
     }
 
-    KnxMSG_GetMessagePtr(pBuffer)->ncpi |= ((hop_count & (uint8_t)0x07) << 4);
+    KnxMSG_GetMessagePtr(pBuffer)->npci |= ((hop_count & (uint8_t)0x07) << 4);
 }
 
 
@@ -360,7 +360,7 @@ FUNC(uint8_t, KSTACK_CODE) KnxMSG_GetRoutingCount(const KnxMSG_BufferPtr pBuffer
 uint8_t KnxMSG_GetRoutingCount(const KnxMSG_BufferPtr pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    return ((KnxMSG_GetMessagePtr(pBuffer)->ncpi) & (uint8_t)0x70) >> 4;
+    return ((KnxMSG_GetMessagePtr(pBuffer)->npci) & (uint8_t)0x70) >> 4;
 }
 
 
@@ -387,12 +387,12 @@ void KnxMSG_SetRoutingCtrl(KnxMSG_BufferPtr pBuffer, boolean on)
 /*
    uint8_t MSG_GetLSDULen(PMSG_Buffer pBuffer)
    {
-    return MSG_GetMessagePtr(pBuffer)->ncpi & 0x0f;
+    return MSG_GetMessagePtr(pBuffer)->npci & 0x0f;
    }
 
    void MSG_SetLSDULen(PMSG_Buffer pBuffer,uint8_t len_lsdu)
    {
-    MSG_GetMessagePtr(pBuffer)->ncpi=(len_lsdu & 0x0f);
+    MSG_GetMessagePtr(pBuffer)->npci=(len_lsdu & 0x0f);
    }
  */
 

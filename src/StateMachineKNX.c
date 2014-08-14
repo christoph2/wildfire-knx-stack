@@ -312,7 +312,7 @@ void T_Disconnect_Ind(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
     KnxMSG_SetDestAddress(pBuffer, dest);
 
     KnxMSG_GetMessagePtr(pBuffer)->ctrl    = (uint8_t)0xB0; /* short-cuts... */
-    KnxMSG_GetMessagePtr(pBuffer)->ncpi    = (uint8_t)0x60;
+    KnxMSG_GetMessagePtr(pBuffer)->npci    = (uint8_t)0x60;
 
     KnxMSG_SetLen(pBuffer, (uint8_t)7);
     pBuffer->service = T_DISCONNECT_IND;
@@ -332,7 +332,7 @@ void T_Disconnect_Con(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
     KnxMSG_SetDestAddress(pBuffer, dest);
 
     KnxMSG_GetMessagePtr(pBuffer)->ctrl    = (uint8_t)0xb0; /* short-cuts... */
-    KnxMSG_GetMessagePtr(pBuffer)->ncpi    = (uint8_t)0x60;
+    KnxMSG_GetMessagePtr(pBuffer)->npci    = (uint8_t)0x60;
 
     KnxMSG_SetLen(pBuffer, (uint8_t)7);
     pBuffer->service = T_DISCONNECT_CON;
