@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -27,7 +27,7 @@
 #include "knx_messaging.h"
 #include "knx_disp.h"
 
-#include "link-layer/knx_tpuart.h"  /* TODO: parameterised. */
+#include "link-layer/uart_bif.h"    /* Only UART bus interfaces for now. */
 
 #if defined(__cplusplus)
 extern "C"
@@ -39,4 +39,3 @@ extern "C"
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_LAYER_LINK_H */
-
