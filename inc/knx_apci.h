@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -125,7 +125,7 @@ typedef enum tagKNX_APCITypeType {
 
 /*
 ** Broadcast.
-** Hinweis: 'C'-Identifier dürfen höchstens 31 Zeichen lang sein!!!
+** 
 */
 #define A_PHYSICALADDRESSSERIALNUMBER_READ      ((uint16_t)0x03DC)    /* PhysAddrSerNoRead            */
 #define A_PHYSICALADDRESSSERIALNUMBER_RESPONSE  ((uint16_t)0x03DD)    /* PhysAddrSerNoResponse        */
@@ -161,4 +161,3 @@ typedef enum tagKNX_APCITypeType {
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_APCI_H */
-
