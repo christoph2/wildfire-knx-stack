@@ -124,8 +124,6 @@ static boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t len
 static uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length);
 static void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount);
 
-void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length);
-
 /*!
  *
  *  Global Functions.
@@ -162,8 +160,6 @@ void KnxLL_TimeoutCB(void)
 // This constitutes the link-layer statemachine.
 void KnxLL_FeedReceiver(uint8_t octet)
 {
-    uint8_t service;
-
 #if 0
     static void U_Reset_res(void);
     static void U_Reset_ind(void);
@@ -234,7 +230,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
         KnxLL_Buffer[KnxLL_ReceiverIndex] = octet;
         KnxLL_RunningFCB ^= octet;
         printf("R: %02x ", octet);
-        TMR_START_DL_TIMER();
+        TMR_START_DL_TIMER();      
 #if 0
 #define OFFS_SOURCE_ADDR_H  (1)
 #define OFFS_SOURCE_ADDR_L  (2)
@@ -315,6 +311,18 @@ boolean KnxLL_IsBusy(void)
     result = (KnxLL_State != KNX_LL_STATE_IDLE);
     PORT_UNLOCK_TASK_LEVEL();
     return result;
+}
+
+
+/**
+* Wait for availability of link-layer.
+*
+* Services shall never be issued while link-layer is busy.
+*/
+void KnxLL_BusyWait(void)
+{   
+    while (KnxLL_IsBusy()) {
+    };
 }
 
 boolean KnxLL_IsConfimed(void)

@@ -133,16 +133,6 @@ void U_SetRepetition_req(uint8_t rst);
  */
 
 
-/**
- * Wait for availability of link-layer.
- *
- * Services shall never be issued while link-layer is busy.
- */
-#define KNX_LL_BUSY_WAIT()          \
-    do {                            \
-        while (KnxLL_IsBusy()) {    \
-        }                           \
-    } while (0)
 
 /**
  *  Global Functions.
@@ -150,8 +140,9 @@ void U_SetRepetition_req(uint8_t rst);
 void KnxLL_FeedReceiver(uint8_t byte);
 void KnxLL_Init(void);
 void KnxLL_Task(void);
-boolean KnxLL_Transmit(uint8_t const * frame, uint8_t length);
+void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length);
 boolean KnxLL_IsBusy(void);
+void KnxLL_BusyWait(void);
 boolean KnxLL_IsConfimed(void);
 void KnxLL_TimeoutCB(void);
 
