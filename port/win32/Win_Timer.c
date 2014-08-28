@@ -37,8 +37,6 @@
 #define MAIN_TIMER      (0)
 #define DL_TIMER        (1)
 
-void Port_TimerDelete(HANDLE timerHandle);
-
 static void CALLBACK TimerProc(void* lpParameter, BOOLEAN TimerOrWaitFired);
 static BOOL Port_TimerCreate(HANDLE * timerHandle, unsigned int number, unsigned int first, unsigned int period);
 static void Port_TimerCancel(HANDLE timerHandle);
@@ -61,13 +59,14 @@ static CRITICAL_SECTION isrCS;
 
 void Port_Init(void)
 {
-
-
     hMainThread = GetCurrentThread();
 
     Port_SetThreadAffinity(hMainThread, 0x00000001);
 
     Port_InitializeCriticalSection(&isrCS);
+    //Dbg_Init();
+    //Port_InstallExitHandler();
+    Port_TimerInit();
 }
 
 void Port_SetThreadAffinity(HANDLE thread, DWORD_PTR mask)
