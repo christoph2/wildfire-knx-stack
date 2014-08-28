@@ -61,63 +61,6 @@ typedef double float64;
 #define STD_ON TRUE
 #define STD_OFF FALSE
 
-/*
- * Some standard macros.
- */
-#if !defined(MIN)
-#define MIN(a, b)                   (((a) > (b)) ? (b) : (a))
-#endif
-
-#if !defined(MAX)
-#define MAX(a, b)                   (((a) > (b)) ? (a) : (b))
-#endif
-
-#if !defined(BETWEEN)
-#define BETWEEN(x, min, max)        (((x) >= (min)) && ((x) <= (max)))
-#endif
-
-#if !defined(ABS)
-#define ABS(i)                      (((i) < 0) ? ((i) * -1) : ((i)))
-#endif
-
-#if !defined(LOBYTE)
-#define LOBYTE(w)                   ((uint8_t)((uint16_t)((uint16_t)(w) & 0x00ffU)))
-#endif
-
-#if !defined(HIBYTE)
-#define HIBYTE(w)                   ((uint8_t)((uint16_t)(((uint16_t)(w ) >> 8) & 0x00ffU)))
-#endif
-
-#if !defined(LOWORD)
-#define LOWORD(dw)                  ((uint16_t)((uint32_t)((uint32_t)(dw) & 0xffffU)))
-#endif
-
-#if !defined(HIWORD)
-#define HIWORD(dw)                  ((uint16_t)((uint32_t)(((uint32_t)(dw) >> 16) & 0xffffU)))
-#endif
-
-#if !defined(MAKEWORD)
-#define MAKEWORD(h, l)              ((((uint16_t)((h) & ((uint8_t)0xff))) <<  (uint16_t)8) | ((uint16_t)((l) & ((uint8_t)0xff))))
-#endif
-
-#if !defined(MAKEDWORD)
-#define MAKEDWORD(h, l)             ((((uint32_t)((h) & ((uint16_t)0xffffu))) << (uint32_t)16) | ((uint32_t)((l) & ((uint16_t)0xffffu))))
-#endif
-
-#if !defined(INVERT_NIBBLE)
-#define INVERT_NIBBLE(b)            ((uint8_t)(((uint8_t) ~(b)) & ((uint8_t)0x0f)))
-#endif
-
-#if !defined(SIZEOF_ARRAY)
-#define SIZEOF_ARRAY(arr)           (sizeof((arr)) / sizeof((arr[0])))
-#endif
-
-#if !defined(BEYOND_ARRAY)
-#define BEYOND_ARRAY(arr)           ((arr) + SIZE_OF_ARRAY((arr)))
-#endif
-
-#define STATIC  static
-
 #include <assert.h>
 
 #define ASSERT assert

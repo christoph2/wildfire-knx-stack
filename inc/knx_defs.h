@@ -25,6 +25,7 @@
 #define __KNX_DEFS_H
 
 #include "knx_types.h"
+#include "knx_macros.h"
 #include "knx_utl.h"
 #include "knx_tracelog.h"
 

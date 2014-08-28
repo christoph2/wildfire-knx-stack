@@ -24,6 +24,7 @@
 #define __KNX_UTL_H
 
 #include "knx_types.h"
+#include "knx_macros.h"
 //#include "kdk/common/CPU_Primitives.h"
 
 #if defined(__cplusplus)
