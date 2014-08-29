@@ -128,6 +128,14 @@ typedef struct tagKnx_LayerServicesType {
 
 typedef uint8_t Knx_HopCountType;
 
+/*
+**  Global Types.
+*/
+typedef enum tagKnxModule_StateType {
+    KNX_MODULE_UNINIT,
+    KNX_MODULE_READY
+} KnxModule_StateType;
+
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */
