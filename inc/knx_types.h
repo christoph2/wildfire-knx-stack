@@ -61,10 +61,6 @@ typedef double float64;
 #define STD_ON TRUE
 #define STD_OFF FALSE
 
-#include <assert.h>
-
-#define ASSERT assert
-
 /*
 ** Global types.
 */
