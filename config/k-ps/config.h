@@ -75,6 +75,8 @@ extern "C"
 /* #define KNX_LL_TIMEOUT_NOTIFICATION() */
 
 
+#define KNX_BUILD_TYPE              KNX_BUILD_DEBUG
+
 #define ENABLE_ALL_INTERRUPTS()
 #define DISABLE_ALL_INTERRUPTS()
 
