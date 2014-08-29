@@ -290,16 +290,17 @@ typedef void(*VoidFunctionType)(void);
 /*
 **  Some specific macros.
 */
-
 #define KNX_DEV_ERROR_DETECT(module) GLUE2(module, _DEV_ERROR_DETECT)
 
+#if KNX_BUILD_TYPE == KNX_BUILD_DEBUG
+
 #define KNX_RAISE_DEV_ERROR(module, api, error)                     \
-    Det_ReportError(module ## _MODULE_ID, KNX_SERVICE_ ## module ## _ ## api, error)
+    KnxEt_ReportError(KNX_MODULE_ID_ ## module, api, error)
 
 #define KNX_IMPLEMENT_MODULE_STATE_VAR(module)                      \
     static KnxModule_StateType module ## _State = KNX_MODULE_UNINIT
 
-#define KNX_GET_MODULE_STATE_VKNX(module)                           \
+#define KNX_GET_MODULE_STATE_VAR(module)                            \
     GLUE2(module, _State)
 
 #define KNX_MODULE_INITIALIZE(module)                               \
@@ -311,10 +312,10 @@ typedef void(*VoidFunctionType)(void);
 #define KNX_MODULE_IS_INITIALIZED(module)                           \
     ((KNX_GET_MODULE_STATE_VAR(module) == KNX_MODULE_READY) ? TRUE : FALSE)
 
-#define KNX_ASSERT_MODULE_IS_INITIALIZED(ml, mu, fkt)               \
+#define KNX_ASSERT_MODULE_IS_INITIALIZED(module, fkt)               \
     _BEGIN_BLOCK                                                    \
-    if (!KNX_MODULE_IS_INITIALIZED(ml)) {                           \
-        KNX_RAISE_DEV_ERROR(mu, fkt, mu ## _E_UNINIT);              \
+if (!KNX_MODULE_IS_INITIALIZED(module)) {                           \
+        KNX_RAISE_DEV_ERROR(module, fkt, module ## _E_UNINIT);      \
     return;                                                         \
     }                                                               \
     _END_BLOCK
@@ -326,6 +327,25 @@ typedef void(*VoidFunctionType)(void);
         return value;                                               \
     }                                                               \
     _END_BLOCK
+
+#elif KNX_BUILD_TYPE == KNX_BUILD_RELEASE
+#define KNX_RAISE_DEV_ERROR(module, api, error)
+
+#define KNX_IMPLEMENT_MODULE_STATE_VAR(module)
+
+#define KNX_GET_MODULE_STATE_VAR(module)
+
+#define KNX_MODULE_INITIALIZE(module)
+
+#define KNX_MODULE_UNINITIALIZE(module)
+
+#define KNX_MODULE_IS_INITIALIZED(module)                           (TRUE)
+
+#define KNX_ASSERT_MODULE_IS_INITIALIZED(ml, mu, fkt)
+
+#define KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(ml, mu, fkt, value)
+#endif
+
 
 #define KNX_DEFINE_LOCAL_CONFIG_VAR(u, l)   P2CONST(l ## _ConfigType, STATIC, u ## _VAR)  l ## _Config
 
