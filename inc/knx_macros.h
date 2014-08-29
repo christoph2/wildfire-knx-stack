@@ -21,8 +21,8 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
-#if !defined(__KNX_ET_H)
-#define __KNX_ET_H
+#if !defined(__KNX_MACROS_H)
+#define __KNX_MACROS_H
 
 #include "knx_defs.h"
 #include "knx_platform.h"
@@ -293,28 +293,28 @@ typedef void(*VoidFunctionType)(void);
 
 #define KNX_DEV_ERROR_DETECT(module) GLUE2(module, _DEV_ERROR_DETECT)
 
-#define KNX_RAISE_DEV_ERROR(module, api, error) \
-    Det_ReportError(module ## _MODULE_ID, module ## _INSTANCE_ID, KNX_SERVICE_ ## module ## _ ## api, error)
+#define KNX_RAISE_DEV_ERROR(module, api, error)                     \
+    Det_ReportError(module ## _MODULE_ID, KNX_SERVICE_ ## module ## _ ## api, error)
 
-#define KNX_IMPLEMENT_MODULE_STATE_VKNX(module) \
-    static BSW_State module ## _State = BSW_UNINIT   /* todo: 'P2VKNX' !!!    */
+#define KNX_IMPLEMENT_MODULE_STATE_VAR(module)                      \
+    static KnxModule_StateType module ## _State = KNX_MODULE_UNINIT
 
-#define KNX_GET_MODULE_STATE_VKNX(module) \
+#define KNX_GET_MODULE_STATE_VKNX(module)                           \
     GLUE2(module, _State)
 
-#define KNX_MODULE_INITIALIZE(module) \
-    KNX_GET_MODULE_STATE_VKNX(module) = BSW_READY
+#define KNX_MODULE_INITIALIZE(module)                               \
+    KNX_GET_MODULE_STATE_VAR(module) = KNX_MODULE_READY
 
-#define KNX_MODULE_UNINITIALIZE(module) \
-    KNX_GET_MODULE_STATE_VKNX(module) = BSW_UNINIT
+#define KNX_MODULE_UNINITIALIZE(module)                             \
+    KNX_GET_MODULE_STATE_VAR(module) = KNX_MODULE_UNINIT
 
-#define KNX_MODULE_IS_INITIALIZED(module) \
-    ((KNX_GET_MODULE_STATE_VKNX(module) == BSW_READY) ? TRUE : FALSE)
+#define KNX_MODULE_IS_INITIALIZED(module)                           \
+    ((KNX_GET_MODULE_STATE_VAR(module) == KNX_MODULE_READY) ? TRUE : FALSE)
 
 #define KNX_ASSERT_MODULE_IS_INITIALIZED(ml, mu, fkt)               \
     _BEGIN_BLOCK                                                    \
     if (!KNX_MODULE_IS_INITIALIZED(ml)) {                           \
-    KNX_RAISE_DEV_ERROR(mu, fkt, mu ## _E_UNINIT);                  \
+        KNX_RAISE_DEV_ERROR(mu, fkt, mu ## _E_UNINIT);              \
     return;                                                         \
     }                                                               \
     _END_BLOCK
@@ -327,7 +327,7 @@ typedef void(*VoidFunctionType)(void);
     }                                                               \
     _END_BLOCK
 
-#define KKNX_DEFINE_LOCAL_CONFIG_VKNX(u, l)   P2CONST(l ## _ConfigType, STATIC, u ## _VKNX)  l ## _Config
+#define KNX_DEFINE_LOCAL_CONFIG_VAR(u, l)   P2CONST(l ## _ConfigType, STATIC, u ## _VAR)  l ## _Config
 
 #define KNX_SAVE_CONFIG_PTR(module)             module ## _Config = ConfigPtr
 #define KNX_GET_CONFIG_PTR(module)              module ## _Config
@@ -336,5 +336,5 @@ typedef void(*VoidFunctionType)(void);
 }
 #endif  /* __cplusplus */
 
-#endif  /* __KNX_ET_H */
+#endif  /* __KNX_MACROS_H */
 
