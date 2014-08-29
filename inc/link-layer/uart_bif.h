@@ -32,6 +32,24 @@ extern "C"
 
 #include "k-ps/config.h"
 
+/*
+**  Service-IDs.
+*/
+#define KNX_SERVICE_LL_WRITE_FRAME              ((uint8_t)0x01)
+
+/*
+**  Module Errors.
+*/
+#define UART_BIF_E_UNINIT                       ((uint8_t)0x01)
+
+#if 0
+#define SPI_E_UNINIT                            ((uint8)0x1a)
+#define SPI_E_SEQ_PENDING                       ((uint8)0x2a)
+#define SPI_E_SEQ_IN_PROCESS                    ((uint8)0x3a)
+#define SPI_E_ALREADY_INITIALIZED               ((uint8)0x4a)
+#endif
+
+
 /**
  *
  * Services from Host-Controller.
