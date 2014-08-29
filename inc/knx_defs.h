@@ -112,19 +112,28 @@ extern "C"
 #define KNX_UNUSED_TSAP                 ((uint8_t)0xfe)
 #define KNX_INVALID_TSAP                ((uint8_t)0x00)
 
+
 /**
  * Supported Bus Interfaces.
  */
-#define KNX_BIF_TPUART_1                (0)
-#define KNX_BIF_TPUART_2                (1)
-#define KNX_BIF_TPUART_NCN5120          (2)
+#define KNX_BIF_TPUART_1                        (0)
+#define KNX_BIF_TPUART_2                        (1)
+#define KNX_BIF_TPUART_NCN5120                  (2)
 
 
 /** Power supply of controller module.
  *
  */
-#define KNX_MODULE_POWER_BY_BUS                    
-#define KNX_MODULE_POWER_BY_AUXILIARY_SUPPLY
+#define KNX_MODULE_POWER_BY_BUS                 (0)         
+#define KNX_MODULE_POWER_BY_AUXILIARY_SUPPLY    (1)
+
+
+/** Build types.
+ *
+ */
+#define KNX_BUILD_DEBUG                         (0)
+#define KNX_BUILD_RELEASE                       (1)
+
 
 #if defined(__cplusplus)
 }
