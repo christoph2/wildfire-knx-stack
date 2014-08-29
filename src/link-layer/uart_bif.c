@@ -107,11 +107,8 @@ static uint8_t KnxLL_ReceiverIndex;
 static KnxLL_ReceiverStageType KnxLL_ReceiverStage;
 static uint8_t KnxLL_RunningFCB;
 static KnxLL_LocalConfirmationType KnxLL_LocalConfirmation;
-#if 0
-static uint8_t KnxLL_ExpectedByteCount;
-static uint8_t KnxLL_ExpectedService;
-static uint8_t KnxLL_ExpectedMask;
-#endif
+
+KNX_IMPLEMENT_MODULE_STATE_VAR(UART_BIF);
 
 /*!
  *
@@ -137,6 +134,8 @@ static void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount);
  */
 void KnxLL_Init(void)
 {
+    KNX_MODULE_INITIALIZE(UART_BIF);
+
     KnxLL_State = KNX_LL_STATE_IDLE;
     KnxLL_SequenceNo = (uint8_t)0x00;
     KnxLL_ReceiverIndex = (uint8_t)0x00;
@@ -325,7 +324,7 @@ void KnxLL_BusyWait(void)
     };
 }
 
-boolean KnxLL_IsConfimed(void)
+boolean KnxLL_IsConfirmed(void)
 {
     boolean result;
 
@@ -407,6 +406,8 @@ void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length)
     uint8_t idx;
     uint8_t checksum;
     char buffer[128];
+
+    KNX_ASSERT_MODULE_IS_INITIALIZED(UART_BIF, KNX_SERVICE_LL_WRITE_FRAME);
 
     checksum = KnxLL_Checksum(frame, length);
     buffer[0] = U_L_DATASTART_REQ;

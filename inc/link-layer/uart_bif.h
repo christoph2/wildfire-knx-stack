@@ -161,7 +161,7 @@ void KnxLL_Task(void);
 void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length);
 boolean KnxLL_IsBusy(void);
 void KnxLL_BusyWait(void);
-boolean KnxLL_IsConfimed(void);
+boolean KnxLL_IsConfirmed(void);
 void KnxLL_TimeoutCB(void);
 
 /**
