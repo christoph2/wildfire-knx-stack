@@ -28,6 +28,7 @@
 #include "knx_macros.h"
 #include "knx_utl.h"
 #include "knx_tracelog.h"
+#include "knx_moduleids.h"
 
 #if defined(__cplusplus)
 extern "C"
