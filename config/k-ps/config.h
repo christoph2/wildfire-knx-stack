@@ -1,26 +1,26 @@
 /*
- *   KONNEX/EIB-Protocol-Stack.
- *
- *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
- *                                       cpu12.gems@googlemail.com>
- *
- *   All Rights Reserved
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along
- *  with this program; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- */
+*   Wildfire - The Open Source KNX/EIB-Protocol Stack.
+*
+*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*                                       cpu12.gems@googlemail.com>
+*
+*   All Rights Reserved
+*
+*  This program is free softwKNXe; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
+*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
+*  GNU General Public License for more KnxEtails.
+*
+*  You should have received a copy of the GNU General Public License along
+*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*
+*/
 
 /*
 **
@@ -61,12 +61,12 @@ extern "C"
  *  @li @c KNX_BIF_TPUART_1
  *  @li @c KNX_BIF_TPUART_2
  *  @li @c KNX_BIF_TPUART_NCN5120
- *  
+ *
  */
 #define KNX_BUS_INTERFACE           KNX_BIF_TPUART_NCN5120
 
 /** @fn KNX_LL_TIMEOUT_NOTIFICATION
- *  @brief  Can be used if application needs to be informed about a link-layer 
+ *  @brief  Can be used if application needs to be informed about a link-layer
  *          time-out (this may be an indication for a bus power outage).
  *
  *          Called from interrupt context.

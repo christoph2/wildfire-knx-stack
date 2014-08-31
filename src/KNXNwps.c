@@ -1,26 +1,26 @@
 /*
- *   KONNEX/EIB-Protocol-Stack.
- *
- *  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
- *                                       cpu12.gems@googlemail.com>
- *
- *   All Rights Reserved
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along
- *  with this program; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- */
+*   Wildfire - The Open Source KNX/EIB-Protocol Stack.
+*
+*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*                                       cpu12.gems@googlemail.com>
+*
+*   All Rights Reserved
+*
+*  This program is free softwKNXe; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
+*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
+*  GNU General Public License for more KnxEtails.
+*
+*  You should have received a copy of the GNU General Public License along
+*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*
+*/
 #include "KNXNwps.h"
 
 /*
@@ -110,9 +110,9 @@ typedef struct tagNWPSFunctions {
 ** Local constants.
 */
 STATIC NWPSFunctions NWPSReadFunctions[] = {
-    {KNX_OT_ADDRESSTABLE_OBJECT, KNX_OT_ADDRESSTABLE_OBJECT,     KNX_PID_GROUP_ADDRESS_LIST,           NWPS_GroupAddressCheck                                                                         },
-    {(uint8_t)50,                  (uint16_t)50000,                  KNX_PID_OBJECT_TYPE,                  NWPS_FunctionalBlockScan                                                                       },
-    {KNX_OT_DEVICE_OBJECT,       KNX_OT_DEVICE_OBJECT,           KNX_PID_SERIAL_NUMBER,                NWPS_GetSerialNumber                                                                           }
+    {KNX_OT_ADDRESSTABLE_OBJECT, KNX_OT_ADDRESSTABLE_OBJECT,    KNX_PID_GROUP_ADDRESS_LIST,     NWPS_GroupAddressCheck      },
+    {(uint8_t)50,               (uint16_t)50000,                KNX_PID_OBJECT_TYPE,            NWPS_FunctionalBlockScan    },
+    {KNX_OT_DEVICE_OBJECT,      KNX_OT_DEVICE_OBJECT,           KNX_PID_SERIAL_NUMBER,          NWPS_GetSerialNumber        }
 };
 
 /* A_NetworkParameter_Read.req(hop_count_type, parameter_type, priority, test_info); */
@@ -131,10 +131,10 @@ FUNC(void, KSTACK_CODE) NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8_t service 
 void NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8_t service /*,boolean connected*/)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KNX_StandardFrameRefType    pmsg;
-    uint8_t                       len;
-    uint8_t                       pid;
-    uint16_t                      objectType;
+    KNX_StandardFrameRefType pmsg;
+    uint8_t len;
+    uint8_t pid;
+    uint16_t objectType;
 
     pmsg = KnxMSG_GetMessagePtr(pBuffer);
 
@@ -187,3 +187,4 @@ boolean NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer)
     #define KSTACK_STOP_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
+

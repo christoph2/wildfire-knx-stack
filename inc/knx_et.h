@@ -1,5 +1,5 @@
 /*
-*   KONNEX/EIB-Protocol-Stack.
+*   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
 *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>

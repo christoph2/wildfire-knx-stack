@@ -21,27 +21,4 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
-#if !defined(__KNXNWPS_H)
-#define __KNXNWPS_H
-
-#include "knx_ios.h"
-#include "knx_messaging.h"
-#include "knx_conversion.h"
-
-#if defined(__cplusplus)
-extern "C"
-{
-#endif  /* __cplusplus */
-
-/*
-** Global types.
-*/typedef enum tagNWPSServiceType {
-    NWPS_READ,
-    NWPS_WRITE
-} NWPSServiceType;
-
-#if defined(__cplusplus)
-}
-#endif  /* __cplusplus */
-
-#endif  /* __KNXNWPS_H */
+#include "Port.h"

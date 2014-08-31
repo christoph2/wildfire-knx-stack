@@ -1,27 +1,26 @@
 /*
- *   KONNEX/EIB-Protocol-Stack.
- *
- *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
- *                                       cpu12.gems@googlemail.com>
- *
- *   All Rights Reserved
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along
- *  with this program; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- */
-
+*   Wildfire - The Open Source KNX/EIB-Protocol Stack.
+*
+*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*                                       cpu12.gems@googlemail.com>
+*
+*   All Rights Reserved
+*
+*  This program is free softwKNXe; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
+*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
+*  GNU General Public License for more KnxEtails.
+*
+*  You should have received a copy of the GNU General Public License along
+*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*
+*/
 #include "win\Win_Utils.h"
 #include <malloc.h>
 #include <stdio.h>
@@ -34,6 +33,10 @@
 
 #if !defined(STATUS_POSSIBLE_DEADLOCK)
     #define STATUS_POSSIBLE_DEADLOCK (0xC0000194)
+#endif
+
+#if !defined(RTL_CRITICAL_SECTION_FLAG_DYNAMIC_SPIN)
+    #define RTL_CRITICAL_SECTION_FLAG_DYNAMIC_SPIN  0x02000000
 #endif
 
 static volatile BOOL exitApplication = FALSE;
@@ -54,7 +57,7 @@ void Win_Error(char * function)
         szBuf[idx] = lpMsgBuf[idx];
     }
 //_tprintf(szBuf, "%s failed with error %d: %s",  lpszFunction, err, szBuf);
-    printf("%s failed with error %d: %s", function, err, szBuf);
+    printf("%s failed with error %ld: %s", function, err, szBuf);
 
     _freea(szBuf);
     LocalFree(lpMsgBuf);
@@ -80,12 +83,16 @@ static unsigned critCounter = 0;
 
 void Port_EnterCriticalSection(CRITICAL_SECTION * criticalSection)
 {
+#if defined(_MSC_VER)
     __try {
         EnterCriticalSection(criticalSection);
     } __except (GetExceptionCode() == EXCEPTION_POSSIBLE_DEADLOCK ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH) {
         printf("POSSIBLE_DEADLOCK exception.\nTerminating.\n");
         ExitProcess(1);
     }
+#else
+    EnterCriticalSection(criticalSection);
+#endif
 }
 
 
