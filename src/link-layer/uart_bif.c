@@ -52,6 +52,10 @@
 #define OFFS_APCI           (7)
 
 
+/*
+** Local Function-like Macros.
+*/
+#define KNX_LL_DESTINATION_ADDRESS()    (MAKEWORD(KnxLL_Buffer[OFFS_DEST_ADDR_H], KnxLL_Buffer[OFFS_DEST_ADDR_L]))
 
 /*!
  *
@@ -85,6 +89,25 @@ typedef struct tagKnxLL_ExpectationType {
     uint8_t ExpectedService;
     uint8_t ExpectedMask;
 } KnxLL_ExpectationType;
+
+
+#if 0
+typedef struct tagKnxLL_LayerStateType {
+    #if 0
+ KnxLL_StateType KnxLL_State;
+ uint8_t KnxLL_SequenceNo;
+
+ uint8_t KnxLL_Buffer[KNX_LL_BUF_SIZE];
+
+ KnxLL_ExpectationType KnxLL_Expectation = {0};
+ uint8_t KnxLL_ReceiverIndex;
+ KnxLL_ReceiverStageType KnxLL_ReceiverStage;
+ uint8_t KnxLL_RunningFCB;
+ KnxLL_LocalConfirmationType KnxLL_LocalConfirmation;
+    #endif
+
+} KnxLL_LayerStateType;
+#endif
 
 typedef enum tagKnxLL_LocalConfirmationType {
     KNX_LL_CONF_NEGATIVE,
@@ -206,8 +229,8 @@ void KnxLL_FeedReceiver(uint8_t octet)
                 DBG_PRINTLN("Receiver Error!\n");
             }
             else if ((octet & L_DATA_CON) == L_DATA_CON) {
-                TMR_STOP_DL_TIMER();               
-                if ((octet & 0x80) == 0x80) {         
+                TMR_STOP_DL_TIMER();
+                if ((octet & 0x80) == 0x80) {
                     KnxLL_LocalConfirmation = KNX_LL_CONF_POSITIVE;
                 } else {
                     KnxLL_LocalConfirmation = KNX_LL_CONF_NEGATIVE;
@@ -229,7 +252,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
         KnxLL_Buffer[KnxLL_ReceiverIndex] = octet;
         KnxLL_RunningFCB ^= octet;
         printf("R: %02x ", octet);
-        TMR_START_DL_TIMER();      
+        TMR_START_DL_TIMER();
 #if 0
 #define OFFS_SOURCE_ADDR_H  (1)
 #define OFFS_SOURCE_ADDR_L  (2)
@@ -237,9 +260,12 @@ void KnxLL_FeedReceiver(uint8_t octet)
 #define OFFS_DEST_ADDR_L    (4)
 #endif
         if (KnxLL_ReceiverStage == KNX_LL_RECEIVER_STAGE_HEADER) {
-            if (KnxLL_ReceiverIndex == OFFS_NPCI) {           
+            if (KnxLL_ReceiverIndex == OFFS_NPCI) {
                 KnxLL_Expectation.ExpectedByteCount = (octet & 0x0f) + 2;
                 KnxLL_ReceiverStage = KNX_LL_RECEIVER_STAGE_TRAILER;
+            } else if (KnxLL_ReceiverIndex == OFFS_DEST_ADDR_H) {
+
+                printf("\nDA: 0x%04X\n", KNX_LL_DESTINATION_ADDRESS());
             }
         } else if (KnxLL_ReceiverStage == KNX_LL_RECEIVER_STAGE_TRAILER) {
             if (KnxLL_ReceiverIndex == KnxLL_Expectation.ExpectedByteCount + OFFS_NPCI) {
