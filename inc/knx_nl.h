@@ -21,8 +21,8 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
-#if !defined(__KNX_LAYER_NETWORK_H)
-#define __KNX_LAYER_NETWORK_H
+#if !defined(__KNX_NL_H)
+#define __KNX_NL_H
 
 #include "knx_messaging.h"
 #include "knx_disp.h"
@@ -54,5 +54,5 @@ void    KnxNL_Init(void);
 }
 #endif  /* __cplusplus */
 
-#endif  /* __KNX_LAYER_NETWORK_H */
+#endif  /* __KNX_NL_H */
 

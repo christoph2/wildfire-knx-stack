@@ -21,7 +21,7 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
-#include "knx_layer_network.h"
+#include "knx_nl.h"
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer);
