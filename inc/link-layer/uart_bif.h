@@ -146,6 +146,8 @@ void U_SetRepetition_req(uint8_t rst);
 
 #endif /* KNX_BUS_INTERFACE */
 
+void U_Ackn_req(uint8_t what);
+
 /**
  *  Global Function-like Macros.
  */

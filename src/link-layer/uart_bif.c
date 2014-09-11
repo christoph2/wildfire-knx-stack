@@ -52,6 +52,10 @@
 #define OFFS_APCI           (7)
 
 
+#define ACK_NACK            (4)
+#define ACK_BUSY            (2)
+#define ACK_ADDRESSED       (1)
+
 /*
 ** Local Function-like Macros.
 */
@@ -179,6 +183,13 @@ void KnxLL_TimeoutCB(void)
     KnxLL_FeedReceiver(0x00);
 }
 
+
+boolean KnxLL_IsAddressed(uint8_t daf, uint16_t address)
+{
+
+    return TRUE;
+}
+
 // This constitutes the link-layer statemachine.
 void KnxLL_FeedReceiver(uint8_t octet)
 {
@@ -265,7 +276,10 @@ void KnxLL_FeedReceiver(uint8_t octet)
                 KnxLL_ReceiverStage = KNX_LL_RECEIVER_STAGE_TRAILER;
             } else if (KnxLL_ReceiverIndex == OFFS_DEST_ADDR_H) {
 
-                printf("\nDA: 0x%04X\n", KNX_LL_DESTINATION_ADDRESS());
+                if (KnxLL_IsAddressed(1, KNX_LL_DESTINATION_ADDRESS())) {
+                    U_Ackn_req(ACK_ADDRESSED);
+                      //printf("\nDA: 0x%04X\n", KNX_LL_DESTINATION_ADDRESS());
+                }
             }
         } else if (KnxLL_ReceiverStage == KNX_LL_RECEIVER_STAGE_TRAILER) {
             if (KnxLL_ReceiverIndex == KnxLL_Expectation.ExpectedByteCount + OFFS_NPCI) {
@@ -288,6 +302,9 @@ void KnxLL_FeedReceiver(uint8_t octet)
         } else if ((octet & 0xd3) == L_DATA_STANDARD_IND)  {
             DBG_PRINTLN("L_DataStandard_Ind");
             printf("%02x ", octet);
+
+            //U_Ackn_req(ACK_ADDRESSED);
+
             KnxLL_State = KNX_LL_STATE_AWAITING_RECEIPTION; /* TODO: Distiguish Standard/Extendend Frames */
             KnxLL_ReceiverStage = KNX_LL_RECEIVER_STAGE_HEADER;
             KnxLL_ReceiverIndex = 0;
@@ -532,6 +549,14 @@ void U_SetRepetition_req(uint8_t rst)
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 4);
 }
 #endif /* KNX_BUS_INTERFACE */
+
+void U_Ackn_req(uint8_t what)
+{
+
+    DBG_PRINTLN("U_Ackn_req");
+    KnxLL_Buffer[0] = U_ACKN_REQ | (what & 0x07);
+    KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
+}
 
 /**
  *
