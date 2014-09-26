@@ -29,6 +29,8 @@
  */
 
 #include "link-layer\uart_bif.h"
+#include "knx_disp.h"
+#include "knx_messaging.h"
 #include "knx_platform.h"
 
 #include <stdio.h>
@@ -56,10 +58,15 @@
 #define ACK_BUSY            (2)
 #define ACK_ADDRESSED       (1)
 
+
+#define ADDRESS_TYPE_INDIVIDUAL     ((uint8_t) 0x00)
+#define ADDRESS_TYPE_MULTICAST      ((uint8_t) 0x80)
+
 /*
 ** Local Function-like Macros.
 */
 #define KNX_LL_DESTINATION_ADDRESS()    (MAKEWORD(KnxLL_Buffer[OFFS_DEST_ADDR_H], KnxLL_Buffer[OFFS_DEST_ADDR_L]))
+#define KNX_LL_ADDRESS_TYPE()           (KnxLL_Buffer[OFFS_NPCI] & 0x80)
 
 /*!
  *
@@ -118,6 +125,35 @@ typedef enum tagKnxLL_LocalConfirmationType {
     KNX_LL_CONF_POSITIVE
 } KnxLL_LocalConfirmationType;
 
+
+/*!
+*
+*  Local Function Prototypes.
+*
+*/
+static boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxLL_StateType desiredState);
+static boolean KnxLL_InternalCommandUnconfirmed(uint8_t const * frame, uint8_t length);
+static boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t length);
+static uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length);
+static void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount);
+static void Disp_L_DataReq(void), Disp_L_PollDataReq(void);
+
+
+/*
+ * Local Constants.
+ */
+STATIC const Knx_LayerServiceFunctionType LL_Services[] = {
+    /*      Service                     Handler                 */
+    /*      ====================================================*/
+    /*      L_DATA_REQ              */ Disp_L_DataReq,
+    /*      L_POLL_DATA_REQ         */ Disp_L_PollDataReq,
+    /*      ====================================================*/
+};
+
+STATIC const Knx_LayerServicesType LL_ServiceTable[] = {
+    { KNX_LL_SERVICES, 2, LL_Services }
+};
+
 /*!
  *
  *  Local Variables.
@@ -136,17 +172,6 @@ static uint8_t KnxLL_RunningFCB;
 static KnxLL_LocalConfirmationType KnxLL_LocalConfirmation;
 
 KNX_IMPLEMENT_MODULE_STATE_VAR(UART_BIF);
-
-/*!
- *
- *  Local Function Prototypes.
- *
- */
-static boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxLL_StateType desiredState);
-static boolean KnxLL_InternalCommandUnconfirmed(uint8_t const * frame, uint8_t length);
-static boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t length);
-static uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length);
-static void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount);
 
 /*!
  *
@@ -186,6 +211,11 @@ void KnxLL_TimeoutCB(void)
 
 boolean KnxLL_IsAddressed(uint8_t daf, uint16_t address)
 {
+    if (daf == ADDRESS_TYPE_MULTICAST) {
+
+    } else if (daf == ADDRESS_TYPE_INDIVIDUAL) {
+
+    }
 
     return TRUE;
 }
@@ -264,19 +294,12 @@ void KnxLL_FeedReceiver(uint8_t octet)
         KnxLL_RunningFCB ^= octet;
         printf("R: %02x ", octet);
         TMR_START_DL_TIMER();
-#if 0
-#define OFFS_SOURCE_ADDR_H  (1)
-#define OFFS_SOURCE_ADDR_L  (2)
-#define OFFS_DEST_ADDR_H    (3)
-#define OFFS_DEST_ADDR_L    (4)
-#endif
         if (KnxLL_ReceiverStage == KNX_LL_RECEIVER_STAGE_HEADER) {
             if (KnxLL_ReceiverIndex == OFFS_NPCI) {
                 KnxLL_Expectation.ExpectedByteCount = (octet & 0x0f) + 2;
                 KnxLL_ReceiverStage = KNX_LL_RECEIVER_STAGE_TRAILER;
             } else if (KnxLL_ReceiverIndex == OFFS_DEST_ADDR_H) {
-
-                if (KnxLL_IsAddressed(1, KNX_LL_DESTINATION_ADDRESS())) {
+                if (KnxLL_IsAddressed(KNX_LL_ADDRESS_TYPE(), KNX_LL_DESTINATION_ADDRESS())) {
                     U_Ackn_req(ACK_ADDRESSED);
                       //printf("\nDA: 0x%04X\n", KNX_LL_DESTINATION_ADDRESS());
                 }
@@ -302,9 +325,6 @@ void KnxLL_FeedReceiver(uint8_t octet)
         } else if ((octet & 0xd3) == L_DATA_STANDARD_IND)  {
             DBG_PRINTLN("L_DataStandard_Ind");
             printf("%02x ", octet);
-
-            //U_Ackn_req(ACK_ADDRESSED);
-
             KnxLL_State = KNX_LL_STATE_AWAITING_RECEIPTION; /* TODO: Distiguish Standard/Extendend Frames */
             KnxLL_ReceiverStage = KNX_LL_RECEIVER_STAGE_HEADER;
             KnxLL_ReceiverIndex = 0;
@@ -342,8 +362,47 @@ void KnxLL_FeedReceiver(uint8_t octet)
 
 void KnxLL_Task(void)
 {
-
+    KnxDisp_DispatchLayer(TASK_LL_ID, LL_ServiceTable);
 }
+
+/*
+**
+**  Services from Network-Layer.
+**
+*/
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_L_DataReq(void)
+#else
+STATIC void Disp_L_DataReq(void)
+#endif /* KSTACK_MEMORY_MAPPING */
+{
+    uint8_t chk;
+
+    KnxMSG_SetFrameType(KnxMSG_ScratchBufferPtr, ftStandard);
+
+    /* PREPARE_CONTROL_FIELD() */
+    KnxMSG_ScratchBufferPtr->msg[0] |= (uint8_t)0x30;   /* fixed one bit + repeated. */
+    KnxMSG_ScratchBufferPtr->msg[0] &= (~(uint8_t)3);   /* clear two LSBs. */
+    /**/
+
+    //chk = CalculateChecksum(KnxMSG_ScratchBufferPtr);
+    chk = KnxLL_Checksum(KnxMSG_ScratchBufferPtr->msg, KnxMSG_ScratchBufferPtr->len);
+
+    KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    //DBG_DUMP(KnxMSG_ScratchBufferPtr);
+}
+
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Disp_L_PollDataReq(void)
+#else
+STATIC void Disp_L_PollDataReq(void)
+#endif /* KSTACK_MEMORY_MAPPING */
+{
+    /* todo: Implement!!! */
+    KnxMSG_SetFrameType(KnxMSG_ScratchBufferPtr, ftPolling);
+}
+
 
 boolean KnxLL_IsBusy(void)
 {
