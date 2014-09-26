@@ -23,7 +23,7 @@
 */
 #include "knx_sched.h"
 #include "knx_layer_link.h"
-#include "knx_layer_network.h"
+#include "knx_nl.h"
 #include "knx_tlg.h"
 #include "knx_layer_application.h"
 

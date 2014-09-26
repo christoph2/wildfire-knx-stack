@@ -21,7 +21,7 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
-/#include "knx_sys_objs.h"
+#include "knx_sys_objs.h"
 
 /*
 ** Supplement S08 "Distributed Address Assignment", ein 'A_NetworkParameter_Write.req' wird

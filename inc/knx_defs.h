@@ -35,12 +35,6 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-#define KNX_BIG_ENDIAN /* TODO: config. */
-
-#if 0
-    #define DISABLE_ALL_INTERRUPTS()
-    #define ENABLE_ALL_INTERRUPTS()
-#endif
 
 /*
 ** Global defines.
@@ -125,7 +119,7 @@ extern "C"
 /** Power supply of controller module.
  *
  */
-#define KNX_MODULE_POWER_BY_BUS                 (0)         
+#define KNX_MODULE_POWER_BY_BUS                 (0)
 #define KNX_MODULE_POWER_BY_AUXILIARY_SUPPLY    (1)
 
 
@@ -141,3 +135,4 @@ extern "C"
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_DEFS_H */
+

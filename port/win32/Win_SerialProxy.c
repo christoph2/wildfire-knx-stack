@@ -21,7 +21,7 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
-/#include "win\Win_SerialProxy.h"
+#include "win\Win_SerialProxy.h"
 #include "link-layer\uart_bif.h"
 #include "knx_debug.h"
 

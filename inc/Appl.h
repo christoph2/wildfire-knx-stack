@@ -25,7 +25,7 @@
 #define __APPL_H
 
 #include "knx_address.h"
-#include "knx_layer_network.h"
+#include "knx_nl.h"
 #include "knx_ios.h"
 
 #if defined(__cplusplus)
