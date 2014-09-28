@@ -31,7 +31,7 @@ extern "C"
 
 #include "k-ps/config.h"
 
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_MSC_VER) || defined(WIN32) || defined(WIN64) || defined(__CYGWIN32__) || defined(__CYGWIN64__)
 
 typedef struct tagDbg_TimerType {
     __int64 start;
