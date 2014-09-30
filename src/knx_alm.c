@@ -157,17 +157,17 @@ STATIC void Disp_T_DataConnectedInd(void)
     uint8_t apci_type = KnxAL_GetAPCIType(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr));
 
     switch (apci_type) {
-        case apciMEMORY_READ:
+        case APCI_MEMORY_READ:
             break;
-        case apciMEMORY_WRITE:
+        case APCI_MEMORY_WRITE:
             break;
-        case apciESCAPE:
+        case APCI_ESCAPE:
             break;
-        case apciADC_READ:
+        case APCI_ADC_READ:
             break;
-        case apciRESTART:
+        case APCI_RESTART:
             break;
-        case apciUSER_MSG:
+        case APCI_USER_MSG:
             break;
         default:
             KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
@@ -188,7 +188,7 @@ STATIC void Disp_T_DataBroadcastInd(void)
     Knx_AddressType addr;
 
     switch (apci_type) {
-        case apciINDIVIDUAL_ADDRESS_WRITE:
+        case APCI_INDIVIDUAL_ADDRESS_WRITE:
 
             if (KnxADR_InProgrammingMode()) {  /* todo: only if 'PID_SERVICE_CONTROL' is activatet! */
                 KnxAL_GetAPDUData(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr), APDU_PHYS_ADDR, (uint8_t *)&addr, (uint8_t)2);
@@ -199,7 +199,7 @@ STATIC void Disp_T_DataBroadcastInd(void)
 
             KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
             break;
-        case apciINDIVIDUAL_ADDRESS_READ:
+        case APCI_INDIVIDUAL_ADDRESS_READ:
 
             if (KnxADR_InProgrammingMode()) {
                 addr = KnxADR_GetPhysAddr();
@@ -208,7 +208,7 @@ STATIC void Disp_T_DataBroadcastInd(void)
             }
 
             break;
-        case apciESCAPE:
+        case APCI_ESCAPE:
             break;
         default:
             KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
@@ -225,7 +225,7 @@ STATIC void Disp_T_DataIndividualInd(void)
 {
     uint8_t apci_type = KnxAL_GetAPCIType(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr));
 
-    if (apci_type == apciESCAPE) {
+    if (apci_type == APCI_ESCAPE) {
         switch (KnxMSG_GetAPCI(KnxMSG_ScratchBufferPtr)) {
             case A_PROPERTYVALUE_READ:
                 IOS_Dispatch(KnxMSG_ScratchBufferPtr, IOS_PROP_READ, FALSE);

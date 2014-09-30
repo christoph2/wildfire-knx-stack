@@ -33,28 +33,28 @@ extern "C"
 **  APCI types.
 */
 typedef enum tagKNX_APCITypeType {
-    apciGROUP_VALUE_READ,           /* Multicast.                   */
-    apciGROUP_VALUE_RESP,           /* "       ".                   */
-    apciGROUP_VALUE_WRITE,          /* "       ".                   */
+    APCI_GROUP_VALUE_READ,           /* Multicast.                   */
+    APCI_GROUP_VALUE_RESP,           /* "       ".                   */
+    APCI_GROUP_VALUE_WRITE,          /* "       ".                   */
     /*                                                              */
-    apciINDIVIDUAL_ADDRESS_WRITE,   /* Broadcast.                   */
-    apciINDIVIDUAL_ADDRESS_READ,    /* "       ".                   */
-    apciINDIVIDUAL_ADDRESS_RESP,    /* "       ".                   */
+    APCI_INDIVIDUAL_ADDRESS_WRITE,   /* Broadcast.                   */
+    APCI_INDIVIDUAL_ADDRESS_READ,    /* "       ".                   */
+    APCI_INDIVIDUAL_ADDRESS_RESP,    /* "       ".                   */
     /*                                                              */
-    apciADC_READ,                   /* P2P-Connection-Oriented.     */
-    apciADC_RESP,                   /* "                     ".     */
-    apciMEMORY_READ,                /* "                     ".     */
-    apciMEMORY_RESP,                /* "                     ".     */
-    apciMEMORY_WRITE,               /* "                     ".     */
+    APCI_ADC_READ,                   /* P2P-Connection-Oriented.     */
+    APCI_ADC_RESP,                   /* "                     ".     */
+    APCI_MEMORY_READ,                /* "                     ".     */
+    APCI_MEMORY_RESP,                /* "                     ".     */
+    APCI_MEMORY_WRITE,               /* "                     ".     */
     /*                                                              */
-    apciUSER_MSG,                   /* User-defined Messages.       */
+    APCI_USER_MSG,                   /* User-defined Messages.       */
     /*                                                              */
-    apciDEVICE_DESCRIPTOR_READ,     /* P2P-Conection-Less.          */
-    apciDEVICE_DESCRIPTOR_RESP,     /* "                ".          */
+    APCI_DEVICE_DESCRIPTOR_READ,     /* P2P-Conection-Less.          */
+    APCI_DEVICE_DESCRIPTOR_RESP,     /* "                ".          */
     /*                                                              */
-    apciRESTART,                    /* P2P-Connection-Oriented.     */
+    APCI_RESTART,                    /* P2P-Connection-Oriented.     */
     /*                                                              */
-    apciESCAPE                      /* Others, escape.              */
+    APCI_ESCAPE                      /* Others, escape.              */
 
 } KNX_APCITypeType;
 
