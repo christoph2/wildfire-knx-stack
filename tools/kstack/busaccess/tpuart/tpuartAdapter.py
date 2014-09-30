@@ -44,6 +44,9 @@ import zmq
 from kstack.busaccess.tpuart import serialport
 from kstack.busaccess.tpuart import utils
 
+from kstack.busaccess.bif import BIF
+
+BYTES_TO_READ   = 32 # 4
 
 def marshall(arr):
     length = len(arr)
@@ -56,10 +59,36 @@ def unmarshall(blob):
     data = struct.unpack(fmt, blob[2 :])
     return data
 
-def connectSerial(port):
-    port = serialport.Serial(port, 19200, timeout = 0.01, parity = serialport.Serial.PARITY_EVEN)
-    port.connect()
-    return port
+
+class TPUARTSerial(BIF):
+
+    def __init__(self, **kws):
+        super(TPUARTSerial, self).__init__(**kws)
+        self.port = serialport.Serial(self.port, baudrate = self.baudrate,
+            timeout = self.timeout, parity = self.parity
+        )
+
+    def connect(self):
+        try:
+            self.port.connect()
+        except:
+            raise
+        else:
+            self.connected = True
+
+    def disconnect(self):
+        self.port.close()
+
+    def read(self, length):
+        data =  self.port.read(length)
+        return data
+
+    def write(self, request):
+        self.port.write(request)
+
+    @property
+    def closed(self):
+        return self.port.closed
 
 
 class Thread(threading.Thread):
@@ -106,9 +135,9 @@ class Thread(threading.Thread):
 
 class Receiver(Thread):
 
-    def __init__(self, port, context):
+    def __init__(self, portAdapter, context):
         super(Receiver, self).__init__()
-        self.port = port
+        self.portAdapter = portAdapter
         self.context = context
         self.socket = self.context.socket(zmq.PUSH)
         #self.socket.setsockopt(zmq.RCVTIMEO, 100)
@@ -120,9 +149,9 @@ class Receiver(Thread):
 
     def execute(self):
         result = True
-        if not self.port.closed:
+        if not self.portAdapter.closed:
             try:
-                data = self.port.read(32)
+                data = self.portAdapter.read(BYTES_TO_READ)
             except serialport.SerialException:
                 data = None
                 result = False
@@ -141,15 +170,39 @@ class Receiver(Thread):
                         print str(e)
         return result
 
+
+BIF_TYPES = {
+    0:  "TPUART1",
+    1:  "TPUART2",
+    2:  "NCN5120",
+}
+
+def bifClass(simulation, bifType):
+    if simulation:
+        moduleName = BIF_TYPES[bifType].lower()
+        module = __import__("kstack.busaccess.tpuart.vbus", fromlist = [moduleName])
+        return getattr(module,  moduleName).Interface
+    else:
+        return TPUARTSerial
+
 def main():
+
     parser = OptionParser()
-    parser.add_option("-p", "--port", dest="port", default=0,
-                  help="Serial port number (default: 0)")
+    parser.add_option("-p", "--port", dest = "serialPort", default = 0, help = "Serial port number (default: 0)")
+    parser.add_option("-s", "--simulation", action = "store_true", dest = "simulation",
+        default = False, help = "Use virtual bus connection instead of actual one"
+    )
+    parser.add_option("-t", "--type", dest = "bif_type", default = 0, type = "int",
+        help = "0 - TPUART1; 1 - TPUART2; 2 - NCN5120"
+    )
     options, args = parser.parse_args()
 
-    port = options.port
-    if isinstance(port, types.StringType) and port.isdigit():
-        port = int(port)
+    serialPort = options.serialPort
+    if isinstance(serialPort, types.StringType) and serialPort.isdigit():
+        serialPort = int(serialPort)
+
+    #print bifClass(options.simulation, options.bif_type)
+    #sys.exit()
 
     ctx = zmq.Context()
     socket = ctx.socket(zmq.PULL)
@@ -161,14 +214,16 @@ def main():
     print "Server now listening."
 
     try:
-        port = connectSerial(port)
+        BifClass =  bifClass(options.simulation, options.bif_type)
+        portAdapter = BifClass(port = serialPort, baudrate = 19200, timeout = 0.01, parity = serialport.Serial.PARITY_EVEN)
+        portAdapter.connect()
     except Exception as e:
         print "\n", str(e), "\nexiting."
         socket.close()
         ctx.term()
         sys.exit(1)
 
-    receiver = Receiver(port, ctx)
+    receiver = Receiver(portAdapter, ctx)
     receiver.start()
     poller = zmq.Poller()
     poller.register(socket, zmq.POLLIN)
@@ -180,12 +235,12 @@ def main():
                 request = unmarshall(socket.recv())
                 #print "REQ: ", utils.hexDump(request)
                 print "REQ"
-                port.write(request)
+                portAdapter.write(request)
         except KeyboardInterrupt:
             print "*** Keyboard Interrupt, exiting ***"
             break
 
-    port.close()
+    portAdapter.disconnect()
     print "Exiting server..."
     socket.close()
     ctx.term()
@@ -194,3 +249,31 @@ def main():
 if __name__ == '__main__':
     main()
 
+
+"""
+import zmq
+import signal
+interrupted = False
+
+def signal_handler(signum, frame):
+    global interrupted
+    interrupted = True
+
+
+context = zmq.Context()
+socket = context.socket(zmq.REP)
+socket.bind("tcp://*:5558")
+
+# or you can use a custom handler
+counter = 0
+signal.signal(signal.SIGINT, signal_handler)
+while True:
+    try:
+        message = socket.recv(zmq.DONTWAIT)
+    except zmq.ZMQError:
+        pass
+    counter += 1
+    if interrupted:
+        print "W: interrupt received, killing server..."
+        break
+"""
