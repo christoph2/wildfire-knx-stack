@@ -70,7 +70,6 @@ void KnxTmr_Init(void)
     Tmr_SysMsCounter = Tmr_SysSecondCounter = (Tmr_TickType)0;
     Tmr_DataLinkCounter = (uint16_t)0U;
     Tmr_DataLinkTimerRunning = FALSE;
-
     TMR_LOCK_MAIN_TIMER();
     for (idx = (uint8_t)0; idx < TMR_NUM_TIMERS; idx++) {
         KNX_Timer[idx].expire_counter  = (uint32_t)0UL;

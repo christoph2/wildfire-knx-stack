@@ -112,16 +112,19 @@ STATIC void Disp_L_DataInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if ((KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->npci & (uint8_t)0x80) == (uint8_t)0x80) {
-        if (KnxADR_IsBroadcastAddress(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->dest)) {
+        if (KnxADR_IsBroadcastAddress(*KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->dest)) {
             /* Broadcast-Communication. */
+            //DBG_PRINTLN("Broadcast-Communication");
             KnxMSG_ScratchBufferPtr->service = N_DATA_BROADCAST_IND;
             (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
         } else {
+            //DBG_PRINTLN("Multicast-Communication");
             /* Multicast-Communication. */
             KnxMSG_ScratchBufferPtr->service = N_DATA_GROUP_IND;
             (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
         }
     } else {
+        //DBG_PRINTLN("Individual-Adressing");
         /* Individual-Adressing. */
         KnxMSG_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_IND;
         (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
@@ -183,6 +186,8 @@ STATIC FUNC(void, KSTACK_CODE) Disp_N_DataIndividualReq(void)
 STATIC void Disp_N_DataIndividualReq(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
+    DBG_PRINTLN("Disp_N_DataIndividualReq");
+
     KnxMSG_SetAddressType(KnxMSG_ScratchBufferPtr, atINDIVIDUAL);
     KnxMSG_SetRoutingCount(KnxMSG_ScratchBufferPtr);
     KnxMSG_ScratchBufferPtr->service = L_DATA_REQ;
