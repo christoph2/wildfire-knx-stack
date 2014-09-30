@@ -68,7 +68,7 @@ FUNC(void, KSTACK_CODE)     DEV_ChkOwnPhysAddrRcvd(boolean on);
 FUNC(void, KSTACK_CODE)     DEV_PhysAddrWriteEnable(boolean on);
 FUNC(void, KSTACK_CODE)     KnxALM_Task(void);
 FUNC(void, KSTACK_CODE)     KnxALG_PollCycle(void);
-FUNC(uint8_t, KSTACK_CODE)    KnxAL_GetAPCIType(const KNX_StandardFrameRefType pmsg);
+FUNC(KNX_APCITypeType, KSTACK_CODE)    KnxAL_GetAPCIType(const KNX_StandardFrameRefType pmsg);
 FUNC(void, KSTACK_CODE)     KnxAL_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset,
                                               P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) data
                                               uint8_t len
@@ -85,7 +85,7 @@ void    DEV_ChkOwnPhysAddrRcvd(boolean on);
 void    DEV_PhysAddrWriteEnable(boolean on);
 void    KnxALM_Task(void);
 void    KnxALG_PollCycle(void);
-uint8_t   KnxAL_GetAPCIType(const KNX_StandardFrameRefType pmsg);
+KNX_APCITypeType KnxAL_GetAPCIType(const KNX_StandardFrameRefType pmsg);
 void    KnxAL_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset, uint8_t * data, uint8_t len);
 void    KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset, uint8_t * data, uint8_t len);
 uint8_t   KnxAL_GetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8_t offset);
