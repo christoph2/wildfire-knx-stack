@@ -85,7 +85,7 @@ void    DEV_ChkOwnPhysAddrRcvd(boolean on);
 void    DEV_PhysAddrWriteEnable(boolean on);
 void    KnxALM_Task(void);
 void    KnxALG_PollCycle(void);
-KNX_APCITypeType KnxAL_GetAPCIType(const KNX_StandardFrameRefType pmsg);
+Knx_APCITypeType KnxAL_GetAPCIType(const KNX_StandardFrameRefType pmsg);
 void    KnxAL_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset, uint8_t * data, uint8_t len);
 void    KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset, uint8_t * data, uint8_t len);
 uint8_t   KnxAL_GetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8_t offset);

@@ -184,7 +184,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_T_DataBroadcastInd(void)
 STATIC void Disp_T_DataBroadcastInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KNX_APCITypeType apci_type = KnxAL_GetAPCIType(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr));
+    Knx_APCITypeType apci_type = KnxAL_GetAPCIType(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr));
     Knx_AddressType addr;
 
     switch (apci_type) {
@@ -308,10 +308,10 @@ STATIC void Disp_T_DataIndividualCon(void)
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(uint8_t, KSTACK_CODE) KnxAL_GetAPCIType(const KNX_StandardFrameRefType pmsg)
 #else
-KNX_APCITypeType KnxAL_GetAPCIType(const KNX_StandardFrameRefType pmsg)
+Knx_APCITypeType KnxAL_GetAPCIType(const KNX_StandardFrameRefType pmsg)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    return (KNX_APCITypeType)((pmsg->tpci & (uint8_t)0x03) << 2) | ((pmsg->apci & (uint8_t)0xC0) >> 6);
+    return (Knx_APCITypeType)((pmsg->tpci & (uint8_t)0x03) << 2) | ((pmsg->apci & (uint8_t)0xC0) >> 6);
 }
 
 
