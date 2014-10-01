@@ -48,48 +48,48 @@ extern "C"
 /*
 ** Global variables.
 */
-extern const uint8_t  KNX_OBJ_LEN_TAB[];
-extern const uint8_t  APP_CommObjTab[];
-extern uint8_t        DEV_Device_Control;
-extern uint8_t        DEV_Current_Accesslevel;
-extern uint8_t        DEV_SystemState;
+extern const uint8_t KNX_OBJ_LEN_TAB[];
+extern const uint8_t APP_CommObjTab[];
+extern uint8_t DEV_Device_Control;
+extern uint8_t DEV_Current_Accesslevel;
+extern uint8_t DEV_SystemState;
 
 /*
 ** Global function-like macros.
 */
-#define KnxAL_GetAPDUShortData(pmsg, nbits)         ((uint8_t)(pmsg)->apci & (uint8_t)KNX_AL_SHORT_DATA_MASK[(nbits) - (uint8_t)1])
-#define KnxAL_SetAPDUShortData(pmsg, data, nbits)   ((pmsg)->apci =      \
+#define KnxAl_GetAPDUShortData(pmsg, nbits)         ((uint8_t)(pmsg)->apci & (uint8_t)KNX_AL_SHORT_DATA_MASK[(nbits) - (uint8_t)1])
+#define KnxAl_SetAPDUShortData(pmsg, data, nbits)   ((pmsg)->apci =      \
                                                          ((pmsg)->apci & \
                                                           ~(uint8_t)0x3f) | ((data) & KNX_AL_SHORT_DATA_MASK[(nbits) - (uint8_t)1])
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)     DEV_SetVerifyMode(boolean on);
-FUNC(void, KSTACK_CODE)     DEV_ChkOwnPhysAddrRcvd(boolean on);
-FUNC(void, KSTACK_CODE)     DEV_PhysAddrWriteEnable(boolean on);
-FUNC(void, KSTACK_CODE)     KnxALM_Task(void);
-FUNC(void, KSTACK_CODE)     KnxALG_PollCycle(void);
-FUNC(KNX_APCITypeType, KSTACK_CODE)    KnxAL_GetAPCIType(const KNX_StandardFrameRefType pmsg);
-FUNC(void, KSTACK_CODE)     KnxAL_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset,
+FUNC(void, KSTACK_CODE) DEV_SetVerifyMode(boolean on);
+FUNC(void, KSTACK_CODE) DEV_ChkOwnPhysAddrRcvd(boolean on);
+FUNC(void, KSTACK_CODE) DEV_PhysAddrWriteEnable(boolean on);
+FUNC(void, KSTACK_CODE) KnxALM_Task(void);
+FUNC(void, KSTACK_CODE) KnxALG_PollCycle(void);
+FUNC(Knx_APCITypeType, KSTACK_CODE) KnxAl_GetAPCIType(const KNX_StandardFrameRefType pmsg);
+FUNC(void, KSTACK_CODE) KnxAl_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset,
                                               P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) data
                                               uint8_t len
                                               );
-FUNC(void, KSTACK_CODE)     KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset,
+FUNC(void, KSTACK_CODE) KnxAl_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset,
                                               P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) data
                                               uint8_t len
                                               );
-FUNC(uint8_t, KSTACK_CODE)    KnxAL_GetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8_t offset);
-FUNC(void, KSTACK_CODE)     KnxAL_SetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8_t offset, uint8_t value);
+FUNC(uint8_t, KSTACK_CODE) KnxAl_GetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8_t offset);
+FUNC(void, KSTACK_CODE) KnxAl_SetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8_t offset, uint8_t value);
 #else
-void    DEV_SetVerifyMode(boolean on);
-void    DEV_ChkOwnPhysAddrRcvd(boolean on);
-void    DEV_PhysAddrWriteEnable(boolean on);
-void    KnxALM_Task(void);
-void    KnxALG_PollCycle(void);
-Knx_APCITypeType KnxAL_GetAPCIType(const KNX_StandardFrameRefType pmsg);
-void    KnxAL_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset, uint8_t * data, uint8_t len);
-void    KnxAL_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset, uint8_t * data, uint8_t len);
-uint8_t   KnxAL_GetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8_t offset);
-void    KnxAL_SetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8_t offset, const uint8_t value);
+void DEV_SetVerifyMode(boolean on);
+void DEV_ChkOwnPhysAddrRcvd(boolean on);
+void DEV_PhysAddrWriteEnable(boolean on);
+void KnxALM_Task(void);
+void KnxALG_PollCycle(void);
+Knx_APCITypeType KnxAl_GetAPCIType(const KNX_StandardFrameRefType pmsg);
+void KnxAl_GetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset, uint8_t * data, uint8_t len);
+void KnxAl_SetAPDUData(const KNX_StandardFrameRefType pmsg, uint8_t offset, uint8_t * data, uint8_t len);
+uint8_t KnxAl_GetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8_t offset);
+void KnxAl_SetAPDUDataByte(const KNX_StandardFrameRefType pmsg, uint8_t offset, const uint8_t value);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -160,12 +160,9 @@ FUNC(void, KSTACK_CODE) A_PropertyDescription_Read_Req(KnxMSG_BufferPtr pBuffer,
                                                        );
 #else
 /* Broadcast-Services. */
-void    A_IndividualAddress_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source);
-void    A_IndividualAddress_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source);
-void    A_IndividualAddress_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
-                                      Knx_AddressType newaddress
-                                      );
-
+void A_IndividualAddress_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source);
+void A_IndividualAddress_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source);
+void A_IndividualAddress_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType newaddress);
 void A_IndividualAddressSerialNumber_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
                                               Knx_SerialNumberType serial_number, Knx_AddressType domain_addr
                                               );
@@ -178,10 +175,10 @@ void A_IndividualAddressSerialNumber_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_Add
 
 void A_ServiceInformation_Indication_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, uint8_t info);
 
-void    A_DomainAddress_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source);
-void    A_DomainAddress_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source);
-void    A_DomainAddress_Write_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType domain_ddress);
-void    A_DomainAddressSelective_Read_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
+void A_DomainAddress_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source);
+void A_DomainAddress_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source);
+void A_DomainAddress_Write_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType domain_ddress);
+void A_DomainAddressSelective_Read_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
                                           Knx_AddressType domain_ddress, Knx_AddressType start_address, uint8_t range
                                           );
 

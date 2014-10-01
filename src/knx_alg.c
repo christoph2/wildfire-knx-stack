@@ -165,7 +165,7 @@ STATIC void Disp_T_DataGroupInd(void)
 {
     uint8_t apci;
 
-    apci = KnxAL_GetAPCIType(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr));
+    apci = KnxAl_GetAPCIType(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr));
 
     if (LSM_IsGrOATLoaded()) {
         switch (apci) {
@@ -475,14 +475,14 @@ void KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8_t testFlags)
                     if (len_lsdu >= (uint8_t)2) {
                         /* Normal-Data. */
                         if (len_obj == (uint8_t)1) {
-                            *KnxALG_GetObjectDataPointer(asap) = KnxAL_GetAPDUDataByte(KnxMSG_GetMessagePtr(pBuffer), 0)
+                            *KnxALG_GetObjectDataPointer(asap) = KnxAl_GetAPDUDataByte(KnxMSG_GetMessagePtr(pBuffer), 0)
                                                                  & KNX_AL_SHORT_DATA_MASK[KnxALG_GetCommObjDescr(asap)->Type];
                         } else {
                             Utl_MemCopy(KnxALG_GetObjectDataPointer(asap), KnxMSG_GetMessagePtr(pBuffer)->data, len_obj);
                         }
                     } else if (len_lsdu == (uint8_t)1) {
                         /* Short-Data. */
-                        *KnxALG_GetObjectDataPointer(asap) = KnxAL_GetAPDUShortData(KnxMSG_GetMessagePtr(
+                        *KnxALG_GetObjectDataPointer(asap) = KnxAl_GetAPDUShortData(KnxMSG_GetMessagePtr(
                                                                                         pBuffer), KnxALG_GetCommObjDescr(
                                                                                         asap)->Type);
                     } else {
