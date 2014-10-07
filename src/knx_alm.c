@@ -207,6 +207,9 @@ STATIC void T_DataBroadcast_Ind(void)
             break;
         case APCI_ESCAPE:
             break;
+        case APCI_INDIVIDUAL_ADDRESS_RESP:
+            addr = Utl_Ntohs((Knx_AddressType)*(Knx_AddressType *)KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->source);
+            break;
         default:
             KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
             break;
