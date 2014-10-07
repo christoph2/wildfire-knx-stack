@@ -26,6 +26,7 @@
 #include "knx_nl.h"
 #include "knx_tlg.h"
 #include "knx_layer_application.h"
+#include "Port.h"
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
@@ -61,14 +62,25 @@ void KnxSched_Init(void)
 
        }
      */
+    Port_Init();
+
+    printf("Dev_Init\n");
     DEV_Init();
+    printf("KnxLL_Init\n");
     KnxLL_Init();
+    printf("LSM_Init\n");
     LSM_Init();
-    KnxNL_Init();
+    printf("KnxNL_Init\n");
+    KnxNl_Init();
+    printf("KnxTLC_Init\n");
     KnxTLC_Init();
+    printf("KnxMSG_Init\n");
     KnxMSG_Init();
+    printf("KnxALG_Init\n");
     KnxALG_Init();
+    printf("KnxTmr_Init\n");
     KnxTmr_Init();
+    printf("KnxUser_Init\n");
     KnxUser_Init(); /* TODO: Check preconditions. */
 }
 
@@ -78,7 +90,7 @@ FUNC(void, KSTACK_CODE) KnxSched_Task(void)
 #else
 void KnxSched_Task(void)
 #endif /* KSTACK_MEMORY_MAPPING */
-{
+{    
     if (KnxSched_PreLinkLayerTest()) {
 
     }
@@ -89,7 +101,7 @@ void KnxSched_Task(void)
 
     }
 
-    KnxNL_Task();
+    KnxNl_Task();
     KnxTLG_Task();
     KnxTLC_Task();
     KnxALG_Task();
@@ -99,13 +111,13 @@ void KnxSched_Task(void)
         KnxUser_Main();
     }
 
-    KnxALG_PollCycle();
+    KnxALG_PollCycle(); // TODO: #if POLLING!!!
 
     KnxALM_Task();
     KnxALG_Task();
     KnxTLC_Task();
     KnxTLG_Task();
-    KnxNL_Task();
+    KnxNl_Task();
 
     if (KnxSched_PreLinkLayerTest()) {
 

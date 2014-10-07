@@ -35,7 +35,7 @@
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(uint16_t, KSTACK_CODE) btohs(uint16_t w)
 #else
-uint16_t btohs(uint16_t w)
+uint16_t btohs(uint16_t w)                  // TODO: knx_utl!!! auﬂerdem: ByteOrder!!!
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return MAKEWORD(LOBYTE(w), HIBYTE(w));

@@ -53,51 +53,6 @@ void KnxLL_TimeoutCB(void);
 
 //////
 
-static HANDLE hMainThread;
-static CRITICAL_SECTION isrCS;
-
-void Port_Init(void)
-{
-    hMainThread = GetCurrentThread();
-
-    Port_SetThreadAffinity(hMainThread, 0x00000001);
-
-    Port_InitializeCriticalSection(&isrCS);
-    //Dbg_Init();
-    //Port_InstallExitHandler();
-    Port_TimerInit();
-}
-
-void Port_SetThreadAffinity(HANDLE thread, DWORD_PTR mask)
-{
-    DWORD_PTR resultMask;
-
-    if (SetThreadAffinityMask(hMainThread, mask) == 0) {
-        Win_Error("Port_SetThreadAffinity");
-    }
-}
-
-//#if 0
-void Port_Lock_TaskLevel(void)
-{
-    Port_EnterCriticalSection(&isrCS);
-#if 0
-    if (SuspendThread(hMainThread) == -1) {
-        Win_Error("Port_Lock_TaskLevel");
-    }
-#endif
-}
-
-void Port_Unlock_TaskLevel(void)
-{
-    Port_LeaveCriticalSection(&isrCS);
-#if 0
-    ResumeThread(hMainThread);
-#endif
-}
-//#endif
-
-
 //////
 
 static void CALLBACK TimerProc(void * lpParameter, BOOLEAN TimerOrWaitFired)
@@ -158,6 +113,7 @@ void Port_TimerLockMainTimer(void)
 
 void Port_TimerUnlockMainTimer(void)
 {
+    // TODO: DevCheck for Module Initialisation!!!
     Port_LeaveCriticalSection(&mainTimerCS);
 }
 

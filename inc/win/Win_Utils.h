@@ -38,14 +38,7 @@ extern "C"
 
 void Win_Error(char * function);
 
-boolean Port_InitializeCriticalSection(CRITICAL_SECTION * criticalSection);
-void Port_DeleteCriticalSection(CRITICAL_SECTION * criticalSection);
-void Port_EnterCriticalSection(CRITICAL_SECTION * criticalSection);
-void Port_LeaveCriticalSection(CRITICAL_SECTION * criticalSection);
-boolean Port_InCriticalSection(CRITICAL_SECTION * criticalSection);
-boolean Port_InstallExitHandler();
 boolean Port_ExitRequest(void);
-void Port_SetThreadAffinity(HANDLE thread, DWORD_PTR mask);
 
 #if defined(__cplusplus)
 }

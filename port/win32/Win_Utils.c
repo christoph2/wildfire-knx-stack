@@ -31,14 +31,6 @@
  *
  */
 
-#if !defined(STATUS_POSSIBLE_DEADLOCK)
-    #define STATUS_POSSIBLE_DEADLOCK (0xC0000194)
-#endif
-
-#if !defined(RTL_CRITICAL_SECTION_FLAG_DYNAMIC_SPIN)
-    #define RTL_CRITICAL_SECTION_FLAG_DYNAMIC_SPIN  0x02000000
-#endif
-
 static volatile BOOL exitApplication = FALSE;
 
 void Win_Error(char * function)
@@ -63,55 +55,6 @@ void Win_Error(char * function)
     LocalFree(lpMsgBuf);
 }
 
-
-boolean Port_InitializeCriticalSection(CRITICAL_SECTION * criticalSection)
-{    
-    if (!InitializeCriticalSectionEx(criticalSection, 4000UL, RTL_CRITICAL_SECTION_FLAG_DYNAMIC_SPIN))  {
-        Win_Error("InitializeCriticalSectionAndSpinCount");
-        return FALSE;
-    }
-    return TRUE;
-}
-
-
-void Port_DeleteCriticalSection(CRITICAL_SECTION * criticalSection)
-{
-    DeleteCriticalSection(criticalSection);
-}
-
-static unsigned critCounter = 0;
-
-void Port_EnterCriticalSection(CRITICAL_SECTION * criticalSection)
-{
-#if defined(_MSC_VER)
-    __try {
-        EnterCriticalSection(criticalSection);
-    } __except (GetExceptionCode() == EXCEPTION_POSSIBLE_DEADLOCK ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH) {
-        printf("POSSIBLE_DEADLOCK exception.\nTerminating.\n");
-        ExitProcess(1);
-    }
-#else
-    EnterCriticalSection(criticalSection);
-#endif
-}
-
-
-void Port_LeaveCriticalSection(CRITICAL_SECTION * criticalSection)
-{
-    LeaveCriticalSection(criticalSection);
-}
-
-
-boolean Port_InCriticalSection(CRITICAL_SECTION * criticalSection)
-{
-    if (TryEnterCriticalSection(criticalSection)) {
-        LeaveCriticalSection(criticalSection);
-        return FALSE;
-    } else {
-        return TRUE;
-    }
-    //return criticalSection.LockCount > 0UL;
-}
 
 
 BOOL WINAPI ConsoleCtrlHandler(DWORD signal)
