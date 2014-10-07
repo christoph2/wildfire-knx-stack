@@ -77,8 +77,12 @@ extern "C"
 
 #define KNX_BUILD_TYPE              KNX_BUILD_DEBUG
 
+// KNX_SETABLE_CALLBACKS    // Name!?
+
 #define ENABLE_ALL_INTERRUPTS()
 #define DISABLE_ALL_INTERRUPTS()
+
+#define KNX_ENDIANESS               KNX_LITTLE_ENDIAN
 
 #if defined(__cplusplus)
 }

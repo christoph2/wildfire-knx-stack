@@ -122,6 +122,12 @@ extern "C"
 #define KNX_MODULE_POWER_BY_BUS                 (0)
 #define KNX_MODULE_POWER_BY_AUXILIARY_SUPPLY    (1)
 
+/**
+ *
+ */
+#define KNX_LITTLE_ENDIAN                       (0)
+#define KNX_BIG_ENDIAN                          (1)
+
 
 /** Build types.
  *

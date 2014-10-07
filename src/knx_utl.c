@@ -12,7 +12,7 @@
 *  (at your option) any later version.
 *
 *  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
+*  but WITHOUT ANY WKNXRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
 *  GNU General Public License for more KnxEtails.
 *
@@ -238,6 +238,15 @@ void Utl_StrCpy(uint8_t * dst, const uint8_t * src)
     }
 }
 
+
+uint16_t Utl_Ntohs(uint16_t value)
+{
+#if KNX_ENDIANESS == KNX_LITTLE_ENDIAN
+    return MAKEWORD(LOBYTE(value), HIBYTE(value));
+#elif #if KNX_ENDIANESS == KNX_BIG_ENDIAN
+    return value;
+#endif
+}
 
 #if 0
 void Utl_StrNCpy(uint8_t * RESTRICT dst, const uint8_t * RESTRICT src, SizeType maxlen)
