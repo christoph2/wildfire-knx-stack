@@ -128,7 +128,7 @@ FUNC(Knx_AddressType, KSTACK_CODE) KnxADR_GetPhysAddr(void)
 Knx_AddressType KnxADR_GetPhysAddr(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    return btohs(*(uint16_t *)&APP_AddressTable[1]);
+    return Utl_Ntohs(*(uint16_t *)&APP_AddressTable[1]);
 }
 
 
@@ -138,7 +138,7 @@ FUNC(void, KSTACK_CODE) KnxADR_SetPhysAddr(Knx_AddressType addr)
 void KnxADR_SetPhysAddr(Knx_AddressType addr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    *(uint16_t *)APP_AddressTable[1] = htobs(addr);    /* todo: use Memory-Server!!! */
+    *(uint16_t *)APP_AddressTable[1] = Utl_Htons(addr);    /* todo: use Memory-Server!!! */
 }
 
 

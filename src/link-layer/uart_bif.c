@@ -29,6 +29,7 @@
  */
 
 #include "link-layer\uart_bif.h"
+#include "knx_debug.h"
 #include "knx_disp.h"
 #include "knx_messaging.h"
 #include "knx_platform.h"
@@ -65,7 +66,7 @@
 /*
 ** Local Function-like Macros.
 */
-#define KNX_LL_DESTINATION_ADDRESS()    (MAKEWORD(KnxLL_Buffer[OFFS_DEST_ADDR_H], KnxLL_Buffer[OFFS_DEST_ADDR_L]))
+#define KNX_LL_DESTINATION_ADDRESS()    (KNX_MAKEWORD(KnxLL_Buffer[OFFS_DEST_ADDR_H], KnxLL_Buffer[OFFS_DEST_ADDR_L]))
 #define KNX_LL_ADDRESS_TYPE()           (KnxLL_Buffer[OFFS_NPCI] & 0x80)
 
 /*!
@@ -136,7 +137,9 @@ static boolean KnxLL_InternalCommandUnconfirmed(uint8_t const * frame, uint8_t l
 static boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t length);
 static uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length);
 static void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount);
-static void Disp_L_DataReq(void), Disp_L_PollDataReq(void);
+static void Disp_L_DataReq(void);
+static void Disp_L_PollDataReq(void);
+static void KnxLL_DataStandard_Ind(uint8_t const * frame);
 
 
 /*
@@ -309,6 +312,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
                 KnxLL_State = KNX_LL_STATE_IDLE;
                 /* TODO: Check FCB. */
                 /* TODO: Callback. */
+                KnxLL_DataStandard_Ind(KnxLL_Buffer);
             }
         }
 
@@ -385,11 +389,14 @@ STATIC void Disp_L_DataReq(void)
     KnxMSG_ScratchBufferPtr->msg[0] &= (~(uint8_t)3);   /* clear two LSBs. */
     /**/
 
-    //chk = CalculateChecksum(KnxMSG_ScratchBufferPtr);
     chk = KnxLL_Checksum(KnxMSG_ScratchBufferPtr->msg, KnxMSG_ScratchBufferPtr->len);
+    
+    DBG_PRINT("Disp_L_DataReq: ");
+    Dbg_DumpHex(KnxMSG_ScratchBufferPtr->msg, KnxMSG_ScratchBufferPtr->len);
+
+    KnxLL_WriteFrame(KnxMSG_ScratchBufferPtr->msg, KnxMSG_ScratchBufferPtr->len);
 
     KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
-    //DBG_DUMP(KnxMSG_ScratchBufferPtr);
 }
 
 
@@ -414,6 +421,23 @@ boolean KnxLL_IsBusy(void)
     return result;
 }
 
+
+void KnxLL_DataStandard_Ind(uint8_t const * frame)
+{
+    KnxMSG_BufferPtr pBuffer;
+    uint8_t length;
+
+    pBuffer = KnxMSG_AllocateBuffer();
+
+    if (pBuffer != (KnxMSG_BufferPtr)NULL) {
+        pBuffer->service = L_DATA_IND;
+//        pBuffer->sap = tsap;
+        pBuffer->len = length = (frame[5] & (uint8_t)0x0f) + (uint8_t)7;
+
+        Utl_MemCopy((void *)pBuffer->msg, (void *)frame, length);
+        (void)KnxMSG_Post(pBuffer);
+    }
+}
 
 /**
 * Wait for availability of link-layer.
@@ -591,8 +615,8 @@ void U_SetAddress_req(uint16_t address)
 {
     DBG_PRINTLN("U_SetAddress_req");
     KnxLL_Buffer[0] = U_SETADDRESS_REQ;
-    KnxLL_Buffer[1] = HIBYTE(address);
-    KnxLL_Buffer[2] = LOBYTE(address);
+    KnxLL_Buffer[1] = KNX_HIBYTE(address);
+    KnxLL_Buffer[2] = KNX_LOBYTE(address);
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 3);
 }
 #endif /* KNX_BUS_INTERFACE */
@@ -612,7 +636,7 @@ void U_SetRepetition_req(uint8_t rst)
 void U_Ackn_req(uint8_t what)
 {
 
-    DBG_PRINTLN("U_Ackn_req");
+//    DBG_PRINTLN("U_Ackn_req");
     KnxLL_Buffer[0] = U_ACKN_REQ | (what & 0x07);
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
 }
@@ -654,8 +678,8 @@ void U_SetAddress_req(uint16_t address) /* NB: TPUART2's SetAddress is unconfirm
 {
     DBG_PRINTLN("U_SetAddress_req");
     KnxLL_Buffer[0] = U_SETADDRESS_REQ;
-    KnxLL_Buffer[1] = HIBYTE(address);
-    KnxLL_Buffer[2] = LOBYTE(address);
+    KnxLL_Buffer[1] = KNX_HIBYTE(address);
+    KnxLL_Buffer[2] = KNX_LOBYTE(address);
     KnxLL_Buffer[3] = 0x00; /* Dummy */
     KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 4);
     KnxLL_Expect(U_CONFIGURE_IND, 0x83, 1);

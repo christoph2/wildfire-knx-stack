@@ -242,7 +242,16 @@ void Utl_StrCpy(uint8_t * dst, const uint8_t * src)
 uint16_t Utl_Ntohs(uint16_t value)
 {
 #if KNX_ENDIANESS == KNX_LITTLE_ENDIAN
-    return MAKEWORD(LOBYTE(value), HIBYTE(value));
+    return KNX_MAKEWORD(KNX_LOBYTE(value), KNX_HIBYTE(value));
+#elif #if KNX_ENDIANESS == KNX_BIG_ENDIAN
+    return value;
+#endif
+}
+
+uint16_t Utl_Htons(uint16_t value)
+{
+#if KNX_ENDIANESS == KNX_LITTLE_ENDIAN
+    return KNX_MAKEWORD(KNX_LOBYTE(value), KNX_HIBYTE(value));
 #elif #if KNX_ENDIANESS == KNX_BIG_ENDIAN
     return value;
 #endif
@@ -393,11 +402,13 @@ boolean Utl_IsNull(void * Ptr)
 
 uint16_t Utl_Swap16(uint16_t * w)
 {
-    return MAKEWORD(LOBYTE(*w), HIBYTE(*w));
+    return KNX_MAKEWORD(KNX_LOBYTE(*w), KNX_HIBYTE(*w));
 }
 
 
 uint32_t Utl_Swap32(uint32_t * dw)
 {
-    return MAKEDWORD(MAKEWORD(LOBYTE(LOWORD(*dw)), HIBYTE(LOWORD(*dw))), MAKEWORD(LOBYTE(HIWORD(*dw)), HIBYTE(HIWORD(*dw))));
+    return KNX_MAKEDWORD(KNX_MAKEWORD(KNX_LOBYTE(KNX_LOWORD(*dw)), KNX_HIBYTE(KNX_LOWORD(*dw))), 
+        KNX_MAKEWORD(KNX_LOBYTE(KNX_HIWORD(*dw)), KNX_HIBYTE(KNX_HIWORD(*dw)))
+    );
 }

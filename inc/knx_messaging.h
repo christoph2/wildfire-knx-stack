@@ -77,8 +77,8 @@ extern "C"
 
 #define KnxMSG_GetSourceAddress(pBuffer)        ((Knx_AddressType)btohs(*(uint16_t *)&KnxMSG_GetMessagePtr((pBuffer))->source))
 #define KnxMSG_GetDestAddress(pBuffer)          ((Knx_AddressType)btohs(*(uint16_t *)&KnxMSG_GetMessagePtr((pBuffer))->dest))
-#define KnxMSG_SetSourceAddress(pBuffer, addr)  (*(uint16_t *)&KnxMSG_GetMessagePtr((pBuffer))->source = htobs((addr)))
-#define KnxMSG_SetDestAddress(pBuffer, addr)    (*(uint16_t *)&KnxMSG_GetMessagePtr((pBuffer))->dest = htobs((addr)))
+#define KnxMSG_SetSourceAddress(pBuffer, addr)  (*(uint16_t *)&KnxMSG_GetMessagePtr((pBuffer))->source = Utl_Htons((addr)))
+#define KnxMSG_SetDestAddress(pBuffer, addr)    (*(uint16_t *)&KnxMSG_GetMessagePtr((pBuffer))->dest = Utl_Htons((addr)))
 
 #define KnxMSG_GetPriority(pBuffer)             ((KNX_PriorityType)(KnxMSG_GetMessagePtr((pBuffer))->ctrl & (uint8_t)0x0C) >> 2)
 #define KnxMSG_SetPriority(pBuffer, priority)   (KnxMSG_GetMessagePtr((pBuffer))->ctrl |= (((priority) & (uint8_t)0x03) << 2))
@@ -100,7 +100,7 @@ extern "C"
 /* check: geht 'GetAPCI' nicht effizienter??? */
 #define KnxMSG_GetAPCI(pBuffer)                 ((uint16_t)(KnxMSG_GetMessagePtr((pBuffer))->tpci << \
                                                           8) | (KnxMSG_GetMessagePtr((pBuffer))->apci))
-#define KnxMSG_SetAPCI(pBuffer, apci)           (*(uint16_t *)&(pBuffer)->msg[6] = htobs((apci)))
+#define KnxMSG_SetAPCI(pBuffer, apci)           (*(uint16_t *)&(pBuffer)->msg[6] = Utl_Htons((apci)))
 
 #define KnxMSG_GetIAK(pBuffer)                  ((uint8_t)KnxMSG_GetMessagePtr((pBuffer))->ctrl & (uint8_t)0x01)
 

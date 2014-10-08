@@ -6,9 +6,9 @@
 *
 *   All Rights Reserved
 *
-*  This program is free softwKNXe; you can redistribute it and/or modify
+*  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
 *
 *  This program is distributed in the hope that it will be useful,
@@ -31,21 +31,6 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-#if defined(__HIWARE__)
-#define KNX_BIG_ENDIAN
-#undef  KNX_LITTLE_ENDIAN
-#elif defined(_MSC_VER)
-#undef  KNX_BIG_ENDIAN
-#define KNX_LITTLE_ENDIAN
-#endif
-
-#if defined(KNX_BIG_ENDIAN)
-#define btohs(w)    (w)
-#define htobs(w)    (w)
-
-#elif defined(KNX_LITTLE_ENDIAN)
-
-/* #define btohs(w)    MAKEWORD(LOBYTE((w)),HIBYTE((w))) */
 
 /*
 ** Global functions.
@@ -65,11 +50,6 @@ uint16_t  btohs(uint16_t w);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
-
-#define htobs(w) btohs(w)
-#else
- #error "No Endianess defined!!!"
-#endif
 
 #if defined(__cplusplus)
 }

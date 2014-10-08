@@ -83,8 +83,8 @@ extern "C"
 
 #define VOID_EXPRESSION()           ((void)0)
 
-#if !defined(UNREFERENCED_PARAMETER)
-    #define UNREFERENCED_PARAMETER(p)   ((p) = (p))
+#if !defined(KNX_UNREFERENCED_PARAMETER)
+    #define KNX_UNREFERENCED_PARAMETER(p)   ((p) = (p))
 #endif
 
 #if !defined(MIN)
@@ -110,28 +110,28 @@ extern "C"
         (a) = (a) ^ (b);    \
     _END_BLOCK
 
-#if !defined(LOBYTE)
-    #define LOBYTE(w)                   ((uint8_t)((uint16_t)((uint16_t)(w) & 0x00ffU)))
+#if !defined(KNX_LOBYTE)
+    #define KNX_LOBYTE(w)               ((uint8_t)((uint16_t)((uint16_t)(w) & 0x00ffU)))
 #endif
 
-#if !defined(HIBYTE)
-    #define HIBYTE(w)                   ((uint8_t)((uint16_t)(((uint16_t)(w ) >> 8) & 0x00ffU)))
+#if !defined(KNX_HIBYTE)
+    #define KNX_HIBYTE(w)               ((uint8_t)((uint16_t)(((uint16_t)(w ) >> 8) & 0x00ffU)))
 #endif
 
-#if !defined(LOWORD)
-    #define LOWORD(dw)                  ((uint16_t)((uint32_t)((uint32_t)(dw) & 0xffffU)))
+#if !defined(KNX_LOWORD)
+    #define KNX_LOWORD(dw)              ((uint16_t)((uint32_t)((uint32_t)(dw) & 0xffffU)))
 #endif
 
-#if !defined(HIWORD)
-    #define HIWORD(dw)                  ((uint16_t)((uint32_t)(((uint32_t)(dw) >> 16) & 0xffffU)))
+#if !defined(KNX_HIWORD)
+    #define KNX_HIWORD(dw)              ((uint16_t)((uint32_t)(((uint32_t)(dw) >> 16) & 0xffffU)))
 #endif
 
-#if !defined(MAKEWORD)
-    #define MAKEWORD(h, l)              ((((uint16_t)((h) & ((uint8_t)0xff))) <<  (uint16_t)8) | ((uint16_t)((l) & ((uint8_t)0xff))))
+#if !defined(KNX_MAKEWORD)
+    #define KNX_MAKEWORD(h, l)          ((((uint16_t)((h) & ((uint8_t)0xff))) <<  (uint16_t)8) | ((uint16_t)((l) & ((uint8_t)0xff))))
 #endif
 
-#if !defined(MAKEDWORD)
-    #define MAKEDWORD(h, l)             ((((uint32_t)((h) & ((uint16_t)0xffffu))) << (uint32_t)16) | ((uint32_t)((l) & ((uint16_t)0xffffu))))
+#if !defined(KNX_MAKEDWORD)
+    #define KNX_MAKEDWORD(h, l)         ((((uint32_t)((h) & ((uint16_t)0xffffu))) << (uint32_t)16) | ((uint32_t)((l) & ((uint16_t)0xffffu))))
 #endif
 
 #if !defined(INVERT_NIBBLE)
@@ -229,17 +229,17 @@ typedef void(*VoidFunctionType)(void);
 #define GLUE3_2(a, b, c)        a ## b ## c
 #define GLUE3(a, b, c)          GLUE3_2(a, b, c)
 
-#define BREF(b, o)              (*(((uint8 *)(b) + (o))))
-#define BPTR(b, o)              ((((uint8 *)(b) + (o))))
+#define KNX_BREF(b, o)          (*(((uint8 *)(b) + (o))))
+#define KNX_BPTR(b, o)          ((((uint8 *)(b) + (o))))
 
-#define WREF(w, o)              (*((uint16 *)((uint8 *)(w) + (o))))
-#define WPTR(w, o)              (((uint16 *)((uint8 *)(w) + (o))))
+#define KNX_WREF(w, o)          (*((uint16 *)((uint8 *)(w) + (o))))
+#define KNX_WPTR(w, o)          (((uint16 *)((uint8 *)(w) + (o))))
 
-#define LREF(l, o)              (*((uint32 *)((uint8 *)(l) + (o))))
-#define LPTR(l, o)              (((uint32 *)((uint8 *)(l) + (o))))
+#define KNX_LREF(l, o)          (*((uint32 *)((uint8 *)(l) + (o))))
+#define KNX_LPTR(l, o)          (((uint32 *)((uint8 *)(l) + (o))))
 
-#define FREF(f, o)              (*((float64 *)((uint8 *)(f) + (o))))
-#define FPTR(f, o)              (((float64 *)((uint8 *)(f) + (o))))
+#define KNX_FREF(f, o)          (*((float64 *)((uint8 *)(f) + (o))))
+#define KNX_FPTR(f, o)          (((float64 *)((uint8 *)(f) + (o))))
 
 #define BYTE_REG(base, offs)    *(volatile uint8 *)BPTR((base), (offs))
 #define WORD_REG(base, offs)    *(volatile uint16 *)WPTR((base), (offs))

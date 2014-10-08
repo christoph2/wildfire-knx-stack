@@ -38,7 +38,7 @@ FUNC(uint16_t, KSTACK_CODE) btohs(uint16_t w)
 uint16_t btohs(uint16_t w)                  // TODO: knx_utl!!! außerdem: ByteOrder!!!
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    return MAKEWORD(LOBYTE(w), HIBYTE(w));
+    return KNX_MAKEWORD(KNX_LOBYTE(w), KNX_HIBYTE(w));
 }
 
 
@@ -131,14 +131,14 @@ float64 DPT9ToFloat(uint16_t value)
     boolean Sign;
     float   Res;
 
-    Sign       = (HIBYTE(value) & (uint8_t)0x80) == (uint8_t)0x80;
+    Sign = (KNX_HIBYTE(value) & (uint8_t)0x80) == (uint8_t)0x80;
     Mantissa   = value & (uint16_t)0x07ffU;
 
     if (Sign) {
         Mantissa = (COMW(Mantissa)) & (uint16_t)0x07ffU;
     }
 
-    Exponent = (HIBYTE(value) & (uint8_t)0x78) >> 3;
+    Exponent = (KNX_HIBYTE(value) & (uint8_t)0x78) >> 3;
 
     Res = (float)((Mantissa << Exponent) / (float)100.0);
 
@@ -161,14 +161,14 @@ int32_t DPT9ToLong(uint16_t value)
     boolean Sign;
     int32_t  Res;
 
-    Sign       = (HIBYTE(value) & (uint8_t)0x80) == (uint8_t)0x80;
+    Sign = (KNX_HIBYTE(value) & (uint8_t)0x80) == (uint8_t)0x80;
     Mantissa   = value & 0x7ff;
 
     if (Sign) {
         Mantissa = (COMW(Mantissa)) & (uint16_t)0x07ffU;
     }
 
-    Exponent = (HIBYTE(value) & (uint8_t)0x78) >> 3;
+    Exponent = (KNX_HIBYTE(value) & (uint8_t)0x78) >> 3;
 
     Res = (int32_t)((Mantissa << Exponent) /*/100.0*/);
 

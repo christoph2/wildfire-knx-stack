@@ -333,13 +333,13 @@ void KnxALG_PollCycle(void)
 
             assoc = KnxADR_GetAssoc(idx);
 
-            if (LOBYTE(assoc) != idx) {
+            if (KNX_LOBYTE(assoc) != idx) {
                 /* this is not a sending object. */
                 KnxALG_SetRAMFlags(idx, KNX_OBJ_IDLE_ERROR);
                 continue;
             }
 
-            if (HIBYTE(assoc) >= KnxADR_GrATLength()) {   /* todo: handle 'INVALID_/UNUSED_TSAP'!!! */
+            if (KNX_HIBYTE(assoc) >= KnxADR_GrATLength()) {   /* todo: handle 'INVALID_/UNUSED_TSAP'!!! */
                 /* TSAP does not exist. */
                 KnxALG_SetRAMFlags(idx, KNX_OBJ_IDLE_ERROR);
                 continue;
@@ -354,7 +354,7 @@ void KnxALG_PollCycle(void)
 
             pBuffer->sap   = idx;
             source         = KnxADR_GetPhysAddr();
-            dest           = KnxADR_GetGroupAddress(HIBYTE(assoc));
+            dest = KnxADR_GetGroupAddress(KNX_HIBYTE(assoc));
             prio           = KnxALG_GetObjPriority(idx);
 
             if ((flags & KNX_OBJ_DATA_REQUEST) == KNX_OBJ_DATA_REQUEST) {
@@ -459,8 +459,8 @@ void KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8_t testFlags)
     while (numAssocs--) {
         ca = btohs(*ap++);
 
-        if (HIBYTE(ca) == pBuffer->sap) {
-            asap = LOBYTE(ca);
+        if (KNX_HIBYTE(ca) == pBuffer->sap) {
+            asap = KNX_LOBYTE(ca);
 
             if (asap <= KnxALG_GetNumCommObjs()) {
                 if (KnxALG_ObjCheckEnabled(KnxALG_GetCommObjDescr(asap)->Config, testFlags)) {

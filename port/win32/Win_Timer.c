@@ -60,7 +60,7 @@ static void CALLBACK TimerProc(void * lpParameter, BOOLEAN TimerOrWaitFired)
     static unsigned channelNumber;
 
     //PORT_LOCK_TASK_LEVEL();
-    UNREFERENCED_PARAMETER(TimerOrWaitFired);
+    KNX_UNREFERENCED_PARAMETER(TimerOrWaitFired);
 
     channelNumber = (unsigned)lpParameter;
     if (channelNumber == MAIN_TIMER) {

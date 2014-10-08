@@ -91,6 +91,8 @@ void            Utl_StrRev(/*@in@*//*@out@*/ uint8_t * str);
 const uint8_t *   Utl_StrChr(/*@in@*/ const uint8_t * str, uint8_t ch);
 
 uint16_t Utl_Ntohs(uint16_t value);
+uint16_t Utl_Htons(uint16_t value);
+
 
 /* void const * Utl_BinSearch(void const * key,void const * base,uint16_t num_elems,uint16_t elem_size,Utl_CompareFuncType compare_func); */
 void    Utl_Divrem(uint16_t dividend, uint16_t divisor, /*@out@*/ Utl_DivremType * res);

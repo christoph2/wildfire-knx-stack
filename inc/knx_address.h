@@ -61,8 +61,8 @@ const uint8_t APP_AddressTable[]={    \
     }
 
 
-#define IMPLEMENT_PHYS_ADDR(p)  HIBYTE((p)), LOBYTE((p)),
-#define IMPLEMENT_GROUP_ADDR(g) HIBYTE((g)), LOBYTE((g)),
+#define IMPLEMENT_PHYS_ADDR(p)  KNX_HIBYTE((p)), KNX_LOBYTE((p)),
+#define IMPLEMENT_GROUP_ADDR(g) KNX_HIBYTE((g)), KNX_LOBYTE((g)),
 
 /* *INDENT-OFF* */
 #define START_ASSOCIATION_TABLE(n)      \
@@ -72,7 +72,7 @@ const uint8_t APP_AssociationTable[]={    \
 #define END_ASSOCIATION_TABLE() };
 /* *INDENT-ON*  */
 
-#define IMPLEMENT_ASSOCIATION(a) HIBYTE((a)), LOBYTE((a)),
+#define IMPLEMENT_ASSOCIATION(a) KNX_HIBYTE((a)), KNX_LOBYTE((a)),
 
 /* *INDENT-OFF* */
 #define START_COMMOBJ_TABLE(n,r)    \

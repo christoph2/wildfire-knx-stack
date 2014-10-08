@@ -164,7 +164,7 @@ boolean Serial_Write(void * so, uint8_t const * arr, uint16_t length)
 
 void Serial_Unmarshal(char * blob, uint8_t * arr, uint16_t * length)
 {
-    uint16_t tlen = MAKEWORD(blob[1], blob[0]);
+    uint16_t tlen = KNX_MAKEWORD(blob[1], blob[0]);
     uint16_t idx;
 
     *length = tlen;
@@ -177,8 +177,8 @@ void Serial_Marshal(char * blob, uint8_t const * arr, uint16_t length)
 {
     uint16_t idx;
 
-    blob[0] = HIBYTE(length);
-    blob[1] = LOBYTE(length);
+    blob[0] = KNX_HIBYTE(length);
+    blob[1] = KNX_LOBYTE(length);
 
     for (idx = 0; idx < length; ++idx) {
         blob[idx + 2] = arr[idx];
