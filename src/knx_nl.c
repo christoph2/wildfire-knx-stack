@@ -22,6 +22,7 @@
 *
 */
 #include "knx_nl.h"
+#include "knx_debug.h"
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 STATIC FUNC(void, KSTACK_CODE) NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer);

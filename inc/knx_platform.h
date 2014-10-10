@@ -45,7 +45,7 @@ extern "C"
 #define TMR_LOCK_DL_TIMER()         Port_TimerLockDLTimer()
 #define TMR_UNLOCK_DL_TIMER()       Port_TimerUnlockDLTimer()
 
-#define TMR_START_DL_TIMER()        KnxTmr_DataLinkTimerStart(50)
+#define TMR_START_DL_TIMER()        KnxTmr_DataLinkTimerStart()
 #define TMR_STOP_DL_TIMER()         KnxTmr_DataLinkTimerStop()
 
 #define PORT_LOCK_TASK_LEVEL()      //Port_Lock_TaskLevel()

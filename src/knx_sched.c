@@ -64,23 +64,23 @@ void KnxSched_Init(void)
      */
     Port_Init();
 
-    printf("Dev_Init\n");
+    //printf("Dev_Init\n");
     DEV_Init();
-    printf("KnxLL_Init\n");
+    //printf("KnxLL_Init\n");
     KnxLL_Init();
-    printf("LSM_Init\n");
+    //printf("LSM_Init\n");
     LSM_Init();
-    printf("KnxNL_Init\n");
+    //printf("KnxNL_Init\n");
     KnxNl_Init();
-    printf("KnxTLC_Init\n");
+    //printf("KnxTLC_Init\n");
     KnxTLC_Init();
-    printf("KnxMSG_Init\n");
+    //printf("KnxMSG_Init\n");
     KnxMSG_Init();
-    printf("KnxALG_Init\n");
+    //printf("KnxALG_Init\n");
     KnxALG_Init();
-    printf("KnxTmr_Init\n");
+    //printf("KnxTmr_Init\n");
     KnxTmr_Init();
-    printf("KnxUser_Init\n");
+    //printf("KnxUser_Init\n");
     KnxUser_Init(); /* TODO: Check preconditions. */
 }
 

@@ -21,6 +21,7 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
+
 #include "win\Win_SerialProxy.h"
 #include "link-layer\uart_bif.h"
 #include "knx_debug.h"
@@ -32,7 +33,7 @@
 #include <assert.h>
 #include <process.h>
 #include <Windows.h>
-
+#include "Port.h"
 
 #define BUFFER_SIZE (128U)
 
@@ -105,8 +106,7 @@ void Serial_Init(void)
     //rc = zmq_socket_monitor(Serial_TransmitterSocket, "inproc://monitor.rep", ZMQ_EVENT_ALL);
     serialThread = _beginthread(Serial_Receiver, 0, Serial_Context);
 
-
-    Port_SetThreadAffinity(serialThread, 0x00000001);
+    Port_SetThreadAffinity((HANDLE)serialThread, 0x00000001);
     
     Serial_TransmitterSocket = zmq_socket(Serial_Context, ZMQ_PUSH);
     rc = zmq_connect(Serial_TransmitterSocket, "tcp://localhost:5556");

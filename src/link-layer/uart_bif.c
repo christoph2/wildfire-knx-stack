@@ -30,6 +30,8 @@
 
 #include "link-layer\uart_bif.h"
 #include "knx_debug.h"
+#include "knx_et.h"
+#include "knx_timer.h"
 #include "knx_disp.h"
 #include "knx_messaging.h"
 #include "knx_platform.h"
