@@ -543,8 +543,7 @@ void A_DomainAddress_Write_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
 {
     uint8_t data[2];
 
-    data[0] = KNX_HIBYTE(domain_ddress);
-    data[1] = KNX_LOBYTE(domain_ddress);
+    KNX_ASSIGN_ELEMENT(data, 0, Knx_AddressType, Utl_Htons, domain_ddress);
 
     A_Broadcast_Req(pBuffer, source, A_DOMAINADDRESS_WRITE, (uint8_t *)data, (uint8_t)2);
 }
@@ -562,10 +561,8 @@ void A_DomainAddressSelective_Read_req(KnxMSG_BufferPtr pBuffer, Knx_AddressType
 {
     uint8_t data[5];
 
-    data[0] = KNX_HIBYTE(domain_ddress);
-    data[1] = KNX_LOBYTE(domain_ddress);
-    data[2] = KNX_HIBYTE(start_address);
-    data[3] = KNX_LOBYTE(start_address);
+    KNX_ASSIGN_ELEMENT(data, 0, Knx_AddressType, Utl_Htons, domain_ddress);
+    KNX_ASSIGN_ELEMENT(data, 2, Knx_AddressType, Utl_Htons, start_address);
 
     data[4] = range;
 
@@ -614,8 +611,8 @@ void KnxAl_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8_t obj_index, uint8_
 {
     uint8_t data[4];
 
-    data[0]    = obj_index;
-    data[1]    = prop_id;
+    data[0] = obj_index;
+    data[1] = prop_id;
     data[2] = ((nr_of_elem & (uint8_t)0x0f) << 4) | (KNX_HIBYTE(start_index) & (uint8_t)0x0f);
     data[3] = KNX_LOBYTE(start_index);
 
@@ -686,12 +683,11 @@ void A_PropertyDescription_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType so
     uint8_t data[7];
 
 /* todo: KnxAl_SetADPUData */
-    data[0]    = obj_index;
-    data[1]    = prop_id;
-    data[2]    = prop_index;
-    data[3]    = type;
-    data[4] = KNX_HIBYTE(nr_of_elem);
-    data[5] = KNX_LOBYTE(nr_of_elem);
+    data[0] = obj_index;
+    data[1] = prop_id;
+    data[2] = prop_index;
+    data[3] = type;
+    KNX_ASSIGN_ELEMENT(data, 4, uint16_t, Utl_Htons, nr_of_elem);
     data[6]    = access;
 
     A_Individual_Req(pBuffer, source, dest, A_PROPERTYDESCRIPTION_RESPONSE, (uint8_t *)data, (uint8_t)7);
