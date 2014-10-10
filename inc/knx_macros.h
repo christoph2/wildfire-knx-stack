@@ -244,6 +244,9 @@ typedef void(*VoidFunctionType)(void);
 #define BYTE_REG(base, offs)    *(volatile uint8 *)BPTR((base), (offs))
 #define WORD_REG(base, offs)    *(volatile uint16 *)WPTR((base), (offs))
 
+#define KNX_CAST_ELEMENT(arr, offset, type)     ((type) * (type *)&(arr)[(offset)])
+#define KNX_ASSIGN_ELEMENT(arr, offset, type, converter, value)     ((type) * (type *)&(arr)[(offset)]) = converter((value))
+
 #define BIT(n, type)            ((type)(1 << (n)))
 
 #define BIT0    ((uint16)0x01)
