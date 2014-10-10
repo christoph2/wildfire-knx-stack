@@ -66,7 +66,7 @@
 /*
 ** Local Function-like Macros.
 */
-#define KNX_LL_DESTINATION_ADDRESS()    (KNX_MAKEWORD(KnxLL_Buffer[OFFS_DEST_ADDR_H], KnxLL_Buffer[OFFS_DEST_ADDR_L]))
+#define KNX_LL_DESTINATION_ADDRESS()    Utl_Ntohs(KNX_CAST_ELEMENT(KnxLL_Buffer, OFFS_DEST_ADDR_H, uint16_t))
 #define KNX_LL_ADDRESS_TYPE()           (KnxLL_Buffer[OFFS_NPCI] & 0x80)
 
 /*!
