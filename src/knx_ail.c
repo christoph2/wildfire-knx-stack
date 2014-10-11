@@ -21,11 +21,12 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
-/*
-**
-**  Application-Interface-Layer.
-**
-*/
+
+/*! @file knx_ail.c
+ *
+ *  Application-Interface-Layer.
+ *
+ */
 
 #include "knx_ail.h"
 
@@ -38,41 +39,41 @@
 **	Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxAIL_TestObject(uint16_t objectNr)
+FUNC(boolean, KSTACK_CODE) KnxAil_TestObject(uint16_t objectNr)
 #else
-boolean KnxAIL_TestObject(uint16_t objectNr)
+boolean KnxAil_TestObject(uint16_t objectNr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_t flags;
 
-    if (!KnxAIL_GetRAMFlags(objectNr, &flags)) {
+    if (!KnxAil_GetRAMFlags(objectNr, &flags)) {
         return FALSE;
     } else {
-        (void)KnxAIL_SetRAMFlags(objectNr, KNX_RESET_FLG_UPDATED);
+        (void)KnxAil_SetRAMFlags(objectNr, KNX_RESET_FLG_UPDATED);
         return (flags & KNX_OBJ_UPDATED) == KNX_OBJ_UPDATED;
     }
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxAIL_TestAndGetObject(uint16_t objectNr, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) dst)
+FUNC(boolean, KSTACK_CODE) KnxAil_TestAndGetObject(uint16_t objectNr, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) dst)
 #else
-boolean KnxAIL_TestAndGetObject(uint16_t objectNr, void * dst)
+boolean KnxAil_TestAndGetObject(uint16_t objectNr, void * dst)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if (!KnxAIL_TestObject(objectNr)) {
+    if (!KnxAil_TestObject(objectNr)) {
         return FALSE;
     } else {
-        (void)KnxAIL_GetObject(objectNr, dst);
+        (void)KnxAil_GetObject(objectNr, dst);
         return TRUE;
     }
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxAIL_GetObject(uint16_t objectNr, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) dst)
+FUNC(boolean, KSTACK_CODE) KnxAil_GetObject(uint16_t objectNr, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) dst)
 #else
-boolean KnxAIL_GetObject(uint16_t objectNr, void * dst)
+boolean KnxAil_GetObject(uint16_t objectNr, void * dst)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     boolean appLoaded = LSM_IsAppLoaded();
@@ -88,9 +89,9 @@ boolean KnxAIL_GetObject(uint16_t objectNr, void * dst)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxAIL_TransmitObject(uint16_t objectNr)
+FUNC(boolean, KSTACK_CODE) KnxAil_TransmitObject(uint16_t objectNr)
 #else
-boolean KnxAIL_TransmitObject(uint16_t objectNr)
+boolean KnxAil_TransmitObject(uint16_t objectNr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* todo: check 'objectNr'? */
@@ -105,16 +106,16 @@ boolean KnxAIL_TransmitObject(uint16_t objectNr)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxAIL_SetAndTransmitObject(uint16_t objectNr, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) src)
+FUNC(boolean, KSTACK_CODE) KnxAil_SetAndTransmitObject(uint16_t objectNr, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) src)
 #else
-boolean KnxAIL_SetAndTransmitObject(uint16_t objectNr, void * src)
+boolean KnxAil_SetAndTransmitObject(uint16_t objectNr, void * src)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if (!KnxAIL_SetObject(objectNr, src)) {
+    if (!KnxAil_SetObject(objectNr, src)) {
         return FALSE;
     }
 
-    if (!KnxAIL_TransmitObject(objectNr)) {
+    if (!KnxAil_TransmitObject(objectNr)) {
         return FALSE;
     }
 
@@ -123,9 +124,9 @@ boolean KnxAIL_SetAndTransmitObject(uint16_t objectNr, void * src)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxAIL_SetObject(uint16_t objectNr, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) src)
+FUNC(boolean, KSTACK_CODE) KnxAil_SetObject(uint16_t objectNr, P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) src)
 #else
-boolean KnxAIL_SetObject(uint16_t objectNr, void * src)
+boolean KnxAil_SetObject(uint16_t objectNr, void * src)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     boolean appLoaded = LSM_IsAppLoaded();
@@ -140,9 +141,9 @@ boolean KnxAIL_SetObject(uint16_t objectNr, void * src)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxAIL_ReadObject(uint16_t objectNr)
+FUNC(boolean, KSTACK_CODE) KnxAil_ReadObject(uint16_t objectNr)
 #else
-boolean KnxAIL_ReadObject(uint16_t objectNr)
+boolean KnxAil_ReadObject(uint16_t objectNr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     boolean appLoaded = LSM_IsAppLoaded();
@@ -161,9 +162,9 @@ boolean KnxAIL_ReadObject(uint16_t objectNr)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxAIL_GetRAMFlags(uint16_t objectNr, P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) flags)
+FUNC(boolean, KSTACK_CODE) KnxAil_GetRAMFlags(uint16_t objectNr, P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) flags)
 #else
-boolean KnxAIL_GetRAMFlags(uint16_t objectNr, uint8_t * flags)
+boolean KnxAil_GetRAMFlags(uint16_t objectNr, uint8_t * flags)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     boolean appLoaded = LSM_IsAppLoaded();
@@ -178,9 +179,9 @@ boolean KnxAIL_GetRAMFlags(uint16_t objectNr, uint8_t * flags)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint8_t , KSTACK_CODE) KnxAIL_SetRAMFlags(uint16_t objectNr, uint8_t flags)
+FUNC(uint8_t , KSTACK_CODE) KnxAil_SetRAMFlags(uint16_t objectNr, uint8_t flags)
 #else
-uint8_t KnxAIL_SetRAMFlags(uint16_t objectNr, uint8_t flags)
+uint8_t KnxAil_SetRAMFlags(uint16_t objectNr, uint8_t flags)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_t   value;

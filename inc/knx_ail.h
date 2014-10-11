@@ -50,41 +50,41 @@ extern "C"
 /*
 ** Global function-like macros.
 */
-#define KnxAIL_GetTransmissionStatus(objectNr) AL_GetTransmissionStatus((objectNr))
+#define KnxAil_GetTransmissionStatus(objectNr) AL_GetTransmissionStatus((objectNr))
 
 /*
 **  Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE)  KnxAIL_TestAndGetObject(uint16_t objectNr,
+FUNC(boolean, KSTACK_CODE)  KnxAil_TestAndGetObject(uint16_t objectNr,
                                                     P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) dst
                                                     );
-FUNC(boolean, KSTACK_CODE)  KnxAIL_TestObject(uint16_t objectNr);
-FUNC(boolean, KSTACK_CODE)  KnxAIL_GetObject(uint16_t objectNr,
+FUNC(boolean, KSTACK_CODE)  KnxAil_TestObject(uint16_t objectNr);
+FUNC(boolean, KSTACK_CODE)  KnxAil_GetObject(uint16_t objectNr,
                                              P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) dst
                                              );
-FUNC(boolean, KSTACK_CODE)  KnxAIL_SetAndTransmitObject(uint16_t objectNr,
+FUNC(boolean, KSTACK_CODE)  KnxAil_SetAndTransmitObject(uint16_t objectNr,
                                                         P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) src
                                                         );
-FUNC(boolean, KSTACK_CODE)  KnxAIL_SetObject(uint16_t objectNr,
+FUNC(boolean, KSTACK_CODE)  KnxAil_SetObject(uint16_t objectNr,
                                              P2VAR(void, AUTOMATIC, KSTACK_APPL_DATA) src
                                              );
-FUNC(boolean, KSTACK_CODE)  KnxAIL_TransmitObject(uint16_t objectNr);
-FUNC(boolean, KSTACK_CODE)  KnxAIL_ReadObject(uint16_t objectNr);
-FUNC(uint8_t, KSTACK_CODE)    KnxAIL_SetRAMFlags(uint16_t objectNr, uint8_t flags);
-FUNC(boolean, KSTACK_CODE)  KnxAIL_GetRAMFlags(uint16_t objectNr,
+FUNC(boolean, KSTACK_CODE)  KnxAil_TransmitObject(uint16_t objectNr);
+FUNC(boolean, KSTACK_CODE)  KnxAil_ReadObject(uint16_t objectNr);
+FUNC(uint8_t, KSTACK_CODE)    KnxAil_SetRAMFlags(uint16_t objectNr, uint8_t flags);
+FUNC(boolean, KSTACK_CODE)  KnxAil_GetRAMFlags(uint16_t objectNr,
                                                P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) flags
                                                );
 #else
-boolean KnxAIL_TestAndGetObject(uint16_t objectNr, void * dst);
-boolean KnxAIL_TestObject(uint16_t objectNr);
-boolean KnxAIL_GetObject(uint16_t objectNr, void * dst);
-boolean KnxAIL_SetAndTransmitObject(uint16_t objectNr, void * src);
-boolean KnxAIL_SetObject(uint16_t objectNr, void * src);
-boolean KnxAIL_TransmitObject(uint16_t objectNr);
-boolean KnxAIL_ReadObject(uint16_t objectNr);
-uint8_t   KnxAIL_SetRAMFlags(uint16_t objectNr, uint8_t flags);
-boolean KnxAIL_GetRAMFlags(uint16_t objectNr, uint8_t * flags);
+boolean KnxAil_TestAndGetObject(uint16_t objectNr, void * dst);
+boolean KnxAil_TestObject(uint16_t objectNr);
+boolean KnxAil_GetObject(uint16_t objectNr, void * dst);
+boolean KnxAil_SetAndTransmitObject(uint16_t objectNr, void * src);
+boolean KnxAil_SetObject(uint16_t objectNr, void * src);
+boolean KnxAil_TransmitObject(uint16_t objectNr);
+boolean KnxAil_ReadObject(uint16_t objectNr);
+uint8_t   KnxAil_SetRAMFlags(uint16_t objectNr, uint8_t flags);
+boolean KnxAil_GetRAMFlags(uint16_t objectNr, uint8_t * flags);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */

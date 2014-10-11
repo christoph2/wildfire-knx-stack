@@ -444,7 +444,7 @@ void KnxLL_DataStandard_Ind(uint8_t const * frame)
 /**
 * Wait for availability of link-layer.
 *
-* Services shall never be issued while link-layer is busy.
+* NB: Services shall never be issued while link-layer is busy!
 */
 void KnxLL_BusyWait(void)
 {   

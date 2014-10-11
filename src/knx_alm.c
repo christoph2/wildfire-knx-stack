@@ -26,13 +26,6 @@
 **  Application-Layer / Managment.
 */
 
-/*
-   #ifdef DEBUG
-    assert(r==TRUE)
-    DEBUG_PRINT("Error releasing Message-Buffer @ " ## __FILE__ ## "(" ## __LINE__ ## ")")
-   #endif
- */
-
 #include "knx_layer_application.h"
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
@@ -48,8 +41,7 @@ FUNC(void, KSTACK_CODE) KnxAl_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8_
                                              );
 #else
 void A_Broadcast_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, uint16_t apci, uint8_t * data, uint8_t len);
-void A_Individual_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint16_t apci, uint8_t * data,
-                         uint8_t len);
+void A_Individual_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint16_t apci, uint8_t * data, uint8_t len);
 void KnxAl_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8_t obj_index, uint8_t prop_id, uint8_t nr_of_elem, uint16_t start_index);
 
 
@@ -169,8 +161,7 @@ STATIC void T_DataConnected_Ind(void)
             break;
         case APCI_USER_MSG:
             break;
-        default:
-            KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+        default:         
             break;
     }
 
