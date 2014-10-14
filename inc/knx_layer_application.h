@@ -158,6 +158,8 @@ FUNC(void, KSTACK_CODE) A_PropertyDescription_Read_Res_NoData(KnxMSG_BufferPtr p
 FUNC(void, KSTACK_CODE) A_PropertyDescription_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source,
                                                        Knx_AddressType dest, uint8_t obj_index, uint8_t prop_id, uint8_t prop_index
                                                        );
+FUNC(void, KSTACK_CODE) A_DeviceDescriptor_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t descriptor_type);
+
 #else
 /* Broadcast-Services. */
 void A_IndividualAddress_Read_Res(KnxMSG_BufferPtr pBuffer, Knx_AddressType source);
@@ -205,7 +207,7 @@ void A_PropertyDescription_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType so
                                     uint8_t obj_index, uint8_t prop_id, uint8_t prop_index
                                     );
 
-
+void A_DeviceDescriptor_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t descriptor_type);
 #endif /* KSTACK_MEMORY_MAPPING */
 
 #if defined(__cplusplus)

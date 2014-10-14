@@ -47,6 +47,16 @@ void KnxAl_SetPropertyHeader(KnxMSG_BufferPtr pBuffer, uint8_t obj_index, uint8_
 
 #endif /* KSTACK_MEMORY_MAPPING */
 
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) A_PropertyDescription_Read_Ind(Knx_AddressType source, Knx_ObjectTypeType object_index,
+    Knx_PropertyIdentifierType property_id, uint8_t property_index, Knx_PropertyDataTypeType type, uint16_t max_nr_of_elem, uint8_t access);
+#else
+void A_PropertyDescription_Read_Ind(Knx_AddressType source, Knx_ObjectTypeType object_index, Knx_PropertyIdentifierType property_id,
+    uint8_t property_index, Knx_PropertyDataTypeType type, uint16_t max_nr_of_elem, uint8_t access
+    );
+#endif /* KSTACK_MEMORY_MAPPING */
+
 #define APDU_PHYS_ADDR ((uint8_t)0)        /* A_IndividualAddress_Write-PDU */
 
 /*
@@ -148,6 +158,8 @@ STATIC void T_DataConnected_Ind(void)
 {
     uint8_t apci_type = KnxAl_GetAPCIType(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr));
 
+    printf("T_DataConnected_Ind\n");
+
     switch (apci_type) {
         case APCI_MEMORY_READ:
             break;
@@ -182,8 +194,6 @@ STATIC void T_DataBroadcast_Ind(void)
         case APCI_INDIVIDUAL_ADDRESS_WRITE:
             if (KnxADR_InProgrammingMode()) {  /* todo: only if 'PID_SERVICE_CONTROL' is activatet! */
                 KnxAl_GetAPDUData(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr), APDU_PHYS_ADDR, (uint8_t *)&addr, (uint8_t)2);
-/*                                addr[0]=KnxAl_GetAPDUDataByte(pmsg,APDU_PHYS_ADDR); */
-/*                                addr[1]=KnxAl_GetAPDUDataByte(pmsg,APDU_PHYS_ADDR+1); */
                 KnxADR_SetPhysAddr(addr);
             }
 
@@ -200,6 +210,7 @@ STATIC void T_DataBroadcast_Ind(void)
             break;
         case APCI_INDIVIDUAL_ADDRESS_RESP:
             addr = Utl_Ntohs((Knx_AddressType)*(Knx_AddressType *)KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->source);
+            printf("APCI_INDIVIDUAL_ADDRESS_RESP [0x%04x]\n", addr);
             break;
         default:
             KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
@@ -214,7 +225,8 @@ STATIC FUNC(void, KSTACK_CODE) T_DataIndividual_Ind(void)
 STATIC void T_DataIndividual_Ind(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8_t apci_type = KnxAl_GetAPCIType(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr));
+    uint8_t apci_type = KnxAl_GetAPCIType(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr));    
+    KNX_StandardFrameRefType frame;
 
     if (apci_type == APCI_ESCAPE) {
         switch (KnxMSG_GetAPCI(KnxMSG_ScratchBufferPtr)) {
@@ -227,6 +239,19 @@ STATIC void T_DataIndividual_Ind(void)
             case A_PROPERTYDESCRIPTION_READ:
                 IOS_Dispatch(KnxMSG_ScratchBufferPtr, IOS_PROP_DESC_READ, FALSE);
                 break;
+
+            case A_PROPERTYDESCRIPTION_RESPONSE:    // MNT-MASTER ONLY!!!
+                frame = KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr);
+                A_PropertyDescription_Read_Ind(
+                    Utl_Ntohs((Knx_AddressType)*(Knx_AddressType *)frame->source), 
+                    (Knx_ObjectTypeType)frame->data[0], (Knx_PropertyIdentifierType)frame->data[1], frame->data[2], (Knx_PropertyDataTypeType)frame->data[3],
+                    Utl_Ntohs( 
+                        KNX_CAST_ELEMENT(frame->data, 4, uint16_t)
+                    ),
+                    frame->data[6]
+                );
+                break;
+
             default:
                 KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
                 break;
@@ -726,6 +751,35 @@ void A_PropertyDescription_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType so
     A_Individual_Req(pBuffer, source, dest, A_PROPERTYDESCRIPTION_READ, (uint8_t *)data, (uint8_t)3);
 }
 
+/*
+ * A_DeviceDescriptor_Read.
+ */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) A_DeviceDescriptor_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t descriptor_type)
+#else
+void A_DeviceDescriptor_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t descriptor_type)
+#endif /* KSTACK_MEMORY_MAPPING */
+{
+    A_Individual_Req(pBuffer, source, dest, A_DEVICEDESCRIPTOR_READ | (descriptor_type & 0x3f) , (uint8_t *)NULL, (uint8_t)0);
+}
+
+
+/*
+ * A_PropertyDescription_Read_Ind.
+ */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) A_PropertyDescription_Read_Ind(Knx_AddressType source, Knx_ObjectTypeType object_index, 
+    Knx_PropertyIdentifierType property_id, uint8_t property_index, Knx_PropertyDataTypeType type, uint16_t max_nr_of_elem, uint8_t access)
+#else
+void A_PropertyDescription_Read_Ind(Knx_AddressType source, Knx_ObjectTypeType object_index, Knx_PropertyIdentifierType property_id,
+    uint8_t property_index, Knx_PropertyDataTypeType type, uint16_t max_nr_of_elem, uint8_t access
+    )
+#endif /* KSTACK_MEMORY_MAPPING */
+{
+    printf("\nA_PropertyDescription_Read_Ind [%04x] oid: %02x pid: %02x idx: %02x type: %02x max_nr_of_elem: %04x access: %02x\n", 
+        source, object_index, property_id, property_index, type, max_nr_of_elem, access
+    );
+}
 
 /*
    Device-Descriptor:
