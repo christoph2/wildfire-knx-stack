@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 __version__ = "0.9.2"
-__description__ = "VMC-File-Parser for the C-Control II."
+__description__ = "Wildfire - The Open Source KNX/EIB-Protocol Stack."
 
 __copyright__ = """
-   2-CB (C-Control-II kompatible Virtuelle Maschine).
+    Wildfire - The Open Source KNX/EIB-Protocol Stack.
 
-  (C) 2007-2012 by Christoph Schueler <github.com/Christoph2,
-                                       cpu12.gems@googlemail.com>
+   (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+                                        cpu12.gems@googlemail.com>
 
    All Rights Reserved
 
@@ -45,12 +45,15 @@ def makeExtension(name):
                 #'-features autodoc',
                 #'-MD',
                 #'-O',
-                #'-I ../inc',
+                '-I ..\\inc',
                 '-modern',
                 '-modernargs',
+                '-verbose',
+                #'-debug-tmsearch',
+                '-debug-tmused',
                 #'-keyword'
         ]
-	#rel = join(*rel.split())
+        #rel = join(*rel.split())
         sources = [
                 '%s.i' % nt,
                 join('..', 'src', 'link-layer', 'uart_bif.c'),
@@ -70,7 +73,7 @@ def makeExtension(name):
                 sourceFile('knx_address'),
                 sourceFile('Appl'),
                 sourceFile('knx_ios'),
-                sourceFile('knx_ail'),                
+                sourceFile('knx_ail'),
                 sourceFile('knx_lsm'),
                 sourceFile('knx_conversion'),
                 sourceFile('knx_sys_objs'),
@@ -102,7 +105,7 @@ setup(
   name = "pyKStack",
   version = "0.1",
   author = "Christoph Schueler",
-  description = "KStack for Python",
+  description = "Wildfire - The Open Source KNX/EIB-Protocol Stack.",
   ext_modules = [
       makeExtension('kstackf'),
   ],
