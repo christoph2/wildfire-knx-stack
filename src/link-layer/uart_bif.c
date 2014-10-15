@@ -176,6 +176,8 @@ static KnxLL_ReceiverStageType KnxLL_ReceiverStage;
 static uint8_t KnxLL_RunningFCB;
 static KnxLL_LocalConfirmationType KnxLL_LocalConfirmation;
 
+static KnxLL_Repeated = FALSE;
+
 KNX_IMPLEMENT_MODULE_STATE_VAR(UART_BIF);
 
 /*!
@@ -198,6 +200,7 @@ void KnxLL_Init(void)
     KnxLL_ReceiverIndex = (uint8_t)0x00;
     KnxLL_RunningFCB = (uint8_t)0x00;
     KnxLL_LocalConfirmation = KNX_LL_CONF_NEGATIVE;
+    KnxLL_Repeated = FALSE;
     Utl_MemSet(&KnxLL_Expectation, '\x00', sizeof(KnxLL_ExpectationType));
 }
 
@@ -228,24 +231,6 @@ boolean KnxLL_IsAddressed(uint8_t daf, uint16_t address)
 // This constitutes the link-layer statemachine.
 void KnxLL_FeedReceiver(uint8_t octet)
 {
-#if 0
-    static void U_Reset_res(void);
-    static void U_Reset_ind(void);
-    static void U_State_res(void);
-    static void U_State_ind(void);
-    static void L_Data_con(void);
-    static void L_DataExtended_ind(void);
-    static void L_DataStandard_ind(void);
-    static void L_PollData_ind(void);
-
-    uint8_t   ctrl;
-    uint8_t   source[2];
-    uint8_t   dest[2];
-    uint8_t   npci;
-    uint8_t   tpci;
-    uint8_t   apci;
-#endif
-
     if (KnxLL_State == KNX_LL_STATE_AWAITING_RESPONSE_LOCAL) {
         if (KnxLL_Expectation.ExpectedService == (octet & KnxLL_Expectation.ExpectedMask)) {
             if (KnxLL_Expectation.ExpectedByteCount == 1) {
@@ -265,8 +250,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
             }
         }
         // KnxLL_Buffer[0] = octet;
-    }
-    else if (KnxLL_State == KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION) {
+    } else if (KnxLL_State == KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION) {
         TMR_STOP_DL_TIMER();
         KnxLL_ReceiverIndex++;
         TMR_START_DL_TIMER();
@@ -281,18 +265,19 @@ void KnxLL_FeedReceiver(uint8_t octet)
                 } else {
                     KnxLL_LocalConfirmation = KNX_LL_CONF_NEGATIVE;
                 }
+                // TODO: Callback!
+                //printf("LCon: %u\n", KnxLL_LocalConfirmation);
                 KnxLL_State = KNX_LL_STATE_IDLE;
             }
             else if ((octet & 0x10) == 0x10) {    /* Weak check. */
-                //printf("Control-Field: 0x%02x\n", octet);
+                //KnxLL_Repeated = (octet & 0x20) == 0x00;
             }
         }
         else if (KnxLL_ReceiverIndex == KnxLL_Expectation.ExpectedByteCount) {
             //printf("Finished. [0x%02x]\n", octet);
             KnxLL_ReceiverIndex = (uint8_t)0x00;
         }
-    }
-    else if (KnxLL_State == KNX_LL_STATE_AWAITING_RECEIPTION) {
+    } else if (KnxLL_State == KNX_LL_STATE_AWAITING_RECEIPTION) {
         TMR_STOP_DL_TIMER();
         KnxLL_ReceiverIndex++;
         KnxLL_Buffer[KnxLL_ReceiverIndex] = octet;
@@ -330,12 +315,13 @@ void KnxLL_FeedReceiver(uint8_t octet)
             DBG_PRINTLN("L_DataExtended_Ind");
         } else if ((octet & 0xd3) == L_DATA_STANDARD_IND)  {
             DBG_PRINTLN("L_DataStandard_Ind");
-            printf("%02x ", octet);
+            printf("CTRL[%02x]\n", octet);
             KnxLL_State = KNX_LL_STATE_AWAITING_RECEIPTION; /* TODO: Distiguish Standard/Extendend Frames */
             KnxLL_ReceiverStage = KNX_LL_RECEIVER_STAGE_HEADER;
             KnxLL_ReceiverIndex = 0;
             KnxLL_RunningFCB = (uint8_t)0xff ^ octet;
             KnxLL_Buffer[KnxLL_ReceiverIndex] = octet;
+            KnxLL_Repeated = (octet & 0x20) == 0x00;
             TMR_START_DL_TIMER();
         } else if (octet == U_RESET_IND) {
             DBG_PRINTLN("U_Reset_Ind");
@@ -428,6 +414,10 @@ void KnxLL_DataStandard_Ind(uint8_t const * frame)
 {
     KnxMSG_BufferPtr pBuffer;
     uint8_t length;
+
+    if (KnxLL_Repeated) {
+        return;     /* Don't route duplicates for now. */
+    }
 
     pBuffer = KnxMSG_AllocateBuffer();
 
