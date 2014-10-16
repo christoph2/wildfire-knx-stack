@@ -91,8 +91,8 @@ STATIC FUNC(void, KSTACK_CODE) Disp_N_DataGroupInd(void)
 STATIC void Disp_N_DataGroupInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMSG_ScratchBufferPtr->service = T_DATA_GROUP_IND;
-    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
+    KnxMsg_ScratchBufferPtr->service = T_DATA_GROUP_IND;
+    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
 
@@ -102,8 +102,8 @@ STATIC FUNC(void, KSTACK_CODE) Disp_N_DataGroupCon(void)
 STATIC void Disp_N_DataGroupCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMSG_ScratchBufferPtr->service = T_DATA_GROUP_CON;
-    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
+    KnxMsg_ScratchBufferPtr->service = T_DATA_GROUP_CON;
+    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
 
@@ -113,8 +113,8 @@ STATIC FUNC(void, KSTACK_CODE) Disp_N_PollDataCon(void)
 STATIC void Disp_N_PollDataCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMSG_ScratchBufferPtr->service = T_POLL_DATA_CON;
-    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
+    KnxMsg_ScratchBufferPtr->service = T_POLL_DATA_CON;
+    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
 
@@ -127,9 +127,9 @@ STATIC FUNC(void, KSTACK_CODE) Disp_T_DataGroupReq(void)
 STATIC void Disp_T_DataGroupReq(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMSG_SetTPCI(KnxMSG_ScratchBufferPtr, TPCI_UDT);
-    KnxMSG_ScratchBufferPtr->service = N_DATA_GROUP_REQ;
-    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
+    KnxMsg_SetTPCI(KnxMsg_ScratchBufferPtr, TPCI_UDT);
+    KnxMsg_ScratchBufferPtr->service = N_DATA_GROUP_REQ;
+    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
 

@@ -165,20 +165,20 @@ STATIC void Disp_T_DataGroupInd(void)
 {
     uint8_t apci;
 
-    apci = KnxAl_GetAPCIType(KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr));
+    apci = KnxAl_GetAPCIType(KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr));
 
     if (LSM_IsGrOATLoaded()) {
         switch (apci) {
             case APCI_GROUP_VALUE_WRITE:
                 /* When the Application Layer of a device receives an A_GroupValue_Write-Service, it searches the */
                 /* TSAP in all entries of the association-table and informs all the associated ASAP. */
-                KnxALG_UpdateAssociatedASAPs(KnxMSG_ScratchBufferPtr, (KNX_OBJ_COMM_ENABLE | KNX_OBJ_WRITE_ENABLE));
-                KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+                KnxALG_UpdateAssociatedASAPs(KnxMsg_ScratchBufferPtr, (KNX_OBJ_COMM_ENABLE | KNX_OBJ_WRITE_ENABLE));
+                KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
                 break;
             case APCI_GROUP_VALUE_RESP:
-                KnxALG_UpdateAssociatedASAPs(KnxMSG_ScratchBufferPtr,
+                KnxALG_UpdateAssociatedASAPs(KnxMsg_ScratchBufferPtr,
                                              (KNX_OBJ_COMM_ENABLE | KNX_OBJ_WRITE_ENABLE | KNX_OBJ_UPDATE_ENABLE));
-                KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+                KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
                 break;
             case APCI_GROUP_VALUE_READ:
                 /*  When the Application Layer of a device receives an A_GroupValue_Read-Service, it searches the */
@@ -187,12 +187,12 @@ STATIC void Disp_T_DataGroupInd(void)
                 break;
             default:
                 /* invalid APCI. */
-                KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+                KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
                 break;
         }
     } else {
         /* AssocTab not loaded. */
-        KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+        KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
     }
 }
 
@@ -257,45 +257,45 @@ void KnxALG_Init(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
+FUNC(void, KSTACK_CODE) A_GroupValue_Read_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
                                               Knx_PriorityType prio)
 #else
-void A_GroupValue_Read_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio)
+void A_GroupValue_Read_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMSG_SetAPCI(pBuffer, APCI_GROUP_VALUE_READ);
-    KnxMSG_SetSourceAddress(pBuffer, source);
-    KnxMSG_SetDestAddress(pBuffer, dest);
-    KnxMSG_SetPriority(pBuffer, prio);
-    KnxMSG_SetLen(pBuffer, (uint8_t)8);
+    KnxMsg_SetAPCI(pBuffer, APCI_GROUP_VALUE_READ);
+    KnxMsg_SetSourceAddress(pBuffer, source);
+    KnxMsg_SetDestAddress(pBuffer, dest);
+    KnxMsg_SetPriority(pBuffer, prio);
+    KnxMsg_SetLen(pBuffer, (uint8_t)8);
 
     pBuffer->service = T_DATA_GROUP_REQ;
 
-    (void)KnxMSG_Post(pBuffer);
+    (void)KnxMsg_Post(pBuffer);
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
+FUNC(void, KSTACK_CODE) A_GroupValue_Write_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
                                                Knx_PriorityType prio,
                                                P2VAR(uint8_t, AUTOMATIC,
                                                      KSTACK_APPL_DATA) data,
                                                uint8_t len)
 #else
-void A_GroupValue_Write_Req(KnxMSG_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
+void A_GroupValue_Write_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
                             uint8_t * data,
                             uint8_t len)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMSG_SetAPCI(pBuffer, APCI_GROUP_VALUE_WRITE);
-    KnxMSG_SetSourceAddress(pBuffer, source);
-    KnxMSG_SetDestAddress(pBuffer, dest);
-    KnxMSG_SetPriority(pBuffer, prio);
-    KnxMSG_SetLen(pBuffer, 8);
+    KnxMsg_SetAPCI(pBuffer, APCI_GROUP_VALUE_WRITE);
+    KnxMsg_SetSourceAddress(pBuffer, source);
+    KnxMsg_SetDestAddress(pBuffer, dest);
+    KnxMsg_SetPriority(pBuffer, prio);
+    KnxMsg_SetLen(pBuffer, 8);
 
     pBuffer->service = T_DATA_GROUP_REQ;
 
-    (void)KnxMSG_Post(pBuffer);
+    (void)KnxMsg_Post(pBuffer);
 }
 
 
@@ -307,7 +307,7 @@ void KnxALG_PollCycle(void)
 {
     uint8_t               idx;
     uint8_t               flags;
-    KnxMSG_BufferPtr    pBuffer;
+    KnxMsg_BufferPtr    pBuffer;
     Knx_AddressType     source;
     Knx_AddressType     dest;
     uint16_t              assoc;
@@ -345,9 +345,9 @@ void KnxALG_PollCycle(void)
                 continue;
             }
 
-            pBuffer = KnxMSG_AllocateBuffer();
+            pBuffer = KnxMsg_AllocateBuffer();
 
-            if (pBuffer == (KnxMSG_BufferPtr)NULL) {
+            if (pBuffer == (KnxMsg_BufferPtr)NULL) {
                 /* no Message-Buffer available. */
                 return;
             }
@@ -440,9 +440,9 @@ uint8_t * KnxALG_GetRAMFlagPointer(void)
 }
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8_t testFlags)
+FUNC(void, KSTACK_CODE) KnxALG_UpdateAssociatedASAPs(KnxMsg_BufferPtr pBuffer, uint8_t testFlags)
 #else
-void KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8_t testFlags)
+void KnxALG_UpdateAssociatedASAPs(KnxMsg_BufferPtr pBuffer, uint8_t testFlags)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16_t      ca;
@@ -465,7 +465,7 @@ void KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8_t testFlags)
             if (asap <= KnxALG_GetNumCommObjs()) {
                 if (KnxALG_ObjCheckEnabled(KnxALG_GetCommObjDescr(asap)->Config, testFlags)) {
 /*                if (AL_ObjWriteEnabled(AL_GetCommObjDescr(asap)->Config)) */
-                    len_lsdu   = KnxMSG_GetLSDULen(pBuffer);
+                    len_lsdu   = KnxMsg_GetLSDULen(pBuffer);
                     len_obj    = KnxALG_GetObjLen(KnxALG_GetCommObjDescr(asap)->Type);
 
                     if (len_lsdu - (uint8_t)1 != len_obj) {
@@ -475,14 +475,14 @@ void KnxALG_UpdateAssociatedASAPs(KnxMSG_BufferPtr pBuffer, uint8_t testFlags)
                     if (len_lsdu >= (uint8_t)2) {
                         /* Normal-Data. */
                         if (len_obj == (uint8_t)1) {
-                            *KnxALG_GetObjectDataPointer(asap) = KnxAl_GetAPDUDataByte(KnxMSG_GetMessagePtr(pBuffer), 0)
+                            *KnxALG_GetObjectDataPointer(asap) = KnxAl_GetAPDUDataByte(KnxMsg_GetMessagePtr(pBuffer), 0)
                                                                  & KNX_AL_SHORT_DATA_MASK[KnxALG_GetCommObjDescr(asap)->Type];
                         } else {
-                            Utl_MemCopy(KnxALG_GetObjectDataPointer(asap), KnxMSG_GetMessagePtr(pBuffer)->data, len_obj);
+                            Utl_MemCopy(KnxALG_GetObjectDataPointer(asap), KnxMsg_GetMessagePtr(pBuffer)->data, len_obj);
                         }
                     } else if (len_lsdu == (uint8_t)1) {
                         /* Short-Data. */
-                        *KnxALG_GetObjectDataPointer(asap) = KnxAl_GetAPDUShortData(KnxMSG_GetMessagePtr(
+                        *KnxALG_GetObjectDataPointer(asap) = KnxAl_GetAPDUShortData(KnxMsg_GetMessagePtr(
                                                                                         pBuffer), KnxALG_GetCommObjDescr(
                                                                                         asap)->Type);
                     } else {

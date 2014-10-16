@@ -282,7 +282,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
         KnxLL_ReceiverIndex++;
         KnxLL_Buffer[KnxLL_ReceiverIndex] = octet;
         KnxLL_RunningFCB ^= octet;
-        printf("R: %02x ", octet);
+        //printf("R: %02x ", octet);
         TMR_START_DL_TIMER();
         if (KnxLL_ReceiverStage == KNX_LL_RECEIVER_STAGE_HEADER) {
             if (KnxLL_ReceiverIndex == OFFS_NPCI) {
@@ -315,7 +315,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
             DBG_PRINTLN("L_DataExtended_Ind");
         } else if ((octet & 0xd3) == L_DATA_STANDARD_IND)  {
             DBG_PRINTLN("L_DataStandard_Ind");
-            printf("CTRL[%02x]\n", octet);
+            //printf("CTRL[%02x]\n", octet);
             KnxLL_State = KNX_LL_STATE_AWAITING_RECEIPTION; /* TODO: Distiguish Standard/Extendend Frames */
             KnxLL_ReceiverStage = KNX_LL_RECEIVER_STAGE_HEADER;
             KnxLL_ReceiverIndex = 0;
@@ -370,21 +370,21 @@ STATIC void Disp_L_DataReq(void)
 {
     uint8_t chk;
 
-    KnxMSG_SetFrameType(KnxMSG_ScratchBufferPtr, ftStandard);
+    KnxMsg_SetFrameType(KnxMsg_ScratchBufferPtr, ftStandard);
 
     /* PREPARE_CONTROL_FIELD() */
-    KnxMSG_ScratchBufferPtr->msg[0] |= (uint8_t)0x30;   /* fixed one bit + repeated. */
-    KnxMSG_ScratchBufferPtr->msg[0] &= (~(uint8_t)3);   /* clear two LSBs. */
+    KnxMsg_ScratchBufferPtr->msg[0] |= (uint8_t)0x30;   /* fixed one bit + repeated. */
+    KnxMsg_ScratchBufferPtr->msg[0] &= (~(uint8_t)3);   /* clear two LSBs. */
     /**/
 
-    chk = KnxLL_Checksum(KnxMSG_ScratchBufferPtr->msg, KnxMSG_ScratchBufferPtr->len);
+    chk = KnxLL_Checksum(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
     
     DBG_PRINT("Disp_L_DataReq: ");
-    Dbg_DumpHex(KnxMSG_ScratchBufferPtr->msg, KnxMSG_ScratchBufferPtr->len);
+    Dbg_DumpHex(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
 
-    KnxLL_WriteFrame(KnxMSG_ScratchBufferPtr->msg, KnxMSG_ScratchBufferPtr->len);
+    KnxLL_WriteFrame(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
 
-    KnxMSG_ReleaseBuffer(KnxMSG_ScratchBufferPtr);
+    KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
 }
 
 
@@ -395,7 +395,7 @@ STATIC void Disp_L_PollDataReq(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* todo: Implement!!! */
-    KnxMSG_SetFrameType(KnxMSG_ScratchBufferPtr, ftPolling);
+    KnxMsg_SetFrameType(KnxMsg_ScratchBufferPtr, ftPolling);
 }
 
 
@@ -412,22 +412,22 @@ boolean KnxLL_IsBusy(void)
 
 void KnxLL_DataStandard_Ind(uint8_t const * frame)
 {
-    KnxMSG_BufferPtr pBuffer;
+    KnxMsg_BufferPtr pBuffer;
     uint8_t length;
 
     if (KnxLL_Repeated) {
         return;     /* Don't route duplicates for now. */
     }
 
-    pBuffer = KnxMSG_AllocateBuffer();
+    pBuffer = KnxMsg_AllocateBuffer();
 
-    if (pBuffer != (KnxMSG_BufferPtr)NULL) {
+    if (pBuffer != (KnxMsg_BufferPtr)NULL) {
         pBuffer->service = L_DATA_IND;
 //        pBuffer->sap = tsap;
         pBuffer->len = length = (frame[5] & (uint8_t)0x0f) + (uint8_t)7;
 
         Utl_MemCopy((void *)pBuffer->msg, (void *)frame, length);
-        (void)KnxMSG_Post(pBuffer);
+        (void)KnxMsg_Post(pBuffer);
     }
 }
 

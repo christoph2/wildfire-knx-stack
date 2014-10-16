@@ -74,8 +74,8 @@ void KnxSched_Init(void)
     KnxNl_Init();
     //printf("KnxTLC_Init\n");
     KnxTLC_Init();
-    //printf("KnxMSG_Init\n");
-    KnxMSG_Init();
+    //printf("KnxMsg_Init\n");
+    KnxMsg_Init();
     //printf("KnxALG_Init\n");
     KnxALG_Init();
     //printf("KnxTmr_Init\n");

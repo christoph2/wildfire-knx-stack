@@ -25,9 +25,9 @@
 #include "knx_debug.h"
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(void, KSTACK_CODE) NL_CheckRoutingCount(KnxMSG_BufferPtr pBuffer);
+STATIC FUNC(void, KSTACK_CODE) NL_CheckRoutingCount(KnxMsg_BufferPtr pBuffer);
 #else
-static void KnxNl_CheckRoutingCount(KnxMSG_BufferPtr pBuffer);
+static void KnxNl_CheckRoutingCount(KnxMsg_BufferPtr pBuffer);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -112,23 +112,23 @@ STATIC FUNC(void, KSTACK_CODE) L_Data_Ind(void)
 STATIC void L_Data_Ind(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if ((KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->npci & (uint8_t)0x80) == (uint8_t)0x80) {
-        if (KnxADR_IsBroadcastAddress(*KnxMSG_GetMessagePtr(KnxMSG_ScratchBufferPtr)->dest)) {
+    if ((KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr)->npci & (uint8_t)0x80) == (uint8_t)0x80) {
+        if (KnxADR_IsBroadcastAddress(*KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr)->dest)) {
             /* Broadcast-Communication. */
             //DBG_PRINTLN("Broadcast-Communication");
-            KnxMSG_ScratchBufferPtr->service = N_DATA_BROADCAST_IND;
-            (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
+            KnxMsg_ScratchBufferPtr->service = N_DATA_BROADCAST_IND;
+            (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
         } else {
             //DBG_PRINTLN("Multicast-Communication");
             /* Multicast-Communication. */
-            KnxMSG_ScratchBufferPtr->service = N_DATA_GROUP_IND;
-            (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
+            KnxMsg_ScratchBufferPtr->service = N_DATA_GROUP_IND;
+            (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
         }
     } else {
         //DBG_PRINTLN("Individual-Adressing");
         /* Individual-Adressing. */
-        KnxMSG_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_IND;
-        (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
+        KnxMsg_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_IND;
+        (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
     }
 }
 
@@ -174,10 +174,10 @@ STATIC FUNC(void, KSTACK_CODE) N_DataBroadcast_Req(void)
 STATIC void N_DataBroadcast_Req(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMSG_SetAddressType(KnxMSG_ScratchBufferPtr, atMULTICAST);
-    KnxMSG_SetRoutingCount(KnxMSG_ScratchBufferPtr);
-    KnxMSG_ScratchBufferPtr->service = L_DATA_REQ;
-    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
+    KnxMsg_SetAddressType(KnxMsg_ScratchBufferPtr, atMULTICAST);
+    KnxMsg_SetRoutingCount(KnxMsg_ScratchBufferPtr);
+    KnxMsg_ScratchBufferPtr->service = L_DATA_REQ;
+    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
 
@@ -189,10 +189,10 @@ STATIC void N_DataIndividual_Req(void)
 {
     DBG_PRINTLN("N_DataIndividualReq");
 
-    KnxMSG_SetAddressType(KnxMSG_ScratchBufferPtr, atINDIVIDUAL);
-    KnxMSG_SetRoutingCount(KnxMSG_ScratchBufferPtr);
-    KnxMSG_ScratchBufferPtr->service = L_DATA_REQ;
-    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
+    KnxMsg_SetAddressType(KnxMsg_ScratchBufferPtr, atINDIVIDUAL);
+    KnxMsg_SetRoutingCount(KnxMsg_ScratchBufferPtr);
+    KnxMsg_ScratchBufferPtr->service = L_DATA_REQ;
+    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
 
@@ -202,10 +202,10 @@ STATIC FUNC(void, KSTACK_CODE) N_DataGroup_Req(void)
 STATIC void N_DataGroup_Req(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMSG_SetAddressType(KnxMSG_ScratchBufferPtr, atMULTICAST);
-    KnxMSG_SetRoutingCount(KnxMSG_ScratchBufferPtr);
-    KnxMSG_ScratchBufferPtr->service = L_DATA_REQ;
-    (void)KnxMSG_Post(KnxMSG_ScratchBufferPtr);
+    KnxMsg_SetAddressType(KnxMsg_ScratchBufferPtr, atMULTICAST);
+    KnxMsg_SetRoutingCount(KnxMsg_ScratchBufferPtr);
+    KnxMsg_ScratchBufferPtr->service = L_DATA_REQ;
+    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
 
@@ -220,15 +220,15 @@ STATIC void N_PollData_Req(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(void, KSTACK_CODE) KnxNl_CheckRoutingCount(KnxMSG_BufferPtr pBuffer)
+STATIC FUNC(void, KSTACK_CODE) KnxNl_CheckRoutingCount(KnxMsg_BufferPtr pBuffer)
 #else
-static void KnxNl_CheckRoutingCount(KnxMSG_BufferPtr pBuffer)
+static void KnxNl_CheckRoutingCount(KnxMsg_BufferPtr pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if (KnxMSG_GetRoutingCount(pBuffer) == MSG_NO_ROUTING_CTRL) {
-        KnxMSG_SetRoutingCtrl(pBuffer, TRUE);
+    if (KnxMsg_GetRoutingCount(pBuffer) == MSG_NO_ROUTING_CTRL) {
+        KnxMsg_SetRoutingCtrl(pBuffer, TRUE);
     } else {
-        KnxMSG_SetRoutingCtrl(pBuffer, FALSE);
+        KnxMsg_SetRoutingCtrl(pBuffer, FALSE);
     }
 }
 

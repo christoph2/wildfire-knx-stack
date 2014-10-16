@@ -67,55 +67,55 @@ extern "C"
 /*
 ** Global function-like macros.
 */
-#define KnxMSG_GetMessagePtr(pBuffer)           ((KNX_StandardFrameRefType)(pBuffer)->msg)
-#define KnxMSG_GetProperyFramePtr(pBuffer)      ((KNX_PropertyFrameRefType)(pBuffer)->msg)
-#define KnxMSG_GetPollingFramePtr(pBuffer)      ((KNX_PollingFrameRefType)(pBuffer)->msg)
+#define KnxMsg_GetMessagePtr(pBuffer)           ((KNX_StandardFrameRefType)(pBuffer)->msg)
+#define KnxMsg_GetProperyFramePtr(pBuffer)      ((KNX_PropertyFrameRefType)(pBuffer)->msg)
+#define KnxMsg_GetPollingFramePtr(pBuffer)      ((KNX_PollingFrameRefType)(pBuffer)->msg)
 
 /**************/
-#define KnxMSG_GetFrameType(pBuffer)            ((KNX_FrameTypeType)(KnxMSG_GetMessagePtr((pBuffer))->ctrl) & (uint8_t)0xc0)
-#define KnxMSG_SetFrameType(pBuffer, type)      (KnxMSG_GetMessagePtr((pBuffer))->ctrl |= ((type) & (uint8_t)0xc0))
+#define KnxMsg_GetFrameType(pBuffer)            ((KNX_FrameTypeType)(KnxMsg_GetMessagePtr((pBuffer))->ctrl) & (uint8_t)0xc0)
+#define KnxMsg_SetFrameType(pBuffer, type)      (KnxMsg_GetMessagePtr((pBuffer))->ctrl |= ((type) & (uint8_t)0xc0))
 
-#define KnxMSG_GetSourceAddress(pBuffer)        ((Knx_AddressType)btohs(*(uint16_t *)&KnxMSG_GetMessagePtr((pBuffer))->source))
-#define KnxMSG_GetDestAddress(pBuffer)          ((Knx_AddressType)btohs(*(uint16_t *)&KnxMSG_GetMessagePtr((pBuffer))->dest))
-#define KnxMSG_SetSourceAddress(pBuffer, addr)  (*(uint16_t *)&KnxMSG_GetMessagePtr((pBuffer))->source = Utl_Htons((addr)))
-#define KnxMSG_SetDestAddress(pBuffer, addr)    (*(uint16_t *)&KnxMSG_GetMessagePtr((pBuffer))->dest = Utl_Htons((addr)))
+#define KnxMsg_GetSourceAddress(pBuffer)        ((Knx_AddressType)btohs(*(uint16_t *)&KnxMsg_GetMessagePtr((pBuffer))->source))
+#define KnxMsg_GetDestAddress(pBuffer)          ((Knx_AddressType)btohs(*(uint16_t *)&KnxMsg_GetMessagePtr((pBuffer))->dest))
+#define KnxMsg_SetSourceAddress(pBuffer, addr)  (*(uint16_t *)&KnxMsg_GetMessagePtr((pBuffer))->source = Utl_Htons((addr)))
+#define KnxMsg_SetDestAddress(pBuffer, addr)    (*(uint16_t *)&KnxMsg_GetMessagePtr((pBuffer))->dest = Utl_Htons((addr)))
 
-#define KnxMSG_GetPriority(pBuffer)             ((KNX_PriorityType)(KnxMSG_GetMessagePtr((pBuffer))->ctrl & (uint8_t)0x0C) >> 2)
-#define KnxMSG_SetPriority(pBuffer, priority)   (KnxMSG_GetMessagePtr((pBuffer))->ctrl |= (((priority) & (uint8_t)0x03) << 2))
+#define KnxMsg_GetPriority(pBuffer)             ((KNX_PriorityType)(KnxMsg_GetMessagePtr((pBuffer))->ctrl & (uint8_t)0x0C) >> 2)
+#define KnxMsg_SetPriority(pBuffer, priority)   (KnxMsg_GetMessagePtr((pBuffer))->ctrl |= (((priority) & (uint8_t)0x03) << 2))
 
 /* check: Daf-Type, DestionationAddressType??? */
-#define KnxMSG_GetAddressType(pBuffer)          ((uint8_t)KnxMSG_GetMessagePtr((pBuffer))->npci & (uint8_t)0x80)
-#define KnxMSG_SetAddressType(pBuffer, at)      (KnxMSG_GetMessagePtr((pBuffer))->npci |= ((at) & (uint8_t)0x80))
+#define KnxMsg_GetAddressType(pBuffer)          ((uint8_t)KnxMsg_GetMessagePtr((pBuffer))->npci & (uint8_t)0x80)
+#define KnxMsg_SetAddressType(pBuffer, at)      (KnxMsg_GetMessagePtr((pBuffer))->npci |= ((at) & (uint8_t)0x80))
 
 /* check: ist 'LSDU' richtig??? */
-#define KnxMSG_GetLSDULen(pBuffer)              (KnxMSG_GetMessagePtr((pBuffer))->npci & (uint8_t)0x0f)
-#define KnxMSG_SetLSDULen(pBuffer, len_lsdu)    (KnxMSG_GetMessagePtr((pBuffer))->npci = ((len_lsdu) & (uint8_t)0x0f))
+#define KnxMsg_GetLSDULen(pBuffer)              (KnxMsg_GetMessagePtr((pBuffer))->npci & (uint8_t)0x0f)
+#define KnxMsg_SetLSDULen(pBuffer, len_lsdu)    (KnxMsg_GetMessagePtr((pBuffer))->npci = ((len_lsdu) & (uint8_t)0x0f))
 
-#define KnxMSG_GetTPCI(pBuffer)                 ((uint8_t)KnxMSG_GetMessagePtr((pBuffer))->tpci)
-#define KnxMSG_SetTPCI(pBuffer, tp)             (KnxMSG_GetMessagePtr((pBuffer))->tpci |= (tp))
+#define KnxMsg_GetTPCI(pBuffer)                 ((uint8_t)KnxMsg_GetMessagePtr((pBuffer))->tpci)
+#define KnxMsg_SetTPCI(pBuffer, tp)             (KnxMsg_GetMessagePtr((pBuffer))->tpci |= (tp))
 
-#define KnxMSG_GetSeqNo(pBuffer)                ((uint8_t)((KnxMSG_GetMessagePtr((pBuffer))->tpci) & (uint8_t)0x3c) >> 2)
-#define KnxMSG_SetSeqNo(pBuffer, SeqNo)         (KnxMSG_GetMessagePtr((pBuffer))->tpci |= (((SeqNo) & (uint8_t)0x0f) << 2))
+#define KnxMsg_GetSeqNo(pBuffer)                ((uint8_t)((KnxMsg_GetMessagePtr((pBuffer))->tpci) & (uint8_t)0x3c) >> 2)
+#define KnxMsg_SetSeqNo(pBuffer, SeqNo)         (KnxMsg_GetMessagePtr((pBuffer))->tpci |= (((SeqNo) & (uint8_t)0x0f) << 2))
 
 /* check: geht 'GetAPCI' nicht effizienter??? */
-#define KnxMSG_GetAPCI(pBuffer)                 ((uint16_t)(KnxMSG_GetMessagePtr((pBuffer))->tpci << \
-                                                          8) | (KnxMSG_GetMessagePtr((pBuffer))->apci))
-#define KnxMSG_SetAPCI(pBuffer, apci)           (*(uint16_t *)&(pBuffer)->msg[6] = Utl_Htons((apci)))
+#define KnxMsg_GetAPCI(pBuffer)                 ((uint16_t)(KnxMsg_GetMessagePtr((pBuffer))->tpci << \
+                                                          8) | (KnxMsg_GetMessagePtr((pBuffer))->apci))
+#define KnxMsg_SetAPCI(pBuffer, apci)           (*(uint16_t *)&(pBuffer)->msg[6] = Utl_Htons((apci)))
 
-#define KnxMSG_GetIAK(pBuffer)                  ((uint8_t)KnxMSG_GetMessagePtr((pBuffer))->ctrl & (uint8_t)0x01)
+#define KnxMsg_GetIAK(pBuffer)                  ((uint8_t)KnxMsg_GetMessagePtr((pBuffer))->ctrl & (uint8_t)0x01)
 
 /*
 ** Global types.
 */
 typedef uint8_t Knx_MessageType[MSG_LEN];
 
-typedef struct tagKnxMSG_Buffer {
+typedef struct tagKnxMsg_Buffer {
     uint8_t               next;
     uint8_t               len;
     Knx_ServiceTypeType service;
     uint8_t               sap;
     Knx_MessageType     msg;
-} KnxMSG_Buffer, * KnxMSG_BufferPtr;
+} KnxMsg_Buffer, * KnxMsg_BufferPtr;
 
 typedef struct tagKNX_StandardFrameType {
     uint8_t   ctrl;
@@ -153,39 +153,39 @@ typedef struct tagKNX_PollingFrameType {
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)         KnxMSG_Init(void);
-FUNC(KnxMSG_BufferPtr, KSTACK_CODE) KnxMSG_AllocateBuffer(void);
-FUNC(void, KSTACK_CODE)     KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr);
-FUNC(boolean, KSTACK_CODE)      KnxMSG_ClearBuffer(KnxMSG_BufferPtr ptr);
-FUNC(boolean, KSTACK_CODE)      KnxMSG_Post(KnxMSG_BufferPtr ptr);
-FUNC(KnxMSG_BufferPtr, KSTACK_CODE) KnxMSG_Get(uint8_t task);
-FUNC(void, KSTACK_CODE)         KnxMSG_RedirectToUser(uint8_t layer); /* U_MS_Switch */
+FUNC(void, KSTACK_CODE)         KnxMsg_Init(void);
+FUNC(KnxMsg_BufferPtr, KSTACK_CODE) KnxMsg_AllocateBuffer(void);
+FUNC(void, KSTACK_CODE)     KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr);
+FUNC(boolean, KSTACK_CODE)      KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr);
+FUNC(boolean, KSTACK_CODE)      KnxMsg_Post(KnxMsg_BufferPtr ptr);
+FUNC(KnxMsg_BufferPtr, KSTACK_CODE) KnxMsg_Get(uint8_t task);
+FUNC(void, KSTACK_CODE)         KnxMsg_RedirectToUser(uint8_t layer); /* U_MS_Switch */
 
-FUNC(void, KSTACK_CODE)         KnxMSG_SetLen(KnxMSG_BufferPtr pBuffer, uint8_t len);
-FUNC(uint8_t, KSTACK_CODE)        KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer);
+FUNC(void, KSTACK_CODE)         KnxMsg_SetLen(KnxMsg_BufferPtr pBuffer, uint8_t len);
+FUNC(uint8_t, KSTACK_CODE)        KnxMsg_GetLen(const KnxMsg_BufferPtr pBuffer);
 
-FUNC(uint8_t, KSTACK_CODE)        KnxMSG_GetRoutingCount(const KnxMSG_BufferPtr pBuffer);
-FUNC(void, KSTACK_CODE)         KnxMSG_SetRoutingCount(KnxMSG_BufferPtr pBuffer);
+FUNC(uint8_t, KSTACK_CODE)        KnxMsg_GetRoutingCount(const KnxMsg_BufferPtr pBuffer);
+FUNC(void, KSTACK_CODE)         KnxMsg_SetRoutingCount(KnxMsg_BufferPtr pBuffer);
 
-FUNC(void, KSTACK_CODE)         KnxMSG_SetRoutingCtrl(KnxMSG_BufferPtr pBuffer, boolean on);
-FUNC(boolean, KSTACK_CODE)      KnxMSG_GetRoutingCtrl(const KnxMSG_BufferPtr pBuffer);
+FUNC(void, KSTACK_CODE)         KnxMsg_SetRoutingCtrl(KnxMsg_BufferPtr pBuffer, boolean on);
+FUNC(boolean, KSTACK_CODE)      KnxMsg_GetRoutingCtrl(const KnxMsg_BufferPtr pBuffer);
 #else
-void                KnxMSG_Init(void);
-KnxMSG_BufferPtr    KnxMSG_AllocateBuffer(void);
-void                KnxMSG_ReleaseBuffer(KnxMSG_BufferPtr ptr);
-boolean             KnxMSG_ClearBuffer(KnxMSG_BufferPtr ptr);
-boolean             KnxMSG_Post(KnxMSG_BufferPtr ptr);
-KnxMSG_BufferPtr    KnxMSG_Get(uint8_t task);
-void                KnxMSG_RedirectToUser(uint8_t layer); /* U_MS_Switch */
+void                KnxMsg_Init(void);
+KnxMsg_BufferPtr    KnxMsg_AllocateBuffer(void);
+void                KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr);
+boolean             KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr);
+boolean             KnxMsg_Post(KnxMsg_BufferPtr ptr);
+KnxMsg_BufferPtr    KnxMsg_Get(uint8_t task);
+void                KnxMsg_RedirectToUser(uint8_t layer); /* U_MS_Switch */
 
-void    KnxMSG_SetLen(KnxMSG_BufferPtr pBuffer, uint8_t len);
-uint8_t   KnxMSG_GetLen(const KnxMSG_BufferPtr pBuffer);
+void    KnxMsg_SetLen(KnxMsg_BufferPtr pBuffer, uint8_t len);
+uint8_t   KnxMsg_GetLen(const KnxMsg_BufferPtr pBuffer);
 
-uint8_t   KnxMSG_GetRoutingCount(const KnxMSG_BufferPtr pBuffer);
-void    KnxMSG_SetRoutingCount(KnxMSG_BufferPtr pBuffer);
+uint8_t   KnxMsg_GetRoutingCount(const KnxMsg_BufferPtr pBuffer);
+void    KnxMsg_SetRoutingCount(KnxMsg_BufferPtr pBuffer);
 
-void    KnxMSG_SetRoutingCtrl(KnxMSG_BufferPtr pBuffer, boolean on);
-boolean KnxMSG_GetRoutingCtrl(const KnxMSG_BufferPtr pBuffer);
+void    KnxMsg_SetRoutingCtrl(KnxMsg_BufferPtr pBuffer, boolean on);
+boolean KnxMsg_GetRoutingCtrl(const KnxMsg_BufferPtr pBuffer);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */

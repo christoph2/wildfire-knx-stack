@@ -63,7 +63,7 @@ const uint8_t KNX_PDT_LEN_TAB[32] = {
 #define PH_PTR_TO_VAL_FN    ((uint8_t)0x01)
 #define PH_PTR_TO_ARRAY     ((uint8_t)0x03)
 
-typedef void (*PROPERTY_FUNC)(KnxMSG_BufferPtr pBuffer, boolean write);
+typedef void (*PROPERTY_FUNC)(KnxMsg_BufferPtr pBuffer, boolean write);
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) ios_test(void);
@@ -79,9 +79,9 @@ void ios_test(void);
 #endif /* KSTACK_MEMORY_MAPPING */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8_t service, boolean connected)
+FUNC(void, KSTACK_CODE) IOS_Dispatch(const KnxMsg_BufferPtr pBuffer, uint8_t service, boolean connected)
 #else
-void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8_t service, boolean connected)
+void IOS_Dispatch(const KnxMsg_BufferPtr pBuffer, uint8_t service, boolean connected)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_t data[MAX_PROP_DATA_LEN];
@@ -97,11 +97,11 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8_t service, boolean conne
     Knx_AddressType dest;
     uint8_t ctl;
 
-    if (pBuffer == (KnxMSG_BufferPtr)NULL) {
+    if (pBuffer == (KnxMsg_BufferPtr)NULL) {
         return;
     }
 
-    pmsg = KnxMSG_GetProperyFramePtr(pBuffer);
+    pmsg = KnxMsg_GetProperyFramePtr(pBuffer);
 
 /*
 **      1. object exists?
@@ -127,7 +127,7 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8_t service, boolean conne
         }
 
         source = KnxADR_GetPhysAddr();
-        dest   = KnxMSG_GetSourceAddress(pBuffer);
+        dest   = KnxMsg_GetSourceAddress(pBuffer);
 
         A_PropertyDescription_Read_Res(pBuffer, source, dest, pmsg->obj_id, pprop->property_id,
                                        pmsg->num_elems, GET_PROPERTY_TYPE(pprop), (uint8_t)1, pobj->access_level);
@@ -231,7 +231,7 @@ void IOS_Dispatch(const KnxMSG_BufferPtr pBuffer, uint8_t service, boolean conne
 
 pr_desc_empty:
     source = KnxADR_GetPhysAddr();
-    dest   = KnxMSG_GetSourceAddress(pBuffer);
+    dest   = KnxMsg_GetSourceAddress(pBuffer);
     A_PropertyDescription_Read_Res_NoData(pBuffer, source, dest, pmsg->obj_id, pmsg->prop_id, pmsg->num_elems);
     return;
 
@@ -240,7 +240,7 @@ empty_answer:   /* Property-Read /wo Data. */
     return;
 
 invalid:
-    KnxMSG_ReleaseBuffer(pBuffer);
+    KnxMsg_ReleaseBuffer(pBuffer);
 }
 
 

@@ -27,15 +27,15 @@
 ** Function prototypes.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)     NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8_t service /*,boolean connected*/);
-FUNC(boolean, KSTACK_CODE) NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer);
-FUNC(boolean, KSTACK_CODE) NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer);
-FUNC(boolean, KSTACK_CODE) NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer);
+FUNC(void, KSTACK_CODE)     NWPS_Dispatch(KnxMsg_BufferPtr pBuffer, uint8_t service /*,boolean connected*/);
+FUNC(boolean, KSTACK_CODE) NWPS_GroupAddressCheck(KnxMsg_BufferPtr pBuffer);
+FUNC(boolean, KSTACK_CODE) NWPS_FunctionalBlockScan(KnxMsg_BufferPtr pBuffer);
+FUNC(boolean, KSTACK_CODE) NWPS_GetSerialNumber(KnxMsg_BufferPtr pBuffer);
 #else
-void    NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8_t service /*,boolean connected*/);
-boolean NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer);
-boolean NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer);
-boolean NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer);
+void    NWPS_Dispatch(KnxMsg_BufferPtr pBuffer, uint8_t service /*,boolean connected*/);
+boolean NWPS_GroupAddressCheck(KnxMsg_BufferPtr pBuffer);
+boolean NWPS_FunctionalBlockScan(KnxMsg_BufferPtr pBuffer);
+boolean NWPS_GetSerialNumber(KnxMsg_BufferPtr pBuffer);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -97,7 +97,7 @@ boolean NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer);
 /*
 ** Local types.
 */
-typedef boolean (*NWPS_FUNC)(KnxMSG_BufferPtr pBuffer);
+typedef boolean (*NWPS_FUNC)(KnxMsg_BufferPtr pBuffer);
 
 typedef struct tagNWPSFunctions {
     uint16_t      objectTypeFrom;
@@ -126,9 +126,9 @@ STATIC NWPSFunctions NWPSReadFunctions[] = {
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8_t service /*,boolean connected*/)
+FUNC(void, KSTACK_CODE) NWPS_Dispatch(KnxMsg_BufferPtr pBuffer, uint8_t service /*,boolean connected*/)
 #else
-void NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8_t service /*,boolean connected*/)
+void NWPS_Dispatch(KnxMsg_BufferPtr pBuffer, uint8_t service /*,boolean connected*/)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KNX_StandardFrameRefType pmsg;
@@ -136,27 +136,27 @@ void NWPS_Dispatch(KnxMSG_BufferPtr pBuffer, uint8_t service /*,boolean connecte
     uint8_t pid;
     uint16_t objectType;
 
-    pmsg = KnxMSG_GetMessagePtr(pBuffer);
+    pmsg = KnxMsg_GetMessagePtr(pBuffer);
 
     objectType = btohs((uint16_t)pmsg->data[0]);
     pid        = pmsg->data[2];
 
-    len = KnxMSG_GetLSDULen(pBuffer);
+    len = KnxMsg_GetLSDULen(pBuffer);
 
     if (service == NWPS_READ) {
 
     } else if (service == NWPS_WRITE) {
 
     } else {
-        KnxMSG_ReleaseBuffer(pBuffer);
+        KnxMsg_ReleaseBuffer(pBuffer);
     }
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer)
+FUNC(boolean, KSTACK_CODE) NWPS_GroupAddressCheck(KnxMsg_BufferPtr pBuffer)
 #else
-boolean NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer)
+boolean NWPS_GroupAddressCheck(KnxMsg_BufferPtr pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return TRUE;
@@ -164,9 +164,9 @@ boolean NWPS_GroupAddressCheck(KnxMSG_BufferPtr pBuffer)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer)
+FUNC(boolean, KSTACK_CODE) NWPS_FunctionalBlockScan(KnxMsg_BufferPtr pBuffer)
 #else
-boolean NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer)
+boolean NWPS_FunctionalBlockScan(KnxMsg_BufferPtr pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return TRUE;
@@ -174,9 +174,9 @@ boolean NWPS_FunctionalBlockScan(KnxMSG_BufferPtr pBuffer)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer)
+FUNC(boolean, KSTACK_CODE) NWPS_GetSerialNumber(KnxMsg_BufferPtr pBuffer)
 #else
-boolean NWPS_GetSerialNumber(KnxMSG_BufferPtr pBuffer)
+boolean NWPS_GetSerialNumber(KnxMsg_BufferPtr pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return TRUE;
