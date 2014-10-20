@@ -6,18 +6,18 @@
 *
 *   All Rights Reserved
 *
-*  This program is free softwKNXe; you can redistribute it and/or modify
+*  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
 *
 *  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
-*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
-*  GNU General Public License for more KnxEtails.
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
 *
 *  You should have received a copy of the GNU General Public License along
-*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  with this program; if not, write to the Free Software Foundation, Inc.,
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
@@ -154,7 +154,8 @@ typedef struct tagKNX_PollingFrameType {
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE)         KnxMsg_Init(void);
-FUNC(KnxMsg_BufferPtr, KSTACK_CODE) KnxMsg_AllocateBuffer(void);
+FUNC(Knx_StatusType, KSTACK_CODE) KnxMsg_AllocateBuffer(KnxMsg_Buffer ** buffer);
+FUNC(KnxMsg_Buffer *, KSTACK_CODE) KnxMsg_AllocateBufferWrapper(void);
 FUNC(void, KSTACK_CODE)     KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr);
 FUNC(boolean, KSTACK_CODE)      KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr);
 FUNC(boolean, KSTACK_CODE)      KnxMsg_Post(KnxMsg_BufferPtr ptr);
@@ -171,7 +172,8 @@ FUNC(void, KSTACK_CODE)         KnxMsg_SetRoutingCtrl(KnxMsg_BufferPtr pBuffer, 
 FUNC(boolean, KSTACK_CODE)      KnxMsg_GetRoutingCtrl(const KnxMsg_BufferPtr pBuffer);
 #else
 void                KnxMsg_Init(void);
-KnxMsg_BufferPtr    KnxMsg_AllocateBuffer(void);
+Knx_StatusType KnxMsg_AllocateBuffer(KnxMsg_Buffer ** buffer);
+KnxMsg_Buffer * KnxMsg_AllocateBufferWrapper(void);
 void                KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr);
 boolean             KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr);
 boolean             KnxMsg_Post(KnxMsg_BufferPtr ptr);

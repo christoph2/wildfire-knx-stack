@@ -6,18 +6,18 @@
 *
 *   All Rights Reserved
 *
-*  This program is free softwKNXe; you can redistribute it and/or modify
+*  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
 *
 *  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
-*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
-*  GNU General Public License for more KnxEtails.
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
 *
 *  You should have received a copy of the GNU General Public License along
-*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  with this program; if not, write to the Free Software Foundation, Inc.,
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
@@ -111,24 +111,26 @@ void ClearMessageBuffer(uint8_t buf_num)
 }
 
 
-STATIC uint16_t AllocCount = (uint16_t)0, ReleaseCount = (uint16_t)0;
-
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(KnxMsg_BufferPtr, KSTACK_CODE) KnxMsg_AllocateBuffer(void)
+FUNC(Knx_StatusType, KSTACK_CODE) KnxMsg_AllocateBuffer(KnxMsg_Buffer ** buffer)
 #else
-KnxMsg_BufferPtr KnxMsg_AllocateBuffer(void)
+Knx_StatusType KnxMsg_AllocateBuffer(KnxMsg_Buffer ** buffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8_t               fp;
-    KnxMsg_BufferPtr    ptr;
+    uint8_t fp;
+    KnxMsg_BufferPtr ptr;
+    KnxMsg_BufferPtr result;
+
+    ASSERT(buffer != NULL);
+
+    //printf("enter KnxMsg_AllocateBuffer [%p]\n", buffer);
 
     DISABLE_ALL_INTERRUPTS();
 
-    AllocCount++;
-
     if ((fp = KnxMsg_Queues[TASK_FREE_ID]) == MSG_NO_NEXT) {
         ENABLE_ALL_INTERRUPTS();
-        return (KnxMsg_BufferPtr)NULL;       /* no Buffer available. */
+        buffer = (KnxMsg_Buffer * )NULL;
+        return KNX_E_NOT_OK;       /* no Buffer available. */
     }
 
     ptr = &KnxMsg_Buffers[fp];
@@ -141,7 +143,25 @@ KnxMsg_BufferPtr KnxMsg_AllocateBuffer(void)
     }
 
     ENABLE_ALL_INTERRUPTS();
-    return &KnxMsg_Buffers[fp];
+    result = &KnxMsg_Buffers[fp];
+    *buffer = result;
+
+    //printf("leave KnxMsg_AllocateBuffer\n");
+    return KNX_E_OK;
+}
+
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(KnxMsg_Buffer *, KSTACK_CODE) KnxMsg_AllocateBufferWrapper(void)
+#else
+KnxMsg_Buffer * KnxMsg_AllocateBufferWrapper(void)
+#endif
+{
+    KnxMsg_Buffer * buffer;
+
+    KnxMsg_AllocateBuffer(&buffer);
+
+    return buffer;
 }
 
 
@@ -162,8 +182,6 @@ void KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr)
         ENABLE_ALL_INTERRUPTS();
         return;
     }
-
-    ReleaseCount++;
 
     old_fp = KnxMsg_Queues[TASK_FREE_ID];
     t_fp   = old_fp;
