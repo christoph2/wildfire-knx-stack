@@ -22,6 +22,7 @@
 *
 */
 #include "knx_tlc.h"
+#include "knx_ffi.h"
 
 /*
 ** Local function prototypes.
@@ -317,9 +318,11 @@ STATIC void N_Data_Individual_Ind(void)
 
     KnxTlc_SetSourceAddress(KnxMsg_GetSourceAddress(KnxMsg_ScratchBufferPtr)); /* todo: !!! TESTEN !!! */
 
-    tpci = KnxMsg_GetTPCI(KnxMsg_ScratchBufferPtr) & (uint8_t)0xc0;
+    tpci = KnxMsg_GetTPCI(KnxMsg_ScratchBufferPtr);
 
-    switch (tpci) {
+    //printf("N_Data_Individual_Ind [%02x]\n", tpci);
+
+    switch (tpci  & (uint8_t)0xc0) {
         case TPCI_UDT:   /* Unnumbered Data (1:1-Connection-Less). */
             KnxMsg_ScratchBufferPtr->service = T_DATA_INDIVIDUAL_IND;
             (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
@@ -329,21 +332,23 @@ STATIC void N_Data_Individual_Ind(void)
             KnxTlc_StateMachine((KNX_TlcEventType)tlcDATA_CONNECTED_IND);
             break;
         case TPCI_UCD:   /* Unnumbered Control. (CONNECT|DISCONNECT). */
-            tpci = KnxMsg_GetTPCI(KnxMsg_ScratchBufferPtr);
-
+            printf("TPCI_UCD [%02x]\n", tpci);
             if (tpci == T_CONNECT_REQ_PDU) {
                 /* T_CONNECT_IND */
                 KnxTlc_StateMachine((KNX_TlcEventType)tlcCONNECT_IND);
+                printf("T_CONNECT_IND\n");
+                KNX_CALLBACK_T_CONNECT_IND();
             } else if (tpci == T_DISCONNECT_REQ_PDU) {
                 /* T_DISCONNECT_IND */
                 KnxTlc_StateMachine((KNX_TlcEventType)tlcDISCONNECT_IND);
+                KNX_CALLBACK_T_DISCONNECT_IND();
+                printf("T_DISCONNECT_IND\n");
             } else {
                 KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
             }
-
             break;
         case TPCI_NCD:                                                      /* Numbered Control (TACK|TNACK). */
-            tpci = KnxMsg_GetTPCI(KnxMsg_ScratchBufferPtr) & (uint8_t)0xC3;   /* 0x03 */
+            tpci  &= (uint8_t)0xC3;
             KnxTlc_SetSequenceNumberOfPDU(KnxMsg_GetSeqNo(KnxMsg_ScratchBufferPtr));
 
             if (tpci == T_ACK_PDU) {
