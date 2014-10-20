@@ -42,12 +42,12 @@ extern "C"
 /*
 ** Global types.
 */
-typedef enum tagKnxTLC_StateType {
+typedef enum tagKnxTlc_StateType {
     CLOSED,
     OPEN_IDLE,
     OPEN_WAIT,
     CONNECTING
-} KnxTLC_StateType;
+} KnxTlc_StateType;
 
 typedef enum tagKNX_TlcEventType {
     tlcCONNECT_IND,
@@ -68,37 +68,37 @@ typedef enum tagKNX_TlcEventType {
     tlcUNDEFINED
 } KNX_TlcEventType;
 
-typedef void (*KnxTLC_ActionFuncType)(void);
+typedef void (*KnxTlc_ActionFuncType)(void);
 
-typedef struct tagKnxTLC_ActionType {
-    KnxTLC_ActionFuncType   Function;
-    KnxTLC_StateType        Next;
-} KnxTLC_ActionType;
+typedef struct tagKnxTlc_ActionType {
+    KnxTlc_ActionFuncType   Function;
+    KnxTlc_StateType        Next;
+} KnxTlc_ActionType;
 
-typedef struct tagKnxTLC_ActionListType {
+typedef struct tagKnxTlc_ActionListType {
 /*    const uint8_t num; */
 #if (TL_STYLE == 1) || (TL_STYLE == 2)
-    const KnxTLC_ActionType Action[3];
+    const KnxTlc_ActionType Action[3];
 #elif TL_STYLE == 3
-    const KnxTLC_ActionType Action[4];
+    const KnxTlc_ActionType Action[4];
 #else
 #error "TL_STYLE muss entweder 1,2 oder 3 sein!"
 #endif
-} KnxTLC_ActionListType;
+} KnxTlc_ActionListType;
 
 /*
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)         KnxTLC_StateMachine(KNX_TlcEventType event);
+FUNC(void, KSTACK_CODE)         KnxTlc_StateMachine(KNX_TlcEventType event);
 
-FUNC(KnxTLC_StateType, KSTACK_CODE) KnxTLC_GetState(void);
-FUNC(void, KSTACK_CODE)         KnxTLC_SetState(KnxTLC_StateType State);
+FUNC(KnxTlc_StateType, KSTACK_CODE) KnxTlc_GetState(void);
+FUNC(void, KSTACK_CODE)         KnxTlc_SetState(KnxTlc_StateType State);
 #else
-void KnxTLC_StateMachine(KNX_TlcEventType event);
+void KnxTlc_StateMachine(KNX_TlcEventType event);
 
-KnxTLC_StateType    KnxTLC_GetState(void);
-void                KnxTLC_SetState(KnxTLC_StateType State);
+KnxTlc_StateType    KnxTlc_GetState(void);
+void                KnxTlc_SetState(KnxTlc_StateType State);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */

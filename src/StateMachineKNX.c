@@ -32,7 +32,7 @@
 /*
 ** Local variables.
 */
-STATIC KnxTLC_StateType KnxTLC_State;
+STATIC KnxTlc_StateType KnxTlc_State;
 STATIC Knx_MessageType  _StoredMsg;    /* Client-only. */
 
 /*
@@ -92,7 +92,7 @@ void    T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_A
 */
 #if TL_STYLE == 3
 /* Transport-Layer-Statemachine-Style #3 */
-STATIC const KnxTLC_ActionListType Actions[] = {
+STATIC const KnxTlc_ActionListType Actions[] = {
     { /* 0,  */ {{A1, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }, {A0, CONNECTING       }}        },
     { /* 1,  */ {{A1, OPEN_IDLE}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT}, {A10, CONNECTING     }}        },
     { /* 2,  */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED },        {A5,  CLOSED           }}        },
@@ -281,22 +281,22 @@ STATIC const EVENT_FUNC TLC_Events[] = {
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(KnxTLC_StateType, KSTACK_CODE) KnxTLC_GetState(void)
+FUNC(KnxTlc_StateType, KSTACK_CODE) KnxTlc_GetState(void)
 #else
-KnxTLC_StateType KnxTLC_GetState(void)
+KnxTlc_StateType KnxTlc_GetState(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    return KnxTLC_State;
+    return KnxTlc_State;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxTLC_SetState(KnxTLC_StateType State)
+FUNC(void, KSTACK_CODE) KnxTlc_SetState(KnxTlc_StateType State)
 #else
-void KnxTLC_SetState(KnxTLC_StateType State)
+void KnxTlc_SetState(KnxTlc_StateType State)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxTLC_State = State;
+    KnxTlc_State = State;
 }
 
 
@@ -341,13 +341,13 @@ void T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxTLC_StateMachine(KNX_TlcEventType event)
+FUNC(void, KSTACK_CODE) KnxTlc_StateMachine(KNX_TlcEventType event)
 #else
-void KnxTLC_StateMachine(KNX_TlcEventType event)
+void KnxTlc_StateMachine(KNX_TlcEventType event)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_t               event_num;
-    KnxTLC_ActionType   action;
+    KnxTlc_ActionType   action;
 
     if (event < tlcUNDEFINED) {
         event_num = TLC_Events[event]();
@@ -355,8 +355,8 @@ void KnxTLC_StateMachine(KNX_TlcEventType event)
         event_num = EventUndefined();
     }
 
-    action = Actions[event_num].Action[KnxTLC_GetState()];
-    KnxTLC_SetState(action.Next);
+    action = Actions[event_num].Action[KnxTlc_GetState()];
+    KnxTlc_SetState(action.Next);
     action.Function();
 }
 
@@ -436,14 +436,14 @@ STATIC FUNC(void, KSTACK_CODE) A1(void)
 STATIC void A1(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxTLC_SetConnectionAddress(KnxTLC_GetSourceAddress());
+    KnxTlc_SetConnectionAddress(KnxTlc_GetSourceAddress());
 
 /* Send a T_CONNECT_ind to the user. */
     KnxMsg_ScratchBufferPtr->service = T_CONNECT_IND;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 
-    KnxTLC_SetSequenceNumberSend((uint8_t)0);
-    KnxTLC_SetSequenceNumberReceived((uint8_t)0);
+    KnxTlc_SetSequenceNumberSend((uint8_t)0);
+    KnxTlc_SetSequenceNumberReceived((uint8_t)0);
     StartConnectionTimeoutTimer();
 }
 
@@ -461,8 +461,8 @@ STATIC void A2(void)
     KnxMsg_AllocateBuffer(&pBuffer);
 
     if (pBuffer != (KnxMsg_BufferPtr)NULL) {
-        T_Ack_Req(pBuffer, KnxADR_GetPhysAddr(), KnxTLC_GetConnectionAddress(), KnxTLC_GetSequenceNumberReceived());
-        KnxTLC_SetSequenceNumberReceived(KnxTLC_GetSequenceNumberReceived() + 1);
+        T_Ack_Req(pBuffer, KnxADR_GetPhysAddr(), KnxTlc_GetConnectionAddress(), KnxTlc_GetSequenceNumberReceived());
+        KnxTlc_SetSequenceNumberReceived(KnxTlc_GetSequenceNumberReceived() + 1);
     } else {
         /* Errorhandling. */
     }
@@ -488,7 +488,7 @@ STATIC void A3(void)
 */
 
     (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
-    T_Ack_Req(KnxMsg_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTLC_GetConnectionAddress(), KnxTLC_GetSequenceNumberReceived());
+    T_Ack_Req(KnxMsg_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTlc_GetConnectionAddress(), KnxTlc_GetSequenceNumberReceived());
     RestartConnectionTimeoutTimer();
 }
 
@@ -506,7 +506,7 @@ STATIC void A4(void)
 */
 
     (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
-    T_Nak_Req(KnxMsg_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTLC_GetConnectionAddress(), KnxTLC_GetSequenceNumberReceived());
+    T_Nak_Req(KnxMsg_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTlc_GetConnectionAddress(), KnxTlc_GetSequenceNumberReceived());
 
     RestartConnectionTimeoutTimer();
 }
@@ -520,7 +520,7 @@ STATIC void A5(void)
 {
     /* Send a T_Disconnect.ind to the user. */
     (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
-    T_Disconnect_Ind(KnxMsg_ScratchBufferPtr, KnxTLC_GetConnectionAddress(), KnxADR_GetPhysAddr());
+    T_Disconnect_Ind(KnxMsg_ScratchBufferPtr, KnxTlc_GetConnectionAddress(), KnxADR_GetPhysAddr());
 
     StopAcknowledgementTimeoutTimer();
     StopConnectionTimeoutTimer();
@@ -543,7 +543,7 @@ STATIC void A6(void)
     KnxMsg_AllocateBuffer(&pBuffer);
 
     if (pBuffer != (KnxMsg_BufferPtr)NULL) {
-        T_Disconnect_Req(pBuffer, KnxADR_GetPhysAddr(), KnxTLC_GetConnectionAddress());
+        T_Disconnect_Req(pBuffer, KnxADR_GetPhysAddr(), KnxTlc_GetConnectionAddress());
     } else {
         /* Errorhandling. */
     }
@@ -555,7 +555,7 @@ STATIC void A6(void)
         (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
     }
 
-    T_Disconnect_Ind(KnxMsg_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTLC_GetConnectionAddress());
+    T_Disconnect_Ind(KnxMsg_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTlc_GetConnectionAddress());
 
     StopAcknowledgementTimeoutTimer();
     StopConnectionTimeoutTimer();
@@ -578,10 +578,10 @@ STATIC void A7(void)   /* Nur local-user (Client only). */
 
 /*    MSG_ScratchBuffer->service=T_DATA_CONNECTED_REQ; */
     KnxMsg_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_REQ;
-    KnxMsg_SetSeqNo(KnxMsg_ScratchBufferPtr, KnxTLC_GetSequenceNumberSend());
+    KnxMsg_SetSeqNo(KnxMsg_ScratchBufferPtr, KnxTlc_GetSequenceNumberSend());
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 
-    KnxTLC_SetRepetitionCount((uint8_t)0);
+    KnxTlc_SetRepetitionCount((uint8_t)0);
 
     StartAcknowledgementTimeoutTimer();
     RestartConnectionTimeoutTimer();
@@ -595,7 +595,7 @@ STATIC void A8(void)  /* only local-user (Client only). */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     StopAcknowledgementTimeoutTimer();
-    KnxTLC_SetSequenceNumberSend(KnxTLC_GetSequenceNumberSend() + (uint8_t)1);
+    KnxTlc_SetSequenceNumberSend(KnxTlc_GetSequenceNumberSend() + (uint8_t)1);
 
     RestoreMessage();
 
@@ -616,7 +616,7 @@ STATIC void A8b(void)        /* only local-user (Client only). */
 {
     KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
     StopAcknowledgementTimeoutTimer();
-    KnxTLC_SetSequenceNumberSend(KnxTLC_GetSequenceNumberSend() + (uint8_t)1);
+    KnxTlc_SetSequenceNumberSend(KnxTlc_GetSequenceNumberSend() + (uint8_t)1);
     RestartConnectionTimeoutTimer();
 }
 
@@ -635,11 +635,11 @@ STATIC void A9(void)  /* only local-user (Client only). */
 
 /*  Send the stored message as a N_Data_Individual.req to the network layer (remote device). */
     RestoreMessage();
-    KnxMsg_SetSeqNo(KnxMsg_ScratchBufferPtr, KnxTLC_GetSequenceNumberSend());
+    KnxMsg_SetSeqNo(KnxMsg_ScratchBufferPtr, KnxTlc_GetSequenceNumberSend());
     KnxMsg_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_REQ;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 
-    KnxTLC_SetRepetitionCount(KnxTLC_GetRepetitionCount() + (uint8_t)1);
+    KnxTlc_SetRepetitionCount(KnxTlc_GetRepetitionCount() + (uint8_t)1);
 
     StartAcknowledgementTimeoutTimer();
     RestartConnectionTimeoutTimer();
@@ -685,14 +685,14 @@ STATIC FUNC(void, KSTACK_CODE) A12(void)
 STATIC void A12(void)                                              /* (Client only.) */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxTLC_SetConnectionAddress(KnxTLC_GetSourceAddress()); /* connection_address=address from T_CONNECT_requ */
+    KnxTlc_SetConnectionAddress(KnxTlc_GetSourceAddress()); /* connection_address=address from T_CONNECT_requ */
 
 /*  send N_Data_Individual.req with T_CONNECT_REQ_PDU */
     (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
-    T_Connect_Req(KnxMsg_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTLC_GetConnectionAddress());
+    T_Connect_Req(KnxMsg_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTlc_GetConnectionAddress());
 
-    KnxTLC_SetSequenceNumberSend((uint8_t)0);
-    KnxTLC_SetSequenceNumberReceived((uint8_t)0);
+    KnxTlc_SetSequenceNumberSend((uint8_t)0);
+    KnxTlc_SetSequenceNumberReceived((uint8_t)0);
     StartConnectionTimeoutTimer();
 }
 
@@ -763,7 +763,7 @@ STATIC FUNC(uint8_t, KSTACK_CODE) EventConnectInd(void)
 STATIC uint8_t EventConnectInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
+    if (KnxTlc_GetSourceAddress() == KnxTlc_GetConnectionAddress()) {
         return (uint8_t)0;
     } else {
         return (uint8_t)1;
@@ -777,7 +777,7 @@ STATIC FUNC(uint8_t, KSTACK_CODE) EventDisconnectInd(void)
 STATIC uint8_t EventDisconnectInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
+    if (KnxTlc_GetSourceAddress() == KnxTlc_GetConnectionAddress()) {
         return (uint8_t)2;
     } else {
         return (uint8_t)3;
@@ -793,13 +793,13 @@ STATIC uint8_t EventDataConnectedInd(void)
 {
     uint8_t event_num;
 
-    if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
-        if (KnxTLC_GetSequenceNumberOfPDU() == KnxTLC_GetSequenceNumberReceived()) {
+    if (KnxTlc_GetSourceAddress() == KnxTlc_GetConnectionAddress()) {
+        if (KnxTlc_GetSequenceNumberOfPDU() == KnxTlc_GetSequenceNumberReceived()) {
             event_num = (uint8_t)4;
-        } else if (KnxTLC_GetSequenceNumberOfPDU() == ((KnxTLC_GetSequenceNumberReceived() - (uint8_t)1) & (uint8_t)0x0f)) {
+        } else if (KnxTlc_GetSequenceNumberOfPDU() == ((KnxTlc_GetSequenceNumberReceived() - (uint8_t)1) & (uint8_t)0x0f)) {
             event_num = (uint8_t)5;
-        } else if ((KnxTLC_GetSequenceNumberOfPDU() != KnxTLC_GetSequenceNumberReceived() - (uint8_t)1)
-                   && (KnxTLC_GetSequenceNumberOfPDU() != ((KnxTLC_GetSequenceNumberReceived() - (uint8_t)1) & (uint8_t)0x0f)))
+        } else if ((KnxTlc_GetSequenceNumberOfPDU() != KnxTlc_GetSequenceNumberReceived() - (uint8_t)1)
+                   && (KnxTlc_GetSequenceNumberOfPDU() != ((KnxTlc_GetSequenceNumberReceived() - (uint8_t)1) & (uint8_t)0x0f)))
         {
             event_num = (uint8_t)6;
         } else {
@@ -821,8 +821,8 @@ STATIC uint8_t EventAckInd(void)
 {
     uint8_t event_num;
 
-    if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
-        if (KnxTLC_GetSequenceNumberOfPDU() == KnxTLC_GetSequenceNumberSend()) {
+    if (KnxTlc_GetSourceAddress() == KnxTlc_GetConnectionAddress()) {
+        if (KnxTlc_GetSequenceNumberOfPDU() == KnxTlc_GetSequenceNumberSend()) {
             event_num = (uint8_t)8;
         } else {
             event_num = (uint8_t)9;
@@ -843,11 +843,11 @@ STATIC uint8_t EventNakInd(void)
 {
     uint8_t event_num;
 
-    if (KnxTLC_GetSourceAddress() == KnxTLC_GetConnectionAddress()) {
-        if (KnxTLC_GetSequenceNumberOfPDU() != KnxTLC_GetSequenceNumberSend()) {
+    if (KnxTlc_GetSourceAddress() == KnxTlc_GetConnectionAddress()) {
+        if (KnxTlc_GetSequenceNumberOfPDU() != KnxTlc_GetSequenceNumberSend()) {
             event_num = (uint8_t)11;
         } else {
-            if (KnxTLC_GetRepetitionCount() < MAX_REP_COUNT) {
+            if (KnxTlc_GetRepetitionCount() < MAX_REP_COUNT) {
                 event_num = (uint8_t)12;
             } else {
                 event_num = (uint8_t)13;
@@ -973,7 +973,7 @@ STATIC FUNC(uint8_t, KSTACK_CODE) EventTimeoutAck(void)
 STATIC uint8_t EventTimeoutAck(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    if (KnxTLC_GetRepetitionCount() < MAX_REP_COUNT) {
+    if (KnxTlc_GetRepetitionCount() < MAX_REP_COUNT) {
         return (uint8_t)17;
     } else {
         return (uint8_t)18;

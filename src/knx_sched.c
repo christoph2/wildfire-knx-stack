@@ -72,8 +72,8 @@ void KnxSched_Init(void)
     LSM_Init();
     //printf("KnxNL_Init\n");
     KnxNl_Init();
-    //printf("KnxTLC_Init\n");
-    KnxTLC_Init();
+    //printf("KnxTlc_Init\n");
+    KnxTlc_Init();
     //printf("KnxMsg_Init\n");
     KnxMsg_Init();
     //printf("KnxALG_Init\n");
@@ -103,7 +103,7 @@ void KnxSched_Task(void)
 
     KnxNl_Task();
     KnxTLG_Task();
-    KnxTLC_Task();
+    KnxTlc_Task();
     KnxALG_Task();
     KnxALM_Task();
 
@@ -115,7 +115,7 @@ void KnxSched_Task(void)
 
     KnxALM_Task();
     KnxALG_Task();
-    KnxTLC_Task();
+    KnxTlc_Task();
     KnxTLG_Task();
     KnxNl_Task();
 
