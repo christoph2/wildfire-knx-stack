@@ -6,18 +6,18 @@
 *
 *   All Rights Reserved
 *
-*  This program is free softwKNXe; you can redistribute it and/or modify
+*  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
 *
 *  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
-*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
-*  GNU General Public License for more KnxEtails.
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
 *
 *  You should have received a copy of the GNU General Public License along
-*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  with this program; if not, write to the Free Software Foundation, Inc.,
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
@@ -458,7 +458,7 @@ STATIC void A2(void)
 
 /*      Send a N_Data_Individual.req with T_ACK_PDU, priority = SYSTEM, destination = */
 /*      connection_address, sequence =SeqNoRcv to the network layer (remote device).  */
-    pBuffer = KnxMsg_AllocateBuffer();
+    KnxMsg_AllocateBuffer(&pBuffer);
 
     if (pBuffer != (KnxMsg_BufferPtr)NULL) {
         T_Ack_Req(pBuffer, KnxADR_GetPhysAddr(), KnxTLC_GetConnectionAddress(), KnxTLC_GetSequenceNumberReceived());
@@ -540,7 +540,7 @@ STATIC void A6(void)
 **      destination = connection_address, sequence = 0 to the network layer (remote device).
 */
 
-    pBuffer = KnxMsg_AllocateBuffer();
+    KnxMsg_AllocateBuffer(&pBuffer);
 
     if (pBuffer != (KnxMsg_BufferPtr)NULL) {
         T_Disconnect_Req(pBuffer, KnxADR_GetPhysAddr(), KnxTLC_GetConnectionAddress());
@@ -550,7 +550,7 @@ STATIC void A6(void)
 
 /* Send a T_Disconnect.ind to the user. */
     if (KnxMsg_ScratchBufferPtr == (KnxMsg_BufferPtr)NULL) {
-        KnxMsg_ScratchBufferPtr = KnxMsg_AllocateBuffer();
+        KnxMsg_AllocateBuffer(&KnxMsg_ScratchBufferPtr);
     } else {
         (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
     }
@@ -628,7 +628,7 @@ STATIC void A9(void)  /* only local-user (Client only). */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (KnxMsg_ScratchBufferPtr == (KnxMsg_BufferPtr)NULL) {
-        KnxMsg_ScratchBufferPtr = KnxMsg_AllocateBuffer();
+        KnxMsg_AllocateBuffer(&KnxMsg_ScratchBufferPtr);
     } else {
         (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
     }

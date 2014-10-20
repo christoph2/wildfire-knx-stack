@@ -65,17 +65,17 @@ FUNC(void, KSTACK_CODE)         TL_Init(void);
 FUNC(void, KSTACK_CODE)         TLG_Task(void);
 FUNC(void, KSTACK_CODE)         TLC_Task(void);
 
-FUNC(void, KSTACK_CODE)         T_Connect_Req(PMSG_Buffer pBuffer, Knx_AddressType source,
+FUNC(void, KSTACK_CODE)         T_Connect_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source,
                                               Knx_AddressType dest
                                               );
-FUNC(void, KSTACK_CODE)         T_Disconnect_Req(PMSG_Buffer pBuffer, Knx_AddressType source,
+FUNC(void, KSTACK_CODE)         T_Disconnect_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source,
                                                  Knx_AddressType dest
                                                  );
 
-FUNC(void, KSTACK_CODE)         T_Ack_Req(PMSG_Buffer pBuffer, Knx_AddressType source,
+FUNC(void, KSTACK_CODE)         T_Ack_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source,
                                           Knx_AddressType dest, uint8_t SeqNo
                                           );
-FUNC(void, KSTACK_CODE)         T_Nak_Req(PMSG_Buffer pBuffer, Knx_AddressType source,
+FUNC(void, KSTACK_CODE)         T_Nak_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source,
                                           Knx_AddressType dest, uint8_t SeqNo
                                           );
 
@@ -99,11 +99,11 @@ void    TL_Init(void);
 void    TLG_Task(void);
 void    TLC_Task(void);
 
-void    T_Connect_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest);
-void    T_Disconnect_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest);
+void    T_Connect_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
+void    T_Disconnect_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
 
-void    T_Ack_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo);
-void    T_Nak_Req(PMSG_Buffer pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo);
+void    T_Ack_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo);
+void    T_Nak_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo);
 
 
 /* TODO: 'knx_tlc.h' !!! */

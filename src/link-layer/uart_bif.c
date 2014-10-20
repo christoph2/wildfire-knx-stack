@@ -419,7 +419,7 @@ void KnxLL_DataStandard_Ind(uint8_t const * frame)
         return;     /* Don't route duplicates for now. */
     }
 
-    pBuffer = KnxMsg_AllocateBuffer();
+    KnxMsg_AllocateBuffer(&pBuffer);
 
     if (pBuffer != (KnxMsg_BufferPtr)NULL) {
         pBuffer->service = L_DATA_IND;
