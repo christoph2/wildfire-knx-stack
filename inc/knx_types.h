@@ -67,6 +67,11 @@ typedef double float64;
 typedef uint16_t  Knx_AddressType;
 typedef uint8_t   Knx_SerialNumberType[6];
 
+typedef enum tagKnx_StatusType {
+    KNX_E_OK,
+    KNX_E_NOT_OK
+} Knx_StatusType;
+
 typedef struct tagKnx_PollGroupSettingType {
     uint16_t  group_addr;
     uint8_t   slot_no;
