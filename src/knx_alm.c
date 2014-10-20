@@ -6,18 +6,18 @@
 *
 *   All Rights Reserved
 *
-*  This program is free softwKNXe; you can redistribute it and/or modify
+*  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
 *
 *  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
-*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
-*  GNU General Public License for more KnxEtails.
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
 *
 *  You should have received a copy of the GNU General Public License along
-*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  with this program; if not, write to the Free Software Foundation, Inc.,
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
@@ -27,7 +27,7 @@
 */
 
 #include "knx_layer_application.h"
-#include "knx_ffipython.h"
+#include "knx_ffi.h"
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) A_Broadcast_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, uint16_t apci,
@@ -211,7 +211,7 @@ STATIC void T_DataBroadcast_Ind(void)
             break;
         case APCI_INDIVIDUAL_ADDRESS_RESP:
             addr = Utl_Ntohs((Knx_AddressType)*(Knx_AddressType *)KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr)->source);            
-            Ffi_Individual_Address_Res(addr);
+            KNX_CALLBACK_INDIVIDUAL_ADDRESS_RES(addr);
             break;
         default:
             KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
@@ -243,8 +243,7 @@ STATIC void T_DataIndividual_Ind(void)
 
             case A_PROPERTYDESCRIPTION_RESPONSE:    // MNT-MASTER ONLY!!!
                 frame = KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr);
-                Ffi_Property_Description_Read_Ind(
-                //A_PropertyDescription_Read_Ind(
+                KNX_CALLBACK_PROPERTYDESCRIPTION_READ_IND(
                     Utl_Ntohs((Knx_AddressType)*(Knx_AddressType *)frame->source), 
                     (Knx_ObjectTypeType)frame->data[0], (Knx_PropertyIdentifierType)frame->data[1], frame->data[2], (Knx_PropertyDataTypeType)frame->data[3],
                     Utl_Ntohs( 
