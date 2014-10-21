@@ -139,7 +139,7 @@ STATIC FUNC(void, KSTACK_CODE) L_Data_Con(void)
 STATIC void L_Data_Con(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    printf("L_Data_Con\n");
+    printf("L_Data_Con [%s]\n", (KnxMsg_ScratchBufferPtr->status == KNX_E_OK) ? "OK" : "NOT_OK");
     KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
 }
 

@@ -143,7 +143,7 @@ static void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount);
 static void Disp_L_Data_Req(void);
 static void Disp_L_PollData_Req(void);
 static void KnxLL_DataStandard_Ind(uint8_t const * frame);
-STATIC void KnxLl_Data_Con(boolean status);
+STATIC void KnxLl_Data_Con(Knx_StatusType status);
 
 
 /*
@@ -269,7 +269,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
                     KnxLL_LocalConfirmation = KNX_LL_CONF_NEGATIVE;
                 }
                 //KNX_CALLBACK_L_CON((octet & 0x80) == 0x80);
-                KnxLl_Data_Con((octet & 0x80) == 0x80);
+                KnxLl_Data_Con( ((octet & 0x80) == 0x80) ? KNX_E_OK : KNX_E_NOT_OK );
                 KnxLL_State = KNX_LL_STATE_IDLE;
             }
             else if ((octet & 0x10) == 0x10) {    /* Weak check. */
@@ -404,21 +404,21 @@ STATIC void Disp_L_PollData_Req(void)
 }
 
 
-STATIC void KnxLl_Data_Con(boolean status)
+STATIC void KnxLl_Data_Con(Knx_StatusType status)
 {
     KnxMsg_Buffer * txBuffer;
     uint8_t length;
 
-    printf("KnxLl_Data_Con [%u]\n", status);
     if (KnxMsg_AllocateBuffer(&txBuffer) == KNX_E_OK) {
         txBuffer->service = KNX_SERVICE_L_DATA_CON;
+        txBuffer->status = status;
 
         txBuffer->len = length = (KnxLL_Buffer[5] & (uint8_t)0x0f) + (uint8_t)7;
         Utl_MemCopy((void *)txBuffer->msg, (void *)KnxLL_Buffer, length);
 
         (void)KnxMsg_Post(txBuffer);
     } else {
-        printf("*** NO BUFFER AVAIL!!!\n");
+        ASSERT(FALSE);
     }
 }
 

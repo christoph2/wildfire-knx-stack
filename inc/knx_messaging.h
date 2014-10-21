@@ -110,11 +110,12 @@ extern "C"
 typedef uint8_t Knx_MessageType[MSG_LEN];
 
 typedef struct tagKnxMsg_Buffer {
-    uint8_t               next;
-    uint8_t               len;
+    uint8_t next;
+    uint8_t len;
     Knx_ServiceTypeType service;
-    uint8_t               sap;
-    Knx_MessageType     msg;
+    uint8_t sap;
+    Knx_StatusType status;
+    Knx_MessageType msg;
 } KnxMsg_Buffer, * KnxMsg_BufferPtr;
 
 typedef struct tagKNX_StandardFrameType {

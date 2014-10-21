@@ -175,6 +175,8 @@ void KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr)
     uint8_t   old_fp;
     uint8_t   t_fp;
 
+    ASSERT_IS_NOT_NULL(ptr);
+
     DISABLE_ALL_INTERRUPTS();
 
     if ((buf_num = GetBufferNumber(ptr)) == MSG_INVALID_BUFFER) {
