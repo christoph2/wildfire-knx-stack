@@ -30,12 +30,6 @@
 #include "knx_layer_transport.h"
 
 /*
-** Local variables.
-*/
-STATIC KnxTlc_StateType KnxTlc_State;
-STATIC Knx_MessageType  _StoredMsg;    /* Client-only. */
-
-/*
 ** Local types.
 */
 typedef uint8_t (*EVENT_FUNC)(void);
@@ -44,26 +38,25 @@ typedef uint8_t (*EVENT_FUNC)(void);
 ** Local function prototypes.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC  FUNC(void, KSTACK_CODE)     StartConnectionTimeoutTimer(void);
-STATIC  FUNC(void, KSTACK_CODE)     RestartConnectionTimeoutTimer(void);
-STATIC  FUNC(void, KSTACK_CODE)     StopConnectionTimeoutTimer(void);
-STATIC  FUNC(void, KSTACK_CODE)     StartAcknowledgementTimeoutTimer(void);
-STATIC  FUNC(void, KSTACK_CODE)     StopAcknowledgementTimeoutTimer(void);
+STATIC  FUNC(void, KSTACK_CODE) StartConnectionTimeoutTimer(void);
+STATIC  FUNC(void, KSTACK_CODE) RestartConnectionTimeoutTimer(void);
+STATIC  FUNC(void, KSTACK_CODE) StopConnectionTimeoutTimer(void);
+STATIC  FUNC(void, KSTACK_CODE) StartAcknowledgementTimeoutTimer(void);
+STATIC  FUNC(void, KSTACK_CODE) StopAcknowledgementTimeoutTimer(void);
 
-STATIC  FUNC(uint8_t, KSTACK_CODE)    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
-STATIC  FUNC(uint8_t, KSTACK_CODE)    EventAckInd(void), EventNakInd(void), EventConnectReq(void);
-STATIC  FUNC(uint8_t, KSTACK_CODE)    EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
-STATIC  FUNC(uint8_t, KSTACK_CODE)    EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
-STATIC  FUNC(uint8_t, KSTACK_CODE)    EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
-STATIC  FUNC(uint8_t, KSTACK_CODE)    EventUndefined(void);
+STATIC  FUNC(uint8_t, KSTACK_CODE) EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
+STATIC  FUNC(uint8_t, KSTACK_CODE) EventAckInd(void), EventNakInd(void), EventConnectReq(void);
+STATIC  FUNC(uint8_t, KSTACK_CODE) EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
+STATIC  FUNC(uint8_t, KSTACK_CODE) EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
+STATIC  FUNC(uint8_t, KSTACK_CODE) EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
+STATIC  FUNC(uint8_t, KSTACK_CODE) EventUndefined(void);
 
-STATIC  FUNC(void, KSTACK_CODE)     A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
-STATIC  FUNC(void, KSTACK_CODE)     A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(
-    void);
+STATIC  FUNC(void, KSTACK_CODE) A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
+STATIC  FUNC(void, KSTACK_CODE) A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(void);
 
 
-FUNC(void, KSTACK_CODE)                T_Disconnect_Ind(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);   /* TODO: include file. */
-FUNC(void, KSTACK_CODE)                T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
+FUNC(void, KSTACK_CODE) T_Disconnect_Ind(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
+FUNC(void, KSTACK_CODE) T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
 #else
 STATIC void StartConnectionTimeoutTimer(void);
 STATIC void RestartConnectionTimeoutTimer(void);
@@ -71,158 +64,156 @@ STATIC void StopConnectionTimeoutTimer(void);
 STATIC void StartAcknowledgementTimeoutTimer(void);
 STATIC void StopAcknowledgementTimeoutTimer(void);
 
-STATIC uint8_t    EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
-STATIC uint8_t    EventAckInd(void), EventNakInd(void), EventConnectReq(void);
-STATIC uint8_t    EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
-STATIC uint8_t    EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
-STATIC uint8_t    EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
-STATIC uint8_t    EventUndefined(void);
+STATIC uint8_t EventConnectInd(void), EventDisconnectInd(void), EventDataConnectedInd(void);
+STATIC uint8_t EventAckInd(void), EventNakInd(void), EventConnectReq(void);
+STATIC uint8_t EventDisconnectReq(void), EventDataConnectedReq(void), EventConnectCon(void);
+STATIC uint8_t EventDisconnectCon(void), EventDataConnectedCon(void), EventAckCon(void);
+STATIC uint8_t EventNakCon(void), EventTimeoutCon(void), EventTimeoutAck(void);
+STATIC uint8_t EventUndefined(void);
 
 STATIC void A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
 STATIC void A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(void);
 
-void    T_Disconnect_Ind(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);              /* TODO: include file. */
-void    T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
-
-
+void T_Disconnect_Ind(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
+void T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
 #endif /* KSTACK_MEMORY_MAPPING */
 
 /*
 ** Local constants.
 */
-#if TL_STYLE == 3
+#if KNX_TL_STATEMACHINE_STYLE == 3
 /* Transport-Layer-Statemachine-Style #3 */
 STATIC const KnxTlc_ActionListType Actions[] = {
-    { /* 0,  */ {{A1, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }, {A0, CONNECTING       }}        },
-    { /* 1,  */ {{A1, OPEN_IDLE}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT}, {A10, CONNECTING     }}        },
-    { /* 2,  */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED },        {A5,  CLOSED           }}        },
-    { /* 3,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING       }}        },
-    { /* 4,  */ {{A0, CLOSED}, {A2, OPEN_IDLE}, {A2, OPEN_WAIT },   {A6,  CLOSED           }}        },
-    { /* 5,  */ {{A0, CLOSED}, {A3, OPEN_IDLE}, {A3, OPEN_WAIT },   {A3,  CONNECTING       }}        },
-    { /* 6,  */ {{A0, CLOSED}, {A4, OPEN_IDLE}, {A4, OPEN_WAIT },   {A6,  CONNECTING       }}        },
-    { /* 7,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A10, CONNECTING       }}        },
-    { /* 8,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A8, OPEN_IDLE },   {A6,  CLOSED           }}        },
-    { /* 9,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED },      {A6,  CLOSED           }}        },
-    { /* 10, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A10, CONNECTING       }}        },
-    { /* 11, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A6,  CLOSED           }}        },
-    { /* 12, */ {{A0, CLOSED}, {A6, CLOSED }, {A9, OPEN_WAIT },     {A6,  CLOSED           }}        },
-    { /* 13, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED },        {A6,  CLOSED           }}        },
-    { /* 14, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A10, CONNECTING       }}        },
-    { /* 15, */ {{A0, CLOSED}, {A7, OPEN_WAIT}, {A11, OPEN_WAIT },  {A11, CONNECTING       }}        },
-    { /* 16, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED },        {A6,  CLOSED           }}        },
-    { /* 17, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A9, OPEN_WAIT },   {A0,  CONNECTING       }}        },
-    { /* 18, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED },      {A0,  CONNECTING       }}        },
-    { /* 19, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A13, OPEN_IDLE        }}        },
-    { /* 20, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A5,  CLOSED           }}        },
-    { /* 21, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING       }}        },
-    { /* 22, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING       }}        },
-    { /* 23, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING       }}        },
-    { /* 24, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING       }}        },
-    { /* 25, */ {{A12, CONNECTING}, {A6, CLOSED}, {A6, CLOSED },    {A6,  CLOSED           }}        },
-    { /* 26, */ {{A15, CLOSED}, {A14, CLOSED }, {A14, CLOSED },     {A14, CLOSED           }}        },
-    { /* 27, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT },   {A0,  CONNECTING       }}        },
+    {/* 0  */{{ A1,  KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A0,   KNX_TLC_STATE_CONNECTING }}},
+    {/* 1  */{{ A1,  KNX_TLC_STATE_OPEN_IDLE },  { A10,  KNX_TLC_STATE_OPEN_IDLE },  { A10,  KNX_TLC_STATE_OPEN_WAIT },  { A10,  KNX_TLC_STATE_CONNECTING }}},
+    {/* 2  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A5,   KNX_TLC_STATE_CLOSED },     { A5,   KNX_TLC_STATE_CLOSED },     { A5,   KNX_TLC_STATE_CLOSED }}},
+    {/* 3  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A0,   KNX_TLC_STATE_CONNECTING }}},
+    {/* 4  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A2,   KNX_TLC_STATE_OPEN_IDLE },  { A2,   KNX_TLC_STATE_OPEN_WAIT },  { A6,   KNX_TLC_STATE_CLOSED }}},
+    {/* 5  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A3,   KNX_TLC_STATE_OPEN_IDLE },  { A3,   KNX_TLC_STATE_OPEN_WAIT },  { A3,   KNX_TLC_STATE_CONNECTING }}},
+    {/* 6  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A4,   KNX_TLC_STATE_OPEN_IDLE },  { A4,   KNX_TLC_STATE_OPEN_WAIT },  { A6,   KNX_TLC_STATE_CONNECTING }}},
+    {/* 7  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A10,  KNX_TLC_STATE_CONNECTING }}},
+    {/* 8  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A8,   KNX_TLC_STATE_OPEN_IDLE },  { A6,   KNX_TLC_STATE_CLOSED }}},
+    {/* 9  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED }}},
+    {/* 10 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A10,  KNX_TLC_STATE_CONNECTING }}},
+    {/* 11 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A6,   KNX_TLC_STATE_CLOSED     }}},
+    {/* 12 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A9,   KNX_TLC_STATE_OPEN_WAIT },  { A6,   KNX_TLC_STATE_CLOSED     }}},
+    {/* 13 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED     }}},
+    {/* 14 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A10,  KNX_TLC_STATE_CONNECTING }}},
+    {/* 15 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A7,   KNX_TLC_STATE_OPEN_WAIT },  { A11,  KNX_TLC_STATE_OPEN_WAIT },  { A11,  KNX_TLC_STATE_CONNECTING }}},
+    {/* 16 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED     }}},
+    {/* 17 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A9,   KNX_TLC_STATE_OPEN_WAIT },  { A0,   KNX_TLC_STATE_CONNECTING }}},
+    {/* 18 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A6,   KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_CONNECTING }}},
+    {/* 19 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A13,  KNX_TLC_STATE_OPEN_IDLE  }}},
+    {/* 20 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A5,   KNX_TLC_STATE_CLOSED     }}},
+    {/* 21 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A0,   KNX_TLC_STATE_CONNECTING }}},
+    {/* 22 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A0,   KNX_TLC_STATE_CONNECTING }}},
+    {/* 23 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A0,   KNX_TLC_STATE_CONNECTING }}},
+    {/* 24 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A0,   KNX_TLC_STATE_CONNECTING }}},
+    {/* 25 */{{ A12, KNX_TLC_STATE_CONNECTING }, { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED     }}},
+    {/* 26 */{{ A15, KNX_TLC_STATE_CLOSED },     { A14,  KNX_TLC_STATE_CLOSED },     { A14,  KNX_TLC_STATE_CLOSED },     { A14,  KNX_TLC_STATE_CLOSED     }}},
+    {/* 27 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A0,   KNX_TLC_STATE_CONNECTING }}},
 };
-#elif (TL_STYLE == 1) || (TL_STYLE == 2)
+#elif (KNX_TL_STATEMACHINE_STYLE == 1) || (KNX_TL_STATEMACHINE_STYLE == 2)
 /* Transport-Layer-Statemachine, Styles #1 and #2 */
 STATIC const ACTION_LIST Actions[] = {
-#if     TL_STYLE == 1
-    { /* 0,  */ {{A1, OPEN_IDLE}, {A6, CLOSED }, {A6, CLOSED }}     },
+#if     KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 0  */{{ A1,  KNX_TLC_STATE_OPEN_IDLE},   { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED }}},
 #else
-/* #if TL_STYLE==2 */
-    { /* 0,  */ {{A1, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_IDLE }} },
+/* #if KNX_TL_STATEMACHINE_STYLE==2 */
+    {/* 0  */{{ A1,  KNX_TLC_STATE_OPEN_IDLE},   { A0,   KNX_TLC_STATE_OPEN_IDLE},   { A0,   KNX_TLC_STATE_OPEN_IDLE }}},
 #endif
 
-#if     TL_STYLE == 1
-    { /* 1,  */ {{A1, OPEN_IDLE}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT}} },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 1  */{{ A1,  KNX_TLC_STATE_OPEN_IDLE },  { A10,  KNX_TLC_STATE_OPEN_IDLE },  { A10,  KNX_TLC_STATE_OPEN_WAIT }}},
 #else
-    { /* 1,  */ {{A1, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }} },
+    {/* 1  */{{ A1,  KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-    { /* 2,  */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED }}        },
-    { /* 3,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
-#if     TL_STYLE == 1
-    { /* 4,  */ {{A10, CLOSED}, {A2, OPEN_IDLE}, {A2, OPEN_WAIT }}  },
+    {/* 2  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A5,   KNX_TLC_STATE_CLOSED },     { A5,   KNX_TLC_STATE_CLOSED }}},
+    {/* 3  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 4  */{{ A10, KNX_TLC_STATE_CLOSED },     { A2,   KNX_TLC_STATE_OPEN_IDLE },  { A2,   KNX_TLC_STATE_OPEN_WAIT }}},
 #else
-    { /* 4,  */ {{A0, CLOSED}, {A2, OPEN_IDLE}, {A2, OPEN_WAIT }}   },
+    {/* 4  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A2,   KNX_TLC_STATE_OPEN_IDLE },  { A2,   KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-#if     TL_STYLE == 1
-    { /* 5,  */ {{A10, CLOSED}, {A3, OPEN_IDLE}, {A3, OPEN_WAIT }}  },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 5  */{{ A10, KNX_TLC_STATE_CLOSED },     { A3,   KNX_TLC_STATE_OPEN_IDLE },  { A3,   KNX_TLC_STATE_OPEN_WAIT }}},
 #else
-    { /* 5,  */ {{A0, CLOSED}, {A3, OPEN_IDLE}, {A3, OPEN_WAIT }}   },
+    {/* 5  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A3,   KNX_TLC_STATE_OPEN_IDLE },  { A3,   KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-#if     TL_STYLE == 1
-    { /* 6,  */ {{A10, CLOSED}, {A4, OPEN_IDLE}, {A4, OPEN_WAIT }}  },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 6  */{{ A10, KNX_TLC_STATE_CLOSED },     { A4,   KNX_TLC_STATE_OPEN_IDLE },  { A4,   KNX_TLC_STATE_OPEN_WAIT }}},
 #else
-    { /* 6,  */ {{A0, CLOSED}, {A4, OPEN_IDLE}, {A4, OPEN_WAIT }}   },
+    {/* 6  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A4,   KNX_TLC_STATE_OPEN_IDLE },  { A4,   KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-#if     TL_STYLE == 1
-    { /* 7,  */ {{A10, CLOSED}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT }} },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 7  */{{ A10, KNX_TLC_STATE_CLOSED },     { A10,  KNX_TLC_STATE_OPEN_IDLE },  { A10,  KNX_TLC_STATE_OPEN_WAIT }}},
 #else
-    { /* 7,  */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
+    {/* 7  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-#if     TL_STYLE == 1
-    { /* 8,  */ {{A10, CLOSED}, {A6, CLOSED }, {A8, OPEN_IDLE }}    },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 8  */{{ A10, KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A8,   KNX_TLC_STATE_OPEN_IDLE }}},
 #else
-    { /* 8,  */ {{A0, CLOSED}, {A6, CLOSED }, {A8b, OPEN_IDLE }}    },
+    {/* 8  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A8b,  KNX_TLC_STATE_OPEN_IDLE }}},
 #endif
-#if     TL_STYLE == 1
-    { /* 9,  */ {{A10, CLOSED}, {A6, CLOSED }, {A6, CLOSED }}       },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 9  */{{ A10, KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED }}},
 #else
-    { /* 9,  */ {{A0, CLOSED}, {A6, CLOSED }, {A0, OPEN_WAIT }}     },
+    {/* 9  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-#if     TL_STYLE == 1
-    { /* 10, */ {{A10, CLOSED}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT }} },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 10 */{{ A10, KNX_TLC_STATE_CLOSED },     { A10,  KNX_TLC_STATE_OPEN_IDLE },  { A10,  KNX_TLC_STATE_OPEN_WAIT }}},
 #else
-    { /* 10, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
+    {/* 10 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-#if     TL_STYLE == 1
-    { /* 11, */ {{A10, CLOSED}, {A6, CLOSED }, {A6, CLOSED }}       },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 11 */{{ A10, KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED }}},
 #else
-    { /* 11, */ {{A0, CLOSED}, {A6, CLOSED }, {A0, OPEN_WAIT }}     },
+    {/* 11 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-#if     TL_STYLE == 1
-    { /* 12, */ {{A10, CLOSED}, {A6, CLOSED }, {A9, OPEN_WAIT }}    },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 12 */{{ A10, KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A9,   KNX_TLC_STATE_OPEN_WAIT }}},
 #else
-    { /* 12, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A9, OPEN_WAIT }}   },
+    {/* 12 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A9,   KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-#if     TL_STYLE == 1
-    { /* 13, */ {{A10, CLOSED}, {A6, CLOSED }, {A6, CLOSED }}       },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 13 */{{ A10, KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED }}},
 #else
-    { /* 13, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED }}      },
+    {/* 13 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A6,   KNX_TLC_STATE_CLOSED }}},
 #endif
-#if     TL_STYLE == 1
-    { /* 14, */ {{A10, CLOSED}, {A10, OPEN_IDLE}, {A10, OPEN_WAIT }} },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 14 */{{ A10, KNX_TLC_STATE_CLOSED },     { A10,  KNX_TLC_STATE_OPEN_IDLE },  { A10,  KNX_TLC_STATE_OPEN_WAIT }}},
 #else
-    { /* 14, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
+    {/* 14 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-#if     TL_STYLE == 1
-    { /* 15, */ {{A5, CLOSED}, {A7, OPEN_WAIT}, {A6, CLOSED }}      },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 15 */{{ A5,  KNX_TLC_STATE_CLOSED },     { A7,   KNX_TLC_STATE_OPEN_WAIT },  { A6,   KNX_TLC_STATE_CLOSED }}},
 #else
-    { /* 15, */ {{A0, CLOSED}, {A7, OPEN_WAIT}, {A11, OPEN_WAIT }}  },
+    {/* 15 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A7,   KNX_TLC_STATE_OPEN_WAIT },  { A11,  KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-    { /* 16, */ {{A0, CLOSED}, {A6, CLOSED }, {A6, CLOSED }}        },
-    { /* 17, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A9, OPEN_WAIT }}   },
-    { /* 18, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A6, CLOSED }}      },
-#if     TL_STYLE == 1
-    { /* 19, */ {{A0, CLOSED}, {A13, OPEN_IDLE}, {A13, OPEN_WAIT }} },
+    {/* 16 */{{ A0,  KNX_TLC_STATE_CLOSED},      { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED }}},
+    {/* 17 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A9,   KNX_TLC_STATE_OPEN_WAIT }}},
+    {/* 18 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A6,   KNX_TLC_STATE_CLOSED }}},
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 19 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A13,  KNX_TLC_STATE_OPEN_IDLE },  { A13,  KNX_TLC_STATE_OPEN_WAIT }}},
 #else
-    { /* 19, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
+    {/* 19 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-    { /* 20, */ {{A0, CLOSED}, {A5, CLOSED }, {A5, CLOSED }}        },
-    { /* 21, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
-    { /* 22, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
-    { /* 23, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
-    { /* 24, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
-#if     TL_STYLE == 1
-    { /* 25, */ {{A12, OPEN_IDLE}, {A6, CLOSED}, {A6, CLOSED }}     },
+    {/* 20 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A5,   KNX_TLC_STATE_CLOSED },     { A5,   KNX_TLC_STATE_CLOSED }}},
+    {/* 21 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
+    {/* 22 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
+    {/* 23 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
+    {/* 24 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 25 */{{ A12, KNX_TLC_STATE_OPEN_IDLE },  { A6, KNX_TLC_STATE_CLOSED },       { A6,   KNX_TLC_STATE_CLOSED }}},
 #else
-    { /* 25, */ {{A12, OPEN_IDLE}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT}} },
+    {/* 25 */{{ A12, KNX_TLC_STATE_OPEN_IDLE },  { A0, KNX_TLC_STATE_OPEN_IDLE },    { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-#if     TL_STYLE == 1
-    { /* 26, */ {{A15, CLOSED}, {A14, CLOSED }, {A14, CLOSED }}     },
+#if KNX_TL_STATEMACHINE_STYLE == 1
+    {/* 26 */{{ A15, KNX_TLC_STATE_CLOSED },     { A14, KNX_TLC_STATE_CLOSED },      { A14,  KNX_TLC_STATE_CLOSED }}},
 #else
-    { /* 26, */ {{A0, CLOSED}, {A14b, CLOSED }, {A11, OPEN_WAIT }}  },
+    {/* 26 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A14b, KNX_TLC_STATE_CLOSED },     { A11,  KNX_TLC_STATE_OPEN_WAIT }}},
 #endif
-    { /* 27, */ {{A0, CLOSED}, {A0, OPEN_IDLE}, {A0, OPEN_WAIT }}   },
+    {/* 27 */{{ A0,  KNX_TLC_STATE_CLOSED },     { A0, KNX_TLC_STATE_OPEN_IDLE },    { A0,   KNX_TLC_STATE_OPEN_WAIT }}},
 };
 #else
 #error "Invalid TL_STYLE [1|2|3]"
@@ -248,6 +239,14 @@ STATIC const EVENT_FUNC TLC_Events[] = {
 /*      tlcTIMEOUT_ACK          */ EventTimeoutAck,
 /*      ====================================================*/
 };
+
+
+/*
+** Local variables.
+*/
+STATIC KnxTlc_StateType KnxTlc_State;
+STATIC Knx_MessageType  _StoredMsg;    /* Client-only. */
+
 
 /* #endif */
 

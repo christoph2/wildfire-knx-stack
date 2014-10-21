@@ -107,7 +107,7 @@ void KnxTlc_Init(void)
     KnxTlc_SetRepetitionCount((uint8_t)0);
     KnxTlc_SetSequenceNumberOfPDU((uint8_t)0);
 
-    KnxTlc_SetState(CLOSED);
+    KnxTlc_SetState(KNX_TLC_STATE_CLOSED);
 }
 
 

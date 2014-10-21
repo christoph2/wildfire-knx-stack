@@ -6,18 +6,18 @@
 *
 *   All Rights Reserved
 *
-*  This program is free softwKNXe; you can redistribute it and/or modify
+*  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
 *
 *  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
-*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *  GNU General Public License for more KnxEtails.
 *
 *  You should have received a copy of the GNU General Public License along
-*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  with this program; if not, write to the Free Software Foundation, Inc.,
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
@@ -32,22 +32,14 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-/* TODO: Config. */
+
 #define MAX_REP_COUNT           ((uint8_t)3)
-#define TL_STYLE                3 /* [1,2,3] - Transport-Layer-Styles gem. KNX-Handbuch 3/3/4. */
 #define TLC_CONNECTION_TIMEOUT  ((Tmr_TickType)6)
 #define TLC_ACKNOWLEDGE_TIMEOUT ((Tmr_TickType)3)
-/*  #define Def_Rep_Count               ((uint8_t)3) */
 
 /*
 ** Global types.
 */
-typedef enum tagKnxTlc_StateType {
-    CLOSED,
-    OPEN_IDLE,
-    OPEN_WAIT,
-    CONNECTING
-} KnxTlc_StateType;
 
 typedef enum tagKNX_TlcEventType {
     tlcCONNECT_IND,
@@ -68,6 +60,15 @@ typedef enum tagKNX_TlcEventType {
     tlcUNDEFINED
 } KNX_TlcEventType;
 
+
+typedef enum tagKnxTlc_StateType {
+    KNX_TLC_STATE_CLOSED,
+    KNX_TLC_STATE_OPEN_IDLE,
+    KNX_TLC_STATE_OPEN_WAIT,
+    KNX_TLC_STATE_CONNECTING
+} KnxTlc_StateType;
+
+
 typedef void (*KnxTlc_ActionFuncType)(void);
 
 typedef struct tagKnxTlc_ActionType {
@@ -77,12 +78,12 @@ typedef struct tagKnxTlc_ActionType {
 
 typedef struct tagKnxTlc_ActionListType {
 /*    const uint8_t num; */
-#if (TL_STYLE == 1) || (TL_STYLE == 2)
+#if (KNX_TL_STATEMACHINE_STYLE == 1) || (KNX_TL_STATEMACHINE_STYLE == 2)
     const KnxTlc_ActionType Action[3];
-#elif TL_STYLE == 3
+#elif KNX_TL_STATEMACHINE_STYLE == 3
     const KnxTlc_ActionType Action[4];
 #else
-#error "TL_STYLE muss entweder 1,2 oder 3 sein!"
+#error "KNX_TL_STATEMACHINE_STYLE muss entweder 1,2 oder 3 sein!"
 #endif
 } KnxTlc_ActionListType;
 
