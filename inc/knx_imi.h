@@ -6,18 +6,18 @@
 *
 *   All Rights Reserved
 *
-*  This program is free softwKNXe; you can redistribute it and/or modify
+*  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
 *
 *  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
-*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *  GNU General Public License for more KnxEtails.
 *
 *  You should have received a copy of the GNU General Public License along
-*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  with this program; if not, write to the Free Software Foundation, Inc.,
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
@@ -58,65 +58,66 @@ typedef enum tagKnx_ServiceTypeType {
 /*
 **      Link-Layer.
 */
-    L_DATA_REQ =   KNX_LL_SERVICES,
-    L_POLL_DATA_REQ,
+
+    KNX_SERVICE_L_DATA_REQ = KNX_LL_SERVICES,
+    KNX_SERVICE_L_POLL_DATA_REQ,
 
 /*
 **      Network-Layer.
 */
-    L_DATA_IND =   KNX_NL_SERVICES,
-    L_DATA_CON,
-    L_POLL_DATA_CON,
-    L_BUSMON_IND,
-    N_DATA_INDIVIDUAL_REQ,
-    N_DATA_GROUP_REQ,
-    N_DATA_BROADCAST_REQ,
-    N_POLL_DATA_REQ,
+    KNX_SERVICE_L_DATA_IND = KNX_NL_SERVICES,
+    KNX_SERVICE_L_DATA_CON,
+    KNX_SERVICE_L_POLL_DATA_CON,
+    KNX_SERVICE_L_BUSMON_IND,
+    KNX_SERVICE_N_DATA_INDIVIDUAL_REQ,
+    KNX_SERVICE_N_DATA_GROUP_REQ,
+    KNX_SERVICE_N_DATA_BROADCAST_REQ,
+    KNX_SERVICE_N_POLL_DATA_REQ,
 
 /*
 **      Transport-Layer/group-oriented.
 */
-    N_DATA_GROUP_IND =   KNX_TLG_SERVICES,
-    N_DATA_GROUP_CON,
-    N_POLL_DATA_CON,
-    T_DATA_GROUP_REQ,
-    T_POLL_DATA_REQ,
+    KNX_SERVICE_N_DATA_GROUP_IND = KNX_TLG_SERVICES,
+    KNX_SERVICE_N_DATA_GROUP_CON,
+    KNX_SERVICE_N_POLL_DATA_CON,
+    KNX_SERVICE_T_DATA_GROUP_REQ,
+    KNX_SERVICE_T_POLL_DATA_REQ,
 
 /*
 **      Transport-Layer/connection-oriented.
 */
-    N_DATA_INDIVIDUAL_IND =   KNX_TLC_SERVICES,
-    N_DATA_INDIVIDUAL_CON,
-    N_DATA_BROADCAST_IND,
-    N_DATA_BROADCAST_CON,
-    T_CONNECT_REQ,
-    T_DISCONNECT_REQ,
-    T_DATA_CONNECTED_REQ,
-    T_DATA_INDIVIDUAL_REQ,
-    T_DATA_BROADCAST_REQ,
+    KNX_SERVICE_N_DATA_INDIVIDUAL_IND = KNX_TLC_SERVICES,
+    KNX_SERVICE_N_DATA_INDIVIDUAL_CON,
+    KNX_SERVICE_N_DATA_BROADCAST_IND,
+    KNX_SERVICE_N_DATA_BROADCAST_CON,
+    KNX_SERVICE_T_CONNECT_REQ,
+    KNX_SERVICE_T_DISCONNECT_REQ,
+    KNX_SERVICE_T_DATA_CONNECTED_REQ,
+    KNX_SERVICE_T_DATA_INDIVIDUAL_REQ,
+    KNX_SERVICE_T_DATA_BROADCAST_REQ,
 
 /*
 **      Application-Layer/group-oriented.
 */
-    T_DATA_GROUP_IND =   KNX_ALG_SERVICES,
-    T_DATA_GROUP_CON,
-    T_POLL_DATA_CON,
-    A_DATA_GROUP_REQ,
-    A_POLL_DATA_REQ,
+    KNX_SERVICE_T_DATA_GROUP_IND = KNX_ALG_SERVICES,
+    KNX_SERVICE_T_DATA_GROUP_CON,
+    KNX_SERVICE_T_POLL_DATA_CON,
+    KNX_SERVICE_A_DATA_GROUP_REQ,
+    KNX_SERVICE_A_POLL_DATA_REQ,
 
 /*
 **      Application-Layer/managment-part.
 */
-    T_CONNECT_IND =   KNX_ALM_SERVICES,
-    T_CONNECT_CON,
-    T_DISCONNECT_IND,
-    T_DISCONNECT_CON,
-    T_DATA_CONNECTED_IND,
-    T_DATA_CONNECTED_CON,
-    T_DATA_INDIVIDUAL_IND,
-    T_DATA_INDIVIDUAL_CON,
-    T_DATA_BROADCAST_IND,
-    T_DATA_BROADCAST_CON
+    KNX_SERVICE_T_CONNECT_IND = KNX_ALM_SERVICES,
+    KNX_SERVICE_T_CONNECT_CON,
+    KNX_SERVICE_T_DISCONNECT_IND,
+    KNX_SERVICE_T_DISCONNECT_CON,
+    KNX_SERVICE_T_DATA_CONNECTED_IND,
+    KNX_SERVICE_T_DATA_CONNECTED_CON,
+    KNX_SERVICE_T_DATA_INDIVIDUAL_IND,
+    KNX_SERVICE_T_DATA_INDIVIDUAL_CON,
+    KNX_SERVICE_T_DATA_BROADCAST_IND,
+    KNX_SERVICE_T_DATA_BROADCAST_CON
 
 } Knx_ServiceTypeType;
 

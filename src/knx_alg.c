@@ -269,7 +269,7 @@ void A_GroupValue_Read_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx
     KnxMsg_SetPriority(pBuffer, prio);
     KnxMsg_SetLen(pBuffer, (uint8_t)8);
 
-    pBuffer->service = T_DATA_GROUP_REQ;
+    pBuffer->service = KNX_SERVICE_T_DATA_GROUP_REQ;
 
     (void)KnxMsg_Post(pBuffer);
 }
@@ -293,7 +293,7 @@ void A_GroupValue_Write_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Kn
     KnxMsg_SetPriority(pBuffer, prio);
     KnxMsg_SetLen(pBuffer, 8);
 
-    pBuffer->service = T_DATA_GROUP_REQ;
+    pBuffer->service = KNX_SERVICE_T_DATA_GROUP_REQ;
 
     (void)KnxMsg_Post(pBuffer);
 }

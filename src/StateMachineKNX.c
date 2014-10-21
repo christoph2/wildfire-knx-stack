@@ -314,7 +314,7 @@ void T_Disconnect_Ind(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
     KnxMsg_GetMessagePtr(pBuffer)->npci    = (uint8_t)0x60;
 
     KnxMsg_SetLen(pBuffer, (uint8_t)7);
-    pBuffer->service = T_DISCONNECT_IND;
+    pBuffer->service = KNX_SERVICE_T_DISCONNECT_IND;
 
     (void)KnxMsg_Post(pBuffer);
 }
@@ -334,7 +334,7 @@ void T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
     KnxMsg_GetMessagePtr(pBuffer)->npci    = (uint8_t)0x60;
 
     KnxMsg_SetLen(pBuffer, (uint8_t)7);
-    pBuffer->service = T_DISCONNECT_CON;
+    pBuffer->service = KNX_SERVICE_T_DISCONNECT_CON;
 
     (void)KnxMsg_Post(pBuffer);
 }
@@ -373,6 +373,7 @@ STATIC void StartConnectionTimeoutTimer(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     (void)KnxTmr_Start(TMR_TIMER_TLC_CON_TIMEOUT, TMR_RESOLUTION_SEC, TLC_CONNECTION_TIMEOUT);
+    printf("StartConnectionTimeoutTimer\n");
 }
 
 
@@ -384,6 +385,7 @@ STATIC void RestartConnectionTimeoutTimer(void)
 {
     (void)KnxTmr_Stop(TMR_TIMER_TLC_CON_TIMEOUT);
     (void)KnxTmr_Start(TMR_TIMER_TLC_CON_TIMEOUT, TMR_RESOLUTION_SEC, TLC_CONNECTION_TIMEOUT);
+    printf("RestartConnectionTimeoutTimer\n");
 }
 
 
@@ -394,6 +396,7 @@ STATIC void StopConnectionTimeoutTimer(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     (void)KnxTmr_Stop(TMR_TIMER_TLC_CON_TIMEOUT);
+    printf("StopConnectionTimeoutTimer\n");
 }
 
 
@@ -438,8 +441,8 @@ STATIC void A1(void)
 {
     KnxTlc_SetConnectionAddress(KnxTlc_GetSourceAddress());
 
-/* Send a T_CONNECT_ind to the user. */
-    KnxMsg_ScratchBufferPtr->service = T_CONNECT_IND;
+    /* Send a T_CONNECT_ind to the user. */
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_CONNECT_IND;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 
     KnxTlc_SetSequenceNumberSend((uint8_t)0);
@@ -468,7 +471,7 @@ STATIC void A2(void)
     }
 
 /*      Send the received buffer as a T_Data_Connected.ind to the user. */
-    KnxMsg_ScratchBufferPtr->service = T_DATA_CONNECTED_IND;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_CONNECTED_IND;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 
     RestartConnectionTimeoutTimer();
@@ -577,7 +580,7 @@ STATIC void A7(void)   /* Nur local-user (Client only). */
     StoreMessage();
 
 /*    MSG_ScratchBuffer->service=T_DATA_CONNECTED_REQ; */
-    KnxMsg_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_REQ;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
     KnxMsg_SetSeqNo(KnxMsg_ScratchBufferPtr, KnxTlc_GetSequenceNumberSend());
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 
@@ -636,7 +639,7 @@ STATIC void A9(void)  /* only local-user (Client only). */
 /*  Send the stored message as a N_Data_Individual.req to the network layer (remote device). */
     RestoreMessage();
     KnxMsg_SetSeqNo(KnxMsg_ScratchBufferPtr, KnxTlc_GetSequenceNumberSend());
-    KnxMsg_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_REQ;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 
     KnxTlc_SetRepetitionCount(KnxTlc_GetRepetitionCount() + (uint8_t)1);
@@ -704,7 +707,7 @@ STATIC void A13(void)  /* Nur local-user (Client only). */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
 /*     Send a T_Connect.con to the user. */
-    KnxMsg_ScratchBufferPtr->service = T_CONNECT_CON;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_CONNECT_CON;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 

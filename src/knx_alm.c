@@ -241,7 +241,7 @@ STATIC void T_DataIndividual_Ind(void)
                 IOS_Dispatch(KnxMsg_ScratchBufferPtr, IOS_PROP_DESC_READ, FALSE);
                 break;
 
-            case A_PROPERTYDESCRIPTION_RESPONSE:    // MNT-MASTER ONLY!!!
+            case A_PROPERTYDESCRIPTION_RESPONSE:
                 frame = KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr);
                 KNX_CALLBACK_PROPERTYDESCRIPTION_READ_IND(
                     Utl_Ntohs((Knx_AddressType)*(Knx_AddressType *)frame->source), 
@@ -416,7 +416,7 @@ void A_Broadcast_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, uint16_t 
     KnxMsg_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
     KnxMsg_SetLen(pBuffer, (uint8_t)8 + len);
     KnxAl_SetAPDUData(KnxMsg_GetMessagePtr(pBuffer), (uint8_t)0, data, len);
-    pBuffer->service = T_DATA_BROADCAST_REQ;
+    pBuffer->service = KNX_SERVICE_T_DATA_BROADCAST_REQ;
 
     (void)KnxMsg_Post(pBuffer);
 }
@@ -613,7 +613,7 @@ void A_Individual_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
     KnxMsg_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
     KnxMsg_SetLen(pBuffer, (uint8_t)8 + len);
     KnxAl_SetAPDUData(KnxMsg_GetMessagePtr(pBuffer), (uint8_t)0, data, len);
-    pBuffer->service = T_DATA_INDIVIDUAL_REQ;
+    pBuffer->service = KNX_SERVICE_T_DATA_INDIVIDUAL_REQ;
 
     (void)KnxMsg_Post(pBuffer);
 }

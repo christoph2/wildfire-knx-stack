@@ -66,7 +66,7 @@ STATIC const Knx_LayerServiceFunctionType KnxTlc_Services[] = {
 /*      ====================================================*/
 };
 
-STATIC const Knx_LayerServicesType TLC_ServiceTable[] = {
+STATIC const Knx_LayerServicesType KnxTlc_ServiceTable[] = {
     { KNX_TLC_SERVICES, SIZEOF_ARRAY(KnxTlc_Services), KnxTlc_Services }
 };
 
@@ -92,7 +92,7 @@ void KnxTlc_Task(void)
         KnxTlc_StateMachine(tlcTIMEOUT_ACK);
     }
 
-    KnxDisp_DispatchLayer(TASK_TC_ID, TLC_ServiceTable);
+    KnxDisp_DispatchLayer(TASK_TC_ID, KnxTlc_ServiceTable);
 }
 
 
@@ -122,7 +122,7 @@ void T_Connect_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_Address
     KnxMsg_SetDestAddress(pBuffer, dest);
     KnxMsg_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
     KnxMsg_SetLen(pBuffer, (uint8_t)7);
-    pBuffer->service = N_DATA_INDIVIDUAL_REQ; /* T_CONNECT_REQ; */
+    pBuffer->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ; /* T_CONNECT_REQ; */
 
     (void)KnxMsg_Post(pBuffer);
 }
@@ -139,7 +139,7 @@ void T_Disconnect_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
     KnxMsg_SetDestAddress(pBuffer, dest);
     KnxMsg_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
     KnxMsg_SetLen(pBuffer, 7);
-    pBuffer->service = N_DATA_INDIVIDUAL_REQ; /* T_DISCONNECT_REQ; */
+    pBuffer->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ; /* T_DISCONNECT_REQ; */
 
     (void)KnxMsg_Post(pBuffer);
 }
@@ -156,7 +156,7 @@ void T_Ack_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType
     KnxMsg_SetDestAddress(pBuffer, dest);
     KnxMsg_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
     KnxMsg_SetLen(pBuffer, 7);
-    pBuffer->service = N_DATA_INDIVIDUAL_REQ;
+    pBuffer->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
 
     (void)KnxMsg_Post(pBuffer);
 }
@@ -173,7 +173,7 @@ void T_Nak_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType
     KnxMsg_SetDestAddress(pBuffer, dest);
     KnxMsg_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
     KnxMsg_SetLen(pBuffer, 7);
-    pBuffer->service = N_DATA_INDIVIDUAL_REQ;
+    pBuffer->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
 
     (void)KnxMsg_Post(pBuffer);
 }
@@ -324,7 +324,7 @@ STATIC void N_Data_Individual_Ind(void)
 
     switch (tpci  & (uint8_t)0xc0) {
         case TPCI_UDT:   /* Unnumbered Data (1:1-Connection-Less). */
-            KnxMsg_ScratchBufferPtr->service = T_DATA_INDIVIDUAL_IND;
+            KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_INDIVIDUAL_IND;
             (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
             break;
         case TPCI_NDT:   /* Numbered Data (T_DATA_CONNECTED_REQ_PDU, 1:1-Connection-Oriented). */
@@ -372,7 +372,7 @@ STATIC FUNC(void, KSTACK_CODE) N_DataBroadcast_Ind(void)
 STATIC void N_DataBroadcast_Ind(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_ScratchBufferPtr->service = T_DATA_BROADCAST_IND;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_BROADCAST_IND;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
@@ -393,7 +393,7 @@ STATIC FUNC(void, KSTACK_CODE) N_DataBroadcast_Con(void)
 STATIC void N_DataBroadcast_Con(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_ScratchBufferPtr->service = T_DATA_BROADCAST_CON;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_BROADCAST_CON;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
@@ -408,7 +408,7 @@ STATIC void T_DataIndividual_Req(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMsg_SetTPCI(KnxMsg_ScratchBufferPtr, TPCI_UDT);
-    KnxMsg_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_REQ;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
@@ -420,7 +420,7 @@ STATIC void T_DataConnected_Req(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMsg_SetTPCI(KnxMsg_ScratchBufferPtr, TPCI_NDT);
-    KnxMsg_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_REQ;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
@@ -432,7 +432,7 @@ STATIC void T_Connect_ReqSrv(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMsg_SetTPCI(KnxMsg_ScratchBufferPtr, TPCI_UCD);
-    KnxMsg_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_REQ;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
@@ -444,7 +444,7 @@ STATIC void T_Disconnect_ReqSrv(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMsg_SetTPCI(KnxMsg_ScratchBufferPtr, TPCI_UCD);
-    KnxMsg_ScratchBufferPtr->service = N_DATA_INDIVIDUAL_REQ;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
@@ -456,7 +456,7 @@ STATIC void T_DataBroadcast_Req(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMsg_SetTPCI(KnxMsg_ScratchBufferPtr, TPCI_UDT);
-    KnxMsg_ScratchBufferPtr->service = N_DATA_BROADCAST_REQ;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_N_DATA_BROADCAST_REQ;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 

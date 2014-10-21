@@ -6,18 +6,18 @@
 *
 *   All Rights Reserved
 *
-*  This program is free softwKNXe; you can redistribute it and/or modify
+*  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
 *
 *  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
-*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *  GNU General Public License for more KnxEtails.
 *
 *  You should have received a copy of the GNU General Public License along
-*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  with this program; if not, write to the Free Software Foundation, Inc.,
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
@@ -91,7 +91,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_N_DataGroupInd(void)
 STATIC void Disp_N_DataGroupInd(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_ScratchBufferPtr->service = T_DATA_GROUP_IND;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_GROUP_IND;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
@@ -102,7 +102,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_N_DataGroupCon(void)
 STATIC void Disp_N_DataGroupCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_ScratchBufferPtr->service = T_DATA_GROUP_CON;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_GROUP_CON;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
@@ -113,7 +113,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_N_PollDataCon(void)
 STATIC void Disp_N_PollDataCon(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_ScratchBufferPtr->service = T_POLL_DATA_CON;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_POLL_DATA_CON;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
@@ -128,7 +128,7 @@ STATIC void Disp_T_DataGroupReq(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMsg_SetTPCI(KnxMsg_ScratchBufferPtr, TPCI_UDT);
-    KnxMsg_ScratchBufferPtr->service = N_DATA_GROUP_REQ;
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_N_DATA_GROUP_REQ;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
