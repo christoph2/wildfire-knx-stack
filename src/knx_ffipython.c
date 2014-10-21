@@ -36,6 +36,11 @@
 
 #include "Python.h"
 
+static PyObject * LocalConfirmationCB = NULL;
+
+static PyObject * Connect_IndCB = NULL;
+static PyObject * Disconnect_IndCB = NULL;
+
 static PyObject * Individual_Address_ResCB = NULL;
 static PyObject * PropertyDescription_Read_IndCB = NULL;
 
@@ -70,6 +75,63 @@ void Ffi_Callback(char const * phormat, ...)
     }
 
     va_end(arguments);
+}
+
+void Ffi_SetLocalConfirmationCB(void * callback)
+{
+    Ffi_SetCallback(&LocalConfirmationCB, callback);
+}
+
+void Ffi_LocalConfirmation(boolean confirmed)
+{    
+    PyObject * arglist;
+    PyObject * result;
+
+    printf("Ffi_LocalConfirmation = %u\n", confirmed);
+
+    if (LocalConfirmationCB != NULL) {
+        arglist = Py_BuildValue("(B)", confirmed);
+        printf("Ffi_LocalConfirmation [before]\n");
+        result = PyObject_Call(LocalConfirmationCB, arglist, NULL);
+        printf("Ffi_LocalConfirmation [after]\n");
+        Py_DECREF(arglist);
+    }
+    printf("Ffi_LocalConfirmation [leaving fkt.]\n");
+}
+
+
+void Ffi_SetConnect_IndCB(void * callback)
+{    
+    Ffi_SetCallback(&Connect_IndCB, callback);
+}
+
+void Ffi_Connect_Ind(void)
+{    
+    PyObject * arglist;
+    PyObject * result;
+
+    if (Connect_IndCB != NULL) {
+        arglist = Py_BuildValue("()");
+        result = PyObject_Call(Connect_IndCB, arglist, NULL);
+        Py_DECREF(arglist);
+    }
+}
+
+void Ffi_SetDisconnect_IndCB(void * callback)
+{    
+    Ffi_SetCallback(&Disconnect_IndCB, callback);
+}
+
+void Ffi_Disconnect_Ind(void)
+{       
+    PyObject * arglist;
+    PyObject * result;
+
+    if (Disconnect_IndCB != NULL) {
+        arglist = Py_BuildValue("()");
+        result = PyObject_Call(Disconnect_IndCB, arglist, NULL);
+        Py_DECREF(arglist);
+    }
 }
 
 void Ffi_Individual_Address_Res(uint16_t address)
