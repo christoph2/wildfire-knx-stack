@@ -85,11 +85,11 @@ void KnxTlc_Task(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (KnxTmr_IsRunning(TMR_TIMER_TLC_CON_TIMEOUT) && KnxTmr_IsExpired(TMR_TIMER_TLC_CON_TIMEOUT)) {
-        KnxTlc_StateMachine(tlcTIMEOUT_CON);
+        KnxTlc_StateMachine(KNX_TLC_EVENT_TIMEOUT_CON);
     }
 
     if (KnxTmr_IsRunning(TMR_TIMER_TLC_ACK_TIMEOUT) && KnxTmr_IsExpired(TMR_TIMER_TLC_ACK_TIMEOUT)) {
-        KnxTlc_StateMachine(tlcTIMEOUT_ACK);
+        KnxTlc_StateMachine(KNX_TLC_EVENT_TIMEOUT_ACK);
     }
 
     KnxDisp_DispatchLayer(TASK_TC_ID, KnxTlc_ServiceTable);
@@ -329,18 +329,18 @@ STATIC void N_Data_Individual_Ind(void)
             break;
         case TPCI_NDT:   /* Numbered Data (T_DATA_CONNECTED_REQ_PDU, 1:1-Connection-Oriented). */
             KnxTlc_SetSequenceNumberOfPDU(KnxMsg_GetSeqNo(KnxMsg_ScratchBufferPtr));
-            KnxTlc_StateMachine((KNX_TlcEventType)tlcDATA_CONNECTED_IND);
+            KnxTlc_StateMachine((KNX_TlcEventType)KNX_TLC_EVENT_DATA_CONNECTED_IND);
             break;
         case TPCI_UCD:   /* Unnumbered Control. (CONNECT|DISCONNECT). */
             printf("TPCI_UCD [%02x]\n", tpci);
             if (tpci == T_CONNECT_REQ_PDU) {
                 /* T_CONNECT_IND */
-                KnxTlc_StateMachine((KNX_TlcEventType)tlcCONNECT_IND);
+                KnxTlc_StateMachine((KNX_TlcEventType)KNX_TLC_EVENT_CONNECT_IND);
                 printf("T_CONNECT_IND\n");
                 KNX_CALLBACK_T_CONNECT_IND();
             } else if (tpci == T_DISCONNECT_REQ_PDU) {
                 /* T_DISCONNECT_IND */
-                KnxTlc_StateMachine((KNX_TlcEventType)tlcDISCONNECT_IND);
+                KnxTlc_StateMachine((KNX_TlcEventType)KNX_TLC_EVENT_DISCONNECT_IND);
                 KNX_CALLBACK_T_DISCONNECT_IND();
                 printf("T_DISCONNECT_IND\n");
             } else {
@@ -352,9 +352,9 @@ STATIC void N_Data_Individual_Ind(void)
             KnxTlc_SetSequenceNumberOfPDU(KnxMsg_GetSeqNo(KnxMsg_ScratchBufferPtr));
 
             if (tpci == T_ACK_PDU) {
-                KnxTlc_StateMachine((KNX_TlcEventType)tlcACK_IND);
+                KnxTlc_StateMachine((KNX_TlcEventType)KNX_TLC_EVENT_ACK_IND);
             } else if (tpci == T_NAK_PDU) {
-                KnxTlc_StateMachine((KNX_TlcEventType)tlcNAK_IND);
+                KnxTlc_StateMachine((KNX_TlcEventType)KNX_TLC_EVENT_NAK_IND);
             } else {
                 KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
             }

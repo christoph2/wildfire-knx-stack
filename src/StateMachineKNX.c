@@ -222,21 +222,21 @@ STATIC const ACTION_LIST Actions[] = {
 STATIC const EVENT_FUNC TLC_Events[] = {
 /*      Event                       Handler                 */
 /*      ====================================================*/
-/*      tlcCONNECT_IND          */ EventConnectInd,
-/*      tlcDISCONNECT_IND       */ EventDisconnectInd,
-/*      tlcDATA_CONNECTED_IND   */ EventDataConnectedInd,
-/*      tlcACK_IND              */ EventAckInd,
-/*      tlcNAK_IND              */ EventNakInd,
-/*      tlcCONNECT_REQ          */ EventConnectReq,
-/*      tlcDISCONNECT_REQ       */ EventDisconnectReq,
-/*      tlcDATA_CONNECTED_REQ   */ EventDataConnectedReq,
-/*      tlcCONNECT_CON          */ EventConnectCon,
-/*      tlcDISCONNECT_CON       */ EventDisconnectCon,
-/*      tlcDATA_CONNECTED_CON   */ EventDataConnectedCon,
-/*      tlcACK_CON              */ EventAckCon,
-/*      tlcNAK_CON              */ EventNakCon,
-/*      tlcTIMEOUT_CON          */ EventTimeoutCon,
-/*      tlcTIMEOUT_ACK          */ EventTimeoutAck,
+/*      KNX_TLC_EVENT_CONNECT_IND          */ EventConnectInd,
+/*      KNX_TLC_EVENT_DISCONNECT_IND       */ EventDisconnectInd,
+/*      KNX_TLC_EVENT_DATA_CONNECTED_IND   */ EventDataConnectedInd,
+/*      KNX_TLC_EVENT_ACK_IND              */ EventAckInd,
+/*      KNX_TLC_EVENT_NAK_IND              */ EventNakInd,
+/*      KNX_TLC_EVENT_CONNECT_REQ          */ EventConnectReq,
+/*      KNX_TLC_EVENT_DISCONNECT_REQ       */ EventDisconnectReq,
+/*      KNX_TLC_EVENT_DATA_CONNECTED_REQ   */ EventDataConnectedReq,
+/*      KNX_TLC_EVENT_CONNECT_CON          */ EventConnectCon,
+/*      KNX_TLC_EVENT_DISCONNECT_CON       */ EventDisconnectCon,
+/*      KNX_TLC_EVENT_DATA_CONNECTED_CON   */ EventDataConnectedCon,
+/*      KNX_TLC_EVENT_ACK_CON              */ EventAckCon,
+/*      KNX_TLC_EVENT_NAK_CON              */ EventNakCon,
+/*      KNX_TLC_EVENT_TIMEOUT_CON          */ EventTimeoutCon,
+/*      KNX_TLC_EVENT_TIMEOUT_ACK          */ EventTimeoutAck,
 /*      ====================================================*/
 };
 
@@ -348,7 +348,7 @@ void KnxTlc_StateMachine(KNX_TlcEventType event)
     uint8_t               event_num;
     KnxTlc_ActionType   action;
 
-    if (event < tlcUNDEFINED) {
+    if (event < KNX_TLC_EVENT_UNDEFINED) {
         event_num = TLC_Events[event]();
     } else {
         event_num = EventUndefined();
