@@ -320,8 +320,6 @@ STATIC void N_Data_Individual_Ind(void)
 
     tpci = KnxMsg_GetTPCI(KnxMsg_ScratchBufferPtr);
 
-    //printf("N_Data_Individual_Ind [%02x]\n", tpci);
-
     switch (tpci  & (uint8_t)0xc0) {
         case TPCI_UDT:   /* Unnumbered Data (1:1-Connection-Less). */
             KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_INDIVIDUAL_IND;
@@ -383,7 +381,9 @@ STATIC FUNC(void, KSTACK_CODE) N_DataIndividual_Con(void)
 STATIC void N_DataIndividual_Con(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    /* todo: Implement !!! */
+    printf("N_DataIndividual_Con [%s]\n", (KnxMsg_ScratchBufferPtr->status == KNX_E_OK) ? "OK" : "NOT_OK");
+    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_INDIVIDUAL_CON;
+    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
 
@@ -393,6 +393,7 @@ STATIC FUNC(void, KSTACK_CODE) N_DataBroadcast_Con(void)
 STATIC void N_DataBroadcast_Con(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
+    printf("N_DataBroadcast_Con [%s]\n", (KnxMsg_ScratchBufferPtr->status == KNX_E_OK) ? "OK" : "NOT_OK");
     KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_BROADCAST_CON;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }

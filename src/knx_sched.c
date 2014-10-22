@@ -102,7 +102,7 @@ void KnxSched_Task(void)
     }
 
     KnxNl_Task();
-    KnxTLG_Task();
+    KnxTlg_Task();
     KnxTlc_Task();
     KnxALG_Task();
     KnxALM_Task();
@@ -116,7 +116,7 @@ void KnxSched_Task(void)
     KnxALM_Task();
     KnxALG_Task();
     KnxTlc_Task();
-    KnxTLG_Task();
+    KnxTlg_Task();
     KnxNl_Task();
 
     if (KnxSched_PreLinkLayerTest()) {
