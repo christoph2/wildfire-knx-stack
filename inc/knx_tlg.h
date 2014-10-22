@@ -35,9 +35,9 @@ extern "C"
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxTLG_Task(void);
+FUNC(void, KSTACK_CODE) KnxTlg_Task(void);
 #else
-void KnxTLG_Task(void);
+void KnxTlg_Task(void);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
