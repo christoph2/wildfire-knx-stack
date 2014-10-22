@@ -255,6 +255,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
         // KnxLL_Buffer[0] = octet;
     } else if (KnxLL_State == KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION) {
         TMR_STOP_DL_TIMER();
+        KnxLL_Buffer[KnxLL_ReceiverIndex] = octet;
         KnxLL_ReceiverIndex++;
         TMR_START_DL_TIMER();
         if (KnxLL_ReceiverIndex == 0x01) {
