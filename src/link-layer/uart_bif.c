@@ -376,7 +376,7 @@ STATIC void Disp_L_Data_Req(void)
 {
     uint8_t chk;
 
-    KnxMsg_SetFrameType(KnxMsg_ScratchBufferPtr, ftStandard);
+    KnxMsg_SetFrameType(KnxMsg_ScratchBufferPtr, KNX_FRAME_STANDARD);
 
     /* PREPARE_CONTROL_FIELD() */
     KnxMsg_ScratchBufferPtr->msg[0] |= (uint8_t)0x30;   /* fixed one bit + repeated. */
@@ -401,7 +401,7 @@ STATIC void Disp_L_PollData_Req(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* todo: Implement!!! */
-    KnxMsg_SetFrameType(KnxMsg_ScratchBufferPtr, ftPolling);
+    KnxMsg_SetFrameType(KnxMsg_ScratchBufferPtr, KNX_FRAME_POLLING);
 }
 
 

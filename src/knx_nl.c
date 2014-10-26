@@ -169,7 +169,7 @@ STATIC FUNC(void, KSTACK_CODE) N_DataBroadcast_Req(void)
 STATIC void N_DataBroadcast_Req(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_SetAddressType(KnxMsg_ScratchBufferPtr, atMULTICAST);
+    KnxMsg_SetAddressType(KnxMsg_ScratchBufferPtr, KNX_ADDR_MULTICAST);
     KnxMsg_SetRoutingCount(KnxMsg_ScratchBufferPtr);
     KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_L_DATA_REQ;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
@@ -184,7 +184,7 @@ STATIC void N_DataIndividual_Req(void)
 {
     //DBG_PRINTLN("N_DataIndividual_Req");
 
-    KnxMsg_SetAddressType(KnxMsg_ScratchBufferPtr, atINDIVIDUAL);
+    KnxMsg_SetAddressType(KnxMsg_ScratchBufferPtr, KNX_ADDR_INDIVIDUAL);
     KnxMsg_SetRoutingCount(KnxMsg_ScratchBufferPtr);
     KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_L_DATA_REQ;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
@@ -197,7 +197,7 @@ STATIC FUNC(void, KSTACK_CODE) N_DataGroup_Req(void)
 STATIC void N_DataGroup_Req(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_SetAddressType(KnxMsg_ScratchBufferPtr, atMULTICAST);
+    KnxMsg_SetAddressType(KnxMsg_ScratchBufferPtr, KNX_ADDR_MULTICAST);
     KnxMsg_SetRoutingCount(KnxMsg_ScratchBufferPtr);
     KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_L_DATA_REQ;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);

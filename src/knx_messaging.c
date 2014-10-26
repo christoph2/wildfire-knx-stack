@@ -129,7 +129,7 @@ Knx_StatusType KnxMsg_AllocateBuffer(KnxMsg_Buffer ** buffer)
 
     if ((fp = KnxMsg_Queues[TASK_FREE_ID]) == MSG_NO_NEXT) {
         ENABLE_ALL_INTERRUPTS();
-        buffer = (KnxMsg_Buffer * )NULL;
+        buffer = (KnxMsg_Buffer **)NULL;
         return KNX_E_NOT_OK;       /* no Buffer available. */
     }
 

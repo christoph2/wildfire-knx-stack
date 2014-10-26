@@ -6,18 +6,18 @@
 *
 *   All Rights Reserved
 *
-*  This program is free softwKNXe; you can redistribute it and/or modify
+*  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
 *
 *  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
-*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *  GNU General Public License for more KnxEtails.
 *
 *  You should have received a copy of the GNU General Public License along
-*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  with this program; if not, write to the Free Software Foundation, Inc.,
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
@@ -84,19 +84,33 @@ typedef struct tagKnx_CommObjDescriptorType {
 } Knx_CommObjDescriptorType;
 
 typedef enum tagKnx_DafType {
-    atINDIVIDUAL   = ((uint8_t) 0x00),
-    atMULTICAST    = ((uint8_t) 0x80)
+    KNX_ADDR_INDIVIDUAL = ((uint8_t)0x00),
+    KNX_ADDR_MULTICAST  = ((uint8_t)0x80)
 } Knx_DafType;
 
 typedef enum tagKnx_FrameTypeType {
-    ftExtended = ((uint8_t) 0x00),
-    ftStandard = ((uint8_t) 0x80),
-    ftPolling  = ((uint8_t) 0xC0)
+    KNX_FRAME_EXTENDED  = ((uint8_t)0x00),
+    KNX_FRAME_STANDARD  = ((uint8_t)0x80),
+    KNX_FRAME_POLLING   = ((uint8_t)0xC0)
 } Knx_FrameTypeType;
 
 typedef enum tagKnx_ObjectType {
-    otUINT1, otUINT2, otUINT3, otUINT4, otUINT5, otUINT6, otUINT7,
-    otUINT8, otUINT16, otBYTE3, otFLOAT, otDATA6, otDOUBLE, otDATA10, otMAXDATA, otVARDATA
+    KNX_OT_UINT1, 
+    KNX_OT_UINT2,
+    KNX_OT_UINT3,
+    KNX_OT_UINT4,
+    KNX_OT_UINT5,
+    KNX_OT_UINT6,
+    KNX_OT_UINT7,
+    KNX_OT_UINT8,
+    KNX_OT_UINT16,
+    KNX_OT_BYTE3,
+    KNX_OT_FLOAT,
+    KNX_OT_DATA6,
+    KNX_OT_DOUBLE,
+    KNX_OT_DATA10,
+    KNX_OT_MAXDATA,
+    KNX_OT_VARDATA
 } Knx_ObjectType;    /* Type-Byte / Object-Descriptor. */
 
 typedef uint8_t Knx_PriorityType;
@@ -107,14 +121,14 @@ typedef uint8_t Knx_PriorityType;
 typedef void (*Knx_LayerServiceFunctionType)(void);
 
 typedef struct tagKnx_ServiceEntryType {
-    Knx_ServiceTypeType             Service;
-    Knx_LayerServiceFunctionType    Function;
+    Knx_ServiceTypeType Service;
+    Knx_LayerServiceFunctionType Function;
 } Knx_ServiceEntryType;
 
 typedef struct tagKnx_LayerServicesType {
-    uint8_t                                   LayerOffset;
-    uint8_t                                   NumServices;
-    const Knx_LayerServiceFunctionType *    Functions;
+    uint8_t LayerOffset;
+    uint8_t NumServices;
+    const Knx_LayerServiceFunctionType * Functions;
 } Knx_LayerServicesType;
 /*
 **  END: LAYER-Dispatching-Functions.
