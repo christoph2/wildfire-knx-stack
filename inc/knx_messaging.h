@@ -102,8 +102,6 @@ extern "C"
                                                           8) | (KnxMsg_GetMessagePtr((pBuffer))->apci))
 #define KnxMsg_SetAPCI(pBuffer, apci)           (*(uint16_t *)&(pBuffer)->msg[6] = Utl_Htons((apci)))
 
-#define KnxMsg_GetIAK(pBuffer)                  ((uint8_t)KnxMsg_GetMessagePtr((pBuffer))->ctrl & (uint8_t)0x01)
-
 /*
 ** Global types.
 */

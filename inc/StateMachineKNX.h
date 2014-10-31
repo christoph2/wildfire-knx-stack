@@ -91,15 +91,15 @@ typedef struct tagKnxTlc_ActionListType {
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)         KnxTlc_StateMachine(KNX_TlcEventType event);
+FUNC(void, KSTACK_CODE) KnxTlc_StateMachine(KNX_TlcEventType event);
 
 FUNC(KnxTlc_StateType, KSTACK_CODE) KnxTlc_GetState(void);
-FUNC(void, KSTACK_CODE)         KnxTlc_SetState(KnxTlc_StateType State);
+FUNC(void, KSTACK_CODE) KnxTlc_SetState(KnxTlc_StateType State);
 #else
 void KnxTlc_StateMachine(KNX_TlcEventType event);
 
-KnxTlc_StateType    KnxTlc_GetState(void);
-void                KnxTlc_SetState(KnxTlc_StateType State);
+KnxTlc_StateType KnxTlc_GetState(void);
+void KnxTlc_SetState(KnxTlc_StateType State);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -109,4 +109,3 @@ void                KnxTlc_SetState(KnxTlc_StateType State);
 #endif  /* __cplusplus */
 
 #endif  /* __STATEMACHINE_KNX */
-
