@@ -24,7 +24,7 @@
 #include "knx_address.h"
 
 /*
-   static const uint8_t KNX_OBJTYPESIZE[16]={ // Hinweis: auch als 'KNX_OBJ_LEN_TAB' definiert!?
+   STATIC const uint8_t KNX_OBJTYPESIZE[16]={ // Hinweis: auch als 'KNX_OBJ_LEN_TAB' definiert!?
     1,   // UINT1
     1,   // UINT2
     1,   // UINT3

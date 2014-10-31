@@ -135,14 +135,14 @@ typedef enum tagKnxLL_LocalConfirmationType {
 *  Local Function Prototypes.
 *
 */
-static boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxLL_StateType desiredState);
-static boolean KnxLL_InternalCommandUnconfirmed(uint8_t const * frame, uint8_t length);
-static boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t length);
-static uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length);
-static void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount);
-static void Disp_L_Data_Req(void);
-static void Disp_L_PollData_Req(void);
-static void KnxLL_DataStandard_Ind(uint8_t const * frame);
+STATIC boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxLL_StateType desiredState);
+STATIC boolean KnxLL_InternalCommandUnconfirmed(uint8_t const * frame, uint8_t length);
+STATIC boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t length);
+STATIC uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length);
+STATIC void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount);
+STATIC void Disp_L_Data_Req(void);
+STATIC void Disp_L_PollData_Req(void);
+STATIC void KnxLL_DataStandard_Ind(uint8_t const * frame);
 STATIC void KnxLl_Data_Con(Knx_StatusType status);
 
 
@@ -167,18 +167,18 @@ STATIC const Knx_LayerServicesType KnxLl_ServiceTable[] = {
  *
  */
 
-static KnxLL_StateType KnxLL_State;
-static uint8_t KnxLL_SequenceNo;
+STATIC KnxLL_StateType KnxLL_State;
+STATIC uint8_t KnxLL_SequenceNo;
 
-static uint8_t KnxLL_Buffer[KNX_LL_BUF_SIZE];
+STATIC uint8_t KnxLL_Buffer[KNX_LL_BUF_SIZE];
 
-static KnxLL_ExpectationType KnxLL_Expectation = {0};
-static uint8_t KnxLL_ReceiverIndex;
-static KnxLL_ReceiverStageType KnxLL_ReceiverStage;
-static uint8_t KnxLL_RunningFCB;
-static KnxLL_LocalConfirmationType KnxLL_LocalConfirmation;
+STATIC KnxLL_ExpectationType KnxLL_Expectation = { 0 };
+STATIC uint8_t KnxLL_ReceiverIndex;
+STATIC KnxLL_ReceiverStageType KnxLL_ReceiverStage;
+STATIC uint8_t KnxLL_RunningFCB;
+STATIC KnxLL_LocalConfirmationType KnxLL_LocalConfirmation;
 
-static KnxLL_Repeated = FALSE;
+STATIC KnxLL_Repeated = FALSE;
 
 
 KNX_IMPLEMENT_MODULE_STATE_VAR(UART_BIF);
@@ -361,7 +361,7 @@ void KnxLL_Task(void)
     KnxDisp_DispatchLayer(TASK_LL_ID, KnxLl_ServiceTable);
 }
 
-static KnxMsg_Buffer * txBuffer;
+STATIC KnxMsg_Buffer * txBuffer;
 
 /*
 **
@@ -492,7 +492,7 @@ boolean KnxLL_IsConfirmed(void)
  *
  * @return boolean
  */
-static boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxLL_StateType desiredState)
+STATIC boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxLL_StateType desiredState)
 {
     boolean result;
 
@@ -510,24 +510,24 @@ static boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxL
     return result;
 }
 
-static boolean KnxLL_InternalCommandUnconfirmed(uint8_t const * frame, uint8_t length)
+STATIC boolean KnxLL_InternalCommandUnconfirmed(uint8_t const * frame, uint8_t length)
 {
     return KnxLL_InternalCommand(frame, length, KNX_LL_STATE_IDLE);
 }
 
-static boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t length)
+STATIC boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t length)
 {
     return KnxLL_InternalCommand(frame, length, KNX_LL_STATE_AWAITING_RESPONSE_LOCAL);
 }
 
-static void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount)
+STATIC void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount)
 {
     KnxLL_Expectation.ExpectedService = service;
     KnxLL_Expectation.ExpectedMask = mask;
     KnxLL_Expectation.ExpectedByteCount = byteCount;
 }
 
-static uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length)
+STATIC uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length)
 {
     uint8_t checksum = (uint8_t)0xff;
     uint8_t idx;

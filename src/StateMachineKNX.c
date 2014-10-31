@@ -21,9 +21,10 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
+
 /*
 **
-**      Konnex Transport-Layer-Statemachines.
+**      Konnex Transport-Layer-Statemachine.
 **
 **/
 
@@ -32,7 +33,7 @@
 /*
 ** Local types.
 */
-typedef uint8_t (*EVENT_FUNC)(void);
+typedef uint8_t (*KnxTlc_EventFunctionType)(void);
 
 /*
 ** Local function prototypes.
@@ -83,7 +84,7 @@ void T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
 */
 #if KNX_TL_STATEMACHINE_STYLE == 3
 /* Transport-Layer-Statemachine-Style #3 */
-STATIC const KnxTlc_ActionListType Actions[] = {
+STATIC const KnxTlc_ActionListType KnxTlc_Actions[] = {
     {/* 0  */{{ A1,  KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_IDLE },  { A0,   KNX_TLC_STATE_OPEN_WAIT },  { A0,   KNX_TLC_STATE_CONNECTING }}},
     {/* 1  */{{ A1,  KNX_TLC_STATE_OPEN_IDLE },  { A10,  KNX_TLC_STATE_OPEN_IDLE },  { A10,  KNX_TLC_STATE_OPEN_WAIT },  { A10,  KNX_TLC_STATE_CONNECTING }}},
     {/* 2  */{{ A0,  KNX_TLC_STATE_CLOSED },     { A5,   KNX_TLC_STATE_CLOSED },     { A5,   KNX_TLC_STATE_CLOSED },     { A5,   KNX_TLC_STATE_CLOSED }}},
@@ -115,7 +116,7 @@ STATIC const KnxTlc_ActionListType Actions[] = {
 };
 #elif (KNX_TL_STATEMACHINE_STYLE == 1) || (KNX_TL_STATEMACHINE_STYLE == 2)
 /* Transport-Layer-Statemachine, Styles #1 and #2 */
-STATIC const ACTION_LIST Actions[] = {
+STATIC const ACTION_LIST KnxTlc_Actions[] = {
 #if     KNX_TL_STATEMACHINE_STYLE == 1
     {/* 0  */{{ A1,  KNX_TLC_STATE_OPEN_IDLE},   { A6,   KNX_TLC_STATE_CLOSED },     { A6,   KNX_TLC_STATE_CLOSED }}},
 #else
@@ -219,7 +220,7 @@ STATIC const ACTION_LIST Actions[] = {
 #error "Invalid TL_STYLE [1|2|3]"
 #endif
 
-STATIC const EVENT_FUNC TLC_Events[] = {
+STATIC const KnxTlc_EventFunctionType TLC_Events[] = {
 /*      Event                                 Handler                     */
 /*      ==================================================================*/
 /*      KNX_TLC_EVENT_CONNECT_IND          */ KnxTlc_Event_Connect_Ind,
@@ -347,7 +348,7 @@ void KnxTlc_StateMachine(KNX_TlcEventType event)
 {
     KnxTlc_ActionType action;
 
-    action = Actions[((event < KNX_TLC_EVENT_UNDEFINED) ? TLC_Events[event]() : KnxTlc_Event_Undefined())].Action[KnxTlc_GetState()];
+    action = KnxTlc_Actions[((event < KNX_TLC_EVENT_UNDEFINED) ? TLC_Events[event]() : KnxTlc_Event_Undefined())].Action[KnxTlc_GetState()];
     KnxTlc_SetState(action.Next);
     action.Function();
 }

@@ -28,8 +28,8 @@
 #include "knx_debug.h"
 #include <Windows.h>
 
-static LARGE_INTEGER timerFrequency;
-static BOOL hrcAvailable;
+STATIC LARGE_INTEGER timerFrequency;
+STATIC BOOL hrcAvailable;
 
 void Dbg_Init(void)
 {

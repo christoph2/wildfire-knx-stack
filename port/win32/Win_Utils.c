@@ -31,7 +31,7 @@
  *
  */
 
-static volatile BOOL exitApplication = FALSE;
+STATIC volatile BOOL exitApplication = FALSE;
 
 void Win_Error(char * function)
 {

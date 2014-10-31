@@ -37,17 +37,17 @@
 #define MAIN_TIMER      (0)
 #define DL_TIMER        (1)
 
-static void CALLBACK TimerProc(void* lpParameter, BOOLEAN TimerOrWaitFired);
-static BOOL Port_TimerCreate(HANDLE * timerHandle, unsigned int number, unsigned int first, unsigned int period);
-static void Port_TimerCancel(HANDLE timerHandle);
-static void Port_TimerDelete(HANDLE timerHandle);
+STATIC void CALLBACK TimerProc(void* lpParameter, BOOLEAN TimerOrWaitFired);
+STATIC BOOL Port_TimerCreate(HANDLE * timerHandle, unsigned int number, unsigned int first, unsigned int period);
+STATIC void Port_TimerCancel(HANDLE timerHandle);
+STATIC void Port_TimerDelete(HANDLE timerHandle);
 
-static HANDLE TimerQueue;
-static HANDLE MainTimer;
-static HANDLE DLTimer;
-static CRITICAL_SECTION mainTimerCS;
-static CRITICAL_SECTION dlTimerCS;
-static BOOL isDLTimerRunning = FALSE;
+STATIC HANDLE TimerQueue;
+STATIC HANDLE MainTimer;
+STATIC HANDLE DLTimer;
+STATIC CRITICAL_SECTION mainTimerCS;
+STATIC CRITICAL_SECTION dlTimerCS;
+STATIC BOOL isDLTimerRunning = FALSE;
 
 void KnxTmr_SystemTickHandler(void);
 void KnxLL_TimeoutCB(void);
@@ -56,9 +56,9 @@ void KnxLL_TimeoutCB(void);
 
 //////
 
-static void CALLBACK TimerProc(void * lpParameter, BOOLEAN TimerOrWaitFired)
+STATIC void CALLBACK TimerProc(void * lpParameter, BOOLEAN TimerOrWaitFired)
 {
-    static unsigned channelNumber;
+    STATIC unsigned channelNumber;
 
     //PORT_LOCK_TASK_LEVEL();
     KNX_UNREFERENCED_PARAMETER(TimerOrWaitFired);
@@ -82,19 +82,19 @@ void Port_TimerInit(void)
     }
 }
 
-static BOOL Port_TimerCreate(HANDLE * timerHandle, unsigned int number, unsigned int first, unsigned int period)
+STATIC BOOL Port_TimerCreate(HANDLE * timerHandle, unsigned int number, unsigned int first, unsigned int period)
 {
     return CreateTimerQueueTimer(timerHandle, TimerQueue, TimerProc, (void *)number,
         (DWORD)first, (DWORD)period, 0/*   WT_EXECUTEINTIMERTHREAD  WT_EXECUTEINIOTHREAD*/
     );
 }
 
-static void Port_TimerCancel(HANDLE timerHandle)
+STATIC void Port_TimerCancel(HANDLE timerHandle)
 {
     DeleteTimerQueueTimer(TimerQueue, timerHandle, INVALID_HANDLE_VALUE);
 }
 
-static void Port_TimerDelete(HANDLE timerHandle)
+STATIC void Port_TimerDelete(HANDLE timerHandle)
 {
     Port_TimerCancel(timerHandle);
     CloseHandle(timerHandle);

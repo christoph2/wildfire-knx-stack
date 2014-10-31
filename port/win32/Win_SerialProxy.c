@@ -42,12 +42,12 @@ void Serial_Receiver(void * context);
 void Serial_Marshal(char * blob, uint8_t const * arr, uint16_t length);
 void Serial_Unmarshal(char * blob, uint8_t * arr, uint16_t * length);
 
-static uintptr_t serialThread;
+STATIC uintptr_t serialThread;
 void * Serial_TransmitterSocket;
-static void * Serial_Context;
+STATIC void * Serial_Context;
 
-static const char * IDSerialReceiver = "TPUART_CLIENT_REQUESTOR";
-static const char * IDSerialTransmitter = "TPUART_CLIENT_TRANSMITTER";
+STATIC const char * IDSerialReceiver = "TPUART_CLIENT_REQUESTOR";
+STATIC const char * IDSerialTransmitter = "TPUART_CLIENT_TRANSMITTER";
 
 /**
  *  'Simulates' an Rx-Interrupt.

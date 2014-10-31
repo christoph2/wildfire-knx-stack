@@ -34,9 +34,9 @@
 #define RTL_CRITICAL_SECTION_FLAG_DYNAMIC_SPIN  0x02000000
 #endif
 
-static HANDLE hMainThread;
-static CRITICAL_SECTION isrCS;
-static uint32_t processID;
+STATIC HANDLE hMainThread;
+STATIC CRITICAL_SECTION isrCS;
+STATIC uint32_t processID;
 
 void Port_Init(void)
 {

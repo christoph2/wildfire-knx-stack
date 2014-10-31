@@ -301,7 +301,7 @@ typedef void(*VoidFunctionType)(void);
     KnxEt_ReportError(KNX_MODULE_ID_ ## module, api, error)
 
 #define KNX_IMPLEMENT_MODULE_STATE_VAR(module)                      \
-    static KnxModule_StateType module ## _State = KNX_MODULE_UNINIT
+    STATIC KnxModule_StateType module ## _State = KNX_MODULE_UNINIT
 
 #define KNX_GET_MODULE_STATE_VAR(module)                            \
     GLUE2(module, _State)

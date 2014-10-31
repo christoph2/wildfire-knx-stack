@@ -39,11 +39,11 @@
 /*
 ** Local variables.
 */
-static Tmr_TimerType KNX_Timer[TMR_NUM_TIMERS];
-static Tmr_TickType  Tmr_SysMsCounter;
-static Tmr_TickType  Tmr_SysSecondCounter;
-static uint16_t      Tmr_DataLinkCounter;
-static boolean       Tmr_DataLinkTimerRunning;
+STATIC Tmr_TimerType KNX_Timer[TMR_NUM_TIMERS];
+STATIC Tmr_TickType  Tmr_SysMsCounter;
+STATIC Tmr_TickType  Tmr_SysSecondCounter;
+STATIC uint16_t      Tmr_DataLinkCounter;
+STATIC boolean       Tmr_DataLinkTimerRunning;
 
 
 /*

@@ -27,7 +27,7 @@
 #if KSTACK_MEMORY_MAPPING == STD_ON
 STATIC FUNC(void, KSTACK_CODE) NL_CheckRoutingCount(KnxMsg_BufferPtr pBuffer);
 #else
-static void KnxNl_CheckRoutingCount(KnxMsg_BufferPtr pBuffer);
+STATIC void KnxNl_CheckRoutingCount(KnxMsg_BufferPtr pBuffer);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -83,7 +83,7 @@ STATIC const Knx_LayerServiceFunctionType KnxNl_Services[] = {
 /*      ====================================================*/
 };
 
-static const Knx_LayerServicesType KnxNl_ServiceTable[] = {
+STATIC const Knx_LayerServicesType KnxNl_ServiceTable[] = {
     { KNX_NL_SERVICES, SIZEOF_ARRAY(KnxNl_Services), KnxNl_Services }
 };
 

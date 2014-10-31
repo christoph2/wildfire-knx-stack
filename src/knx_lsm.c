@@ -215,8 +215,8 @@ void LSM_Dispatch(uint8_t * record, /*LSM_State*/ uint8_t * ls_var)
 }
 
 
-/* static uint8_t app_rec[10]; */
-/*static LSM_Stateuint8 app_lsc; */
+/* STATIC uint8_t app_rec[10]; */
+/*STATIC LSM_Stateuint8 app_lsc; */
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) LSM_Test(void)
 #else

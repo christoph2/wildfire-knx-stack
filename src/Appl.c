@@ -69,7 +69,7 @@ const uint8_t                 KNX_DEV_ORDER_INFO[10] = {0x0a, 0x09, 0x08, 0x07, 
    } AppInfoBlock;
  */
 
-/*static*/ const uint8_t DEV_EEPROM_HEADER[0x16] = {
+/* STATIC */ const uint8_t DEV_EEPROM_HEADER[0x16] = {
     0xff,   /* OptionReg (HC05 EEPROM Option Register).         */
     0x00,   /* ManData (2 Bytes).   */
     0x00,

@@ -36,19 +36,19 @@
 
 #include "Python.h"
 
-static PyObject * LocalConfirmationCB = NULL;
+STATIC PyObject * LocalConfirmationCB = NULL;
 
-static PyObject * Connect_IndCB = NULL;
-static PyObject * Disconnect_IndCB = NULL;
+STATIC PyObject * Connect_IndCB = NULL;
+STATIC PyObject * Disconnect_IndCB = NULL;
 
-static PyObject * Individual_Address_ResCB = NULL;
-static PyObject * PropertyDescription_Read_IndCB = NULL;
-
-
-static void Ffi_SetCallback(PyObject ** callback, void * func);
+STATIC PyObject * Individual_Address_ResCB = NULL;
+STATIC PyObject * PropertyDescription_Read_IndCB = NULL;
 
 
-static void Ffi_SetCallback(PyObject ** callback, void * func)
+STATIC void Ffi_SetCallback(PyObject ** callback, void * func);
+
+
+STATIC void Ffi_SetCallback(PyObject ** callback, void * func)
 {
     Py_XINCREF((PyObject *)func);   /* Add a reference to new callback */
     Py_XDECREF(*callback);          /* Dispose of previous callback */
