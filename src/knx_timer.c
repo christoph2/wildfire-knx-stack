@@ -297,8 +297,11 @@ void KnxTmr_SystemTickHandler(void)
             } else if (tm->base == TMR_RESOLUTION_SEC) {
                 if (SecondChanged == TRUE)  {
                     tm->expire_counter -= (uint32_t)1UL;
-                    if (tm->expire_counter == (uint32_t)0UL) {
+                    if (tm->expire_counter == (uint32_t)0UL) {                                   
                         tm->state = TMR_STATE_EXPIRED;
+                        if (KnxTmr_Callbacks[idx] != (Tmr_CallbackFunction*)NULL) {
+                            KnxTmr_Callbacks[idx]();
+                        }
                     }
                 }
             }

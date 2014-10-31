@@ -48,6 +48,8 @@ extern "C"
 */
 typedef uint32_t Tmr_TickType, * Tmr_TickRefType;
 
+typedef void (*Tmr_CallbackFunction)(void);
+
 typedef enum tagTmr_ResolutionType {
     TMR_RESOLUTION_MS,
     TMR_RESOLUTION_SEC
@@ -87,6 +89,8 @@ FUNC(void, KSTACK_CODE)     KnxTmr_DelayHMS(uint16_t H, uint16_t M, uint16_t S);
 
 FUNC(void, KSTACK_CODE)     KnxTmr_SystemTickHandler(void);
 FUNC(void, KSTACK_CODE)     KnxTmr_SecondCallback(void);
+
+
 #else
 void KnxTmr_Init(void);
 
@@ -109,6 +113,11 @@ void    KnxTmr_DelayHMS(uint16_t H, uint16_t M, uint16_t S);
 
 void    KnxTmr_SystemTickHandler(void);
 void    KnxTmr_SecondCallback(void);
+
+/*
+** Global Variables.
+*/
+extern Tmr_CallbackFunction KnxTmr_Callbacks[TMR_NUM_TIMERS];
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
