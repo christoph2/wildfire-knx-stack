@@ -39,7 +39,9 @@
 STATIC PyObject * LocalConfirmationCB = NULL;
 
 STATIC PyObject * Connect_IndCB = NULL;
+STATIC PyObject * Connect_ConCB = NULL;
 STATIC PyObject * Disconnect_IndCB = NULL;
+STATIC PyObject * Disconnect_ConCB = NULL;
 
 STATIC PyObject * Individual_Address_ResCB = NULL;
 STATIC PyObject * PropertyDescription_Read_IndCB = NULL;
@@ -105,6 +107,11 @@ void Ffi_SetConnect_IndCB(void * callback)
     Ffi_SetCallback(&Connect_IndCB, callback);
 }
 
+void Ffi_SetConnect_ConCB(void * callback)
+{    
+    Ffi_SetCallback(&Connect_ConCB, callback);
+}
+
 void Ffi_Connect_Ind(void)
 {    
     PyObject * arglist;
@@ -117,9 +124,26 @@ void Ffi_Connect_Ind(void)
     }
 }
 
+void Ffi_Connect_Con(boolean status)
+{    
+    PyObject * arglist;
+    PyObject * result;
+
+    if (Connect_ConCB != NULL) {
+        arglist = Py_BuildValue("(H)", status);
+        result = PyObject_Call(Connect_ConCB, arglist, NULL);
+        Py_DECREF(arglist);
+    }
+}
+
 void Ffi_SetDisconnect_IndCB(void * callback)
 {    
     Ffi_SetCallback(&Disconnect_IndCB, callback);
+}
+
+void Ffi_SetDisconnect_ConCB(void * callback)
+{    
+    Ffi_SetCallback(&Disconnect_ConCB, callback);
 }
 
 void Ffi_Disconnect_Ind(void)
@@ -133,6 +157,19 @@ void Ffi_Disconnect_Ind(void)
         Py_DECREF(arglist);
     }
 }
+
+void Ffi_Disconnect_Con(boolean status)
+{       
+    PyObject * arglist;
+    PyObject * result;
+
+    if (Disconnect_ConCB != NULL) {
+        arglist = Py_BuildValue("(H)", status);
+        result = PyObject_Call(Disconnect_ConCB, arglist, NULL);
+        Py_DECREF(arglist);
+    }
+}
+
 
 void Ffi_Individual_Address_Res(uint16_t address)
 {

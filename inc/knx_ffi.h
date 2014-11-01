@@ -37,10 +37,14 @@ extern "C"
 #if defined(SWIG)
 
 void Ffi_SetConnect_IndCB(void * callback);
+void Ffi_SetConnect_ConCB(void * callback);
 void Ffi_Connect_Ind(void);
+void Ffi_Connect_Con(boolean status);
 
 void Ffi_SetDisconnect_IndCB(void * callback);
+void Ffi_SetDisconnect_ConCB(void * callback);
 void Ffi_Disconnect_Ind(void);
+void Ffi_Disconnect_Con(boolean status);
 
 void Ffi_SetLocalConfirmationCB(void * callback);
 void Ffi_LocalConfirmation(boolean confirmed);
@@ -56,7 +60,9 @@ void Ffi_Property_Description_Read_Ind(uint16_t source, uint8_t object_index,
 #define KNX_CALLBACK_L_CON(confirmed)                           Ffi_LocalConfirmation((confirmed))
 
 #define KNX_CALLBACK_T_CONNECT_IND()                            Ffi_Connect_Ind()
+#define KNX_CALLBACK_T_CONNECT_CON(status)                      Ffi_Connect_Con((status))
 #define KNX_CALLBACK_T_DISCONNECT_IND()                         Ffi_Disconnect_Ind()
+#define KNX_CALLBACK_T_DISCONNECT_CON(status)                   Ffi_Disconnect_Con((status))
 
 #define KNX_CALLBACK_INDIVIDUAL_ADDRESS_RES(address)            Ffi_Individual_Address_Res((address))
 #define KNX_CALLBACK_PROPERTYDESCRIPTION_READ_IND(source,   \
@@ -70,7 +76,9 @@ void Ffi_Property_Description_Read_Ind(uint16_t source, uint8_t object_index,
 #define KNX_CALLBACK_L_CON(confirmed)
 
 #define KNX_CALLBACK_T_CONNECT_IND()
+#define KNX_CALLBACK_T_CONNECT_CON(status)
 #define KNX_CALLBACK_T_DISCONNECT_IND()
+#define KNX_CALLBACK_T_DISCONNECT_CON(status)
 
 #define KNX_CALLBACK_INDIVIDUAL_ADDRESS_RES(address)
 #define KNX_CALLBACK_PROPERTYDESCRIPTION_READ_IND(source, object_index, property_id, property_index, type, max_nr_of_elem, access)
