@@ -295,6 +295,7 @@ void KnxTmr_SystemTickHandler(void)
                     tm->state = TMR_STATE_EXPIRED;
                 }
             } else if (tm->base == TMR_RESOLUTION_SEC) {
+                TMR_LOCK_MAIN_TIMER();
                 if (SecondChanged == TRUE)  {
                     tm->expire_counter -= (uint32_t)1UL;
                     if (tm->expire_counter == (uint32_t)0UL) {                                   
@@ -304,6 +305,7 @@ void KnxTmr_SystemTickHandler(void)
                         }
                     }
                 }
+                TMR_UNLOCK_MAIN_TIMER();
             }
         }
     }
