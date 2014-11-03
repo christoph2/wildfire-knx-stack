@@ -306,7 +306,7 @@ FUNC(void, KSTACK_CODE) T_Disconnect_Ind(KnxMsg_BufferPtr pBuffer, Knx_AddressTy
 void T_Disconnect_Ind(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_SetTPCI(pBuffer, T_DISCONNECT_REQ_PDU);
+    KnxMsg_SetTPCI(pBuffer, KNX_TPCI_DISCONNECT_REQ_PDU);
     KnxMsg_SetSourceAddress(pBuffer, source);
     KnxMsg_SetDestAddress(pBuffer, dest);
 
@@ -326,7 +326,7 @@ FUNC(void, KSTACK_CODE) T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressTy
 void T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_SetTPCI(pBuffer, T_DISCONNECT_REQ_PDU);
+    KnxMsg_SetTPCI(pBuffer, KNX_TPCI_DISCONNECT_REQ_PDU);
     KnxMsg_SetSourceAddress(pBuffer, source);
     KnxMsg_SetDestAddress(pBuffer, dest);
 
@@ -431,6 +431,7 @@ STATIC void A0(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* do nothing. */
+    DBG_PRINTLN("A0()");
     if (KnxMsg_ScratchBufferPtr != (KnxMsg_BufferPtr)NULL) {
         KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
     }
@@ -443,6 +444,8 @@ STATIC FUNC(void, KSTACK_CODE) A1(void)
 STATIC void A1(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
+    DBG_PRINTLN("A1()");
+
     KnxTlc_SetConnectionAddress(KnxTlc_GetSourceAddress());
 
     /* Send a T_CONNECT_ind to the user. */
@@ -463,12 +466,14 @@ STATIC void A2(void)
 {
     KnxMsg_BufferPtr pBuffer;
 
+    DBG_PRINTLN("A2()");
+
 /*      Send a N_Data_Individual.req with T_ACK_PDU, priority = SYSTEM, destination = */
 /*      connection_address, sequence =SeqNoRcv to the network layer (remote device).  */
     KnxMsg_AllocateBuffer(&pBuffer);
 
     if (pBuffer != (KnxMsg_BufferPtr)NULL) {
-        T_Ack_Req(pBuffer, KnxADR_GetPhysAddr(), KnxTlc_GetConnectionAddress(), KnxTlc_GetSequenceNumberReceived());
+        T_Ack_Req(pBuffer, KnxTlc_GetSourceAddress(), /* KnxADR_GetPhysAddr(), */ KnxTlc_GetConnectionAddress(), KnxTlc_GetSequenceNumberReceived());
         KnxTlc_SetSequenceNumberReceived(KnxTlc_GetSequenceNumberReceived() + 1);
     } else {
         /* Errorhandling. */
@@ -494,8 +499,10 @@ STATIC void A3(void)
 **      layer (remote device).
 */
 
+    DBG_PRINTLN("A3()");
+
     (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
-    T_Ack_Req(KnxMsg_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTlc_GetConnectionAddress(), KnxTlc_GetSequenceNumberReceived());
+    T_Ack_Req(KnxMsg_ScratchBufferPtr, KnxTlc_GetSourceAddress(), /* KnxADR_GetPhysAddr(), */ KnxTlc_GetConnectionAddress(), KnxTlc_GetSequenceNumberReceived());
     KnxTlc_RestartConnectionTimeoutTimer();
 }
 
@@ -512,8 +519,10 @@ STATIC void A4(void)
 **      layer (remote device).
 */
 
+    DBG_PRINTLN("A4()");
+
     (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
-    T_Nak_Req(KnxMsg_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTlc_GetConnectionAddress(), KnxTlc_GetSequenceNumberReceived());
+    T_Nak_Req(KnxMsg_ScratchBufferPtr, KnxTlc_GetSourceAddress(), /* KnxADR_GetPhysAddr(), */ KnxTlc_GetConnectionAddress(), KnxTlc_GetSequenceNumberReceived());
 
     KnxTlc_RestartConnectionTimeoutTimer();
 }
@@ -526,8 +535,12 @@ STATIC void A5(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     /* Send a T_Disconnect.ind to the user. */
-    (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
-    T_Disconnect_Ind(KnxMsg_ScratchBufferPtr, KnxTlc_GetConnectionAddress(), KnxADR_GetPhysAddr());
+    /* Handled by callback. */
+    //(void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
+    //T_Disconnect_Ind(KnxMsg_ScratchBufferPtr, KnxTlc_GetConnectionAddress(), KnxTlc_GetSourceAddress(), /*KnxADR_GetPhysAddr() */);
+
+
+    DBG_PRINTLN("A5()");
 
     KnxTlc_StopAcknowledgementTimeoutTimer();
     KnxTlc_StopConnectionTimeoutTimer();
@@ -547,22 +560,27 @@ STATIC void A6(void)
 **      destination = connection_address, sequence = 0 to the network layer (remote device).
 */
 
+    DBG_PRINTLN("A6()");
+
     KnxMsg_AllocateBuffer(&pBuffer);
 
     if (pBuffer != (KnxMsg_BufferPtr)NULL) {
-        T_Disconnect_Req(pBuffer, KnxADR_GetPhysAddr(), KnxTlc_GetConnectionAddress());
+        T_Disconnect_Req(pBuffer, KnxTlc_GetSourceAddress(), /* KnxADR_GetPhysAddr(), */ KnxTlc_GetConnectionAddress());
     } else {
         /* Errorhandling. */
     }
 
-/* Send a T_Disconnect.ind to the user. */
+    /* Send a T_Disconnect.ind to the user. */
+    /* Handled by callback. */
+#if 0
     if (KnxMsg_ScratchBufferPtr == (KnxMsg_BufferPtr)NULL) {
         KnxMsg_AllocateBuffer(&KnxMsg_ScratchBufferPtr);
     } else {
         (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
     }
 
-    T_Disconnect_Ind(KnxMsg_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTlc_GetConnectionAddress());
+    T_Disconnect_Ind(KnxMsg_ScratchBufferPtr, KnxTlc_GetSourceAddress(), /* KnxADR_GetPhysAddr(), */ KnxTlc_GetConnectionAddress());
+#endif
 
     KnxTlc_StopAcknowledgementTimeoutTimer();
     KnxTlc_StopConnectionTimeoutTimer();
@@ -581,12 +599,13 @@ STATIC void A7(void)   /* Nur local-user (Client only). */
 **              sequence = SeqNoSend to the network layer (remote device).
 */
 
+    DBG_PRINTLN("A7()");
     StoreMessage();
 
 /*    MSG_ScratchBuffer->service=T_DATA_CONNECTED_REQ; */
-    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
+    //KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
     KnxMsg_SetSeqNo(KnxMsg_ScratchBufferPtr, KnxTlc_GetSequenceNumberSend());
-    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
+    //(void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 
     KnxTlc_SetRepetitionCount((uint8_t)0);
 
@@ -601,6 +620,8 @@ STATIC FUNC(void, KSTACK_CODE) A8(void)
 STATIC void A8(void)  /* only local-user (Client only). */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
+    DBG_PRINTLN("A8()");
+
     KnxTlc_StopAcknowledgementTimeoutTimer();
     KnxTlc_SetSequenceNumberSend(KnxTlc_GetSequenceNumberSend() + (uint8_t)1);
 
@@ -621,6 +642,8 @@ STATIC FUNC(void, KSTACK_CODE) A8b(void)
 STATIC void A8b(void)        /* only local-user (Client only). */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
+    DBG_PRINTLN("A8b()");
+
     KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
     KnxTlc_StopAcknowledgementTimeoutTimer();
     KnxTlc_SetSequenceNumberSend(KnxTlc_GetSequenceNumberSend() + (uint8_t)1);
@@ -634,6 +657,9 @@ STATIC FUNC(void, KSTACK_CODE) A9(void)
 STATIC void A9(void)  /* only local-user (Client only). */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
+
+    DBG_PRINTLN("A9()");
+
     if (KnxMsg_ScratchBufferPtr == (KnxMsg_BufferPtr)NULL) {
         KnxMsg_AllocateBuffer(&KnxMsg_ScratchBufferPtr);
     } else {
@@ -662,6 +688,8 @@ STATIC void A10(void)  /* GO AWAY!!! */
 /*      Send a N_Data_Individual.req with T_DISCONNECT_REQ_PDU Priority = SYSTEM, */
 /*      Destination = source (rbuffer), Sequence = 0 back to sender. */
 
+    DBG_PRINTLN("A10()");
+
     Knx_AddressType source;
     Knx_AddressType dest;
 
@@ -680,9 +708,11 @@ STATIC FUNC(void, KSTACK_CODE) A11(void)
 STATIC void A11(void)  /* (Client only???) */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-/* Store event back and handle after next event. Don�t change order of T_Data_Connected.req events. */
+/* Store event back and handle after next event. Don't change order of T_Data_Connected.req events. */
 
-    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);   /* push-bask event. */
+    DBG_PRINTLN("A11()");
+
+//    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);   /* push-bask event. */
 }
 
 
@@ -693,12 +723,16 @@ STATIC void A12(void)                                              /* (Client on
 #endif /* KSTACK_MEMORY_MAPPING */
 {
 #if 0
-    KnxTlc_SetConnectionAddress(KnxTlc_GetSourceAddress()); /* connection_address=address from T_CONNECT_requ */
 
 /*  send N_Data_Individual.req with T_CONNECT_REQ_PDU */
     (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
-    T_Connect_Req(KnxMsg_ScratchBufferPtr, KnxADR_GetPhysAddr(), KnxTlc_GetConnectionAddress());
+    T_Connect_Req(KnxMsg_ScratchBufferPtr, KnxTlc_GetSourceAddress(), /* KnxADR_GetPhysAddr(), */ KnxTlc_GetConnectionAddress());
 #endif
+
+    DBG_PRINTLN("A12()");
+
+    //KnxTlc_SetConnectionAddress(KnxTlc_GetSourceAddress(KnxMsg_ScratchBufferPtr)); /* connection_address=address from T_CONNECT_requ */
+
     KnxTlc_SetSequenceNumberSend((uint8_t)0);
     KnxTlc_SetSequenceNumberReceived((uint8_t)0);
     KnxTlc_StartConnectionTimeoutTimer();
@@ -712,8 +746,11 @@ STATIC void A13(void)  /* Nur local-user (Client only). */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
 /*     Send a T_Connect.con to the user. */
-    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_CONNECT_CON;
-    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
+
+    DBG_PRINTLN("A13()");
+
+    //KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_CONNECT_CON;
+    //(void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
 
@@ -727,6 +764,8 @@ STATIC void A14(void)    /* only local-user (Client only). */
 /*      destination = connection_address, sequence = 0 to the network layer (remote device). */
 
 /*      Send a T_Disconnect.con to the user. */
+
+    printf(" A14()\n");
 
     KnxTlc_StopAcknowledgementTimeoutTimer();
     KnxTlc_StopConnectionTimeoutTimer();
@@ -742,6 +781,8 @@ STATIC void A14b(void)  /* wie A14, nur ohne T_DISCONNECT_CON to user. */
 /*      Send a N_Data_Individual.req with T_DISCONNECT_REQ_PDU, priority = SYSTEM, */
 /*      destination = connection_address, sequence = 0 to the network layer (remote device). */
 
+    DBG_PRINTLN(" A14b()");
+
     KnxTlc_StopAcknowledgementTimeoutTimer();
     KnxTlc_StopConnectionTimeoutTimer();
 }
@@ -754,6 +795,8 @@ STATIC void A15(void)   /* only local-user (Client only). */
 #endif /* KSTACK_MEMORY_MAPPING */
 {
 /*      Send a T_Disconnect.con to the management user */
+
+    DBG_PRINTLN("A15()");
 
     KnxTlc_StopAcknowledgementTimeoutTimer();
     KnxTlc_StopConnectionTimeoutTimer();

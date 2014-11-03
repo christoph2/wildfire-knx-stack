@@ -38,22 +38,21 @@ extern "C"
 /*
 **  TPCI-Codings.
 */
-#define TPCI_UDT                ((uint8_t)0x00)       /* Unnumbered Data. */
-#define TPCI_NDT                ((uint8_t)0x40)       /* Numbered Data (T_DATA_CONNECTED_REQ_PDU). */
-#define TPCI_UCD                ((uint8_t)0x80)       /* Unnumbered Control. */
-#define TPCI_NCD                ((uint8_t)0xC0)       /* Numbered Control (TACK/TNACK). */
+#define KNX_TPCI_UDT                    ((uint8_t)0x00)       /* Unnumbered Data. */
+#define KNX_TPCI_NDT                    ((uint8_t)0x40)       /* Numbered Data (T_DATA_CONNECTED_REQ_PDU). */
+#define KNX_TPCI_UCD                    ((uint8_t)0x80)       /* Unnumbered Control. */
+#define KNX_TPCI_NCD                    ((uint8_t)0xC0)       /* Numbered Control (TACK/TNACK). */
 
-#define T_ACK_PDU               ((uint8_t)0xC2)
-#define T_NAK_PDU               ((uint8_t)0xC3)
+#define KNX_TPCI_ACK_PDU                ((uint8_t)0xC2)
+#define KNX_TPCI_NAK_PDU                ((uint8_t)0xC3)
 
-#define T_CONNECT_REQ_PDU       ((uint8_t)0x80)
-#define T_DISCONNECT_REQ_PDU    ((uint8_t)0x81)
+#define KNX_TPCI_CONNECT_REQ_PDU        ((uint8_t)0x80)
+#define KNX_TPCI_DISCONNECT_REQ_PDU     ((uint8_t)0x81)
 
-#define T_DATA_TAG_GROUP_PDU    ((uint8_t)0x04)    /* Interface-Objects using Group-Addressing (LTE-HEE). */
+#define KNX_TPCI_DATA_TAG_GROUP_PDU     ((uint8_t)0x04)    /* Interface-Objects using Group-Addressing (LTE-HEE). */
 
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_LAYER_TRANSPORT_H */
-

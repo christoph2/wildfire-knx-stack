@@ -127,7 +127,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_T_DataGroup_Req(void)
 STATIC void Disp_T_DataGroup_Req(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_SetTPCI(KnxMsg_ScratchBufferPtr, TPCI_UDT);
+    KnxMsg_SetTPCI(KnxMsg_ScratchBufferPtr, KNX_TPCI_UDT);
     KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_N_DATA_GROUP_REQ;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
