@@ -50,6 +50,9 @@ void Dbg_TimerInit(Dbg_TimerType * timerContext);
 void Dbg_TimerStart(Dbg_TimerType * timerContext);
 void Dbg_TimerStop(Dbg_TimerType * timerContext);
 __int64 Dbg_TimerElapsedTime(Dbg_TimerType const * timerContext);
+void Dbg_TraceFunctionEntry(uint8_t ModuleId, uint8_t ApiId);
+void Dbg_TraceFunctionExit(uint8_t ModuleId, uint8_t ApiId);
+
 
 #else
 #define Dbg_DumpHex(frame, length)
@@ -62,6 +65,9 @@ __int64 Dbg_TimerElapsedTime(Dbg_TimerType const * timerContext);
 #define Dbg_TimerStart(timerContext)
 #define Dbg_TimerStop(timerContext)
 #define Dbg_TimerElapsedTime(timerContext)
+#define Dbg_TraceFunctionEntry(ModuleId, ApiId)
+#define Dbg_TraceFunctionExit(ModuleId, ApiId)
+
 #endif
 
 

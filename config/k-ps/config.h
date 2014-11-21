@@ -84,6 +84,8 @@ extern "C"
 
 #define KNX_ENDIANESS               KNX_LITTLE_ENDIAN
 
+#define KNX_DEBUG_TRACE_API         STD_ON
+
 
 #define KNX_TL_STATEMACHINE_STYLE                3 /* [1,2,3] - Transport-Layer-Styles gem. KNX-Handbuch 3/3/4. */
 

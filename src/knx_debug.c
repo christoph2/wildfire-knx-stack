@@ -94,4 +94,15 @@ void Dbg_DumpHex(uint8_t const * frame, uint16_t length)
     printf("\n");
 }
 
+
+void Dbg_TraceFunctionEntry(uint8_t ModuleId, uint8_t ApiId)
+{
+    printf("Dbg_TraceFunctionEntry -- module: %u api: %u\n", ModuleId, ApiId);
+}
+
+void Dbg_TraceFunctionExit(uint8_t ModuleId, uint8_t ApiId)
+{
+    printf("Dbg_TraceFunctionExit -- module: %u api: %u\n", ModuleId, ApiId);
+}
+
 #endif /* defined(WIN32) || defined(WIN64) */
