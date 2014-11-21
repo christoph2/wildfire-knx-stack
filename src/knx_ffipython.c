@@ -86,14 +86,14 @@ void Ffi_ApiError(uint8_t ModuleId, uint8_t ApiId, uint8_t ErrorCode)
     PyObject * arglist;
     PyObject * result;
 
-    if (Individual_AddrApiErrorCBess_ResCB != NULL) {
+    if (ApiErrorCB != NULL) {
         arglist = Py_BuildValue("(HHH)", ModuleId, ApiId, ErrorCode);
         result = PyObject_Call(ApiErrorCB, arglist, NULL);
         Py_DECREF(arglist);
     }
 }
 
-void Ffi_SetApiError(void * callback)
+void Ffi_SetApiErrorCB(void * callback)
 {
     Ffi_SetCallback(&ApiErrorCB, callback);
 }

@@ -37,7 +37,7 @@ extern "C"
 #if defined(SWIG)
 
 void Ffi_ApiError(uint8_t ModuleId, uint8_t ApiId, uint8_t ErrorCode);
-void Ffi_SetApiError(void * callback);
+void Ffi_SetApiErrorCB(void * callback);
 
 void Ffi_SetConnect_IndCB(void * callback);
 void Ffi_SetConnect_ConCB(void * callback);
@@ -60,7 +60,7 @@ void Ffi_Property_Description_Read_Ind(uint16_t source, uint8_t object_index,
     uint8_t property_id, uint8_t property_index, uint8_t type, uint16_t max_nr_of_elem, uint8_t access
 );
 
-#define KNX_API_ERROR(ModuleId, ApiId, ErrorCode)                (PORT_LOCK_TASK_LEVEL(), Ffi_ApiError((ModuleId), (ApiId), (ErrorCode)), PORT_UNLOCK_TASK_LEVEL())
+#define KNX_API_ERROR(ModuleId, ApiId, ErrorCode)               (PORT_LOCK_TASK_LEVEL(), Ffi_ApiError((ModuleId), (ApiId), (ErrorCode)), PORT_UNLOCK_TASK_LEVEL())
 
 #define KNX_CALLBACK_L_CON(confirmed)                           (PORT_LOCK_TASK_LEVEL(), Ffi_LocalConfirmation((confirmed)), PORT_UNLOCK_TASK_LEVEL())
 

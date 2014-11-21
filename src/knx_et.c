@@ -46,11 +46,3 @@ void KnxEt_Start(void)
 {
 
 }
-
-#if 0
-
-http://forschergeist.de/podlove/file/12/s/webplayer/c/website/fg001-geschichte-der-wissenschaften.opus
-
-http://forschergeist.de/podlove/file/3/s/webplayer/c/website/fg000 - forschergeist.opus
-
-#endif

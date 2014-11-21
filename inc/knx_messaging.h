@@ -55,6 +55,10 @@ extern "C"
 **  Module-Errors.
 */
 #define MSG_E_UNINIT                            ((uint8_t)0x01)
+#define MSG_E_NULL_PTR                          ((uint8_t)0x02)
+#define MSG_E_NO_BUFFER_AVAIL                   ((uint8_t)0x03)
+#define MSG_E_INVALID_BUFFER                    ((uint8_t)0x04)
+#define MSG_E_NOT_ALLOCATED                     ((uint8_t)0x05)
 
 /*
 ** Global defines.
@@ -179,8 +183,8 @@ typedef struct tagKNX_PollingFrameType {
 FUNC(void, KSTACK_CODE) KnxMsg_Init(void);
 FUNC(Knx_StatusType, KSTACK_CODE) KnxMsg_AllocateBuffer(KnxMsg_Buffer ** buffer);
 FUNC(KnxMsg_Buffer *, KSTACK_CODE) KnxMsg_AllocateBufferWrapper(void);
-FUNC(void, KSTACK_CODE) KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr);
-FUNC(void, KSTACK_CODE) KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr);
+FUNC(Knx_StatusType, KSTACK_CODE) KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr);
+FUNC(Knx_StatusType, KSTACK_CODE) KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr);
 FUNC(Knx_StatusType, KSTACK_CODE) KnxMsg_Post(KnxMsg_BufferPtr ptr);
 FUNC(KnxMsg_BufferPtr, KSTACK_CODE) KnxMsg_Get(uint8_t task);
 FUNC(void, KSTACK_CODE) KnxMsg_RedirectToUser(uint8_t layer); /* U_MS_Switch */
@@ -197,8 +201,8 @@ FUNC(boolean, KSTACK_CODE) KnxMsg_GetRoutingCtrl(const KnxMsg_BufferPtr pBuffer)
 void KnxMsg_Init(void);
 Knx_StatusType KnxMsg_AllocateBuffer(KnxMsg_Buffer ** buffer);
 KnxMsg_Buffer * KnxMsg_AllocateBufferWrapper(void);
-void KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr);
-void KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr);
+Knx_StatusType KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr);
+Knx_StatusType KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr);
 Knx_StatusType KnxMsg_Post(KnxMsg_BufferPtr ptr);
 KnxMsg_BufferPtr KnxMsg_Get(uint8_t task);
 void KnxMsg_RedirectToUser(uint8_t layer); /* U_MS_Switch */
