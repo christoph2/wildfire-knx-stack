@@ -39,7 +39,7 @@ typedef struct tagDbg_TimerType {
     boolean running;
 } Dbg_TimerType;
 
-void Dbg_DumpHex(uint8_t * frame, uint16_t length);
+void Dbg_DumpHex(uint8_t const * frame, uint16_t length);
 
 #define DBG_PRINT(msg)      printf("%s", (msg))
 #define DBG_PRINTLN(msg)    printf("%s\n", (msg))

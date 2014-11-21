@@ -6,18 +6,18 @@
 *
 *   All Rights Reserved
 *
-*  This program is free softwKNXe; you can redistribute it and/or modify
+*  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
 *
 *  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
-*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
-*  GNU General Public License for more KnxEtails.
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
 *
 *  You should have received a copy of the GNU General Public License along
-*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  with this program; if not, write to the Free Software Foundation, Inc.,
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
@@ -48,8 +48,8 @@ extern "C"
 #define TMR_START_DL_TIMER()        KnxTmr_DataLinkTimerStart()
 #define TMR_STOP_DL_TIMER()         KnxTmr_DataLinkTimerStop()
 
-#define PORT_LOCK_TASK_LEVEL()      //Port_Lock_TaskLevel()
-#define PORT_UNLOCK_TASK_LEVEL()    //Port_Unlock_TaskLevel()
+#define PORT_LOCK_TASK_LEVEL()      Port_Lock_TaskLevel()
+#define PORT_UNLOCK_TASK_LEVEL()    Port_Unlock_TaskLevel()
 
 #if defined(__cplusplus)
 }

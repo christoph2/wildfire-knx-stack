@@ -84,7 +84,7 @@ __int64 Dbg_TimerElapsedTime(Dbg_TimerType const * timerContext)
 }
 
 
-void Dbg_DumpHex(uint8_t * frame, uint16_t length)
+void Dbg_DumpHex(uint8_t const * frame, uint16_t length)
 {
     uint8_t idx;
 

@@ -36,6 +36,8 @@
 
 #include "Python.h"
 
+
+STATIC PyObject * ApiErrorCB = NULL;
 STATIC PyObject * LocalConfirmationCB = NULL;
 
 STATIC PyObject * Connect_IndCB = NULL;
@@ -77,6 +79,23 @@ void Ffi_Callback(char const * phormat, ...)
     }
 
     va_end(arguments);
+}
+
+void Ffi_ApiError(uint8_t ModuleId, uint8_t ApiId, uint8_t ErrorCode)
+{
+    PyObject * arglist;
+    PyObject * result;
+
+    if (Individual_AddrApiErrorCBess_ResCB != NULL) {
+        arglist = Py_BuildValue("(HHH)", ModuleId, ApiId, ErrorCode);
+        result = PyObject_Call(ApiErrorCB, arglist, NULL);
+        Py_DECREF(arglist);
+    }
+}
+
+void Ffi_SetApiError(void * callback)
+{
+    Ffi_SetCallback(&ApiErrorCB, callback);
 }
 
 void Ffi_SetLocalConfirmationCB(void * callback)

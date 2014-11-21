@@ -36,6 +36,9 @@ extern "C"
 
 #if defined(SWIG)
 
+void Ffi_ApiError(uint8_t ModuleId, uint8_t ApiId, uint8_t ErrorCode);
+void Ffi_SetApiError(void * callback);
+
 void Ffi_SetConnect_IndCB(void * callback);
 void Ffi_SetConnect_ConCB(void * callback);
 void Ffi_Connect_Ind(void);
@@ -57,21 +60,26 @@ void Ffi_Property_Description_Read_Ind(uint16_t source, uint8_t object_index,
     uint8_t property_id, uint8_t property_index, uint8_t type, uint16_t max_nr_of_elem, uint8_t access
 );
 
-#define KNX_CALLBACK_L_CON(confirmed)                           Ffi_LocalConfirmation((confirmed))
+#define KNX_API_ERROR(ModuleId, ApiId, ErrorCode)                (PORT_LOCK_TASK_LEVEL(), Ffi_ApiError((ModuleId), (ApiId), (ErrorCode)), PORT_UNLOCK_TASK_LEVEL())
 
-#define KNX_CALLBACK_T_CONNECT_IND()                            Ffi_Connect_Ind()
-#define KNX_CALLBACK_T_CONNECT_CON(status)                      Ffi_Connect_Con((status))
-#define KNX_CALLBACK_T_DISCONNECT_IND()                         Ffi_Disconnect_Ind()
-#define KNX_CALLBACK_T_DISCONNECT_CON(status)                   Ffi_Disconnect_Con((status))
+#define KNX_CALLBACK_L_CON(confirmed)                           (PORT_LOCK_TASK_LEVEL(), Ffi_LocalConfirmation((confirmed)), PORT_UNLOCK_TASK_LEVEL())
 
-#define KNX_CALLBACK_INDIVIDUAL_ADDRESS_RES(address)            Ffi_Individual_Address_Res((address))
+#define KNX_CALLBACK_T_CONNECT_IND()                            (PORT_LOCK_TASK_LEVEL(), Ffi_Connect_Ind(), PORT_UNLOCK_TASK_LEVEL())
+#define KNX_CALLBACK_T_CONNECT_CON(status)                      (PORT_LOCK_TASK_LEVEL(), Ffi_Connect_Con((status)), PORT_UNLOCK_TASK_LEVEL())
+#define KNX_CALLBACK_T_DISCONNECT_IND()                         (PORT_LOCK_TASK_LEVEL(), Ffi_Disconnect_Ind(), PORT_UNLOCK_TASK_LEVEL())
+#define KNX_CALLBACK_T_DISCONNECT_CON(status)                   (PORT_LOCK_TASK_LEVEL(), Ffi_Disconnect_Con((status)), PORT_UNLOCK_TASK_LEVEL())
+
+#define KNX_CALLBACK_INDIVIDUAL_ADDRESS_RES(address)            (PORT_LOCK_TASK_LEVEL(), Ffi_Individual_Address_Res((address)), PORT_UNLOCK_TASK_LEVEL())
 #define KNX_CALLBACK_PROPERTYDESCRIPTION_READ_IND(source,   \
     object_index, property_id, property_index, type,        \
-    max_nr_of_elem, access)                                       Ffi_Property_Description_Read_Ind((source), (object_index), (property_id), \
-                                                                    (property_index), (type), (max_nr_of_elem), (access))
+    max_nr_of_elem, access)                                     (PORT_LOCK_TASK_LEVEL(), Ffi_Property_Description_Read_Ind((source), \
+                                                                    (object_index), (property_id),                                  \
+                                                                    (property_index), (type), (max_nr_of_elem), (access)), PORT_UNLOCK_TASK_LEVEL())
 
 
 #else
+
+#define KNX_API_ERROR(ModuleId, ApiId, ErrorCode)
 
 #define KNX_CALLBACK_L_CON(confirmed)
 
