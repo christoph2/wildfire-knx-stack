@@ -32,6 +32,30 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+
+/*
+**  Service-IDs.
+*/
+#define AR_SERVICE_MSG_INIT                     ((uint8_t)0x00)
+#define AR_SERVICE_MSG_ALLOCATE_BUFFER          ((uint8_t)0x01)
+#define AR_SERVICE_MSG_ALLOCATE_BUFFER_WRAPPER  ((uint8_t)0x02)
+#define AR_SERVICE_MSG_RELEASE_BUFFER           ((uint8_t)0x03)
+#define AR_SERVICE_MSG_CLEAR_BUFFER             ((uint8_t)0x04)
+#define AR_SERVICE_MSG_POST                     ((uint8_t)0x05)
+#define AR_SERVICE_MSG_GET                      ((uint8_t)0x06)
+#define AR_SERVICE_MSG_SET_LEN                  ((uint8_t)0x07)
+#define AR_SERVICE_MSG_GET_LEN                  ((uint8_t)0x08)
+#define AR_SERVICE_MSG_SET_ROUTING_COUNT        ((uint8_t)0x09)
+#define AR_SERVICE_MSG_GET_ROUTING_COUNT        ((uint8_t)0x0a)
+#define AR_SERVICE_MSG_GET_BUFFER_ADDRESS       ((uint8_t)0x0b)
+#define AR_SERVICE_MSG_GET_BUFFER_NUMBER        ((uint8_t)0x0c)
+#define AR_SERVICE_MSG_CLEAR_MESSAGE_BUFFER     ((uint8_t)0x0d)
+
+/*
+**  Module-Errors.
+*/
+#define MSG_E_UNINIT                            ((uint8_t)0x01)
+
 /*
 ** Global defines.
 */
@@ -152,40 +176,40 @@ typedef struct tagKNX_PollingFrameType {
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)         KnxMsg_Init(void);
+FUNC(void, KSTACK_CODE) KnxMsg_Init(void);
 FUNC(Knx_StatusType, KSTACK_CODE) KnxMsg_AllocateBuffer(KnxMsg_Buffer ** buffer);
 FUNC(KnxMsg_Buffer *, KSTACK_CODE) KnxMsg_AllocateBufferWrapper(void);
-FUNC(void, KSTACK_CODE)     KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr);
-FUNC(boolean, KSTACK_CODE)      KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr);
-FUNC(boolean, KSTACK_CODE)      KnxMsg_Post(KnxMsg_BufferPtr ptr);
+FUNC(void, KSTACK_CODE) KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr);
+FUNC(void, KSTACK_CODE) KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr);
+FUNC(Knx_StatusType, KSTACK_CODE) KnxMsg_Post(KnxMsg_BufferPtr ptr);
 FUNC(KnxMsg_BufferPtr, KSTACK_CODE) KnxMsg_Get(uint8_t task);
-FUNC(void, KSTACK_CODE)         KnxMsg_RedirectToUser(uint8_t layer); /* U_MS_Switch */
+FUNC(void, KSTACK_CODE) KnxMsg_RedirectToUser(uint8_t layer); /* U_MS_Switch */
 
-FUNC(void, KSTACK_CODE)         KnxMsg_SetLen(KnxMsg_BufferPtr pBuffer, uint8_t len);
-FUNC(uint8_t, KSTACK_CODE)        KnxMsg_GetLen(const KnxMsg_BufferPtr pBuffer);
+FUNC(void, KSTACK_CODE) KnxMsg_SetLen(KnxMsg_BufferPtr pBuffer, uint8_t len);
+FUNC(uint8_t, KSTACK_CODE) KnxMsg_GetLen(const KnxMsg_BufferPtr pBuffer);
 
-FUNC(uint8_t, KSTACK_CODE)        KnxMsg_GetRoutingCount(const KnxMsg_BufferPtr pBuffer);
-FUNC(void, KSTACK_CODE)         KnxMsg_SetRoutingCount(KnxMsg_BufferPtr pBuffer);
+FUNC(uint8_t, KSTACK_CODE) KnxMsg_GetRoutingCount(const KnxMsg_BufferPtr pBuffer);
+FUNC(void, KSTACK_CODE) KnxMsg_SetRoutingCount(KnxMsg_BufferPtr pBuffer);
 
-FUNC(void, KSTACK_CODE)         KnxMsg_SetRoutingCtrl(KnxMsg_BufferPtr pBuffer, boolean on);
-FUNC(boolean, KSTACK_CODE)      KnxMsg_GetRoutingCtrl(const KnxMsg_BufferPtr pBuffer);
+FUNC(void, KSTACK_CODE) KnxMsg_SetRoutingCtrl(KnxMsg_BufferPtr pBuffer, boolean on);
+FUNC(boolean, KSTACK_CODE) KnxMsg_GetRoutingCtrl(const KnxMsg_BufferPtr pBuffer);
 #else
-void                KnxMsg_Init(void);
+void KnxMsg_Init(void);
 Knx_StatusType KnxMsg_AllocateBuffer(KnxMsg_Buffer ** buffer);
 KnxMsg_Buffer * KnxMsg_AllocateBufferWrapper(void);
-void                KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr);
-boolean             KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr);
-boolean             KnxMsg_Post(KnxMsg_BufferPtr ptr);
-KnxMsg_BufferPtr    KnxMsg_Get(uint8_t task);
-void                KnxMsg_RedirectToUser(uint8_t layer); /* U_MS_Switch */
+void KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr);
+void KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr);
+Knx_StatusType KnxMsg_Post(KnxMsg_BufferPtr ptr);
+KnxMsg_BufferPtr KnxMsg_Get(uint8_t task);
+void KnxMsg_RedirectToUser(uint8_t layer); /* U_MS_Switch */
 
-void    KnxMsg_SetLen(KnxMsg_BufferPtr pBuffer, uint8_t len);
-uint8_t   KnxMsg_GetLen(const KnxMsg_BufferPtr pBuffer);
+void KnxMsg_SetLen(KnxMsg_BufferPtr pBuffer, uint8_t len);
+uint8_t KnxMsg_GetLen(const KnxMsg_BufferPtr pBuffer);
 
-uint8_t   KnxMsg_GetRoutingCount(const KnxMsg_BufferPtr pBuffer);
-void    KnxMsg_SetRoutingCount(KnxMsg_BufferPtr pBuffer);
+uint8_t KnxMsg_GetRoutingCount(const KnxMsg_BufferPtr pBuffer);
+void KnxMsg_SetRoutingCount(KnxMsg_BufferPtr pBuffer);
 
-void    KnxMsg_SetRoutingCtrl(KnxMsg_BufferPtr pBuffer, boolean on);
+void KnxMsg_SetRoutingCtrl(KnxMsg_BufferPtr pBuffer, boolean on);
 boolean KnxMsg_GetRoutingCtrl(const KnxMsg_BufferPtr pBuffer);
 
 

@@ -25,7 +25,7 @@
 
 #define HOP_COUNT ((uint8_t)6)
 
-/* check: 'static' ??? */
+
 #if KSTACK_MEMORY_MAPPING == STD_ON
 STATIC FUNC(KnxMsg_BufferPtr, KSTACK_CODE) KnxMsg_GetBufferAddress(uint8_t buf_num);
 STATIC FUNC(uint8_t, KSTACK_CODE) KnxMsg_GetBufferNumber(const KnxMsg_BufferPtr buffer);
@@ -45,10 +45,11 @@ STATIC const uint8_t KnxMsg_MessageRedirectionTable[16] = {
 STATIC uint8_t            KnxMsg_Queues[MSG_NUM_TASKS];
 STATIC KnxMsg_Buffer    KnxMsg_Buffers[MSG_NUM_BUFFERS];
 
-KNX_IMPLEMENT_MODULE_STATE_VAR(Messaging);
+KNX_IMPLEMENT_MODULE_STATE_VAR(MSG);
 
 /*  Get Destination Queue from Message-Code. */
 #define KnxMsg_GetQueueForService(service) ((uint8_t)KnxMsg_MessageRedirectionTable[(service) >> 4])
+
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
@@ -56,6 +57,32 @@ KNX_IMPLEMENT_MODULE_STATE_VAR(Messaging);
 #endif /* KSTACK_MEMORY_MAPPING */
 
 
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxMsg_Init(void)
+#else
+void KnxMsg_Init(void)
+#endif /* KSTACK_MEMORY_MAPPING */
+{
+    uint8_t t;
+
+    for (t = (uint8_t)0; t < MSG_NUM_BUFFERS; t++) {
+        KnxMsg_ClearMessageBuffer(t);
+    }
+
+    KnxMsg_Queues[TASK_FREE_ID] = (uint8_t)0x00;      /* the first Queue contains the Freelist. */
+
+    for (t = (uint8_t)0; t <= MSG_NUM_BUFFERS; t++) { /* Setup Freelist. */
+        KnxMsg_Buffers[t].next = t + (uint8_t)1;
+    }
+
+    KnxMsg_Buffers[MSG_NUM_BUFFERS - 1].next = MSG_NO_NEXT;
+
+    for (t = (uint8_t)1; t < MSG_NUM_TASKS; t++) {
+        KnxMsg_Queues[t] = MSG_QUEUE_EMPTY;
+    }
+
+    KNX_MODULE_INITIALIZE(MSG);
+}
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
@@ -67,6 +94,8 @@ Knx_StatusType KnxMsg_AllocateBuffer(KnxMsg_Buffer ** buffer)
     uint8_t fp;
     KnxMsg_BufferPtr ptr;
     KnxMsg_BufferPtr result;
+
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_ALLOCATE_BUFFER, KNX_E_NOT_OK);
 
     ASSERT(buffer != NULL);
 
@@ -122,6 +151,7 @@ void KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr)
     uint8_t   old_fp;
     uint8_t   t_fp;
 
+    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_RELEASE_BUFFER);
     ASSERT_IS_NOT_NULL(ptr);
 
     DISABLE_ALL_INTERRUPTS();
@@ -155,44 +185,47 @@ void KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr)
+FUNC(void, KSTACK_CODE) KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr)
 #else
-boolean KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr)
+void KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_t * pb;
 
+    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_CLEAR_BUFFER);
+
     if (ptr == (KnxMsg_BufferPtr)NULL) {
-        return FALSE;
+        return;
     }
 
     pb = (uint8_t *)ptr;
     pb++;
 
     Utl_MemSet(pb, '\0', sizeof(KnxMsg_Buffer) - 1);
-
-    return TRUE;
 }
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) KnxMsg_Post(KnxMsg_BufferPtr ptr)
+FUNC(Knx_StatusType, KSTACK_CODE) KnxMsg_Post(KnxMsg_BufferPtr ptr)
 #else
-boolean KnxMsg_Post(KnxMsg_BufferPtr ptr)
+Knx_StatusType KnxMsg_Post(KnxMsg_BufferPtr ptr)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_t   queue;
     uint8_t   buf_num;
     uint8_t   qp;
 
+
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_POST, FALSE);
+
     if ((buf_num = KnxMsg_GetBufferNumber(ptr)) == MSG_INVALID_BUFFER) {
         DBG_PRINTLN("\t*** KnxMsg_Post - MSG_INVALID_BUFFER");
-        return FALSE;
+        return KNX_E_NOT_OK;
     }
 
     if ((queue = KnxMsg_GetQueueForService(ptr->service)) == TASK_FREE_ID) {
         DBG_PRINTLN("\t*** KnxMsg_Post - NO FREE BUFFER");
-        return FALSE;
+        return KNX_E_NOT_OK;
     }
 
     qp = KnxMsg_Queues[queue];
@@ -208,7 +241,7 @@ boolean KnxMsg_Post(KnxMsg_BufferPtr ptr)
         KnxMsg_Buffers[qp].next = buf_num;
     }
 
-    return TRUE;
+    return KNX_E_OK;
 }
 
 
@@ -219,6 +252,9 @@ KnxMsg_BufferPtr KnxMsg_Get(uint8_t task)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_t qp;
+
+
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_GET, FALSE);
 
     if ((task < 1) || (task > MSG_NUM_TASKS)) {
         return (KnxMsg_BufferPtr)NULL;
@@ -241,39 +277,14 @@ KnxMsg_BufferPtr KnxMsg_Get(uint8_t task)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxMsg_Init(void)
-#else
-void KnxMsg_Init(void)
-#endif /* KSTACK_MEMORY_MAPPING */
-{
-    uint8_t t;
-
-    for (t = (uint8_t)0; t < MSG_NUM_BUFFERS; t++) {
-        KnxMsg_ClearMessageBuffer(t);
-    }
-
-    KnxMsg_Queues[TASK_FREE_ID] = (uint8_t)0x00;      /* the first Queue contains the Freelist. */
-
-    for (t = (uint8_t)0; t <= MSG_NUM_BUFFERS; t++) { /* Setup Freelist. */
-        KnxMsg_Buffers[t].next = t + (uint8_t)1;
-    }
-
-    KnxMsg_Buffers[MSG_NUM_BUFFERS - 1].next = MSG_NO_NEXT;
-
-    for (t = (uint8_t)1; t < MSG_NUM_TASKS; t++) {
-        KnxMsg_Queues[t] = MSG_QUEUE_EMPTY;
-    }
-
-    KNX_MODULE_INITIALIZE(Messaging);
-}
-
-
-#if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) KnxMsg_SetLen(KnxMsg_BufferPtr pBuffer, uint8_t len)
 #else
 void KnxMsg_SetLen(KnxMsg_BufferPtr pBuffer, uint8_t len)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
+
+    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_SET_LEN);
+
     pBuffer->len                           = len;
     KnxMsg_GetMessagePtr(pBuffer)->npci   |= ((len - (uint8_t)7) & (uint8_t)0x0f);
 }
@@ -285,6 +296,9 @@ FUNC(uint8_t, KSTACK_CODE) KnxMsg_GetLen(const KnxMsg_BufferPtr pBuffer)
 uint8_t KnxMsg_GetLen(const KnxMsg_BufferPtr pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
+
+    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_GET_LEN);
+
     return pBuffer->len;
 }
 
@@ -310,6 +324,8 @@ void KnxMsg_SetRoutingCount(KnxMsg_BufferPtr pBuffer)
     uint8_t   ctrl;
     uint8_t   hop_count;
 
+    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_SET_ROUTING_COUNT);
+
     ctrl = KnxMsg_GetMessagePtr(pBuffer)->ctrl;
 
     if ((ctrl & (uint8_t)0x02) == (uint8_t)0x02) {
@@ -330,6 +346,9 @@ FUNC(uint8_t, KSTACK_CODE) KnxMsg_GetRoutingCount(const KnxMsg_BufferPtr pBuffer
 uint8_t KnxMsg_GetRoutingCount(const KnxMsg_BufferPtr pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
+
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_GET_ROUTING_COUNT, 0x00);
+
     return ((KnxMsg_GetMessagePtr(pBuffer)->npci) & (uint8_t)0x70) >> 4;
 }
 
@@ -341,6 +360,8 @@ void KnxMsg_SetRoutingCtrl(KnxMsg_BufferPtr pBuffer, boolean on)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_t r;
+
+//    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_SET_ROUTING_COUNT);
 
     (on == TRUE) ? (r = (uint8_t)0x02) : (r = (uint8_t)0x00);
     KnxMsg_GetMessagePtr(pBuffer)->ctrl |= r;
@@ -357,6 +378,9 @@ STATIC FUNC(KnxMsg_BufferPtr, KSTACK_CODE) KnxMsg_GetBufferAddress(uint8_t buf_n
 STATIC KnxMsg_BufferPtr KnxMsg_GetBufferAddress(uint8_t buf_num)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
+
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_GET_BUFFER_ADDRESS, NULL);
+
     if (buf_num >= MSG_NUM_BUFFERS) {
         return (KnxMsg_BufferPtr)NULL;
     }
@@ -372,8 +396,10 @@ STATIC FUNC(uint8_t, KSTACK_CODE) KnxMsg_GetBufferNumber(const KnxMsg_BufferPtr 
 STATIC uint8_t KnxMsg_GetBufferNumber(const KnxMsg_BufferPtr buffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_BufferPtr    tmp_buf;
-    uint8_t               idx;
+    KnxMsg_BufferPtr tmp_buf;
+    uint8_t idx;
+
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_GET_BUFFER_NUMBER, MSG_INVALID_BUFFER);
 
     for (idx = (uint8_t)0; idx < MSG_NUM_BUFFERS; idx++) {
         tmp_buf = &KnxMsg_Buffers[idx];
@@ -393,8 +419,10 @@ STATIC FUNC(void, KSTACK_CODE) KnxMsg_ClearMessageBuffer(uint8_t buf_num)
 STATIC void KnxMsg_ClearMessageBuffer(uint8_t buf_num)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_BufferPtr    ptr;
-    uint8_t *             pb;
+    KnxMsg_BufferPtr ptr;
+    uint8_t * pb;
+
+    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_CLEAR_MESSAGE_BUFFER);
 
     ptr = KnxMsg_GetBufferAddress(buf_num);
 
@@ -405,13 +433,13 @@ STATIC void KnxMsg_ClearMessageBuffer(uint8_t buf_num)
     pb = (uint8_t *)ptr;
     pb++;
 
-    Utl_MemSet(pb, '\0', (uint16_t)sizeof(KnxMsg_Buffer)-(uint16_t)1);
+    Utl_MemSet(pb, '\0', (uint16_t)sizeof(KnxMsg_Buffer) - (uint16_t)1);
 }
 
 /*
    boolean MSG_GetRoutingCtrl(const PMSG_Buffer pBuffer)
    {
-    return ((MSG_GetMessagePtr(pBuffer)->ctrl & 0x02)==0x02);
+    return ((MSG_GetMessagePtr(pBuffer)->ctrl & 0x02) == 0x02);
    }
  */
 
