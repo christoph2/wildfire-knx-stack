@@ -6,18 +6,18 @@
 *
 *   All Rights Reserved
 *
-*  This program is free softwKNXe; you can redistribute it and/or modify
+*  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free SoftwKNXe Foundation; either version 2 of the License, or
+*  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
 *
 *  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WKNXRANTY; without even the implied wKNXranty of
-*  MERCHANTABILITY or FITNESS FOR A PKNXTICULKNX PURPOSE.  See the
-*  GNU General Public License for more KnxEtails.
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
 *
 *  You should have received a copy of the GNU General Public License along
-*  with this program; if not, write to the Free SoftwKNXe Foundation, Inc.,
+*  with this program; if not, write to the Free Software Foundation, Inc.,
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
@@ -166,8 +166,8 @@ extern "C"
     + (((x)& 0x0F000000LU) ? 64 : 0)                \
     + (((x)& 0xF0000000LU) ? 128 : 0)
 
-#define BIN8(d)                     ((uint8)__BIN8(__HEX(d)))
-#define BIN16(dmsb, dlsb)           (((uint16)BIN8(dmsb) << 8) + BIN8(dlsb))
+#define BIN8(d)                     ((uint8_t)__BIN8(__HEX(d)))
+#define BIN16(dmsb, dlsb)           (((uint16_t)BIN8(dmsb) << 8) + BIN8(dlsb))
 #define BIN32(dmsb, db2, db3, dlsb)                 \
     (((uint32)BIN8(dmsb) << 24)                     \
     + ((uint32)BIN8(db2) << 16)                     \
@@ -203,7 +203,7 @@ while (!(cond))                                     \
 #else
 #define STATIC_ASSERT(cond, msg)                    \
 struct  GLUE2(__NEVER_USED_BY_ISO_C_, __LINE__) {   \
-    uint8 x[(cond) ? 1 : -1];                       \
+    uint8_t x[(cond) ? 1 : -1];                     \
 }
 #endif
 
@@ -229,20 +229,20 @@ typedef void(*VoidFunctionType)(void);
 #define GLUE3_2(a, b, c)        a ## b ## c
 #define GLUE3(a, b, c)          GLUE3_2(a, b, c)
 
-#define KNX_BREF(b, o)          (*(((uint8 *)(b) + (o))))
-#define KNX_BPTR(b, o)          ((((uint8 *)(b) + (o))))
+#define KNX_BREF(b, o)          (*(((uint8_t *)(b) + (o))))
+#define KNX_BPTR(b, o)          ((((uint8_t *)(b) + (o))))
 
-#define KNX_WREF(w, o)          (*((uint16 *)((uint8 *)(w) + (o))))
-#define KNX_WPTR(w, o)          (((uint16 *)((uint8 *)(w) + (o))))
+#define KNX_WREF(w, o)          (*((uint16_t *)((uint8_t *)(w) + (o))))
+#define KNX_WPTR(w, o)          (((uint16_t *)((uint8_t *)(w) + (o))))
 
-#define KNX_LREF(l, o)          (*((uint32 *)((uint8 *)(l) + (o))))
-#define KNX_LPTR(l, o)          (((uint32 *)((uint8 *)(l) + (o))))
+#define KNX_LREF(l, o)          (*((uint32_t *)((uint8_t *)(l) + (o))))
+#define KNX_LPTR(l, o)          (((uint32_t *)((uint8_t *)(l) + (o))))
 
-#define KNX_FREF(f, o)          (*((float64 *)((uint8 *)(f) + (o))))
-#define KNX_FPTR(f, o)          (((float64 *)((uint8 *)(f) + (o))))
+#define KNX_FREF(f, o)          (*((float64 *)((uint8_t *)(f) + (o))))
+#define KNX_FPTR(f, o)          (((float64 *)((uint8_t *)(f) + (o))))
 
-#define BYTE_REG(base, offs)    *(volatile uint8 *)BPTR((base), (offs))
-#define WORD_REG(base, offs)    *(volatile uint16 *)WPTR((base), (offs))
+#define BYTE_REG(base, offs)    *(volatile uint8_t *)BPTR((base), (offs))
+#define WORD_REG(base, offs)    *(volatile uint16_t *)WPTR((base), (offs))
 
 #define KNX_CAST_ELEMENT(arr, offset, type)     ((type) * (type *)&(arr)[(offset)])
 #define KNX_ASSIGN_ELEMENT(arr, offset, type, converter, value)     ((type) * (type *)&(arr)[(offset)]) = converter((value))
@@ -317,16 +317,16 @@ typedef void(*VoidFunctionType)(void);
 
 #define KNX_ASSERT_MODULE_IS_INITIALIZED(module, fkt)               \
     _BEGIN_BLOCK                                                    \
-if (!KNX_MODULE_IS_INITIALIZED(module)) {                           \
+    if (!KNX_MODULE_IS_INITIALIZED(module)) {                       \
         KNX_RAISE_DEV_ERROR(module, fkt, module ## _E_UNINIT);      \
-    return;                                                         \
+        return;                                                     \
     }                                                               \
     _END_BLOCK
 
-#define KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(ml, mu, fkt, value) \
+#define KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(module, fkt, value) \
     _BEGIN_BLOCK                                                    \
-    if (!KNX_MODULE_IS_INITIALIZED(ml)) {                           \
-        KNX_RAISE_DEV_ERROR(mu, fkt, mu ## _E_UNINIT);              \
+    if (!KNX_MODULE_IS_INITIALIZED(module)) {                       \
+        KNX_RAISE_DEV_ERROR(module, fkt, module ## _E_UNINIT);      \
         return value;                                               \
     }                                                               \
     _END_BLOCK
