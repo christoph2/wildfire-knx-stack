@@ -39,6 +39,9 @@ extern "C"
 void Ffi_ApiError(uint8_t ModuleId, uint8_t ApiId, uint8_t ErrorCode);
 void Ffi_SetApiErrorCB(void * callback);
 
+void Ffi_ApiTrace(uint8_t ModuleId, uint8_t Kind, uint8_t ApiId);
+void Ffi_SetApiTraceCB(void * callback);
+
 void Ffi_SetConnect_IndCB(void * callback);
 void Ffi_SetConnect_ConCB(void * callback);
 void Ffi_Connect_Ind(void);
@@ -61,6 +64,7 @@ void Ffi_Property_Description_Read_Ind(uint16_t source, uint8_t object_index,
 );
 
 #define KNX_API_ERROR(ModuleId, ApiId, ErrorCode)               (PORT_LOCK_TASK_LEVEL(), Ffi_ApiError((ModuleId), (ApiId), (ErrorCode)), PORT_UNLOCK_TASK_LEVEL())
+#define KNX_API_TRACE(Kind, ModuleId, ApiId)                    (PORT_LOCK_TASK_LEVEL(), Ffi_ApiTrace((Kind), (ModuleId), (ApiId)), PORT_UNLOCK_TASK_LEVEL())
 
 #define KNX_CALLBACK_L_CON(confirmed)                           (PORT_LOCK_TASK_LEVEL(), Ffi_LocalConfirmation((confirmed)), PORT_UNLOCK_TASK_LEVEL())
 
@@ -80,6 +84,7 @@ void Ffi_Property_Description_Read_Ind(uint16_t source, uint8_t object_index,
 #else
 
 #define KNX_API_ERROR(ModuleId, ApiId, ErrorCode)
+#define KNX_API_TRACE(Kind, ModuleId, ApiId)
 
 #define KNX_CALLBACK_L_CON(confirmed)
 

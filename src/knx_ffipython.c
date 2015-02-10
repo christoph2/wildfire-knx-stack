@@ -38,6 +38,7 @@
 
 
 STATIC PyObject * ApiErrorCB = NULL;
+STATIC PyObject * ApiTraceCB = NULL;
 STATIC PyObject * LocalConfirmationCB = NULL;
 
 STATIC PyObject * Connect_IndCB = NULL;
@@ -97,6 +98,28 @@ void Ffi_SetApiErrorCB(void * callback)
 {
     Ffi_SetCallback(&ApiErrorCB, callback);
 }
+
+void Ffi_ApiTrace(uint8_t Kind, uint8_t ModuleId, uint8_t ApiId)
+{
+    PyObject * arglist;
+    PyObject * result;
+
+    if (ApiTraceCB != NULL) {
+        arglist = Py_BuildValue("(BBB)", Kind, ModuleId, ApiId);
+        printf("Ffi_ApiTrace - before Call()\n");
+        //result = PyObject_Call(ApiTraceCB, arglist, NULL);
+        result = PyObject_CallObject(ApiTraceCB, arglist);
+        Py_DECREF(result);
+        printf("Ffi_ApiTrace - after Call()\n");        
+        Py_DECREF(arglist);
+    }
+}
+
+void Ffi_SetApiTraceCB(void * callback)
+{
+    Ffi_SetCallback(&ApiTraceCB, callback);
+}
+
 
 void Ffi_SetLocalConfirmationCB(void * callback)
 {

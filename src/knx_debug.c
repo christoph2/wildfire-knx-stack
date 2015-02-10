@@ -26,6 +26,7 @@
 #include <stdio.h>
 
 #include "knx_debug.h"
+#include "knx_ffi.h"
 #include <Windows.h>
 
 STATIC LARGE_INTEGER timerFrequency;
@@ -97,12 +98,16 @@ void Dbg_DumpHex(uint8_t const * frame, uint16_t length)
 
 void Dbg_TraceFunctionEntry(uint8_t ModuleId, uint8_t ApiId)
 {
-    printf("Dbg_TraceFunctionEntry -- module: %u api: %u\n", ModuleId, ApiId);
+    if (ModuleId == 1 && ApiId == 5)
+        printf("Dbg_TraceFunctionEntry -- module: %u api: %u\n", ModuleId, ApiId);
+    KNX_API_TRACE(0, ModuleId, ApiId);
+    
 }
 
 void Dbg_TraceFunctionExit(uint8_t ModuleId, uint8_t ApiId)
 {
-    printf("Dbg_TraceFunctionExit -- module: %u api: %u\n", ModuleId, ApiId);
+    //printf("Dbg_TraceFunctionExit -- module: %u api: %u\n", ModuleId, ApiId);
+    KNX_API_TRACE(1, ModuleId, ApiId);
 }
 
 #endif /* defined(WIN32) || defined(WIN64) */

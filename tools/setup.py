@@ -50,7 +50,7 @@ def makeExtension(name):
                 '-modernargs',
                 '-verbose',
                 #'-debug-tmsearch',
-                '-debug-tmused',
+                #'-debug-tmused',
                 #'-keyword'
         ]
         #rel = join(*rel.split())
@@ -72,12 +72,14 @@ def makeExtension(name):
                 sourceFile('knx_alm'),
                 sourceFile('knx_address'),
                 sourceFile('Appl'),
+                sourceFile('config'),
                 sourceFile('knx_ios'),
                 sourceFile('knx_ail'),
                 sourceFile('knx_lsm'),
                 sourceFile('knx_conversion'),
                 sourceFile('knx_sys_objs'),
                 sourceFile('knx_sched'),
+                sourceFile('knx_ffipython'),
                 'dummy.c',
                 portFile('Win_Timer'),
                 portFile('Win_Utils'),
