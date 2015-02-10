@@ -161,9 +161,14 @@ STATIC FUNC(void, KSTACK_CODE) T_DataConnected_Ind(void)
 STATIC void T_DataConnected_Ind(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8_t apci_type = KnxAl_GetAPCIType(KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr));
+    Knx_APCITypeType apci_type = KnxAl_GetAPCIType(KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr)); 
+    KNX_StandardFrameType * frame = KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr);
+    uint8_t idx;
+    
+    printf("\nT_DataConnected_Ind [%04x] *** ", apci_type);
 
-    printf("T_DataConnected_Ind\n");
+    //Dbg_DumpHex(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
+    //printf(" ***\n\n");
 
     switch (apci_type) {
         case APCI_MEMORY_READ:
@@ -178,11 +183,19 @@ STATIC void T_DataConnected_Ind(void)
             break;
         case APCI_USER_MSG:
             break;
-        default:         
+        case APCI_DEVICE_DESCRIPTOR_RESP:
+            printf("APCI_DEVICE_DESCRIPTOR_RESP: [");
+            for (idx = 0; idx < KnxMsg_GetLSDULen(KnxMsg_ScratchBufferPtr) - 1; ++idx) {
+                printf(" 0x%02x", frame->data[idx]);
+            }
+            printf(" ]\n");
+            break;
+        default:   
+            printf("APIC_???\n");
             break;
     }
 
-    KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
+    //KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
 }
 
 
