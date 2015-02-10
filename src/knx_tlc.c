@@ -323,14 +323,25 @@ STATIC void N_Data_Individual_Ind(void)
 
     tpci = KnxMsg_GetTPCI(KnxMsg_ScratchBufferPtr);
 
+    printf("N_Data_Individual_Ind [%02x] / ", tpci);
+
     switch (tpci  & (uint8_t)0xc0) {
         case KNX_TPCI_UDT:   /* Unnumbered Data (1:1-Connection-Less). */
+            DBG_PRINTLN("TPCI_NDT");
             KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_INDIVIDUAL_IND;
             (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
             break;
         case KNX_TPCI_NDT:   /* Numbered Data (T_DATA_CONNECTED_REQ_PDU, 1:1-Connection-Oriented). */
+            DBG_PRINTLN("TPCI_NDT");
             KnxTlc_SetSequenceNumberOfPDU(KnxMsg_GetSeqNo(KnxMsg_ScratchBufferPtr));
+            
+            //KnxTlc_StateMachine(KNX_TLC_EVENT_DATA_CONNECTED_IND);
+            
+            KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_CONNECTED_IND;
+            (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
+
             KnxTlc_StateMachine(KNX_TLC_EVENT_DATA_CONNECTED_IND);
+
             break;
         case KNX_TPCI_UCD:   /* Unnumbered Control. (CONNECT|DISCONNECT). */
             printf("TPCI_UCD [%02x]\n", tpci);
@@ -348,11 +359,11 @@ STATIC void N_Data_Individual_Ind(void)
                 KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
             }
             break;
-        case KNX_TPCI_NCD:                                                      /* Numbered Control (TACK|TNACK). */
+        case KNX_TPCI_NCD:                                                      /* Numbered Control (ACK | NAK). */
             tpci  &= (uint8_t)0xC3;
             KnxTlc_SetSequenceNumberOfPDU(KnxMsg_GetSeqNo(KnxMsg_ScratchBufferPtr));
 
-            printf("TPCI_NCD [%02x]\n", tpci);
+            printf("TPCI_NCD [%02x] -- %u\n", tpci, KnxMsg_GetSeqNo(KnxMsg_ScratchBufferPtr));
 
             if (tpci == KNX_TPCI_ACK_PDU) {
                 KnxTlc_StateMachine(KNX_TLC_EVENT_ACK_IND);
@@ -375,6 +386,7 @@ STATIC FUNC(void, KSTACK_CODE) N_Data_Broadcast_Ind(void)
 STATIC void N_Data_Broadcast_Ind(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
+    printf("N_Data_Broadcast_Ind\n");
     KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_BROADCAST_IND;
     (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
@@ -422,7 +434,7 @@ STATIC void N_Data_Individual_Con(void)
                 KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
             }
             break;
-        case KNX_TPCI_NCD:                                                      /* Numbered Control (TACK|TNACK). */
+        case KNX_TPCI_NCD:                                                      /* Numbered Control (ACK| NAK). */
             tpci &= (uint8_t)0xC3;
             //KnxTlc_SetSequenceNumberOfPDU(KnxMsg_GetSeqNo(KnxMsg_ScratchBufferPtr));
 

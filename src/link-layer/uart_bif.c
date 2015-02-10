@@ -318,7 +318,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
         } else if ((octet & 0xd3) == L_DATA_EXTENDED_IND) { // #if defined()
             DBG_PRINTLN("L_DataExtended_Ind");
         } else if ((octet & 0xd3) == L_DATA_STANDARD_IND)  {
-            DBG_PRINTLN("L_DataStandard_Ind");
+            //DBG_PRINTLN("L_DataStandard_Ind");
             //printf("CTRL[%02x]\n", octet);
             KnxLL_State = KNX_LL_STATE_AWAITING_RECEIPTION; /* TODO: Distiguish Standard/Extendend Frames */
             KnxLL_ReceiverStage = KNX_LL_RECEIVER_STAGE_HEADER;
@@ -385,6 +385,7 @@ STATIC void Disp_L_Data_Req(void)
 
     chk = KnxLL_Checksum(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
     
+    DBG_PRINTLN("");
     DBG_PRINT("Disp_L_Data_Req: ");
     Dbg_DumpHex(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
 
@@ -448,11 +449,15 @@ void KnxLL_DataStandard_Ind(uint8_t const * frame)
     if (pBuffer != (KnxMsg_BufferPtr)NULL) {
         pBuffer->service = KNX_SERVICE_L_DATA_IND;
 //        pBuffer->sap = tsap;
-        pBuffer->len = length = (frame[5] & (uint8_t)0x0f) + (uint8_t)7;
+        pBuffer->len = length = (frame[5] & (uint8_t)0x0f) + (uint8_t)7;    // TODO: Refactor to function-like macro.
 
         Utl_MemCopy((void *)pBuffer->msg, (void *)frame, length);
         (void)KnxMsg_Post(pBuffer);
     }
+
+    DBG_PRINT("");
+    DBG_PRINT("L_DataStandard_Ind: ");
+    Dbg_DumpHex(frame, length);
 }
 
 /**

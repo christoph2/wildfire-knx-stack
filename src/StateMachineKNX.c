@@ -274,8 +274,8 @@ STATIC Knx_MessageType  _StoredMsg;    /* Client-only. */
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
 
-#define StoreMessage()      Utl_MemCopy(_StoredMsg, KnxMsg_ScratchBufferPtr->msg, MSG_LEN)
-#define RestoreMessage()    Utl_MemCopy(KnxMsg_ScratchBufferPtr->msg, _StoredMsg, MSG_LEN)
+#define StoreMessage()      Utl_MemCopy(_StoredMsg, KnxMsg_ScratchBufferPtr->msg, MSG_LEN), printf("StoreMessage()\n")
+#define RestoreMessage()    Utl_MemCopy(KnxMsg_ScratchBufferPtr->msg, _StoredMsg, MSG_LEN), printf("RestoreMessage()\n")
 
 /*
 ** Global functions.
@@ -348,8 +348,11 @@ void KnxTlc_StateMachine(KNX_TlcEventType event)
 {
     KnxTlc_ActionType action;
 
+    printf("STATE: %u EVENT: %u ", KnxTlc_GetState(), event);
+
     action = KnxTlc_Actions[((event < KNX_TLC_EVENT_UNDEFINED) ? TLC_Events[event]() : KnxTlc_Event_Undefined())].Action[KnxTlc_GetState()];
     KnxTlc_SetState(action.Next);
+    printf("NEXT-STATE: %u\n", action.Next);
     action.Function();
 }
 
@@ -446,7 +449,8 @@ STATIC void A1(void)
 {
     DBG_PRINTLN("A1()");
 
-    KnxTlc_SetConnectionAddress(KnxTlc_GetSourceAddress());
+    //KnxTlc_SetConnectionAddress(KnxTlc_GetSourceAddress());
+    KnxTlc_SetConnectionAddress(KnxMsg_GetSourceAddress(KnxMsg_ScratchBufferPtr));
 
     /* Send a T_CONNECT_ind to the user. */
     KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_CONNECT_IND;
@@ -480,8 +484,8 @@ STATIC void A2(void)
     }
 
 /*      Send the received buffer as a T_Data_Connected.ind to the user. */
-    KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_CONNECTED_IND;
-    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
+    //KnxMsg_ScratchBufferPtr->service = KNX_SERVICE_T_DATA_CONNECTED_IND;
+    //(void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 
     KnxTlc_RestartConnectionTimeoutTimer();
 }
@@ -572,7 +576,7 @@ STATIC void A6(void)
 
     /* Send a T_Disconnect.ind to the user. */
     /* Handled by callback. */
-#if 0
+//#if 0
     if (KnxMsg_ScratchBufferPtr == (KnxMsg_BufferPtr)NULL) {
         KnxMsg_AllocateBuffer(&KnxMsg_ScratchBufferPtr);
     } else {
@@ -580,7 +584,7 @@ STATIC void A6(void)
     }
 
     T_Disconnect_Ind(KnxMsg_ScratchBufferPtr, KnxTlc_GetSourceAddress(), /* KnxADR_GetPhysAddr(), */ KnxTlc_GetConnectionAddress());
-#endif
+//#endif
 
     KnxTlc_StopAcknowledgementTimeoutTimer();
     KnxTlc_StopConnectionTimeoutTimer();
@@ -731,7 +735,7 @@ STATIC void A12(void)                                              /* (Client on
 
     DBG_PRINTLN("A12()");
 
-    //KnxTlc_SetConnectionAddress(KnxTlc_GetSourceAddress(KnxMsg_ScratchBufferPtr)); /* connection_address=address from T_CONNECT_requ */
+//    KnxTlc_SetConnectionAddress(KnxMsg_GetDestAddress(KnxMsg_ScratchBufferPtr)); /* connection_address=address from T_CONNECT_requ */
 
     KnxTlc_SetSequenceNumberSend((uint8_t)0);
     KnxTlc_SetSequenceNumberReceived((uint8_t)0);
@@ -873,12 +877,17 @@ STATIC uint8_t KnxTlc_Event_Ack_Ind(void)
     uint8_t event_num;
 
     if (KnxTlc_GetSourceAddress() == KnxTlc_GetConnectionAddress()) {
+        printf("OK, sourceAddr == connectionAddr.\n");
         if (KnxTlc_GetSequenceNumberOfPDU() == KnxTlc_GetSequenceNumberSend()) {
+            printf("OK, seqNoPDU == seqNoSend.\n");
             event_num = (uint8_t)8;
         } else {
+            printf("NOT-OK, seqNoPDU != seqNoSend!\n");
             event_num = (uint8_t)9;
         }
     } else {
+        printf("NOT-OK, sourceAddr != connectionAddr! ");
+        printf("<<%04X>><<%04X>>\n", KnxTlc_GetSourceAddress(), KnxTlc_GetConnectionAddress());
         event_num = (uint8_t)10;
     }
 
