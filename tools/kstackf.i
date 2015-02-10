@@ -12,8 +12,15 @@ typedef uint8_t boolean;
 #include <stdio.h>
 %}
 
-%pointer_class(uint8_t, uint8p);
-%array_class(uint8_t, uint8a);
+//%pointer_class(uint8_t, uint8p);
+//%array_class(uint8_t, uint8a);
+
+typedef uint16_t Knx_AddressType;
+
+typedef enum tagKnx_StatusType {
+    KNX_E_OK,
+    KNX_E_NOT_OK
+} Knx_StatusType;
 
 %typemap(in) callback * {
 
@@ -23,6 +30,16 @@ typedef uint8_t boolean;
     }
 
     $1 = $input;
+}
+
+%typemap(in, numinputs = 0) KnxMsg_Buffer ** buf ( KnxMsg_Buffer ** tmp) {
+    printf("MsgBuffer[in]\n");
+    $1 = tmp;
+}
+
+%typemap(argout, numinputs = 0) KnxMsg_Buffer ** buf {
+    printf("MsgBuffer[argout]\n");
+    $result = (PyObject*)*tmp$argnum;
 }
 
 %typemap(out) boolean {
@@ -74,10 +91,20 @@ typedef uint8_t boolean;
 
 void checkCallback(callback * fn);
 
+void Ffi_SetApiErrorCB(callback * fn);
+void Ffi_SetApiTraceCB(callback * fn);
+void Ffi_SetLocalConfirmationCB(callback * fn);
 void Ffi_SetIndividual_Address_ResCB(callback * fn);
+void Ffi_SetProperty_Description_Read_IndCB(callback * fn);
+void Ffi_SetConnect_IndCB(callback * fn);
+void Ffi_SetDisconnect_IndCB(callback * fn);
+void Ffi_SetConnect_ConCB(callback * fn);
+void Ffi_SetDisconnect_ConCB(callback * fn);
 
 #include "knx_apci.h"
 %}
+
+//%include "Port.h"
 
 /*
 **  Link-Layer.
@@ -97,11 +124,34 @@ void KnxLL_TimeoutCB(void);
 void U_Reset_req(void);
 void U_State_req(void);
 
+/*!
+ *
+ *  Transport Layer.
+ *
+ */
+void T_Connect_Req(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest);
+void T_Disconnect_Req(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest);
+
 /*
 ** Scheduler.
 */
 void KnxSched_Task(void);
 void KnxSched_Init(void);
+
+/*!
+ *  Messaging.
+ *
+ */
+
+KnxMsg_Buffer * KnxMsg_AllocateBufferWrapper(void);
+
+void KnxMsg_ReleaseBuffer(KnxMsg_Buffer * ptr);
+
+/*!
+ *  Application-Layer.
+ */
+void A_IndividualAddress_Read_Req(KnxMsg_Buffer * pBuffer, uint16_t source);
+void A_DeviceDescriptor_Read_Req(KnxMsg_Buffer * pBuffer, uint16_t source, uint16_t dest, uint8_t descriptor_type);
 
 //
 void Port_Init(void);
@@ -112,3 +162,23 @@ void Serial_Init(void);
 void Serial_Deinit();
 
 void StackTest(void);
+
+#if 0
+%contract sqrt(double x) {
+require:
+    x >= 0;
+ensure:
+    sqrt >= 0;
+}
+
+...
+double sqrt(double);
+#endif
+
+#if 0
+%apply int *OUTPUT { int *result };
+%apply int *INPUT  { int *x, int *y};
+void add(int x, int y, int *result);
+int  sub(int *x, int *y);
+#endif
+
