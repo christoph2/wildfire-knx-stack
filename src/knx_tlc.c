@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2015 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -28,17 +28,16 @@
 ** Local function prototypes.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC  FUNC(void, KSTACK_CODE) T_Data_Connected_Req(void), T_Connect_ReqSrv(void), T_Disconnect_ReqSrv(void);
-STATIC  FUNC(void, KSTACK_CODE) N_Data_Individual_Ind(void), T_Data_Individual_Req(void), T_Data_Broadcast_Req(void);
-STATIC  FUNC(void, KSTACK_CODE) N_Data_Broadcast_Ind(void), N_Data_Individual_Con(void), N_Data_Broadcast_Con(void);
-
-
+STATIC FUNC(void, KSTACK_CODE) T_Data_Connected_Req(void), T_Connect_ReqSrv(void), T_Disconnect_ReqSrv(void);
+STATIC FUNC(void, KSTACK_CODE) N_Data_Individual_Ind(void), T_Data_Individual_Req(void), T_Data_Broadcast_Req(void);
+STATIC FUNC(void, KSTACK_CODE) N_Data_Broadcast_Ind(void), N_Data_Individual_Con(void), N_Data_Broadcast_Con(void);
+STATIC FUNC(void, KSTACK_CODE) AckService_Req(KnxMsg_BufferPtr pBuffer, uint8_t tpci, Knx_AddressType source, 
+                                              Knx_AddressType dest, uint8_t SeqNo);
 #else
 STATIC void T_Data_Connected_Req(void), T_Connect_ReqSrv(void), T_Disconnect_ReqSrv(void);
 STATIC void N_Data_Individual_Ind(void), T_Data_Individual_Req(void), T_Data_Broadcast_Req(void);
 STATIC void N_Data_Broadcast_Ind(void), N_Data_Individual_Con(void), N_Data_Broadcast_Con(void);
-
-
+STATIC void AckService_Req(KnxMsg_BufferPtr pBuffer, uint8_t tpci, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo)
 #endif /* KSTACK_MEMORY_MAPPING */
 
 /*
@@ -153,14 +152,7 @@ FUNC(void, KSTACK_CODE) T_Ack_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType sour
 void T_Ack_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_SetTPCI(pBuffer, KNX_TPCI_ACK_PDU | ((SeqNo & (uint8_t)0x0f) << 2));
-    KnxMsg_SetSourceAddress(pBuffer, source);
-    KnxMsg_SetDestAddress(pBuffer, dest);
-    KnxMsg_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
-    KnxMsg_SetLen(pBuffer, 7);
-    pBuffer->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
-    
-    (void)KnxMsg_Post(pBuffer);
+    AckService_Req(pBuffer, KNX_TPCI_ACK_PDU, source, dest, SeqNo);
 }
 
 
@@ -170,14 +162,7 @@ FUNC(void, KSTACK_CODE) T_Nak_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType sour
 void T_Nak_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_SetTPCI(pBuffer, KNX_TPCI_NAK_PDU | ((SeqNo & (uint8_t)0x0f) << 2));
-    KnxMsg_SetSourceAddress(pBuffer, source);
-    KnxMsg_SetDestAddress(pBuffer, dest);
-    KnxMsg_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
-    KnxMsg_SetLen(pBuffer, 7);
-    pBuffer->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
-
-    (void)KnxMsg_Post(pBuffer);
+    AckService_Req(pBuffer, KNX_TPCI_NAK_PDU, source, dest, SeqNo);
 }
 
 
@@ -307,6 +292,22 @@ void KnxTlc_SetConnectionAddress(Knx_AddressType ConnectionAddress)
 ** Local functions.
 **
 */
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) AckService_Req(KnxMsg_BufferPtr pBuffer, uint8_t tpci, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo)
+#else
+STATIC void AckService_Req(KnxMsg_BufferPtr pBuffer, uint8_t tpci, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo)
+#endif /* KSTACK_MEMORY_MAPPING */
+{
+    KnxMsg_SetTPCI(pBuffer, tpci | ((SeqNo & (uint8_t)0x0f) << 2));
+    KnxMsg_SetSourceAddress(pBuffer, source);
+    KnxMsg_SetDestAddress(pBuffer, dest);
+    KnxMsg_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
+    KnxMsg_SetLen(pBuffer, 7);
+    pBuffer->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
+    
+    (void)KnxMsg_Post(pBuffer);
+}
+
 
 /*
 **  Services from Network-Layer.
@@ -532,3 +533,4 @@ STATIC void T_Data_Broadcast_Req(void)
     #define KSTACK_STOP_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
+
