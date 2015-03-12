@@ -33,11 +33,15 @@ STATIC FUNC(void, KSTACK_CODE) N_Data_Individual_Ind(void), T_Data_Individual_Re
 STATIC FUNC(void, KSTACK_CODE) N_Data_Broadcast_Ind(void), N_Data_Individual_Con(void), N_Data_Broadcast_Con(void);
 STATIC FUNC(void, KSTACK_CODE) AckService_Req(KnxMsg_BufferPtr pBuffer, uint8_t tpci, Knx_AddressType source, 
                                               Knx_AddressType dest, uint8_t SeqNo);
+STATIC FUNC(void, KSTACK_CODE) Connection_Req(KnxMsg_BufferPtr pBuffer, uint8_t tpci, KNX_TlcEventType event, 
+                                              Knx_AddressType source, Knx_AddressType dest);
+
 #else
 STATIC void T_Data_Connected_Req(void), T_Connect_ReqSrv(void), T_Disconnect_ReqSrv(void);
 STATIC void N_Data_Individual_Ind(void), T_Data_Individual_Req(void), T_Data_Broadcast_Req(void);
 STATIC void N_Data_Broadcast_Ind(void), N_Data_Individual_Con(void), N_Data_Broadcast_Con(void);
 STATIC void AckService_Req(KnxMsg_BufferPtr pBuffer, uint8_t tpci, Knx_AddressType source, Knx_AddressType dest, uint8_t SeqNo)
+STATIC void Connection_Req(KnxMsg_BufferPtr pBuffer, uint8_t tpci, KNX_TlcEventType event, Knx_AddressType source, Knx_AddressType dest);
 #endif /* KSTACK_MEMORY_MAPPING */
 
 /*
@@ -116,16 +120,7 @@ FUNC(void, KSTACK_CODE) T_Connect_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType 
 void T_Connect_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_SetTPCI(pBuffer, KNX_TPCI_CONNECT_REQ_PDU);
-    KnxMsg_SetSourceAddress(pBuffer, source);
-    KnxTlc_SetConnectionAddress(dest);
-    KnxTlc_SetSourceAddress(source);
-    KnxMsg_SetDestAddress(pBuffer, dest);
-    KnxMsg_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
-    KnxMsg_SetLen(pBuffer, (uint8_t)7);
-    pBuffer->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ; /* T_CONNECT_REQ; */
-    KnxTlc_StateMachine(KNX_TLC_EVENT_CONNECT_REQ);
-    (void)KnxMsg_Post(pBuffer);
+    Connection_Req(pBuffer, KNX_TPCI_CONNECT_REQ_PDU, KNX_TLC_EVENT_CONNECT_REQ, source, dest);
 }
 
 
@@ -135,14 +130,7 @@ FUNC(void, KSTACK_CODE) T_Disconnect_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressTy
 void T_Disconnect_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_SetTPCI(pBuffer, KNX_TPCI_DISCONNECT_REQ_PDU);
-    KnxMsg_SetSourceAddress(pBuffer, source);
-    KnxMsg_SetDestAddress(pBuffer, dest);
-    KnxMsg_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
-    KnxMsg_SetLen(pBuffer, 7);
-    pBuffer->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ; /* T_DISCONNECT_REQ; */
-    KnxTlc_StateMachine(KNX_TLC_EVENT_DISCONNECT_REQ);
-    (void)KnxMsg_Post(pBuffer);
+    Connection_Req(pBuffer, KNX_TPCI_DISCONNECT_REQ_PDU, KNX_TLC_EVENT_DISCONNECT_REQ, source, dest);
 }
 
 
@@ -305,6 +293,25 @@ STATIC void AckService_Req(KnxMsg_BufferPtr pBuffer, uint8_t tpci, Knx_AddressTy
     KnxMsg_SetLen(pBuffer, 7);
     pBuffer->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
     
+    (void)KnxMsg_Post(pBuffer);
+}
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+STATIC FUNC(void, KSTACK_CODE) Connection_Req(KnxMsg_BufferPtr pBuffer, uint8_t tpci, KNX_TlcEventType event, 
+                                              Knx_AddressType source, Knx_AddressType dest)
+#else
+STATIC void Connection_Req(KnxMsg_BufferPtr pBuffer, uint8_t tpci, KNX_TlcEventType event, Knx_AddressType source, Knx_AddressType dest)
+#endif /* KSTACK_MEMORY_MAPPING */
+{
+    KnxMsg_SetTPCI(pBuffer, tpci);
+    KnxMsg_SetSourceAddress(pBuffer, source);
+    KnxTlc_SetConnectionAddress(dest);
+    KnxTlc_SetSourceAddress(source);
+    KnxMsg_SetDestAddress(pBuffer, dest);
+    KnxMsg_SetPriority(pBuffer, KNX_OBJ_PRIO_SYSTEM);
+    KnxMsg_SetLen(pBuffer, (uint8_t)7);
+    pBuffer->service = KNX_SERVICE_N_DATA_INDIVIDUAL_REQ;
+    KnxTlc_StateMachine(event);
     (void)KnxMsg_Post(pBuffer);
 }
 
