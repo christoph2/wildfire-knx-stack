@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2015 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -115,9 +115,12 @@ extern "C"
 #define KnxMsg_GetAddressType(pBuffer)          ((uint8_t)KnxMsg_GetMessagePtr((pBuffer))->npci & (uint8_t)0x80)
 #define KnxMsg_SetAddressType(pBuffer, at)      (KnxMsg_GetMessagePtr((pBuffer))->npci |= ((at) & (uint8_t)0x80))
 
+#define KnxMsg_IsMulticastAddressed(pBuffer)    (KnxMsg_GetAddressType((pBuffer)) == KNX_ADDR_MULTICAST)
+#define KnxMsg_IsIndividualAddressed(pBuffer)   (KnxMsg_GetAddressType((pBuffer)) == KNX_ADDR_INDIVIDUAL)
+
 /* check: ist 'LSDU' richtig??? */
 #define KnxMsg_GetLSDULen(pBuffer)              (KnxMsg_GetMessagePtr((pBuffer))->npci & (uint8_t)0x0f)
-#define KnxMsg_SetLSDULen(pBuffer, len_lsdu)    (KnxMsg_GetMessagePtr((pBuffer))->npci = ((len_lsdu) & (uint8_t)0x0f))
+#define KnxMsg_SetLSDULen(pBuffer, len_lsdu)    (KnxMsg_GetMessagePtr((pBuffer))->npci |= ((len_lsdu) & (uint8_t)0x0f))
 
 #define KnxMsg_GetTPCI(pBuffer)                 ((uint8_t)KnxMsg_GetMessagePtr((pBuffer))->tpci)
 #define KnxMsg_SetTPCI(pBuffer, tp)             (KnxMsg_GetMessagePtr((pBuffer))->tpci |= (tp))

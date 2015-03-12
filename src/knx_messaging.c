@@ -361,7 +361,7 @@ void KnxMsg_SetRoutingCount(KnxMsg_BufferPtr pBuffer)
 
     if ((ctrl & (uint8_t)0x02) == (uint8_t)0x02) {
         hop_count                              = MSG_NO_ROUTING_CTRL;
-        ctrl                                  &= ~(uint8_t)0x02;
+        ctrl                                  &= ~(uint8_t)0x02;        // TODO: Check!!!
         KnxMsg_GetMessagePtr(pBuffer)->ctrl    = ctrl;
     } else {
         hop_count = HOP_COUNT;

@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2015 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -234,26 +234,24 @@ STATIC void KnxNl_CheckRoutingCount(KnxMsg_BufferPtr pBuffer)
 */
 STATIC void KnxNl_DispatchIncoming(Knx_ServiceTypeType const * services)
 {
-    if ((KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr)->npci & (uint8_t)0x80) == (uint8_t)0x80) {
+    if (KnxMsg_IsMulticastAddressed(KnxMsg_ScratchBufferPtr)) {
         if (KnxADR_IsBroadcastAddress(*KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr)->dest)) {
             /* Broadcast-Communication. */
-            DBG_PRINTLN("Broadcast-Communication [Con/Ind]");
+            //DBG_PRINTLN("Broadcast-Communication [Con/Ind]");
             KnxMsg_ScratchBufferPtr->service = services[0];
-            (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
         }
         else {
             /* Multicast-Communication. */
-            DBG_PRINTLN("Multicast-Communication [Con/Ind]");
+            //DBG_PRINTLN("Multicast-Communication [Con/Ind]");
             KnxMsg_ScratchBufferPtr->service = services[1];
-            (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
         }
     }
     else {
         /* Individual-Adressing. */
-        DBG_PRINTLN("Individual-Adressing [Con/Ind]");
+        //DBG_PRINTLN("Individual-Adressing [Con/Ind]");
         KnxMsg_ScratchBufferPtr->service = services[2];
-        (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
     }
+    (void)KnxMsg_Post(KnxMsg_ScratchBufferPtr);
 }
 
 
