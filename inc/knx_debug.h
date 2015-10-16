@@ -31,11 +31,12 @@ extern "C"
 
 #include "k-ps/config.h"
 
+
 #if (KNX_BUILD_TYPE == KNX_BUILD_DEBUG) && (defined(_MSC_VER) || defined(WIN32) || defined(WIN64) || defined(__CYGWIN32__) || defined(__CYGWIN64__))
 
 typedef struct tagDbg_TimerType {
-    __int64 start;
-    __int64 stop;
+    int64_t start;
+    int64_t stop;
     boolean running;
 } Dbg_TimerType;
 
