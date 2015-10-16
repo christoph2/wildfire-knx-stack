@@ -38,9 +38,12 @@ extern "C"
  *
  */
 #if __STDC_VERSION__ >= 199901L
-typedef _Bool boolean;
+//typedef _Bool boolean;
 #else
-typedef unsigned char boolean;
+//typedef unsigned char boolean;
+//#include <stdbool.h>
+//typedef _Bool unsigned char;
+typedef _Bool boolean;
 #endif
 
 typedef float float32;
