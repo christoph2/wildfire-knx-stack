@@ -25,6 +25,8 @@
 #define __KNX_MESSAGING_H
 
 #include "knx_address.h"
+#include "knx_macros.h"
+#include "knx_et.h"
 #include "k-ps/config.h"
 
 #if defined(__cplusplus)

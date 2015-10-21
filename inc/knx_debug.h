@@ -31,12 +31,14 @@ extern "C"
 
 #include "k-ps/config.h"
 
+//#undef KNX_BUILD_TYPE
+
 #if (KNX_BUILD_TYPE == KNX_BUILD_DEBUG) && (defined(_MSC_VER) || defined(WIN32) || defined(WIN64) || defined(__CYGWIN32__) || defined(__CYGWIN64__))
 
 typedef struct tagDbg_TimerType {
     int64_t start;
     int64_t stop;
-    _Bool running;
+    boolean running;
 } Dbg_TimerType;
 
 void Dbg_DumpHex(uint8_t const * frame, uint16_t length);
@@ -45,7 +47,7 @@ void Dbg_DumpHex(uint8_t const * frame, uint16_t length);
 #define DBG_PRINTLN(msg)    printf("%s\n", (msg))
 
 void Dbg_Init(void);
-_Bool Dbg_IsHRTAvailable(void);
+boolean Dbg_IsHRTAvailable(void);
 void Dbg_TimerInit(Dbg_TimerType * timerContext);
 void Dbg_TimerStart(Dbg_TimerType * timerContext);
 void Dbg_TimerStop(Dbg_TimerType * timerContext);

@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2015 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -28,6 +28,10 @@
 extern "C"
 {
 #endif  /* __cplusplus */
+
+#include "k-ps/config.h"
+#include "knx_types.h"
+#include "knx_macros.h"
 
 /*
 ** Global defines.
