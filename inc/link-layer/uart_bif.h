@@ -30,6 +30,7 @@ extern "C"
 #endif  /* __cplusplus */
 
 
+#include "knx_types.h"
 #include "k-ps/config.h"
 
 /*
@@ -75,9 +76,6 @@ extern "C"
 #define U_SETADDRESS_REQ        ((uint8_t)0x1C)
 #endif /* KNX_BUS_INTERFACE */
 
-#define U_SETADDRESS_REQ        ((uint8_t)0xF1)
-#define U_SETREPETITION_REQ     ((uint8_t)0xF2)
-
 #if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
 #define U_L_DATAOFFSET_REQ      ((uint8_t)0x08) /* 08 - 0C */
 #define U_SYSTEMSTAT_REQ        ((uint8_t)0x0D)
@@ -100,6 +98,12 @@ extern "C"
 #define U_L_DATASTART_REQ       ((uint8_t)0x80)
 #define U_L_DATACONT_REQ        ((uint8_t)0x80) /* 81 - BF */
 #define U_L_DATAEND_REQ         ((uint8_t)0x40) /* 47 - 7F */
+
+#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120 /* TODO: Überprüfen!!!*/
+#define U_SETADDRESS_REQ        ((uint8_t)0xF1)
+#define U_SETREPETITION_REQ     ((uint8_t)0xF2)
+#endif
+
 
 /**
  *
