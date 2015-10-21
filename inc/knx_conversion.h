@@ -24,7 +24,7 @@
 #if !defined(__KNXCONV_H)
 #define __KNXCONV_H
 
-#include "k-ps/config.h"
+#include "Wildfire_Config.h"
 #include "knx_types.h"
 #include "knx_macros.h"
 

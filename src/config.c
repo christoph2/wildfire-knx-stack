@@ -22,7 +22,7 @@
 *
 */
 
-#include "k-ps/config.h"
+#include "Wildfire_Config.h"
 #include "knx_timer.h"
 
 void KnxTlc_OnConnectionTimeoutTimer(void);

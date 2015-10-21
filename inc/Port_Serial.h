@@ -29,7 +29,7 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-#include "k-ps/config.h"
+#include "Wildfire_Config.h"
 #include <stdint.h>
 
 uint8_t Port_WriteToBusInterface(uint8_t  const * frame, uint16_t length);

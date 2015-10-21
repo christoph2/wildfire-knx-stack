@@ -29,7 +29,7 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-#include "k-ps/config.h"
+#include "Wildfire_Config.h"
 
 #if _WIN32_WINNT <= 0x0601
     #define _WIN32_WINNT 0x0601

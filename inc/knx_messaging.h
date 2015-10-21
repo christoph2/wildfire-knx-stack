@@ -27,7 +27,7 @@
 #include "knx_address.h"
 #include "knx_macros.h"
 #include "knx_et.h"
-#include "k-ps/config.h"
+#include "Wildfire_Config.h"
 
 #if defined(__cplusplus)
 extern "C"

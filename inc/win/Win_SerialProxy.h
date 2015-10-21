@@ -29,7 +29,7 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-#include "k-ps/config.h"
+#include "Wildfire_Config.h"
 #include <stdint.h>
 
 extern void * Serial_TransmitterSocket;

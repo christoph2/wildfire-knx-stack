@@ -31,7 +31,7 @@ extern "C"
 
 
 #include "knx_types.h"
-#include "k-ps/config.h"
+#include "Wildfire_Config.h"
 
 /*
 **  Service-IDs.
