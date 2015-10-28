@@ -113,7 +113,7 @@ extern "C"
  */
 #define KNX_BIF_TPUART_1                        (0)
 #define KNX_BIF_TPUART_2                        (1)
-#define KNX_BIF_TPUART_NCN5120                  (2)
+#define KNX_BIF_NCN5120                  (2)
 
 
 /** Power supply of controller module.

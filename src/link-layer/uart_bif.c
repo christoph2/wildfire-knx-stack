@@ -585,7 +585,7 @@ void U_ActivateBusmon_req(void)
     KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
 }
 
-#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
+#if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
 void U_ActivateBusyMode_req(void)
 {
     DBG_PRINTLN("U_ActivateBusyMode_req");
@@ -642,7 +642,7 @@ void U_SetAddress_req(uint16_t address)
 }
 #endif /* KNX_BUS_INTERFACE */
 
-#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
+#if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
 void U_SetRepetition_req(uint8_t rst)
 {
     DBG_PRINTLN("U_SetRepetition_req");
@@ -694,7 +694,7 @@ void U_ProductID_req(void)
 }
 #endif /* KNX_BUS_INTERFACE */
 
-#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
+#if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
 void U_SetAddress_req(uint16_t address) /* NB: TPUART2's SetAddress is unconfirmed! */
 {
     DBG_PRINTLN("U_SetAddress_req");

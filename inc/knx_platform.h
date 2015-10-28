@@ -30,7 +30,7 @@ extern "C"
 #endif  /* __cplusplus */
 
 #include "Wildfire_Config.h"
-#include "knx_debug.h"
+//#include "knx_debug.h"
 #include <stdint.h>
 
 #if defined(_WIN32) || defined(_WIN64)

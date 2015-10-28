@@ -60,7 +60,7 @@ extern "C"
 #define U_RESET_REQ             ((uint8_t)0x01)
 #define U_STATE_REQ             ((uint8_t)0x02)
 
-#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
+#if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
 #define U_SETBUSY_REQ           ((uint8_t)0x03)
 #define U_QUITBUSY_REQ          ((uint8_t)0x04)
 #endif /* KNX_BUS_INTERFACE */
@@ -76,7 +76,7 @@ extern "C"
 #define U_SETADDRESS_REQ        ((uint8_t)0x1C)
 #endif /* KNX_BUS_INTERFACE */
 
-#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
+#if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
 #define U_L_DATAOFFSET_REQ      ((uint8_t)0x08) /* 08 - 0C */
 #define U_SYSTEMSTAT_REQ        ((uint8_t)0x0D)
 #define U_STOPMODE_REQ          ((uint8_t)0x0E)
@@ -85,7 +85,7 @@ extern "C"
 
 #define U_ACKN_REQ              ((uint8_t)0x10) /* 10 - 17 */
 
-#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
+#if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
 #define U_CONFIGURE_REQ         ((uint8_t)0x18) /* 18 - 1F */
 #define U_INTREGWR_REQ          ((uint8_t)0x28) /* 28 - 2B */
 #define U_INTREGRD_REQ          ((uint8_t)0x38) /* 38 - 3B */
@@ -99,7 +99,7 @@ extern "C"
 #define U_L_DATACONT_REQ        ((uint8_t)0x80) /* 81 - BF */
 #define U_L_DATAEND_REQ         ((uint8_t)0x40) /* 47 - 7F */
 
-#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120 /* TODO: Überprüfen!!!*/
+#if KNX_BUS_INTERFACE == KNX_BIF_NCN5120 /* TODO: Überprüfen!!!*/
 #define U_SETADDRESS_REQ        ((uint8_t)0xF1)
 #define U_SETREPETITION_REQ     ((uint8_t)0xF2)
 #endif
@@ -142,11 +142,11 @@ void U_SetRepetition_req(uint8_t rst);
 void U_ActivateCRC_req(void);
 #endif /* KNX_BUS_INTERFACE */
 
-#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_2 || KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
+#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_2 || KNX_BUS_INTERFACE == KNX_BIF_NCN5120
 void U_SetRepetition_req(uint8_t rst);
 #endif /* KNX_BUS_INTERFACE */
 
-#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
+#if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
 
 #endif /* KNX_BUS_INTERFACE */
 
@@ -181,11 +181,11 @@ void U_State_req(void);
 void U_ProductID_req(void);
 #endif /* KNX_BUS_INTERFACE */
 
-#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
+#if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
 void U_SetAddress_req(uint16_t address);
 #endif /* KNX_BUS_INTERFACE */
 
-#if KNX_BUS_INTERFACE == KNX_BIF_TPUART_NCN5120
+#if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
 
 #endif /* KNX_BUS_INTERFACE */
 
