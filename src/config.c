@@ -28,9 +28,8 @@
 void KnxTlc_OnConnectionTimeoutTimer(void);
 
 Tmr_CallbackFunction KnxTmr_Callbacks[TMR_NUM_TIMERS] = {
-    (Tmr_CallbackFunction *)NULL,
-    (Tmr_CallbackFunction *)KnxTlc_OnConnectionTimeoutTimer,
-    (Tmr_CallbackFunction *)NULL,
-    (Tmr_CallbackFunction *)NULL,
-    (Tmr_CallbackFunction *)NULL,
+    (Tmr_CallbackFunction)NULL,
+    (Tmr_CallbackFunction)KnxTlc_OnConnectionTimeoutTimer,
+    (Tmr_CallbackFunction)NULL,
+    (Tmr_CallbackFunction)NULL,
 };
