@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2015 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -29,6 +29,10 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
+#include "Wildfire_Config.h"
+#include "knx_types.h"
+#include "knx_macros.h"
+
 /*
 ** Global defines.
 */
@@ -37,7 +41,7 @@ extern "C"
 #define TMR_TIMER_TLC_ACK_TIMEOUT   ((uint8_t)2)
 #define TMR_TIMER_USER0             ((uint8_t)3)
 
-#include "k-ps/config.h"
+#include "Wildfire_Config.h"
 
 #if TMR_NUM_TIMERS < 4
     #error "ERROR: Number of timers must be at least three!"

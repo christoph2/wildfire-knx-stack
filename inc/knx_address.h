@@ -25,7 +25,7 @@
 #if !defined(__KNX_ADDRESS_H)
 #define __KNX_ADDRESS_H
 
-#include "k-ps/config.h"
+#include "Wildfire_Config.h"
 #include "knx_conversion.h"
 
 #if defined(__cplusplus)

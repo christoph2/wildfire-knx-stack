@@ -29,7 +29,9 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-#include "k-ps/config.h"
+#include "Wildfire_Config.h"
+
+//#undef KNX_BUILD_TYPE
 
 
 #if (KNX_BUILD_TYPE == KNX_BUILD_DEBUG) && (defined(_MSC_VER) || defined(WIN32) || defined(WIN64) || defined(__CYGWIN32__) || defined(__CYGWIN64__))
@@ -50,7 +52,7 @@ boolean Dbg_IsHRTAvailable(void);
 void Dbg_TimerInit(Dbg_TimerType * timerContext);
 void Dbg_TimerStart(Dbg_TimerType * timerContext);
 void Dbg_TimerStop(Dbg_TimerType * timerContext);
-__int64 Dbg_TimerElapsedTime(Dbg_TimerType const * timerContext);
+int64_t Dbg_TimerElapsedTime(Dbg_TimerType const * timerContext);
 void Dbg_TraceFunctionEntry(uint8_t ModuleId, uint8_t ApiId);
 void Dbg_TraceFunctionExit(uint8_t ModuleId, uint8_t ApiId);
 

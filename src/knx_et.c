@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2015
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -21,6 +21,8 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
+
+#include <stdio.h>
 #include "knx_et.h"
 #include "knx_ffi.h"
 

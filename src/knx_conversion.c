@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2015 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -31,26 +31,15 @@
 ** Global functions.
 */
 
-#if defined(KNX_LITTLE_ENDIAN)
-#if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint16_t, KSTACK_CODE) btohs(uint16_t w)
-#else
 uint16_t btohs(uint16_t w)                  // TODO: knx_utl!!! auﬂerdem: ByteOrder!!!
-#endif /* KSTACK_MEMORY_MAPPING */
 {
     return KNX_MAKEWORD(KNX_LOBYTE(w), KNX_HIBYTE(w));
 }
 
 
-#endif  /* defined(KNX_LITTLE_ENDIAN) */
-
 #define COMW(w) ((~(w)) + 1)
 
-#if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint16_t, KSTACK_CODE) LongToDPT9(sint32 value)
-#else
 uint16_t LongToDPT9(int32_t value)
-#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16_t  Mantissa;
     uint8_t   Exponent;
@@ -83,11 +72,7 @@ uint16_t LongToDPT9(int32_t value)
 }
 
 
-#if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint16_t, KSTACK_CODE) FloatToDPT9(float64 value)
-#else
 uint16_t FloatToDPT9(float64 value)
-#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16_t  Mantissa;
     uint8_t   Exponent;
@@ -120,11 +105,7 @@ uint16_t FloatToDPT9(float64 value)
 }
 
 
-#if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(float64, KSTACK_CODE) DPT9ToFloat(uint16_t value)
-#else
 float64 DPT9ToFloat(uint16_t value)
-#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16_t  Mantissa;
     uint8_t   Exponent;
@@ -150,11 +131,7 @@ float64 DPT9ToFloat(uint16_t value)
 }
 
 
-#if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(sint32, KSTACK_CODE) DPT9ToLong(uint16_t value)
-#else
 int32_t DPT9ToLong(uint16_t value)
-#endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16_t  Mantissa;
     uint8_t   Exponent;
@@ -180,7 +157,3 @@ int32_t DPT9ToLong(uint16_t value)
 }
 
 
-#if KSTACK_MEMORY_MAPPING == STD_ON
-    #define KSTACK_STOP_SEC_CODE
-    #include "MemMap.h"
-#endif /* KSTACK_MEMORY_MAPPING */

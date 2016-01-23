@@ -21,16 +21,18 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
-#if (KNX_BUILD_TYPE == KNX_BUILD_DEBUG) && (defined(_MSC_VER) || defined(WIN32) || defined(WIN64) || defined(__CYGWIN32__) || defined(__CYGWIN64__))
 
-#include <stdio.h>
+
+
 
 #include "knx_debug.h"
+#if (KNX_BUILD_TYPE == KNX_BUILD_DEBUG) && (defined(_MSC_VER) || defined(WIN32) || defined(WIN64) || defined(__CYGWIN32__) || defined(__CYGWIN64__))
+#include <stdio.h>
 #include "knx_ffi.h"
 #include <Windows.h>
 
 STATIC LARGE_INTEGER timerFrequency;
-STATIC BOOL hrcAvailable;
+STATIC boolean hrcAvailable;
 
 void Dbg_Init(void)
 {

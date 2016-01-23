@@ -24,7 +24,7 @@
 #if !defined(__KNX_LSM_H)
 #define __KNX_LSM_H
 
-#include "k-ps/config.h"
+#include "Wildfire_Config.h"
 
 #if defined(__cplusplus)
 extern "C"

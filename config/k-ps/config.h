@@ -60,10 +60,10 @@ extern "C"
  * Possible values:
  *  @li @c KNX_BIF_TPUART_1
  *  @li @c KNX_BIF_TPUART_2
- *  @li @c KNX_BIF_TPUART_NCN5120
+ *  @li @c KNX_BIF_NCN5120
  *
  */
-#define KNX_BUS_INTERFACE           KNX_BIF_TPUART_NCN5120
+#define KNX_BUS_INTERFACE           KNX_BIF_NCN5120
 
 /** @fn KNX_LL_TIMEOUT_NOTIFICATION
  *  @brief  Can be used if application needs to be informed about a link-layer

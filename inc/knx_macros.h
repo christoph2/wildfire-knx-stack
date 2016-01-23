@@ -87,12 +87,12 @@ extern "C"
     #define KNX_UNREFERENCED_PARAMETER(p)   ((p) = (p))
 #endif
 
-#if !defined(MIN)
-    #define MIN(a, b)                   (((a) > (b)) ? (b) : (a))
+#if !defined(KNX_MIN)
+    #define KNX_MIN(a, b)                   (((a) > (b)) ? (b) : (a))
 #endif
 
-#if !defined(MAX)
-    #define MAX(a, b)                   (((a) > (b)) ? (a) : (b))
+#if !defined(KNX_MAX)
+    #define KNX_MAX(a, b)                   (((a) > (b)) ? (a) : (b))
 #endif
 
 #if !defined(BETWEEN)

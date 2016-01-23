@@ -243,7 +243,7 @@ uint16_t Utl_Ntohs(uint16_t value)
 {
 #if KNX_ENDIANESS == KNX_LITTLE_ENDIAN
     return KNX_MAKEWORD(KNX_LOBYTE(value), KNX_HIBYTE(value));
-#elif #if KNX_ENDIANESS == KNX_BIG_ENDIAN
+#elif KNX_ENDIANESS == KNX_BIG_ENDIAN
     return value;
 #endif
 }
@@ -252,7 +252,7 @@ uint16_t Utl_Htons(uint16_t value)
 {
 #if KNX_ENDIANESS == KNX_LITTLE_ENDIAN
     return KNX_MAKEWORD(KNX_LOBYTE(value), KNX_HIBYTE(value));
-#elif #if KNX_ENDIANESS == KNX_BIG_ENDIAN
+#elif KNX_ENDIANESS == KNX_BIG_ENDIAN
     return value;
 #endif
 }

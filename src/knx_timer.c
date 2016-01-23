@@ -273,13 +273,13 @@ void KnxTmr_SystemTickHandler(void)
     if (KnxTmr_DataLinkTimerIsRunning()) {
         TMR_LOCK_DL_TIMER();
         Tmr_DataLinkCounter += TMR_TICK_RESOLUTION;
-        if (Tmr_DataLinkCounter >= KNX_LL_TIMEOUT) {            
+        if (Tmr_DataLinkCounter >= KNX_LL_TIMEOUT) {
             KnxLL_TimeoutCB();  // Link-Layer timed out.
             KnxTmr_DataLinkTimerStop();
         }
         TMR_UNLOCK_DL_TIMER();
     }
-  
+
     if ((Tmr_SysMsCounter % (uint32_t)1000UL) == (uint32_t)0UL) {
         Tmr_SysSecondCounter++;
         SecondChanged = TRUE;
@@ -298,9 +298,9 @@ void KnxTmr_SystemTickHandler(void)
                 TMR_LOCK_MAIN_TIMER();
                 if (SecondChanged == TRUE)  {
                     tm->expire_counter -= (uint32_t)1UL;
-                    if (tm->expire_counter == (uint32_t)0UL) {                                   
+                    if (tm->expire_counter == (uint32_t)0UL) {
                         tm->state = TMR_STATE_EXPIRED;
-                        if (KnxTmr_Callbacks[idx] != (Tmr_CallbackFunction*)NULL) {
+                        if (KnxTmr_Callbacks[idx] != (Tmr_CallbackFunction)NULL) {
                             KnxTmr_Callbacks[idx]();
                         }
                     }

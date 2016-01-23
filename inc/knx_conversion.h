@@ -24,7 +24,10 @@
 #if !defined(__KNXCONV_H)
 #define __KNXCONV_H
 
-#include "k-ps/config.h"
+#include "Wildfire_Config.h"
+#include "knx_types.h"
+#include "knx_macros.h"
+
 
 #if defined(__cplusplus)
 extern "C"
@@ -35,21 +38,12 @@ extern "C"
 /*
 ** Global functions.
 */
-#if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(uint16_t, KSTACK_CODE)   LongToDPT9(sint32 value);
-FUNC(uint16_t, KSTACK_CODE)   FloatToDPT9(float64 value);
-FUNC(float64, KSTACK_CODE)  DPT9ToFloat(uint16_t value);
-FUNC(sint32, KSTACK_CODE)   DPT9ToLong(uint16_t value);
-FUNC(uint16_t, KSTACK_CODE)   btohs(uint16_t w);
-#else
 uint16_t  LongToDPT9(int32_t value);
 uint16_t  FloatToDPT9(float64 value);
 float64 DPT9ToFloat(uint16_t value);
 int32_t  DPT9ToLong(uint16_t value);
 uint16_t  btohs(uint16_t w);
 
-
-#endif /* KSTACK_MEMORY_MAPPING */
 
 #if defined(__cplusplus)
 }

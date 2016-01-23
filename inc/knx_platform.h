@@ -29,8 +29,8 @@ extern "C"
 {
 #endif  /* __cplusplus */
 
-#include "k-ps/config.h"
-#include "knx_debug.h"
+#include "Wildfire_Config.h"
+//#include "knx_debug.h"
 #include <stdint.h>
 
 #if defined(_WIN32) || defined(_WIN64)
