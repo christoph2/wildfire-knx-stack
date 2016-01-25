@@ -122,7 +122,7 @@ extern "C"
 #define KNX_MODULE_POWER_BY_BUS                 (0)
 #define KNX_MODULE_POWER_BY_AUXILIARY_SUPPLY    (1)
 
-/**
+/** Endianess
  *
  */
 #define KNX_LITTLE_ENDIAN                       (0)
@@ -134,6 +134,14 @@ extern "C"
  */
 #define KNX_BUILD_DEBUG                         (0)
 #define KNX_BUILD_RELEASE                       (1)
+
+/** Target Types.
+ *
+ */
+#define KNX_TARGET_WINDOWS                      (1)
+#define KNX_TARGET_POSIX                        (2)
+#define KNX_TARGET_S12                          (3)
+#define KNX_TARGET_ATMEL_ATSAM4                 (4)
 
 
 #if defined(__cplusplus)
