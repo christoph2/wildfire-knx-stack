@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2015 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -52,7 +52,8 @@ extern "C"
 */
 typedef uint32_t Tmr_TickType, * Tmr_TickRefType;
 
-typedef void (*Tmr_CallbackFunction)(void);
+typedef void (*KnxTmr_CallbackFunctionType)(void);
+typedef void (*KnxTmr_TickHandlerType)(void);
 
 typedef enum tagTmr_ResolutionType {
     TMR_RESOLUTION_MS,
@@ -112,16 +113,16 @@ boolean KnxTmr_DataLinkTimerIsRunning(void);
 void KnxTmr_DataLinkTimerStart(void);
 void KnxTmr_DataLinkTimerStop(void);
 
-void    KnxTmr_Delay(Tmr_TickType ms);
-void    KnxTmr_DelayHMS(uint16_t H, uint16_t M, uint16_t S);
+void KnxTmr_Delay(Tmr_TickType ms);
+void KnxTmr_DelayHMS(uint16_t H, uint16_t M, uint16_t S);
 
-void    KnxTmr_SystemTickHandler(void);
-void    KnxTmr_SecondCallback(void);
+void KnxTmr_SystemTickHandler(void);
+void KnxTmr_SecondCallback(void);
 
 /*
 ** Global Variables.
 */
-extern Tmr_CallbackFunction KnxTmr_Callbacks[TMR_NUM_TIMERS];
+extern KnxTmr_CallbackFunctionType KnxTmr_Callbacks[TMR_NUM_TIMERS];
 
 
 #endif /* KSTACK_MEMORY_MAPPING */

@@ -180,7 +180,7 @@ FUNC(Tmr_TickType, KSTACK_CODE) KnxTmr_GetSystemTime(Tmr_ResolutionType base)
 Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    Tmr_TickType timerValue;
+    Tmr_TickType timerValue = (Tmr_TickType)0UL;
 
     TMR_LOCK_MAIN_TIMER();
 
@@ -302,7 +302,7 @@ void KnxTmr_SystemTickHandler(void)
                     tm->expire_counter -= (uint32_t)1UL;
                     if (tm->expire_counter == (uint32_t)0UL) {
                         tm->state = TMR_STATE_EXPIRED;
-                        if (KnxTmr_Callbacks[idx] != (Tmr_CallbackFunction)NULL) {
+                        if (KnxTmr_Callbacks[idx] != (KnxTmr_CallbackFunctionType)NULL) {
                             KnxTmr_Callbacks[idx]();
                         }
                     }

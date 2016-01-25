@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -27,9 +27,10 @@
 
 void KnxTlc_OnConnectionTimeoutTimer(void);
 
-Tmr_CallbackFunction KnxTmr_Callbacks[TMR_NUM_TIMERS] = {
-    (Tmr_CallbackFunction)NULL,
-    (Tmr_CallbackFunction)KnxTlc_OnConnectionTimeoutTimer,
-    (Tmr_CallbackFunction)NULL,
-    (Tmr_CallbackFunction)NULL,
+KnxTmr_CallbackFunctionType KnxTmr_Callbacks[TMR_NUM_TIMERS] = {
+    (KnxTmr_CallbackFunctionType)NULL,
+    (KnxTmr_CallbackFunctionType)KnxTlc_OnConnectionTimeoutTimer,
+    (KnxTmr_CallbackFunctionType)NULL,
+    (KnxTmr_CallbackFunctionType)NULL,
 };
+
