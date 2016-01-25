@@ -22,26 +22,16 @@
 *
 */
 
-#include "Wildfire_Config.h"
+#ifndef __PORT_TIMER_H
+#define __PORT_TIMER_H
+
 #include "knx_timer.h"
-#include "knx_defs.h"
 
-void KnxTlc_OnConnectionTimeoutTimer(void);
+typedef struct tagPort_Timer_ConfigType {
+    KnxTmr_TickHandlerType tickHandler;
+    uint16_t tickResolution;
+} Port_Timer_ConfigType;
 
-KnxTmr_CallbackFunctionType KnxTmr_Callbacks[TMR_NUM_TIMERS] = {
-    (KnxTmr_CallbackFunctionType)NULL,
-    (KnxTmr_CallbackFunctionType)KnxTlc_OnConnectionTimeoutTimer,
-    (KnxTmr_CallbackFunctionType)NULL,
-    (KnxTmr_CallbackFunctionType)NULL,
-};
 
-#if KNX_TARGET_TYPE == KNX_TARGET_POSIX
-#include "port/port_timer.h"
-
-Port_Timer_ConfigType Port_Timer_Configuration = {
-    KnxTmr_SystemTickHandler,
-    (uint16_t)10
-};
-
-#endif
+#endif /* __PORT_TIMER_H*/
 
