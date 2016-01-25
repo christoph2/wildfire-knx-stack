@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -83,7 +83,7 @@ void KnxMsg_Init(void)
 
     for (t = (uint8_t)1; t < MSG_NUM_TASKS; t++) {
         KnxMsg_Queues[t] = MSG_QUEUE_EMPTY;
-    }    
+    }
 
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_INIT);
 }
@@ -142,7 +142,7 @@ FUNC(KnxMsg_Buffer *, KSTACK_CODE) KnxMsg_AllocateBufferWrapper(void)
 KnxMsg_Buffer * KnxMsg_AllocateBufferWrapper(void)
 #endif
 {
-    KnxMsg_Buffer * buffer;
+    KnxMsg_Buffer * buffer = NULL;
 
     KnxMsg_AllocateBuffer(&buffer);
 
@@ -162,8 +162,7 @@ Knx_StatusType KnxMsg_ReleaseBuffer(KnxMsg_BufferPtr ptr)
 
 //    Dbg_TraceFunctionEntry(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_RELEASE_BUFFER);
 
-
-    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_RELEASE_BUFFER);
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_RELEASE_BUFFER, KNX_E_NOT_OK);
     if (ptr == NULL) {
         KNX_RAISE_DEV_ERROR(MSG, AR_SERVICE_MSG_RELEASE_BUFFER, MSG_E_NULL_PTR);
 //        Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_RELEASE_BUFFER);
@@ -214,7 +213,7 @@ Knx_StatusType KnxMsg_ClearBuffer(KnxMsg_BufferPtr ptr)
 
 //    Dbg_TraceFunctionEntry(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_CLEAR_BUFFER);
 
-    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_CLEAR_BUFFER);
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_ALLOCATE_BUFFER, KNX_E_NOT_OK);
     if (ptr == NULL) {
         KNX_RAISE_DEV_ERROR(MSG, AR_SERVICE_MSG_CLEAR_BUFFER, MSG_E_NULL_PTR);
 //        Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_CLEAR_BUFFER);
@@ -242,7 +241,7 @@ Knx_StatusType KnxMsg_Post(KnxMsg_BufferPtr ptr)
 
 //    Dbg_TraceFunctionEntry(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_POST);
 
-    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_POST, FALSE);
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_POST, KNX_E_NOT_OK);
 
     if ((buf_num = KnxMsg_GetBufferNumber(ptr)) == MSG_INVALID_BUFFER) {
         KNX_RAISE_DEV_ERROR(MSG, AR_SERVICE_MSG_POST, MSG_E_INVALID_BUFFER);
@@ -281,7 +280,7 @@ KnxMsg_BufferPtr KnxMsg_Get(uint8_t task)
     uint8_t qp;
 
 //    Dbg_TraceFunctionEntry(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_GET);
-    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_GET, FALSE);
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_GET, NULL);
 
     if ((task < 1) || (task > MSG_NUM_TASKS)) {
         KNX_RAISE_DEV_ERROR(MSG, AR_SERVICE_MSG_GET, MSG_E_INVALID_BUFFER);
@@ -327,7 +326,7 @@ uint8_t KnxMsg_GetLen(const KnxMsg_BufferPtr pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
 //    Dbg_TraceFunctionEntry(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_GET_LEN);
-    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_GET_LEN);
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_ALLOCATE_BUFFER, 0);
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_GET_LEN);
     return pBuffer->len;
 }
@@ -464,7 +463,7 @@ STATIC Knx_StatusType KnxMsg_ClearMessageBuffer(uint8_t buf_num)
     uint8_t * pb;
 
 //    Dbg_TraceFunctionEntry(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_CLEAR_MESSAGE_BUFFER);
-    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_CLEAR_MESSAGE_BUFFER);
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_ALLOCATE_BUFFER, KNX_E_NOT_OK);
 
     ptr = KnxMsg_GetBufferAddress(buf_num);
 
@@ -477,7 +476,7 @@ STATIC Knx_StatusType KnxMsg_ClearMessageBuffer(uint8_t buf_num)
     pb = (uint8_t *)ptr;
     pb++;
 
-    Utl_MemSet(pb, '\0', (uint16_t)sizeof(KnxMsg_Buffer) - (uint16_t)1);   
+    Utl_MemSet(pb, '\0', (uint16_t)sizeof(KnxMsg_Buffer) - (uint16_t)1);
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_CLEAR_MESSAGE_BUFFER);
     return KNX_E_OK;
 }

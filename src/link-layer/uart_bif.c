@@ -28,7 +28,7 @@
  *
  */
 
-#include "link-layer\uart_bif.h"
+#include "link-layer/uart_bif.h"
 #include "knx_debug.h"
 #include "knx_et.h"
 #include "knx_ffi.h"
@@ -178,7 +178,7 @@ STATIC KnxLL_ReceiverStageType KnxLL_ReceiverStage;
 STATIC uint8_t KnxLL_RunningFCB;
 STATIC KnxLL_LocalConfirmationType KnxLL_LocalConfirmation;
 
-STATIC KnxLL_Repeated = FALSE;
+STATIC boolean KnxLL_Repeated = FALSE;
 
 
 KNX_IMPLEMENT_MODULE_STATE_VAR(UART_BIF);
@@ -248,6 +248,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
                     DBG_PRINTLN("U_State_Res");
                     break;
                 default:
+                    printf("Unexpected octet: 0x%02x\n", octet);
                     break;
                 }
             }
@@ -373,7 +374,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_L_Data_Req(void)
 #else
 STATIC void Disp_L_Data_Req(void)
 #endif /* KSTACK_MEMORY_MAPPING */
-{
+{
     uint8_t chk;
 
     KnxMsg_SetFrameType(KnxMsg_ScratchBufferPtr, KNX_FRAME_STANDARD);
@@ -390,7 +391,7 @@ STATIC void Disp_L_Data_Req(void)
     Dbg_DumpHex(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
 
     KnxLL_WriteFrame(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
-    KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
+    (void)KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
 }
 
 
@@ -408,8 +409,8 @@ STATIC void Disp_L_PollData_Req(void)
 
 STATIC void KnxLl_Data_Con(Knx_StatusType status)
 {
-    KnxMsg_Buffer * txBuffer;
-    uint8_t length;
+    //KnxMsg_Buffer * txBuffer;
+    uint16_t length;
 
     if (KnxMsg_AllocateBuffer(&txBuffer) == KNX_E_OK) {
         txBuffer->service = KNX_SERVICE_L_DATA_CON;
@@ -438,13 +439,13 @@ boolean KnxLL_IsBusy(void)
 void KnxLL_DataStandard_Ind(uint8_t const * frame)
 {
     KnxMsg_BufferPtr pBuffer;
-    uint8_t length;
+    uint8_t length = 0x00;
 
     if (KnxLL_Repeated) {
         return;     /* Don't route duplicates for now. */
     }
 
-    KnxMsg_AllocateBuffer(&pBuffer);
+    (void)KnxMsg_AllocateBuffer(&pBuffer);
 
     if (pBuffer != (KnxMsg_BufferPtr)NULL) {
         pBuffer->service = KNX_SERVICE_L_DATA_IND;
@@ -565,7 +566,7 @@ void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length)
     }
     buffer[idx] = U_L_DATAEND_REQ | (idx >> 1);
     buffer[idx + 1] = checksum;
-    Port_WriteToBusInterface(buffer, idx + 2);
+    (void)Port_WriteToBusInterface(buffer, idx + 2);
     KnxLL_Expect(0x00, 0x00, length + 1);
     KnxLL_State = KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION;
     KnxLL_ReceiverIndex = (uint8_t)0x00;
@@ -672,7 +673,7 @@ void U_Reset_req(void)
 {
     DBG_PRINTLN("U_Reset_req");
     KnxLL_Buffer[0] = U_RESET_REQ;
-    KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
+    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
     KnxLL_Expect(U_RESET_IND, 0xff, 1);
 }
 
@@ -680,7 +681,7 @@ void U_State_req(void)
 {
     DBG_PRINTLN("U_State_req");
     KnxLL_Buffer[0] = U_STATE_REQ;
-    KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
+    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
     KnxLL_Expect(U_STATE_IND, 0x07, 1);
 }
 

@@ -38,12 +38,12 @@ extern "C"
  *
  */
 #if __STDC_VERSION__ >= 199901L
-//typedef _Bool boolean;
+typedef _Bool boolean;
 #else
-//typedef unsigned char boolean;
+typedef unsigned char boolean;
 //#include <stdbool.h>
 //typedef _Bool unsigned char;
-typedef _Bool boolean;
+//typedef _Bool boolean;
 #endif
 
 typedef float float32;
@@ -98,7 +98,7 @@ typedef enum tagKnx_FrameTypeType {
 } Knx_FrameTypeType;
 
 typedef enum tagKnx_ObjectType {
-    KNX_OT_UINT1, 
+    KNX_OT_UINT1,
     KNX_OT_UINT2,
     KNX_OT_UINT3,
     KNX_OT_UINT4,

@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -180,19 +180,21 @@ FUNC(Tmr_TickType, KSTACK_CODE) KnxTmr_GetSystemTime(Tmr_ResolutionType base)
 Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    Tmr_TickType t;
+    Tmr_TickType timerValue;
 
     TMR_LOCK_MAIN_TIMER();
 
     if (base == TMR_RESOLUTION_MS) {
-        t = Tmr_SysMsCounter;
+        timerValue = Tmr_SysMsCounter;
     } else if (base == TMR_RESOLUTION_SEC) {
-        t = Tmr_SysSecondCounter;
+        timerValue = Tmr_SysSecondCounter;
+    } else {
+        ASSERT(FALSE);
     }
 
     TMR_UNLOCK_MAIN_TIMER();
 
-    return t;
+    return timerValue;
 }
 
 

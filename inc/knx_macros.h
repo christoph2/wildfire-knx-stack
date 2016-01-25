@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -183,7 +183,7 @@ while (!(cond))                                     \
     _BEGIN_BLOCK                                    \
     _END_BLOCK
 
-/* todo: 'Assert.h', 'ASSERT_DBG','ASSERT_RT', Assertion-Handler!!! */                    
+/* todo: 'Assert.h', 'ASSERT_DBG','ASSERT_RT', Assertion-Handler!!! */
 #if !defined(NDEBUG)
 #define ASSERT(cond)                                \
     _BEGIN_BLOCK                                    \

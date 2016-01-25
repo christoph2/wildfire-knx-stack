@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -48,24 +48,24 @@ extern "C"
  */
 
 /* RunError-Codes. */
-#define KNX_RUNERROR_SYS3_ERR   ((uint8_t)0x40)           /* internal system error (not for each default MCB [ROM] an. */
-                                                        /* MCB [EEPROM] exists with the same start address). */
-#define KNX_RUNERROR_SYS2_ERR   ((uint8_t)0x20)           /* internal system error (stuck/ overheat detection). */
-#define KNX_RUNERROR_OBJ_ERR    ((uint8_t)0x10)           /* RAM flag table error (*PTR not in ZPAGE range). */
-#define KNX_RUNERROR_STK_OVL    ((uint8_t)0x08)           /* stack overflow was detected. */
-#define KNX_RUNERROR_EEPROM_ERR ((uint8_t)0x04)           /* EEPROM check detected an CRC error. */
-#define KNX_RUNERROR_SYS1_ERR   ((uint8_t)0x02)           /* internal system error (parity bit in SystemState is corrupt). */
-#define KNX_RUNERROR_SYS0_ERR   ((uint8_t)0x01)           /* internal system error (msg buffer offset corrupt). */
+#define KNX_RUNERROR_SYS3_ERR   ((uint8_t)0x40) /* internal system error (not for each default MCB [ROM] an. */
+                                                /* MCB [EEPROM] exists with the same start address). */
+#define KNX_RUNERROR_SYS2_ERR   ((uint8_t)0x20) /* internal system error (stuck/ overheat detection). */
+#define KNX_RUNERROR_OBJ_ERR    ((uint8_t)0x10) /* RAM flag table error (*PTR not in ZPAGE range). */
+#define KNX_RUNERROR_STK_OVL    ((uint8_t)0x08) /* stack overflow was detected. */
+#define KNX_RUNERROR_EEPROM_ERR ((uint8_t)0x04) /* EEPROM check detected an CRC error. */
+#define KNX_RUNERROR_SYS1_ERR   ((uint8_t)0x02) /* internal system error (parity bit in SystemState is corrupt). */
+#define KNX_RUNERROR_SYS0_ERR   ((uint8_t)0x01) /* internal system error (msg buffer offset corrupt). */
 
 /*
 ** Config-Byte / Object-Descriptor.
 */
-#define KNX_OBJ_UPDATE_ENABLE   ((uint8_t)0x80)               /* GroupValueRead()_Res wird verarbeitet - nur Mask 0020h, 0021h. */
-#define KNX_OBJ_TRANSMIT_ENABLE ((uint8_t)0x40)               /* Lese- und Schreib-Anforderungen (Requests) vom App.-Layer werden verarbeitet. */
-#define KNX_OBJ_EEPROM_VALUE    ((uint8_t)0x20)               /* Objektwert steht im EEPROM (statt im RAM). */
-#define KNX_OBJ_WRITE_ENABLE    ((uint8_t)0x10)               /* Objektwert kann über den Bus geschrieben werden. */
-#define KNX_OBJ_READ_ENABLE     ((uint8_t)0x08)               /* Objektwert kann über den Bus gelesen werden. */
-#define KNX_OBJ_COMM_ENABLE     ((uint8_t)0x04)               /* "Mainswitch" for Communikation. */
+#define KNX_OBJ_UPDATE_ENABLE   ((uint8_t)0x80) /* GroupValueRead()_Res wird verarbeitet - nur Mask 0020h, 0021h. */
+#define KNX_OBJ_TRANSMIT_ENABLE ((uint8_t)0x40) /* Lese- und Schreib-Anforderungen (Requests) vom App.-Layer werden verarbeitet. */
+#define KNX_OBJ_EEPROM_VALUE    ((uint8_t)0x20) /* Objektwert steht im EEPROM (statt im RAM). */
+#define KNX_OBJ_WRITE_ENABLE    ((uint8_t)0x10) /* Objektwert kann über den Bus geschrieben werden. */
+#define KNX_OBJ_READ_ENABLE     ((uint8_t)0x08) /* Objektwert kann über den Bus gelesen werden. */
+#define KNX_OBJ_COMM_ENABLE     ((uint8_t)0x04) /* "Mainswitch" for Communikation. */
 
 /*
 **  Config-Byte / Priorities.
@@ -113,7 +113,7 @@ extern "C"
  */
 #define KNX_BIF_TPUART_1                        (0)
 #define KNX_BIF_TPUART_2                        (1)
-#define KNX_BIF_NCN5120                  (2)
+#define KNX_BIF_NCN5120                         (2)
 
 
 /** Power supply of controller module.
