@@ -34,7 +34,7 @@ extern "C"
 /*
 ** Global variables.
 */
-extern KnxMsg_BufferPtr KnxMsg_ScratchBufferPtr;
+extern KnxMsg_Buffer * KnxMsg_ScratchBufferPtr;
 
 /*
 ** Global functions.

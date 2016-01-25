@@ -63,7 +63,7 @@ const uint8_t KNX_PDT_LEN_TAB[32] = {
 #define PH_PTR_TO_VAL_FN    ((uint8_t)0x01)
 #define PH_PTR_TO_ARRAY     ((uint8_t)0x03)
 
-typedef void (*PROPERTY_FUNC)(KnxMsg_BufferPtr pBuffer, boolean write);
+typedef void (*PROPERTY_FUNC)(KnxMsg_Buffer * pBuffer, boolean write);
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) ios_test(void);
@@ -79,9 +79,9 @@ void ios_test(void);
 #endif /* KSTACK_MEMORY_MAPPING */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) IOS_Dispatch(const KnxMsg_BufferPtr pBuffer, uint8_t service, boolean connected)
+FUNC(void, KSTACK_CODE) IOS_Dispatch(const KnxMsg_Buffer * pBuffer, uint8_t service, boolean connected)
 #else
-void IOS_Dispatch(const KnxMsg_BufferPtr pBuffer, uint8_t service, boolean connected)
+void IOS_Dispatch(const KnxMsg_Buffer * pBuffer, uint8_t service, boolean connected)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_t data[MAX_PROP_DATA_LEN];
@@ -97,7 +97,7 @@ void IOS_Dispatch(const KnxMsg_BufferPtr pBuffer, uint8_t service, boolean conne
     Knx_AddressType dest;
     uint8_t ctl;
 
-    if (pBuffer == (KnxMsg_BufferPtr)NULL) {
+    if (pBuffer == (KnxMsg_Buffer *)NULL) {
         return;
     }
 

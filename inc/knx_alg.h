@@ -66,15 +66,15 @@ FUNC(void, KSTACK_CODE)     KnxALG_SetRAMFlags(uint16_t objectNr, uint8_t flags)
 FUNC(uint8_t, KSTACK_CODE)    KnxALG_GetRAMFlags(uint16_t objectNr);
 FUNC(uint8_t *, KSTACK_CODE)  KnxALG_GetRAMFlagPointer(void);
 
-FUNC(void, KSTACK_CODE)     KnxALG_UpdateAssociatedASAPs(KnxMsg_BufferPtr pBuffer, uint8_t testFlags);
+FUNC(void, KSTACK_CODE)     KnxALG_UpdateAssociatedASAPs(KnxMsg_Buffer * pBuffer, uint8_t testFlags);
 
 FUNC(void, KSTACK_CODE)     KnxALG_Task(void);
 FUNC(void, KSTACK_CODE)     KnxALG_Init(void);
 
 /* Group-Services. */
-FUNC(void, KSTACK_CODE)     A_GroupValue_Read_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source,
+FUNC(void, KSTACK_CODE)     A_GroupValue_Read_Req(KnxMsg_Buffer * pBuffer, Knx_AddressType source,
                                                   Knx_AddressType dest, uint8_t prio);
-FUNC(void, KSTACK_CODE)     A_GroupValue_Write_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source,
+FUNC(void, KSTACK_CODE)     A_GroupValue_Write_Req(KnxMsg_Buffer * pBuffer, Knx_AddressType source,
                                                    Knx_AddressType dest, Knx_PriorityType prio,
                                                    P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) data, uint8_t len);
 #else
@@ -84,15 +84,15 @@ void    KnxALG_SetRAMFlags(uint16_t objectNr, uint8_t flags);
 uint8_t   KnxALG_GetRAMFlags(uint16_t objectNr);
 uint8_t * KnxALG_GetRAMFlagPointer(void);
 
-void KnxALG_UpdateAssociatedASAPs(KnxMsg_BufferPtr pBuffer, uint8_t testFlags);
+void KnxALG_UpdateAssociatedASAPs(KnxMsg_Buffer * pBuffer, uint8_t testFlags);
 
 void    KnxALG_Task(void);
 void    KnxALG_Init(void);
 
 
 /* Group-Services. */
-void    A_GroupValue_Read_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t prio);
-void    A_GroupValue_Write_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
+void    A_GroupValue_Read_Req(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest, uint8_t prio);
+void    A_GroupValue_Write_Req(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
                                uint8_t * data,
                                uint8_t len);
 

@@ -25,9 +25,9 @@
 #include "knx_debug.h"
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(void, KSTACK_CODE) NL_CheckRoutingCount(KnxMsg_BufferPtr pBuffer);
+STATIC FUNC(void, KSTACK_CODE) NL_CheckRoutingCount(KnxMsg_Buffer * pBuffer);
 #else
-STATIC void KnxNl_CheckRoutingCount(KnxMsg_BufferPtr pBuffer);
+STATIC void KnxNl_CheckRoutingCount(KnxMsg_Buffer * pBuffer);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -215,9 +215,9 @@ STATIC void N_PollData_Req(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-STATIC FUNC(void, KSTACK_CODE) KnxNl_CheckRoutingCount(KnxMsg_BufferPtr pBuffer)
+STATIC FUNC(void, KSTACK_CODE) KnxNl_CheckRoutingCount(KnxMsg_Buffer * pBuffer)
 #else
-STATIC void KnxNl_CheckRoutingCount(KnxMsg_BufferPtr pBuffer)
+STATIC void KnxNl_CheckRoutingCount(KnxMsg_Buffer * pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (KnxMsg_GetRoutingCount(pBuffer) == MSG_NO_ROUTING_CTRL) {

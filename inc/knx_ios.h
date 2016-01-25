@@ -228,14 +228,14 @@ FUNC(Knx_PropertyType const *, KSTACK_CODE)         IOS_GetPropertyByIndex(
     P2CONST(Knx_InterfaceObjectType, AUTOMATIC, KSTACK_APPL_DATA) pobj,
     uint16_t prop_index
     );
-FUNC(void, KSTACK_CODE)                 IOS_Dispatch(const KnxMsg_BufferPtr pBuffer,
+FUNC(void, KSTACK_CODE)                 IOS_Dispatch(const KnxMsg_Buffer * pBuffer,
                                                      uint8_t service, boolean connected
                                                      );
 #else
 Knx_InterfaceObjectType const * IOS_GetInterfaceObjectByIndex(uint16_t object_index);
 Knx_PropertyType const *        IOS_FindProperty(Knx_InterfaceObjectType const * pobj, uint16_t prop_id);
 Knx_PropertyType const *        IOS_GetPropertyByIndex(Knx_InterfaceObjectType const * pobj, uint16_t prop_index);
-void                            IOS_Dispatch(const KnxMsg_BufferPtr pBuffer, uint8_t service, boolean connected);
+void                            IOS_Dispatch(const KnxMsg_Buffer * pBuffer, uint8_t service, boolean connected);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */

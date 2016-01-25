@@ -27,15 +27,15 @@
 ** Function prototypes.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)     NWPS_Dispatch(KnxMsg_BufferPtr pBuffer, uint8_t service /*,boolean connected*/);
-FUNC(boolean, KSTACK_CODE) NWPS_GroupAddressCheck(KnxMsg_BufferPtr pBuffer);
-FUNC(boolean, KSTACK_CODE) NWPS_FunctionalBlockScan(KnxMsg_BufferPtr pBuffer);
-FUNC(boolean, KSTACK_CODE) NWPS_GetSerialNumber(KnxMsg_BufferPtr pBuffer);
+FUNC(void, KSTACK_CODE)     NWPS_Dispatch(KnxMsg_Buffer * pBuffer, uint8_t service /*,boolean connected*/);
+FUNC(boolean, KSTACK_CODE) NWPS_GroupAddressCheck(KnxMsg_Buffer * pBuffer);
+FUNC(boolean, KSTACK_CODE) NWPS_FunctionalBlockScan(KnxMsg_Buffer * pBuffer);
+FUNC(boolean, KSTACK_CODE) NWPS_GetSerialNumber(KnxMsg_Buffer * pBuffer);
 #else
-void    NWPS_Dispatch(KnxMsg_BufferPtr pBuffer, uint8_t service /*,boolean connected*/);
-boolean NWPS_GroupAddressCheck(KnxMsg_BufferPtr pBuffer);
-boolean NWPS_FunctionalBlockScan(KnxMsg_BufferPtr pBuffer);
-boolean NWPS_GetSerialNumber(KnxMsg_BufferPtr pBuffer);
+void    NWPS_Dispatch(KnxMsg_Buffer * pBuffer, uint8_t service /*,boolean connected*/);
+boolean NWPS_GroupAddressCheck(KnxMsg_Buffer * pBuffer);
+boolean NWPS_FunctionalBlockScan(KnxMsg_Buffer * pBuffer);
+boolean NWPS_GetSerialNumber(KnxMsg_Buffer * pBuffer);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -97,7 +97,7 @@ boolean NWPS_GetSerialNumber(KnxMsg_BufferPtr pBuffer);
 /*
 ** Local types.
 */
-typedef boolean (*NWPS_FUNC)(KnxMsg_BufferPtr pBuffer);
+typedef boolean (*NWPS_FUNC)(KnxMsg_Buffer * pBuffer);
 
 typedef struct tagNWPSFunctions {
     uint16_t      objectTypeFrom;
@@ -126,9 +126,9 @@ STATIC NWPSFunctions NWPSReadFunctions[] = {
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) NWPS_Dispatch(KnxMsg_BufferPtr pBuffer, uint8_t service /*,boolean connected*/)
+FUNC(void, KSTACK_CODE) NWPS_Dispatch(KnxMsg_Buffer * pBuffer, uint8_t service /*,boolean connected*/)
 #else
-void NWPS_Dispatch(KnxMsg_BufferPtr pBuffer, uint8_t service /*,boolean connected*/)
+void NWPS_Dispatch(KnxMsg_Buffer * pBuffer, uint8_t service /*,boolean connected*/)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KNX_StandardFrameRefType pmsg;
@@ -154,9 +154,9 @@ void NWPS_Dispatch(KnxMsg_BufferPtr pBuffer, uint8_t service /*,boolean connecte
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) NWPS_GroupAddressCheck(KnxMsg_BufferPtr pBuffer)
+FUNC(boolean, KSTACK_CODE) NWPS_GroupAddressCheck(KnxMsg_Buffer * pBuffer)
 #else
-boolean NWPS_GroupAddressCheck(KnxMsg_BufferPtr pBuffer)
+boolean NWPS_GroupAddressCheck(KnxMsg_Buffer * pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return TRUE;
@@ -164,9 +164,9 @@ boolean NWPS_GroupAddressCheck(KnxMsg_BufferPtr pBuffer)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) NWPS_FunctionalBlockScan(KnxMsg_BufferPtr pBuffer)
+FUNC(boolean, KSTACK_CODE) NWPS_FunctionalBlockScan(KnxMsg_Buffer * pBuffer)
 #else
-boolean NWPS_FunctionalBlockScan(KnxMsg_BufferPtr pBuffer)
+boolean NWPS_FunctionalBlockScan(KnxMsg_Buffer * pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return TRUE;
@@ -174,9 +174,9 @@ boolean NWPS_FunctionalBlockScan(KnxMsg_BufferPtr pBuffer)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE) NWPS_GetSerialNumber(KnxMsg_BufferPtr pBuffer)
+FUNC(boolean, KSTACK_CODE) NWPS_GetSerialNumber(KnxMsg_Buffer * pBuffer)
 #else
-boolean NWPS_GetSerialNumber(KnxMsg_BufferPtr pBuffer)
+boolean NWPS_GetSerialNumber(KnxMsg_Buffer * pBuffer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     return TRUE;

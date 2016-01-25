@@ -56,8 +56,8 @@ STATIC  FUNC(void, KSTACK_CODE) A0(void), A1(void), A2(void), A3(void), A4(void)
 STATIC  FUNC(void, KSTACK_CODE) A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(void);
 
 
-FUNC(void, KSTACK_CODE) T_Disconnect_Ind(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
-FUNC(void, KSTACK_CODE) T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
+FUNC(void, KSTACK_CODE) T_Disconnect_Ind(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest);
+FUNC(void, KSTACK_CODE) T_Disconnect_Con(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest);
 #else
 STATIC void KnxTlc_StartConnectionTimeoutTimer(void);
 STATIC void KnxTlc_RestartConnectionTimeoutTimer(void);
@@ -75,8 +75,8 @@ STATIC uint8_t KnxTlc_Event_Undefined(void);
 STATIC void A0(void), A1(void), A2(void), A3(void), A4(void), A5(void), A6(void), A7(void), A8(void);
 STATIC void A8b(void), A9(void), A10(void), A11(void), A12(void), A13(void), A14(void), A14b(void), A15(void);
 
-void T_Disconnect_Ind(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
-void T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest);
+void T_Disconnect_Ind(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest);
+void T_Disconnect_Con(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest);
 #endif /* KSTACK_MEMORY_MAPPING */
 
 /*
@@ -301,9 +301,9 @@ void KnxTlc_SetState(KnxTlc_StateType State)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) T_Disconnect_Ind(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
+FUNC(void, KSTACK_CODE) T_Disconnect_Ind(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest)
 #else
-void T_Disconnect_Ind(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
+void T_Disconnect_Ind(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMsg_SetTPCI(pBuffer, KNX_TPCI_DISCONNECT_REQ_PDU);
@@ -321,9 +321,9 @@ void T_Disconnect_Ind(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_Addr
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
+FUNC(void, KSTACK_CODE) T_Disconnect_Con(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest)
 #else
-void T_Disconnect_Con(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest)
+void T_Disconnect_Con(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMsg_SetTPCI(pBuffer, KNX_TPCI_DISCONNECT_REQ_PDU);
@@ -435,7 +435,7 @@ STATIC void A0(void)
 {
     /* do nothing. */
     DBG_PRINTLN("A0()");
-    if (KnxMsg_ScratchBufferPtr != (KnxMsg_BufferPtr)NULL) {
+    if (KnxMsg_ScratchBufferPtr != (KnxMsg_Buffer *)NULL) {
         KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
     }
 }
@@ -468,7 +468,7 @@ STATIC FUNC(void, KSTACK_CODE) A2(void)
 STATIC void A2(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_BufferPtr pBuffer;
+    KnxMsg_Buffer * pBuffer;
 
     DBG_PRINTLN("A2()");
 
@@ -476,7 +476,7 @@ STATIC void A2(void)
 /*      connection_address, sequence =SeqNoRcv to the network layer (remote device).  */
     KnxMsg_AllocateBuffer(&pBuffer);
 
-    if (pBuffer != (KnxMsg_BufferPtr)NULL) {
+    if (pBuffer != (KnxMsg_Buffer *)NULL) {
         T_Ack_Req(pBuffer, KnxTlc_GetSourceAddress(), /* KnxADR_GetPhysAddr(), */ KnxTlc_GetConnectionAddress(), KnxTlc_GetSequenceNumberReceived());
         KnxTlc_SetSequenceNumberReceived(KnxTlc_GetSequenceNumberReceived() + 1);
     } else {
@@ -557,7 +557,7 @@ STATIC FUNC(void, KSTACK_CODE) A6(void)
 STATIC void A6(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_BufferPtr pBuffer;
+    KnxMsg_Buffer * pBuffer;
 
 /*
 **      Send a N_Data_Individual.req with T_DISCONNECT_REQ_PDU, priority = SYSTEM,
@@ -568,7 +568,7 @@ STATIC void A6(void)
 
     KnxMsg_AllocateBuffer(&pBuffer);
 
-    if (pBuffer != (KnxMsg_BufferPtr)NULL) {
+    if (pBuffer != (KnxMsg_Buffer *)NULL) {
         T_Disconnect_Req(pBuffer, KnxTlc_GetSourceAddress(), /* KnxADR_GetPhysAddr(), */ KnxTlc_GetConnectionAddress());
     } else {
         /* Errorhandling. */
@@ -577,7 +577,7 @@ STATIC void A6(void)
     /* Send a T_Disconnect.ind to the user. */
     /* Handled by callback. */
 //#if 0
-    if (KnxMsg_ScratchBufferPtr == (KnxMsg_BufferPtr)NULL) {
+    if (KnxMsg_ScratchBufferPtr == (KnxMsg_Buffer *)NULL) {
         KnxMsg_AllocateBuffer(&KnxMsg_ScratchBufferPtr);
     } else {
         (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);
@@ -664,7 +664,7 @@ STATIC void A9(void)  /* only local-user (Client only). */
 
     DBG_PRINTLN("A9()");
 
-    if (KnxMsg_ScratchBufferPtr == (KnxMsg_BufferPtr)NULL) {
+    if (KnxMsg_ScratchBufferPtr == (KnxMsg_Buffer *)NULL) {
         KnxMsg_AllocateBuffer(&KnxMsg_ScratchBufferPtr);
     } else {
         (void)KnxMsg_ClearBuffer(KnxMsg_ScratchBufferPtr);

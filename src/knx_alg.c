@@ -29,7 +29,7 @@
 #include "knx_alg.h"
 
 /*
-**	Local function prototypes.
+**      Local function prototypes.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
 STATIC  FUNC(void, KSTACK_CODE) Disp_A_DataGroupReq(void), Disp_A_PollDataReq(void), Disp_T_PollDataCon(void);
@@ -257,10 +257,10 @@ void KnxALG_Init(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_GroupValue_Read_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
+FUNC(void, KSTACK_CODE) A_GroupValue_Read_Req(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest,
                                               Knx_PriorityType prio)
 #else
-void A_GroupValue_Read_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio)
+void A_GroupValue_Read_Req(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     KnxMsg_SetAPCI(pBuffer, APCI_GROUP_VALUE_READ);
@@ -276,13 +276,13 @@ void A_GroupValue_Read_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) A_GroupValue_Write_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest,
+FUNC(void, KSTACK_CODE) A_GroupValue_Write_Req(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest,
                                                Knx_PriorityType prio,
                                                P2VAR(uint8_t, AUTOMATIC,
                                                      KSTACK_APPL_DATA) data,
                                                uint8_t len)
 #else
-void A_GroupValue_Write_Req(KnxMsg_BufferPtr pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
+void A_GroupValue_Write_Req(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_AddressType dest, Knx_PriorityType prio,
                             uint8_t * data,
                             uint8_t len)
 #endif /* KSTACK_MEMORY_MAPPING */
@@ -307,7 +307,7 @@ void KnxALG_PollCycle(void)
 {
     uint8_t               idx;
     uint8_t               flags;
-    KnxMsg_BufferPtr    pBuffer;
+    KnxMsg_Buffer *    pBuffer;
     Knx_AddressType     source;
     Knx_AddressType     dest;
     uint16_t              assoc;
@@ -347,7 +347,7 @@ void KnxALG_PollCycle(void)
 
             KnxMsg_AllocateBuffer(&pBuffer);
 
-            if (pBuffer == (KnxMsg_BufferPtr)NULL) {
+            if (pBuffer == (KnxMsg_Buffer *)NULL) {
                 /* no Message-Buffer available. */
                 return;
             }
@@ -440,9 +440,9 @@ uint8_t * KnxALG_GetRAMFlagPointer(void)
 }
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxALG_UpdateAssociatedASAPs(KnxMsg_BufferPtr pBuffer, uint8_t testFlags)
+FUNC(void, KSTACK_CODE) KnxALG_UpdateAssociatedASAPs(KnxMsg_Buffer * pBuffer, uint8_t testFlags)
 #else
-void KnxALG_UpdateAssociatedASAPs(KnxMsg_BufferPtr pBuffer, uint8_t testFlags)
+void KnxALG_UpdateAssociatedASAPs(KnxMsg_Buffer * pBuffer, uint8_t testFlags)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint16_t      ca;

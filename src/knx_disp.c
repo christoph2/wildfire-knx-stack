@@ -26,7 +26,7 @@
 /*
 ** Global variables.
 */
-KnxMsg_BufferPtr KnxMsg_ScratchBufferPtr;
+KnxMsg_Buffer * KnxMsg_ScratchBufferPtr;
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
     #define KSTACK_START_SEC_CODE
@@ -49,7 +49,7 @@ void KnxDisp_DispatchLayer(const uint8_t LayerID, const Knx_LayerServicesType * 
     do {
         KnxMsg_ScratchBufferPtr = KnxMsg_Get(LayerID);
 
-        if (KnxMsg_ScratchBufferPtr != (KnxMsg_BufferPtr)NULL) {
+        if (KnxMsg_ScratchBufferPtr != (KnxMsg_Buffer *)NULL) {
             entry = KnxMsg_ScratchBufferPtr->service - ServiceTable->LayerOffset;
 
             if (entry < ServiceTable->NumServices) {
@@ -59,7 +59,7 @@ void KnxDisp_DispatchLayer(const uint8_t LayerID, const Knx_LayerServicesType * 
                 KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
             }
         }
-    } while (KnxMsg_ScratchBufferPtr != (KnxMsg_BufferPtr)NULL);
+    } while (KnxMsg_ScratchBufferPtr != (KnxMsg_Buffer *)NULL);
 }
 
 
