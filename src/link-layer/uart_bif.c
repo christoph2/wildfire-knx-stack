@@ -1,7 +1,7 @@
 /*
  *   KONNEX/EIB-Protocol-Stack.
  *
- *  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+ *  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
  *                                       cpu12.gems@googlemail.com>
  *
  *   All Rights Reserved
@@ -48,20 +48,18 @@
 /*
 ** Offsets into KNX Frame.
 */
-#define OFFS_CTRL           (0)
-#define OFFS_SOURCE_ADDR_H  (1)
-#define OFFS_SOURCE_ADDR_L  (2)
-#define OFFS_DEST_ADDR_H    (3)
-#define OFFS_DEST_ADDR_L    (4)
-#define OFFS_NPCI           (5)
-#define OFFS_TPCI           (6)
-#define OFFS_APCI           (7)
+#define OFFS_CTRL                   ((uint8_t)0)
+#define OFFS_SOURCE_ADDR_H          ((uint8_t)1)
+#define OFFS_SOURCE_ADDR_L          ((uint8_t)2)
+#define OFFS_DEST_ADDR_H            ((uint8_t)3)
+#define OFFS_DEST_ADDR_L            ((uint8_t)4)
+#define OFFS_NPCI                   ((uint8_t)5)
+#define OFFS_TPCI                   ((uint8_t)6)
+#define OFFS_APCI                   ((uint8_t)7)
 
-
-#define ACK_NACK            (4)
-#define ACK_BUSY            (2)
-#define ACK_ADDRESSED       (1)
-
+#define ACK_NACK                    ((uint8_t)4)
+#define ACK_BUSY                    ((uint8_t)2)
+#define ACK_ADDRESSED               ((uint8_t)1)
 
 #define ADDRESS_TYPE_INDIVIDUAL     ((uint8_t) 0x00)
 #define ADDRESS_TYPE_MULTICAST      ((uint8_t) 0x80)
@@ -204,7 +202,7 @@ void KnxLL_Init(void)
     KnxLL_RunningFCB = (uint8_t)0x00;
     KnxLL_LocalConfirmation = KNX_LL_CONF_NEGATIVE;
     KnxLL_Repeated = FALSE;
-    Utl_MemSet(&KnxLL_Expectation, '\x00', sizeof(KnxLL_ExpectationType));
+    Utl_MemSet(&KnxLL_Expectation, (uint8_t)'\x00', (uint16_t)sizeof(KnxLL_ExpectationType));
 }
 
 
@@ -216,7 +214,7 @@ void KnxLL_TimeoutCB(void)
 {
     DBG_PRINTLN("L2 TIMEOUT.");
     KnxLL_State = KNX_LL_STATE_TIMED_OUT;
-    KnxLL_FeedReceiver(0x00);
+    KnxLL_FeedReceiver((uint8_t)0x00);
 }
 
 
@@ -291,7 +289,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
         TMR_START_DL_TIMER();
         if (KnxLL_ReceiverStage == KNX_LL_RECEIVER_STAGE_HEADER) {
             if (KnxLL_ReceiverIndex == OFFS_NPCI) {
-                KnxLL_Expectation.ExpectedByteCount = (octet & 0x0f) + 2;
+                KnxLL_Expectation.ExpectedByteCount = (uint8_t)((octet & 0x0f) + 2);
                 KnxLL_ReceiverStage = KNX_LL_RECEIVER_STAGE_TRAILER;
             } else if (KnxLL_ReceiverIndex == OFFS_DEST_ADDR_H) {
                 if (KnxLL_IsAddressed(KNX_LL_ADDRESS_TYPE(), KNX_LL_DESTINATION_ADDRESS())) {
@@ -323,7 +321,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
             //printf("CTRL[%02x]\n", octet);
             KnxLL_State = KNX_LL_STATE_AWAITING_RECEIPTION; /* TODO: Distiguish Standard/Extendend Frames */
             KnxLL_ReceiverStage = KNX_LL_RECEIVER_STAGE_HEADER;
-            KnxLL_ReceiverIndex = 0;
+            KnxLL_ReceiverIndex = (uint8_t)0;
             KnxLL_RunningFCB = (uint8_t)0xff ^ octet;
             KnxLL_Buffer[KnxLL_ReceiverIndex] = octet;
             KnxLL_Repeated = (octet & 0x20) == 0x00;
@@ -438,8 +436,8 @@ boolean KnxLL_IsBusy(void)
 
 void KnxLL_DataStandard_Ind(uint8_t const * frame)
 {
-    KnxMsg_BufferPtr pBuffer;
-    uint8_t length = 0x00;
+    KnxMsg_Buffer * pBuffer;
+    uint8_t length = (uint8_t)0x00;
 
     if (KnxLL_Repeated) {
         return;     /* Don't route duplicates for now. */
@@ -447,12 +445,12 @@ void KnxLL_DataStandard_Ind(uint8_t const * frame)
 
     (void)KnxMsg_AllocateBuffer(&pBuffer);
 
-    if (pBuffer != (KnxMsg_BufferPtr)NULL) {
+    if (pBuffer != (KnxMsg_Buffer *)NULL) {
         pBuffer->service = KNX_SERVICE_L_DATA_IND;
 //        pBuffer->sap = tsap;
         pBuffer->len = length = (frame[5] & (uint8_t)0x0f) + (uint8_t)7;    // TODO: Refactor to function-like macro.
 
-        Utl_MemCopy((void *)pBuffer->msg, (void *)frame, length);
+        Utl_MemCopy((void *)pBuffer->msg, (void *)frame, (uint16_t)length);
         (void)KnxMsg_Post(pBuffer);
     }
 
@@ -509,7 +507,7 @@ STATIC boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxL
     }
     //KnxLL_State = KNX_LL_STATE_SENDING;
     KnxLL_State = desiredState;
-    result = (boolean)Port_WriteToBusInterface(frame, length);
+    result = (boolean)Port_WriteToBusInterface(frame, (uint16_t)length);
     PORT_UNLOCK_TASK_LEVEL();
     TMR_START_DL_TIMER();
     //KnxLL_State = desiredState;
@@ -538,7 +536,7 @@ STATIC uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length)
     uint8_t checksum = (uint8_t)0xff;
     uint8_t idx;
 
-    for (idx = 0; idx < length; ++idx) {
+    for (idx = (uint8_t)0; idx < length; ++idx) {
         checksum ^= frame[idx];
     }
 
@@ -560,14 +558,14 @@ void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length)
     checksum = KnxLL_Checksum(frame, length);
     buffer[0] = U_L_DATASTART_REQ;
     buffer[1] = frame[0];
-    for (idx = 2; idx < (length << 1); idx += 2) {
+    for (idx = (uint8_t)2; idx < (length << 1); idx += (uint8_t)2) {
         buffer[idx] = U_L_DATACONT_REQ | (idx >> 1);
         buffer[idx + 1] = frame[idx >> 1];
     }
     buffer[idx] = U_L_DATAEND_REQ | (idx >> 1);
     buffer[idx + 1] = checksum;
-    (void)Port_WriteToBusInterface(buffer, idx + 2);
-    KnxLL_Expect(0x00, 0x00, length + 1);
+    (void)Port_WriteToBusInterface((uint8_t *)buffer, (uint16_t)(idx + (uint8_t)2));
+    KnxLL_Expect((uint8_t)0x00, (uint8_t)0x00, length + (uint8_t)1);
     KnxLL_State = KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION;
     KnxLL_ReceiverIndex = (uint8_t)0x00;
     TMR_START_DL_TIMER();
@@ -583,7 +581,7 @@ void U_ActivateBusmon_req(void)
 {
     DBG_PRINTLN("U_ActivateBusmon_req");
     KnxLL_Buffer[0] = U_BUSMON_REQ;
-    KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
+    (void)KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, (uint8_t)1);
 }
 
 #if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
@@ -591,14 +589,14 @@ void U_ActivateBusyMode_req(void)
 {
     DBG_PRINTLN("U_ActivateBusyMode_req");
     KnxLL_Buffer[0] = U_SETBUSY_REQ;
-    KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
+    (void)KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, (uint8_t)1);
 }
 
 void U_ResetBusyMode_req(void)
 {
     DBG_PRINTLN("U_ResetBusyMode_req");
     KnxLL_Buffer[0] = U_QUITBUSY_REQ;
-    KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
+    (void)KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, (uint8_t)1);
 }
 #endif /* KNX_BUS_INTERFACE */
 
@@ -607,7 +605,7 @@ void U_ActivateBusyMode_req(void)
 {
     DBG_PRINTLN("U_ActivateBusyMode_req");
     KnxLL_Buffer[0] = U_ACTIVATEBUSYMODE_REQ;
-    KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
+    (void)KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, (uint8_t)1);
 }
 
 
@@ -615,7 +613,7 @@ void U_ResetBusyMode_req(void)
 {
     DBG_PRINTLN("U_ResetBusyMode_req");
     KnxLL_Buffer[0] = U_RESETBUSYMODE_REQ;
-    KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
+    (void)KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, (uint8_t)1);
 }
 
 void U_SetRepetition_req(uint8_t rst)
@@ -623,14 +621,14 @@ void U_SetRepetition_req(uint8_t rst)
     DBG_PRINTLN("U_SetRepetition_req");
     KnxLL_Buffer[0] = U_MXRSTCNT_REQ;
     KnxLL_Buffer[1] = rst;
-    KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 2);
+    (void)KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, (uint8_t)2);
 }
 
 void U_ActivateCRC_req(void)
 {
     DBG_PRINTLN("U_ActivateCRC_req");
     KnxLL_Buffer[0] = U_ACTIVATECRC_REQ;
-    KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
+    (void)KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, (uint8_t)1);
 }
 
 void U_SetAddress_req(uint16_t address)
@@ -639,7 +637,7 @@ void U_SetAddress_req(uint16_t address)
     KnxLL_Buffer[0] = U_SETADDRESS_REQ;
     KnxLL_Buffer[1] = KNX_HIBYTE(address);
     KnxLL_Buffer[2] = KNX_LOBYTE(address);
-    KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 3);
+    (void)KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, (uint8_t)3);
 }
 #endif /* KNX_BUS_INTERFACE */
 
@@ -649,9 +647,9 @@ void U_SetRepetition_req(uint8_t rst)
     DBG_PRINTLN("U_SetRepetition_req");
     KnxLL_Buffer[0] = U_SETREPETITION_REQ;
     KnxLL_Buffer[1] = rst;
-    KnxLL_Buffer[2] = 0x00; /* Dummy */
-    KnxLL_Buffer[3] = 0x00; /* Dummy */
-    KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 4);
+    KnxLL_Buffer[2] = (uint8_t)0x00; /* Dummy */
+    KnxLL_Buffer[3] = (uint8_t)0x00; /* Dummy */
+    (void)KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, (uint8_t)4);
 }
 #endif /* KNX_BUS_INTERFACE */
 
@@ -660,7 +658,7 @@ void U_Ackn_req(uint8_t what)
 
 //    DBG_PRINTLN("U_Ackn_req");
     KnxLL_Buffer[0] = U_ACKN_REQ | (what & 0x07);
-    KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 1);
+    (void)KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, (uint8_t)1);
 }
 
 /**
@@ -673,16 +671,16 @@ void U_Reset_req(void)
 {
     DBG_PRINTLN("U_Reset_req");
     KnxLL_Buffer[0] = U_RESET_REQ;
-    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
-    KnxLL_Expect(U_RESET_IND, 0xff, 1);
+    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, (uint8_t)1);
+    KnxLL_Expect(U_RESET_IND, (uint8_t)0xff, (uint8_t)1);
 }
 
 void U_State_req(void)
 {
     DBG_PRINTLN("U_State_req");
     KnxLL_Buffer[0] = U_STATE_REQ;
-    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
-    KnxLL_Expect(U_STATE_IND, 0x07, 1);
+    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, (uint8_t)1);
+    KnxLL_Expect(U_STATE_IND, (uint8_t)0x07, (uint8_t)1);
 }
 
 #if KNX_BUS_INTERFACE == KNX_BIF_TPUART_2
@@ -690,8 +688,8 @@ void U_ProductID_req(void)
 {
     DBG_PRINTLN("U_ProductID_req");
     KnxLL_Buffer[0] = U_PRODUCTID_REQUEST;
-    KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
-    KnxLL_Expect(0x00, 0x00, 1);    /* Expect any single byte value. */
+    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, (uint8_t)1);
+    KnxLL_Expect((uint8_t)0x00, (uint8_t)0x00, (uint8_t)1);    /* Expect any single byte value. */
 }
 #endif /* KNX_BUS_INTERFACE */
 
@@ -702,9 +700,9 @@ void U_SetAddress_req(uint16_t address) /* NB: TPUART2's SetAddress is unconfirm
     KnxLL_Buffer[0] = U_SETADDRESS_REQ;
     KnxLL_Buffer[1] = KNX_HIBYTE(address);
     KnxLL_Buffer[2] = KNX_LOBYTE(address);
-    KnxLL_Buffer[3] = 0x00; /* Dummy */
-    KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 4);
-    KnxLL_Expect(U_CONFIGURE_IND, 0x83, 1);
+    KnxLL_Buffer[3] = (uint8_t)0x00; /* Dummy */
+    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, (uint8_t)4);
+    KnxLL_Expect(U_CONFIGURE_IND, (uint8_t)0x83, (uint8_t)1);
 }
 #endif /* KNX_BUS_INTERFACE */
 
@@ -718,32 +716,32 @@ void U_SystemState_req(void)
 {
     DBG_PRINTLN("U_SystemState_req");
     KnxLL_Buffer[0] = U_SYSTEMSTAT_REQ;
-    KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 2);
-    KnxLL_Expect(U_SYSTEMSTAT_IND, 0xff, 2);
+    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, (uint8_t)2);
+    KnxLL_Expect(U_SYSTEMSTAT_IND, (uint8_t)0xff, (uint8_t)2);
 }
 
 void U_StopMode_req(void)
 {
     DBG_PRINTLN("U_StopMode_req");
     KnxLL_Buffer[0] = U_STOPMODE_REQ;
-    KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
-    KnxLL_Expect(U_STOPMODE_IND, 0xff, 1);
+    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, (uint8_t)1);
+    KnxLL_Expect(U_STOPMODE_IND, (uint8_t)0xff, (uint8_t)1);
 }
 
 void U_ExitStopMode_req(void)
 {
     DBG_PRINTLN("U_ExitStopMode_req");
     KnxLL_Buffer[0] = U_EXITSTOPMODE_REQ;
-    KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
-    KnxLL_Expect(U_RESET_IND, 0xff, 1);
+    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, (uint8_t)1);
+    KnxLL_Expect(U_RESET_IND, (uint8_t)0xff, (uint8_t)1);
 }
 
 void U_Configure_req(uint8_t conf)
 {
     DBG_PRINTLN("U_Configure_req");
     KnxLL_Buffer[0] = U_CONFIGURE_REQ | (conf & 0x07);
-    KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
-    KnxLL_Expect(U_CONFIGURE_IND, 0xff, 1);
+    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, (uint8_t)1);
+    KnxLL_Expect(U_CONFIGURE_IND, (uint8_t)0xff, (uint8_t)1);
 }
 
 void U_IntRegWr_req(uint8_t addr, uint8_t value)
@@ -751,14 +749,15 @@ void U_IntRegWr_req(uint8_t addr, uint8_t value)
     DBG_PRINTLN("U_IntRegWr_req");
     KnxLL_Buffer[0] = U_INTREGWR_REQ | (addr & 0x03);
     KnxLL_Buffer[1] = value;
-    KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, 2);
+    (void)KnxLL_InternalCommandUnconfirmed(KnxLL_Buffer, (uint8_t)2);
 }
 
 void U_IntRegRd_req(uint8_t addr)
 {
     DBG_PRINTLN("U_IntRegRd_req");
     KnxLL_Buffer[0] = U_INTREGRD_REQ;
-    KnxLL_InternalCommandConfirmed(KnxLL_Buffer, 1);
-    KnxLL_Expect(0x00, 0x00, 1);
+    (void)KnxLL_InternalCommandConfirmed(KnxLL_Buffer, (uint8_t)1);
+    KnxLL_Expect((uint8_t)0x00, (uint8_t)0x00, (uint8_t)1);
 }
 #endif
+
