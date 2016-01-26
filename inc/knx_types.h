@@ -54,15 +54,15 @@ typedef double float64;
 #endif
 
 #if !defined(TRUE)
-    #define TRUE    (1u)
+    #define TRUE    ((boolean)1)
 #endif
 
 #if !defined(FALSE)
-    #define FALSE   (0u)
+    #define FALSE   ((boolean)0)
 #endif
 
-#define STD_ON TRUE
-#define STD_OFF FALSE
+#define STD_ON      (1)
+#define STD_OFF     (0)
 
 /*
 ** Global types.
