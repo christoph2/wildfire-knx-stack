@@ -31,6 +31,7 @@ extern "C"
 
 
 #include "knx_types.h"
+#include "knx_defs.h"
 #include "Wildfire_Config.h"
 
 /*
