@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -33,9 +33,11 @@ extern "C"
 //#include "knx_debug.h"
 #include <stdint.h>
 
+#if 0
 #if defined(_WIN32) || defined(_WIN64)
-#include "win\Win_Timer.h"
 #include "Port_Serial.h"
+#endif
+
 #else
 
 #endif
