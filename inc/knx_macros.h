@@ -25,7 +25,6 @@
 #define __KNX_MACROS_H
 
 #include "knx_defs.h"
-#include "knx_platform.h"
 
 #if defined(__cplusplus)
 extern "C"

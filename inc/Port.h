@@ -30,7 +30,6 @@ extern "C"
 #endif  /* __cplusplus */
 
 //#include "knx_defs.h"
-#include "knx_platform.h"
 #if _WIN32_WINNT <= 0x0601
 #define _WIN32_WINNT 0x0601
 #endif

@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -26,7 +26,6 @@
 #define __KNX_FFI_H
 
 #include "knx_defs.h"
-#include "knx_platform.h"
 
 #if defined(__cplusplus)
 extern "C"
@@ -108,3 +107,4 @@ void Ffi_Property_Description_Read_Ind(uint16_t source, uint8_t object_index,
 #endif  /* __cplusplus */
 
 #endif /* __KNX_FFI_H */
+
