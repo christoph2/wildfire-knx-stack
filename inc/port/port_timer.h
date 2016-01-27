@@ -25,6 +25,7 @@
 #ifndef __PORT_TIMER_H
 #define __PORT_TIMER_H
 
+#include "Wildfire_Config.h"
 #include "knx_timer.h"
 
 typedef struct tagPort_Timer_ConfigType {
