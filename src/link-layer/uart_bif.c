@@ -35,7 +35,7 @@
 #include "knx_timer.h"
 #include "knx_disp.h"
 #include "knx_messaging.h"
-#include "knx_platform.h"
+#include "port/port_serial.h"
 
 #include <stdio.h>
 
@@ -507,7 +507,7 @@ STATIC boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxL
     }
     //KnxLL_State = KNX_LL_STATE_SENDING;
     KnxLL_State = desiredState;
-    result = (boolean)Port_WriteToBusInterface(frame, (uint16_t)length);
+    result = Port_Serial_Write(frame, (uint32_t)length);
     PORT_UNLOCK_TASK_LEVEL();
     TMR_START_DL_TIMER();
     //KnxLL_State = desiredState;
@@ -543,10 +543,6 @@ STATIC uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length)
     return checksum;
 }
 
-#define WRITE(ch)   \
-    printf("0x%02x ", ch);   \
-    Port_WriteToBusInterface((uint8_t*)&ch, 1)
-
 void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length)
 {
     uint8_t idx;
@@ -564,7 +560,7 @@ void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length)
     }
     buffer[idx] = U_L_DATAEND_REQ | (idx >> 1);
     buffer[idx + 1] = checksum;
-    (void)Port_WriteToBusInterface((uint8_t *)buffer, (uint16_t)(idx + (uint8_t)2));
+    (void)Port_Serial_Write((uint8_t *)buffer, (uint32_t)(idx + (uint8_t)2));
     KnxLL_Expect((uint8_t)0x00, (uint8_t)0x00, length + (uint8_t)1);
     KnxLL_State = KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION;
     KnxLL_ReceiverIndex = (uint8_t)0x00;
