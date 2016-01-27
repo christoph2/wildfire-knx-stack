@@ -42,8 +42,8 @@ STATIC const uint8_t KnxMsg_MessageRedirectionTable[16] = {
     TASK_MG_ID,   TASK_MG_ID,   TASK_PM_ID,   TASK_LC_ID,   TASK_FREE_ID,   TASK_US_ID,       TASK_US_ID,     TASK_US_ID
 };
 
-STATIC uint8_t            KnxMsg_Queues[MSG_NUM_TASKS];
-STATIC KnxMsg_Buffer    KnxMsg_Buffers[MSG_NUM_BUFFERS];
+STATIC uint8_t KnxMsg_Queues[MSG_NUM_TASKS];
+STATIC KnxMsg_Buffer KnxMsg_Buffers[MSG_NUM_BUFFERS];
 
 KNX_IMPLEMENT_MODULE_STATE_VAR(MSG);
 
@@ -314,7 +314,7 @@ void KnxMsg_SetLen(KnxMsg_Buffer * pBuffer, uint8_t len)
     KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_SET_LEN);
 
     pBuffer->len = len;
-    KnxMsg_GetMessagePtr(pBuffer)->npci |= ((len - (uint8_t)7) & (uint8_t)0x0f);
+    KnxMsg_GetMessagePtr(pBuffer).npci |= ((len - (uint8_t)7) & (uint8_t)0x0f);
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_SET_LEN);
 }
 
@@ -356,17 +356,17 @@ void KnxMsg_SetRoutingCount(KnxMsg_Buffer * pBuffer)
 //    Dbg_TraceFunctionEntry(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_SET_ROUTING_COUNT);
     KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_SET_ROUTING_COUNT);
 
-    ctrl = KnxMsg_GetMessagePtr(pBuffer)->ctrl;
+    ctrl = KnxMsg_GetMessagePtr(pBuffer).ctrl;
 
     if ((ctrl & (uint8_t)0x02) == (uint8_t)0x02) {
-        hop_count                              = MSG_NO_ROUTING_CTRL;
-        ctrl                                  &= ~(uint8_t)0x02;        // TODO: Check!!!
-        KnxMsg_GetMessagePtr(pBuffer)->ctrl    = ctrl;
+        hop_count = MSG_NO_ROUTING_CTRL;
+        ctrl &= ~(uint8_t)0x02;        // TODO: Check!!!
+        KnxMsg_GetMessagePtr(pBuffer).ctrl    = ctrl;
     } else {
         hop_count = HOP_COUNT;
     }
 
-    KnxMsg_GetMessagePtr(pBuffer)->npci |= ((hop_count & (uint8_t)0x07) << 4);
+    KnxMsg_GetMessagePtr(pBuffer).npci |= ((hop_count & (uint8_t)0x07) << 4);
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_SET_ROUTING_COUNT);
 }
 
@@ -381,7 +381,7 @@ uint8_t KnxMsg_GetRoutingCount(const KnxMsg_Buffer * pBuffer)
     KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_GET_ROUTING_COUNT, 0x00);
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_GET_ROUTING_COUNT);
 
-    return ((KnxMsg_GetMessagePtr(pBuffer)->npci) & (uint8_t)0x70) >> 4;
+    return ((KnxMsg_GetMessagePtr(pBuffer).npci) & (uint8_t)0x70) >> 4;
 }
 
 
@@ -397,7 +397,7 @@ void KnxMsg_SetRoutingCtrl(KnxMsg_Buffer * pBuffer, boolean on)
 //    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_SET_ROUTING_COUNT);
 
     (on == TRUE) ? (r = (uint8_t)0x02) : (r = (uint8_t)0x00);
-    KnxMsg_GetMessagePtr(pBuffer)->ctrl |= r;
+    KnxMsg_GetMessagePtr(pBuffer).ctrl |= r;
     //Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_GET_ROUTING_COUNT);
 }
 
@@ -504,3 +504,4 @@ STATIC Knx_StatusType KnxMsg_ClearMessageBuffer(uint8_t buf_num)
     #define KSTACK_STOP_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
+

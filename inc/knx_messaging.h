@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2015 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -97,57 +97,48 @@ extern "C"
 /*
 ** Global function-like macros.
 */
-#define KnxMsg_GetMessagePtr(pBuffer)           ((KNX_StandardFrameRefType)(pBuffer)->msg)
-#define KnxMsg_GetProperyFramePtr(pBuffer)      ((KNX_PropertyFrameRefType)(pBuffer)->msg)
-#define KnxMsg_GetPollingFramePtr(pBuffer)      ((KNX_PollingFrameRefType)(pBuffer)->msg)
+#define KnxMsg_GetMessagePtr(pBuffer)           ((pBuffer)->msg.standard)
+#define KnxMsg_GetProperyFramePtr(pBuffer)      ((pBuffer)->msg.property)
+#define KnxMsg_GetPollingFramePtr(pBuffer)      ((pBuffer)->msg.polling)
 
 /**************/
-#define KnxMsg_GetFrameType(pBuffer)            ((KNX_FrameTypeType)(KnxMsg_GetMessagePtr((pBuffer))->ctrl) & (uint8_t)0xc0)
-#define KnxMsg_SetFrameType(pBuffer, type)      (KnxMsg_GetMessagePtr((pBuffer))->ctrl |= ((type) & (uint8_t)0xc0))
+#define KnxMsg_GetFrameType(pBuffer)            ((KNX_FrameTypeType)(KnxMsg_GetMessagePtr((pBuffer)).ctrl) & (uint8_t)0xc0)
+#define KnxMsg_SetFrameType(pBuffer, type)      (KnxMsg_GetMessagePtr((pBuffer)).ctrl |= ((type) & (uint8_t)0xc0))
 
-#define KnxMsg_GetSourceAddress(pBuffer)        ((Knx_AddressType)btohs(*(uint16_t *)&KnxMsg_GetMessagePtr((pBuffer))->source))
-#define KnxMsg_GetDestAddress(pBuffer)          ((Knx_AddressType)btohs(*(uint16_t *)&KnxMsg_GetMessagePtr((pBuffer))->dest))
-#define KnxMsg_SetSourceAddress(pBuffer, addr)  (*(uint16_t *)&KnxMsg_GetMessagePtr((pBuffer))->source = Utl_Htons((addr)))
-#define KnxMsg_SetDestAddress(pBuffer, addr)    (*(uint16_t *)&KnxMsg_GetMessagePtr((pBuffer))->dest = Utl_Htons((addr)))
+#define KnxMsg_GetSourceAddress(pBuffer)        ((Knx_AddressType)btohs(*(uint16_t *)&KnxMsg_GetMessagePtr((pBuffer)).source))
+#define KnxMsg_GetDestAddress(pBuffer)          ((Knx_AddressType)btohs(*(uint16_t *)&KnxMsg_GetMessagePtr((pBuffer)).dest))
+#define KnxMsg_SetSourceAddress(pBuffer, addr)  (*(uint16_t *)&KnxMsg_GetMessagePtr((pBuffer)).source = Utl_Htons((addr)))
+#define KnxMsg_SetDestAddress(pBuffer, addr)    (*(uint16_t *)&KnxMsg_GetMessagePtr((pBuffer)).dest = Utl_Htons((addr)))
 
-#define KnxMsg_GetPriority(pBuffer)             ((KNX_PriorityType)(KnxMsg_GetMessagePtr((pBuffer))->ctrl & (uint8_t)0x0C) >> 2)
-#define KnxMsg_SetPriority(pBuffer, priority)   (KnxMsg_GetMessagePtr((pBuffer))->ctrl |= (((priority) & (uint8_t)0x03) << 2))
+#define KnxMsg_GetPriority(pBuffer)             ((KNX_PriorityType)(KnxMsg_GetMessagePtr((pBuffer)).ctrl & (uint8_t)0x0C) >> 2)
+#define KnxMsg_SetPriority(pBuffer, priority)   (KnxMsg_GetMessagePtr((pBuffer)).ctrl |= (((priority) & (uint8_t)0x03) << 2))
 
 /* check: Daf-Type, DestionationAddressType??? */
-#define KnxMsg_GetAddressType(pBuffer)          ((uint8_t)KnxMsg_GetMessagePtr((pBuffer))->npci & (uint8_t)0x80)
-#define KnxMsg_SetAddressType(pBuffer, at)      (KnxMsg_GetMessagePtr((pBuffer))->npci |= ((at) & (uint8_t)0x80))
+#define KnxMsg_GetAddressType(pBuffer)          ((uint8_t)KnxMsg_GetMessagePtr((pBuffer)).npci & (uint8_t)0x80)
+#define KnxMsg_SetAddressType(pBuffer, at)      (KnxMsg_GetMessagePtr((pBuffer)).npci |= ((at) & (uint8_t)0x80))
 
 #define KnxMsg_IsMulticastAddressed(pBuffer)    (KnxMsg_GetAddressType((pBuffer)) == KNX_ADDR_MULTICAST)
 #define KnxMsg_IsIndividualAddressed(pBuffer)   (KnxMsg_GetAddressType((pBuffer)) == KNX_ADDR_INDIVIDUAL)
 
 /* check: ist 'LSDU' richtig??? */
-#define KnxMsg_GetLSDULen(pBuffer)              (KnxMsg_GetMessagePtr((pBuffer))->npci & (uint8_t)0x0f)
-#define KnxMsg_SetLSDULen(pBuffer, len_lsdu)    (KnxMsg_GetMessagePtr((pBuffer))->npci |= ((len_lsdu) & (uint8_t)0x0f))
+#define KnxMsg_GetLSDULen(pBuffer)              (KnxMsg_GetMessagePtr((pBuffer).npci & (uint8_t)0x0f)
+#define KnxMsg_SetLSDULen(pBuffer, len_lsdu)    (KnxMsg_GetMessagePtr((pBuffer)).npci |= ((len_lsdu) & (uint8_t)0x0f))
 
-#define KnxMsg_GetTPCI(pBuffer)                 ((uint8_t)KnxMsg_GetMessagePtr((pBuffer))->tpci)
-#define KnxMsg_SetTPCI(pBuffer, tp)             (KnxMsg_GetMessagePtr((pBuffer))->tpci |= (tp))
+#define KnxMsg_GetTPCI(pBuffer)                 ((uint8_t)KnxMsg_GetMessagePtr((pBuffer)).tpci)
+#define KnxMsg_SetTPCI(pBuffer, tp)             (KnxMsg_GetMessagePtr((pBuffer)).tpci |= (tp))
 
-#define KnxMsg_GetSeqNo(pBuffer)                ((uint8_t)((KnxMsg_GetMessagePtr((pBuffer))->tpci) & (uint8_t)0x3c) >> 2)
-#define KnxMsg_SetSeqNo(pBuffer, SeqNo)         (KnxMsg_GetMessagePtr((pBuffer))->tpci |= (((SeqNo) & (uint8_t)0x0f) << 2))
+#define KnxMsg_GetSeqNo(pBuffer)                ((uint8_t)((KnxMsg_GetMessagePtr((pBuffer)).tpci) & (uint8_t)0x3c) >> 2)
+#define KnxMsg_SetSeqNo(pBuffer, SeqNo)         (KnxMsg_GetMessagePtr((pBuffer)).tpci |= (((SeqNo) & (uint8_t)0x0f) << 2))
 
 /* check: geht 'GetAPCI' nicht effizienter??? */
-#define KnxMsg_GetAPCI(pBuffer)                 ((uint16_t)(KnxMsg_GetMessagePtr((pBuffer))->tpci << \
-                                                          8) | (KnxMsg_GetMessagePtr((pBuffer))->apci))
-#define KnxMsg_SetAPCI(pBuffer, apci)           (*(uint16_t *)&(pBuffer)->msg[6] = Utl_Htons((apci)))
+#define KnxMsg_GetAPCI(pBuffer)                 ((uint16_t)(KnxMsg_GetMessagePtr((pBuffer)).tpci << \
+                                                          8) | (KnxMsg_GetMessagePtr((pBuffer)).apci))
+#define KnxMsg_SetAPCI(pBuffer, apci)           (*(uint16_t *)&(pBuffer)->msg.raw[6] = Utl_Htons((apci)))
 
 /*
 ** Global types.
 */
 typedef uint8_t Knx_MessageType[MSG_LEN];
-
-typedef struct tagKnxMsg_Buffer {
-    uint8_t next;
-    uint8_t len;
-    Knx_ServiceTypeType service;
-    uint8_t sap;
-    Knx_StatusType status;
-    Knx_MessageType msg;
-} KnxMsg_Buffer;
 
 typedef struct tagKNX_StandardFrameType {
     uint8_t   ctrl;
@@ -180,6 +171,20 @@ typedef struct tagKNX_PollingFrameType {
     uint8_t   num_slots;
     uint8_t   slot[MAX_ADPU_LEN];
 } KNX_PollingFrameType, * KNX_PollingFrameRefType;  /* KNX_PollingFrameType */
+
+typedef struct tagKnxMsg_Buffer {
+    uint8_t next;
+    uint8_t len;
+    Knx_ServiceTypeType service;
+    uint8_t sap;
+    Knx_StatusType status;
+    union {
+        Knx_MessageType raw;
+        KNX_StandardFrameType standard;
+        KNX_PropertyFrameType property;
+        KNX_PollingFrameType polling;
+    } msg;
+} KnxMsg_Buffer;
 
 /*
 ** Global functions.
