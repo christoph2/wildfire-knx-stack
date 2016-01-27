@@ -21,7 +21,7 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
-*/
+
 #include "knx_timer.h"
 
 /*
@@ -303,7 +303,7 @@ void KnxTmr_SystemTickHandler(void)
                     tm->expire_counter -= (uint32_t)1UL;
                     if (tm->expire_counter == (uint32_t)0UL) {
                         tm->state = TMR_STATE_EXPIRED;
-                        if (KnxTmr_Callbacks[idx] != (KnxTmr_CallbackFunctionType)NULL) {
+                        if (KnxTmr_Callbacks[idx] != NULL) {
                             KnxTmr_Callbacks[idx]();
                         }
                     }
