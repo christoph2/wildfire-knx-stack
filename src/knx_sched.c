@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -14,20 +14,25 @@
 *  This program is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more KnxEtails.
+*  GNU General Public License for more details.
 *
 *  You should have received a copy of the GNU General Public License along
 *  with this program; if not, write to the Free Software Foundation, Inc.,
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
+
+#include "Wildfire_Config.h"
 #include "knx_sched.h"
 #include "knx_layer_link.h"
 #include "knx_nl.h"
 #include "knx_tlg.h"
 #include "knx_layer_application.h"
-#include "Port.h"
 
+#if KNX_TARGET_TYPE == KNX_TARGET_POSIX
+#include "port/port_serial.h"
+#include "port/port_timer.h"
+#endif
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
 STATIC FUNC(boolean, KSTACK_CODE)  KnxSched_PreLinkLayerTest(void);
@@ -90,11 +95,15 @@ FUNC(void, KSTACK_CODE) KnxSched_Task(void)
 #else
 void KnxSched_Task(void)
 #endif /* KSTACK_MEMORY_MAPPING */
-{    
+{
     PORT_LOCK_TASK_LEVEL();
     if (KnxSched_PreLinkLayerTest()) {
 
     }
+
+#if KNX_TARGET_TYPE == KNX_TARGET_POSIX
+    Port_Serial_Task();
+#endif
 
     KnxLL_Task();
 
@@ -179,3 +188,4 @@ TODO: check entry conditions for application
     #define KSTACK_STOP_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
+

@@ -246,3 +246,36 @@ uint16_t Port_Serial_BytesWaiting(uint32_t * errors)
     return Serial_BytesWaiting(&ComPort, errors);
 }
 
+void Port_Serial_Task(void)
+{
+    uint8_t buffer[128];
+    PollingResultType pollingResult;
+    uint16_t events;
+    uint32_t errors;
+    int result;
+    int byteCount;
+    int idx;
+
+    pollingResult = Port_Serial_Poll(FALSE, &events);
+
+    if (pollingResult ==  POLLING_ERROR) {
+        Win_Error("read", errno);
+    } else if (pollingResult == POLLING_OK) {
+        printf("Polling events: %04X\n", events);
+        byteCount = Port_Serial_BytesWaiting(&errors);
+        printf("Bytes waiting: %u\n", byteCount);
+        result = Port_Serial_Read(buffer, byteCount);
+        printf("Read-Result: %02x\n", result);
+        if (result == -1) {
+            Win_Error("read", errno);
+        } else {
+            Dbg_DumpHex(buffer, byteCount);
+            for (idx = 0; idx < byteCount; ++idx) {
+                KnxLL_FeedReceiver(buffer[idx]);
+            }
+        }
+    } else if (pollingResult == POLLING_TIMEOUT) {
+        printf("Timeout.\n");
+    } else {
+    }
+}

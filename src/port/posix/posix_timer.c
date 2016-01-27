@@ -44,6 +44,8 @@ static timer_t timerid;
 static Port_Timer_ConfigType const * timerConfiguration = NULL;
 extern Port_Timer_ConfigType Port_Timer_Configuration;
 
+sig_atomic_t myISRVar = 0;
+
 void TimerISR(int sig, siginfo_t * extra, void * cruft)
 {
     //int count;
@@ -54,6 +56,8 @@ void TimerISR(int sig, siginfo_t * extra, void * cruft)
         }
 */
         timerConfiguration->tickHandler();
+    } else {
+        printf("Other signal [%u]\n", sig);
     }
 }
 

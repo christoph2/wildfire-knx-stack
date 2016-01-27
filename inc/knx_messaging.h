@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2015 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -146,7 +146,7 @@ typedef struct tagKnxMsg_Buffer {
     Knx_ServiceTypeType service;
     uint8_t sap;
     Knx_StatusType status;
-    Knx_MessageType msg;
+    Knx_MessageType msg;    // TODO: union (type-punning)!!!
 } KnxMsg_Buffer;
 
 typedef struct tagKNX_StandardFrameType {
