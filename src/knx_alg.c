@@ -165,7 +165,7 @@ STATIC void Disp_T_DataGroupInd(void)
 {
     uint8_t apci;
 
-    apci = KnxAl_GetAPCIType(KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr));
+    apci = KnxAl_GetAPCIType(KnxMsg_GetStandardFramePtr(KnxMsg_ScratchBufferPtr));
 
     if (LSM_IsGrOATLoaded()) {
         switch (apci) {
@@ -375,7 +375,7 @@ void KnxALG_PollCycle(void)
 
 
 /*
-   void AL_SetAPDUShortData(const KNX_StandardFrameRefType pmsg,uint8_t data,uint8_t nbits)
+   void AL_SetAPDUShortData(const KnxMsg_StandardFrameRefType pmsg,uint8_t data,uint8_t nbits)
    {
     if (nbits>6) {
         return;
@@ -475,14 +475,14 @@ void KnxALG_UpdateAssociatedASAPs(KnxMsg_Buffer * pBuffer, uint8_t testFlags)
                     if (len_lsdu >= (uint8_t)2) {
                         /* Normal-Data. */
                         if (len_obj == (uint8_t)1) {
-                            *KnxALG_GetObjectDataPointer(asap) = KnxAl_GetAPDUDataByte(KnxMsg_GetMessagePtr(pBuffer), 0)
+                            *KnxALG_GetObjectDataPointer(asap) = KnxAl_GetAPDUDataByte(KnxMsg_GetStandardFramePtr(pBuffer), 0)
                                                                  & KNX_AL_SHORT_DATA_MASK[KnxALG_GetCommObjDescr(asap)->Type];
                         } else {
-                            Utl_MemCopy(KnxALG_GetObjectDataPointer(asap), KnxMsg_GetMessagePtr(pBuffer)->data, len_obj);
+                            Utl_MemCopy(KnxALG_GetObjectDataPointer(asap), KnxMsg_GetStandardFramePtr(pBuffer)->data, len_obj);
                         }
                     } else if (len_lsdu == (uint8_t)1) {
                         /* Short-Data. */
-                        *KnxALG_GetObjectDataPointer(asap) = KnxAl_GetAPDUShortData(KnxMsg_GetMessagePtr(
+                        *KnxALG_GetObjectDataPointer(asap) = KnxAl_GetAPDUShortData(KnxMsg_GetStandardFramePtr(
                                                                                         pBuffer), KnxALG_GetCommObjDescr(
                                                                                         asap)->Type);
                     } else {

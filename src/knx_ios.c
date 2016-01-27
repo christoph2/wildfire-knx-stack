@@ -85,7 +85,7 @@ void IOS_Dispatch(const KnxMsg_Buffer * pBuffer, uint8_t service, boolean connec
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_t data[MAX_PROP_DATA_LEN];
-    KNX_PropertyFrameRefType pmsg;
+    KnxMsg_PropertyFrameRefType pmsg;
     Knx_InterfaceObjectType const * pobj;
     Knx_PropertyType const * pprop;
     uint8_t num_elems;

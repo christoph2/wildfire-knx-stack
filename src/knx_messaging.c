@@ -314,7 +314,7 @@ void KnxMsg_SetLen(KnxMsg_Buffer * pBuffer, uint8_t len)
     KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_SET_LEN);
 
     pBuffer->len = len;
-    KnxMsg_GetMessagePtr(pBuffer).npci |= ((len - (uint8_t)7) & (uint8_t)0x0f);
+    KnxMsg_GetStandardFramePtr(pBuffer).npci |= ((len - (uint8_t)7) & (uint8_t)0x0f);
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_SET_LEN);
 }
 
@@ -356,17 +356,17 @@ void KnxMsg_SetRoutingCount(KnxMsg_Buffer * pBuffer)
 //    Dbg_TraceFunctionEntry(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_SET_ROUTING_COUNT);
     KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_SET_ROUTING_COUNT);
 
-    ctrl = KnxMsg_GetMessagePtr(pBuffer).ctrl;
+    ctrl = KnxMsg_GetStandardFramePtr(pBuffer).ctrl;
 
     if ((ctrl & (uint8_t)0x02) == (uint8_t)0x02) {
         hop_count = MSG_NO_ROUTING_CTRL;
         ctrl &= ~(uint8_t)0x02;        // TODO: Check!!!
-        KnxMsg_GetMessagePtr(pBuffer).ctrl    = ctrl;
+        KnxMsg_GetStandardFramePtr(pBuffer).ctrl    = ctrl;
     } else {
         hop_count = HOP_COUNT;
     }
 
-    KnxMsg_GetMessagePtr(pBuffer).npci |= ((hop_count & (uint8_t)0x07) << 4);
+    KnxMsg_GetStandardFramePtr(pBuffer).npci |= ((hop_count & (uint8_t)0x07) << 4);
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_SET_ROUTING_COUNT);
 }
 
@@ -381,7 +381,7 @@ uint8_t KnxMsg_GetRoutingCount(const KnxMsg_Buffer * pBuffer)
     KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_GET_ROUTING_COUNT, 0x00);
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_GET_ROUTING_COUNT);
 
-    return ((KnxMsg_GetMessagePtr(pBuffer).npci) & (uint8_t)0x70) >> 4;
+    return ((KnxMsg_GetStandardFramePtr(pBuffer).npci) & (uint8_t)0x70) >> 4;
 }
 
 
@@ -397,7 +397,7 @@ void KnxMsg_SetRoutingCtrl(KnxMsg_Buffer * pBuffer, boolean on)
 //    KNX_ASSERT_MODULE_IS_INITIALIZED(MSG, AR_SERVICE_MSG_SET_ROUTING_COUNT);
 
     (on == TRUE) ? (r = (uint8_t)0x02) : (r = (uint8_t)0x00);
-    KnxMsg_GetMessagePtr(pBuffer).ctrl |= r;
+    KnxMsg_GetStandardFramePtr(pBuffer).ctrl |= r;
     //Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_GET_ROUTING_COUNT);
 }
 

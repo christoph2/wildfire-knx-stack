@@ -235,7 +235,7 @@ STATIC void KnxNl_CheckRoutingCount(KnxMsg_Buffer * pBuffer)
 STATIC void KnxNl_DispatchIncoming(Knx_ServiceTypeType const * services)
 {
     if (KnxMsg_IsMulticastAddressed(KnxMsg_ScratchBufferPtr)) {
-        if (KnxADR_IsBroadcastAddress(*KnxMsg_GetMessagePtr(KnxMsg_ScratchBufferPtr)->dest)) {
+        if (KnxADR_IsBroadcastAddress(*KnxMsg_GetStandardFramePtr(KnxMsg_ScratchBufferPtr)->dest)) {
             /* Broadcast-Communication. */
             //DBG_PRINTLN("Broadcast-Communication [Con/Ind]");
             KnxMsg_ScratchBufferPtr->service = services[0];

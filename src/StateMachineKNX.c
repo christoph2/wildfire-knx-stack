@@ -246,7 +246,7 @@ STATIC const KnxTlc_EventFunctionType TLC_Events[] = {
 ** Local variables.
 */
 STATIC KnxTlc_StateType KnxTlc_State;
-STATIC Knx_MessageType  _StoredMsg;    /* Client-only. */
+STATIC KnxMsg_MessageType  _StoredMsg;    /* Client-only. */
 
 
 /* #endif */
@@ -310,8 +310,8 @@ void T_Disconnect_Ind(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_Addre
     KnxMsg_SetSourceAddress(pBuffer, source);
     KnxMsg_SetDestAddress(pBuffer, dest);
 
-    KnxMsg_GetMessagePtr(pBuffer)->ctrl    = (uint8_t)0xB0; /* short-cuts... */
-    KnxMsg_GetMessagePtr(pBuffer)->npci    = (uint8_t)0x60;
+    KnxMsg_GetStandardFramePtr(pBuffer)->ctrl    = (uint8_t)0xB0; /* short-cuts... */
+    KnxMsg_GetStandardFramePtr(pBuffer)->npci    = (uint8_t)0x60;
 
     KnxMsg_SetLen(pBuffer, (uint8_t)7);
     pBuffer->service = KNX_SERVICE_T_DISCONNECT_IND;
@@ -330,8 +330,8 @@ void T_Disconnect_Con(KnxMsg_Buffer * pBuffer, Knx_AddressType source, Knx_Addre
     KnxMsg_SetSourceAddress(pBuffer, source);
     KnxMsg_SetDestAddress(pBuffer, dest);
 
-    KnxMsg_GetMessagePtr(pBuffer)->ctrl    = (uint8_t)0xb0; /* short-cuts... */
-    KnxMsg_GetMessagePtr(pBuffer)->npci    = (uint8_t)0x60;
+    KnxMsg_GetStandardFramePtr(pBuffer)->ctrl    = (uint8_t)0xb0; /* short-cuts... */
+    KnxMsg_GetStandardFramePtr(pBuffer)->npci    = (uint8_t)0x60;
 
     KnxMsg_SetLen(pBuffer, (uint8_t)7);
     pBuffer->service = KNX_SERVICE_T_DISCONNECT_CON;

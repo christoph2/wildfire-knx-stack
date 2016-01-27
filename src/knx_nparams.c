@@ -131,12 +131,12 @@ FUNC(void, KSTACK_CODE) NWPS_Dispatch(KnxMsg_Buffer * pBuffer, uint8_t service /
 void NWPS_Dispatch(KnxMsg_Buffer * pBuffer, uint8_t service /*,boolean connected*/)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KNX_StandardFrameRefType pmsg;
+    KnxMsg_StandardFrameRefType pmsg;
     uint8_t len;
     uint8_t pid;
     uint16_t objectType;
 
-    pmsg = KnxMsg_GetMessagePtr(pBuffer);
+    pmsg = KnxMsg_GetStandardFramePtr(pBuffer);
 
     objectType = btohs((uint16_t)pmsg->data[0]);
     pid        = pmsg->data[2];
