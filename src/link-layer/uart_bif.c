@@ -378,17 +378,17 @@ STATIC void Disp_L_Data_Req(void)
     KnxMsg_SetFrameType(KnxMsg_ScratchBufferPtr, KNX_FRAME_STANDARD);
 
     /* PREPARE_CONTROL_FIELD() */
-    KnxMsg_ScratchBufferPtr->msg[0] |= (uint8_t)0x30;   /* fixed one bit + repeated. */
-    KnxMsg_ScratchBufferPtr->msg[0] &= (~(uint8_t)3);   /* clear two LSBs. */
+    KnxMsg_ScratchBufferPtr->msg.raw[0] |= (uint8_t)0x30;   /* fixed one bit + repeated. */
+    KnxMsg_ScratchBufferPtr->msg.raw[0] &= (~(uint8_t)3);   /* clear two LSBs. */
     /**/
 
-    chk = KnxLL_Checksum(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
+    chk = KnxLL_Checksum(KnxMsg_ScratchBufferPtr->msg.raw, KnxMsg_ScratchBufferPtr->len);
     
     DBG_PRINTLN("");
     DBG_PRINT("Disp_L_Data_Req: ");
-    Dbg_DumpHex(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
+    Dbg_DumpHex(KnxMsg_ScratchBufferPtr->msg.raw, KnxMsg_ScratchBufferPtr->len);
 
-    KnxLL_WriteFrame(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
+    KnxLL_WriteFrame(KnxMsg_ScratchBufferPtr->msg.raw, KnxMsg_ScratchBufferPtr->len);
     (void)KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
 }
 
@@ -415,7 +415,7 @@ STATIC void KnxLl_Data_Con(Knx_StatusType status)
         txBuffer->status = status;
 
         txBuffer->len = length = (KnxLL_Buffer[5] & (uint8_t)0x0f) + (uint8_t)7;
-        Utl_MemCopy((void *)txBuffer->msg, (void *)KnxLL_Buffer, length);
+        Utl_MemCopy((void *)txBuffer->msg.raw, (void *)KnxLL_Buffer, length);
 
         (void)KnxMsg_Post(txBuffer);
     } else {
@@ -450,7 +450,7 @@ void KnxLL_DataStandard_Ind(uint8_t const * frame)
 //        pBuffer->sap = tsap;
         pBuffer->len = length = (frame[5] & (uint8_t)0x0f) + (uint8_t)7;    // TODO: Refactor to function-like macro.
 
-        Utl_MemCopy((void *)pBuffer->msg, (void *)frame, (uint16_t)length);
+        Utl_MemCopy((void *)pBuffer->msg.raw, (void *)frame, (uint16_t)length);
         (void)KnxMsg_Post(pBuffer);
     }
 

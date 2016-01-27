@@ -223,7 +223,7 @@ FUNC(void, KSTACK_CODE) KnxTmr_SecondCallback(void)
 void KnxTmr_SecondCallback(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-
+    printf("   One second elapsed.\n");
 }
 
 /*
@@ -267,9 +267,9 @@ FUNC(void, KSTACK_CODE) KnxTmr_SystemTickHandler(void)
 void KnxTmr_SystemTickHandler(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    Tmr_TimerType *  tm;
-    uint8_t           idx;
-    boolean         SecondChanged = FALSE;
+    Tmr_TimerType * tm;
+    uint8_t idx;
+    boolean SecondChanged = FALSE;
 
     Tmr_SysMsCounter += TMR_TICK_RESOLUTION;
 
