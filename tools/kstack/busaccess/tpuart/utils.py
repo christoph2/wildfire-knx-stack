@@ -5,7 +5,7 @@
 __copyright__ = """
    KONNEX/EIB-Protocol-Stack.
 
-   (C) 2001-2014 by Christoph Schueler <cpu12.gems@googlemail.com>
+   (C) 2001-2016 by Christoph Schueler <cpu12.gems@googlemail.com>
 
    All Rights Reserved
 
@@ -38,4 +38,20 @@ checksum = lambda frame: reduce(operator.xor, frame, 0xff)
 
 def wordToBytes(w):
     return [(w & 0xff00) >> 8, w & 0xff]
+
+import sys
+
+if sys.version_info.major == 3:
+    from io import BytesIO as StringIO
+else:
+    try:
+        from cStringIO import StringIO
+    except ImportError:
+        from StringIO import StringIO
+
+
+def createStringBuffer(*args):
+    """Create a string with file-like behaviour (StringIO on Python 2.x).
+    """
+    return StringIO(*args)
 
