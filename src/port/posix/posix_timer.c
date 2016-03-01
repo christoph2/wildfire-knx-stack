@@ -30,6 +30,7 @@
 #include <time.h>
 #include <signal.h>
 #include <sys/signal.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "port/port_timer.h"
@@ -39,16 +40,16 @@
 void Win_Error(char * function, uint32_t err);
 
 void timerTest(void);
-void TimerISR(int sig, struct siginfo_t * extra, void * cruft);
+void TimerISR(int sig, siginfo_t * extra, void * cruft);
 void Port_Timer_Start(long millis);
 
-static struct timer_t timerid;
+static timer_t timerid;
 static Port_Timer_ConfigType const * timerConfiguration = NULL;
 extern Port_Timer_ConfigType Port_Timer_Configuration;
 
 sig_atomic_t myISRVar = 0;
 
-void TimerISR(int sig, struct siginfo_t * extra, void * cruft)
+void TimerISR(int sig, siginfo_t * extra, void * cruft)
 {
     //int count;
     if (sig == TIMER_SIGNAL) {
