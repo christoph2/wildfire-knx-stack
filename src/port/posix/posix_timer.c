@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <signal.h>
+#include <sys/signal.h>
 #include <unistd.h>
 
 #include "port/port_timer.h"
