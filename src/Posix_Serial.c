@@ -30,6 +30,7 @@
 #include <string.h>
 #include <termios.h>
 #include <time.h>
+#include <signal.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
