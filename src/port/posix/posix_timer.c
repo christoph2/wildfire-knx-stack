@@ -39,7 +39,7 @@
 void Win_Error(char * function, uint32_t err);
 
 void timerTest(void);
-void TimerISR(int sig, siginfo_t * extra, void * cruft);
+void TimerISR(int sig, struct siginfo_t * extra, void * cruft);
 void Port_Timer_Start(long millis);
 
 static struct timer_t timerid;
