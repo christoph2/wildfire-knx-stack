@@ -1,10 +1,10 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
+#AC_PREREQ([2.69])
 AC_INIT([kstack], [1.0], [cpu12.gems@googlemail.com])
-AM_INIT_AUTOMAKE([subdir-objects]) #(silent-rules)
-AC_CONFIG_SRCDIR([../src/])
+AM_INIT_AUTOMAKE([subdir-objects foreign]) #(silent-rules)
+AC_CONFIG_SRCDIR([./src/])
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
