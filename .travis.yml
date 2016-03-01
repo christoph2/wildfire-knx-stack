@@ -1,7 +1,11 @@
 language: c
+
 sudo: required
-install:
+
+script:
   - autoreconf -iv
+  - configure
+  - make chec
 
 os:
   - linux
