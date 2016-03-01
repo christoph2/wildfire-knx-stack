@@ -1,2 +1,17 @@
 language: c
 sudo: required
+install:
+  - autoreconf -iv
+
+os:
+  - linux
+  - osx
+
+compiler:
+  - gcc
+  - clang
+
+matrix:
+  allow_failures:
+    - os: osx
+
