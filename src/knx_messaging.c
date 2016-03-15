@@ -144,9 +144,12 @@ KnxMsg_Buffer * KnxMsg_AllocateBufferWrapper(void)
 {
     KnxMsg_Buffer * buffer = NULL;
 
-    KnxMsg_AllocateBuffer(&buffer);
+    if (KnxMsg_AllocateBuffer(&buffer) == KNX_E_OK) {
 
-    return buffer;
+        return buffer;
+    } else {
+        return NULL;
+    }
 }
 
 
@@ -194,7 +197,7 @@ Knx_StatusType KnxMsg_ReleaseBuffer(KnxMsg_Buffer * ptr)
 
     KnxMsg_Queues[TASK_FREE_ID]    = buf_num;
     KnxMsg_Buffers[buf_num].next   = old_fp;
-    KnxMsg_ClearMessageBuffer(buf_num);
+    (void)KnxMsg_ClearMessageBuffer(buf_num);
 
     ptr = (KnxMsg_Buffer *)NULL;  /* Invalidate Buffer. */
     ENABLE_ALL_INTERRUPTS();
@@ -223,7 +226,7 @@ Knx_StatusType KnxMsg_ClearBuffer(KnxMsg_Buffer * ptr)
     pb = (uint8_t *)ptr;
     pb++;
 
-    Utl_MemSet(pb, '\0', sizeof(KnxMsg_Buffer) - 1);
+    Utl_MemSet(pb, (uint8_t)'\0', (uint16_t)(sizeof(KnxMsg_Buffer) - 1));
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_CLEAR_BUFFER);
     return KNX_E_OK;
 }
@@ -288,16 +291,16 @@ KnxMsg_Buffer * KnxMsg_Get(uint8_t task)
         return (KnxMsg_Buffer *)NULL;
     }
 
-    if ((qp = KnxMsg_Queues[task]) == MSG_QUEUE_EMPTY) {
+    if ((qp = KnxMsg_Queues[task]) == MSG_QUEUE_EMPTY) {    // Check: Possibly out of bounds?
 //        Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_GET);
         return (KnxMsg_Buffer *)NULL;          /* No message for task. */
     }
 
     if (KnxMsg_Buffers[qp].next != MSG_QUEUE_EMPTY) {
-        KnxMsg_Queues[task] = KnxMsg_Buffers[qp].next;
+        KnxMsg_Queues[task] = KnxMsg_Buffers[qp].next;  // Check: Possibly out of bounds?
         KnxMsg_Buffers[qp].next = MSG_NO_NEXT;  /* Unlink buffer. */
     } else {
-        KnxMsg_Queues[task] = MSG_QUEUE_EMPTY;
+        KnxMsg_Queues[task] = MSG_QUEUE_EMPTY;  // Check: Possibly out of bounds?
     }
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_GET);
     return &KnxMsg_Buffers[qp];
