@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -85,7 +85,7 @@ void IOS_Dispatch(const KnxMsg_Buffer * pBuffer, uint8_t service, boolean connec
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_t data[MAX_PROP_DATA_LEN];
-    KnxMsg_PropertyFrameRefType pmsg;
+    KnxMsg_PropertyFrameType pmsg;
     Knx_InterfaceObjectType const * pobj;
     Knx_PropertyType const * pprop;
     uint8_t num_elems;
@@ -192,12 +192,12 @@ void IOS_Dispatch(const KnxMsg_Buffer * pBuffer, uint8_t service, boolean connec
         } else if (type_len > 0) {
             switch (GET_PROPERTY_CONTROL(pprop) & (uint8_t)0x03) {
                 case PH_VALUE_INPLACE:
-                    Utl_MemCopy((void *)data, (void *)&pprop->property_var, type_len);
+                    Utl_MemCopy((void *)data, (void *)&pprop->property_var, (uint16_t)type_len);
                     break;
                 case PH_PTR_TO_VAL_FN:
 
                     if (pprop->property_func == (uint8_t)0x00) {
-                        Utl_MemCopy((void *)data, (void *)pprop->property_var, type_len);
+                        Utl_MemCopy((void *)data, (void *)pprop->property_var, (uint16_t)type_len);
                     } else {
                     }
 
@@ -240,7 +240,7 @@ empty_answer:   /* Property-Read /wo Data. */
     return;
 
 invalid:
-    KnxMsg_ReleaseBuffer(pBuffer);
+    (void)KnxMsg_ReleaseBuffer(pBuffer);
 }
 
 

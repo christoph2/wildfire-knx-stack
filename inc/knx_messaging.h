@@ -106,8 +106,8 @@ extern "C"
 #define KnxMsg_GetFrameType(pBuffer)            ((KNX_FrameTypeType)(KnxMsg_GetStandardFramePtr((pBuffer)).ctrl) & (uint8_t)0xc0)
 #define KnxMsg_SetFrameType(pBuffer, type)      (KnxMsg_GetStandardFramePtr((pBuffer)).ctrl |= ((type) & (uint8_t)0xc0))
 
-#define KnxMsg_GetSourceAddress(pBuffer)        ((Knx_AddressType)btohs(*(uint16_t *)&KnxMsg_GetStandardFramePtr((pBuffer)).source))
-#define KnxMsg_GetDestAddress(pBuffer)          ((Knx_AddressType)btohs(*(uint16_t *)&KnxMsg_GetStandardFramePtr((pBuffer)).dest))
+#define KnxMsg_GetSourceAddress(pBuffer)        ((Knx_AddressType)btohs(*(uint16_t *)KnxMsg_GetStandardFramePtr((pBuffer)).source))
+#define KnxMsg_GetDestAddress(pBuffer)          ((Knx_AddressType)btohs(*(uint16_t *)KnxMsg_GetStandardFramePtr((pBuffer)).dest))
 #define KnxMsg_SetSourceAddress(pBuffer, addr)  (*(uint16_t *)&KnxMsg_GetStandardFramePtr((pBuffer)).source = Utl_Htons((addr)))
 #define KnxMsg_SetDestAddress(pBuffer, addr)    (*(uint16_t *)&KnxMsg_GetStandardFramePtr((pBuffer)).dest = Utl_Htons((addr)))
 
