@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -33,9 +33,8 @@ extern "C"
 #if _WIN32_WINNT <= 0x0601
 #define _WIN32_WINNT 0x0601
 #endif
+#if 0
 #include <windows.h>
-
-void Port_Init(void);
 void Port_SetThreadAffinity(HANDLE thread, DWORD_PTR mask);
 uint32_t Port_GetProcessID(void);
 boolean Port_InitializeCriticalSection(CRITICAL_SECTION * criticalSection);
@@ -44,6 +43,10 @@ void Port_EnterCriticalSection(CRITICAL_SECTION * criticalSection);
 void Port_LeaveCriticalSection(CRITICAL_SECTION * criticalSection);
 boolean Port_InCriticalSection(CRITICAL_SECTION * criticalSection);
 boolean Port_InstallExitHandler();
+#endif 
+
+void Port_Init(void);
+
 
 #if defined(__cplusplus)
 }
