@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2015 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -36,9 +36,6 @@ uint16_t btohs(uint16_t w)                  // TODO: knx_utl!!! außerdem: ByteOr
     return KNX_MAKEWORD(KNX_LOBYTE(w), KNX_HIBYTE(w));
 }
 
-
-#define COMW(w) ((~(w)) + 1)
-
 uint16_t LongToDPT9(int32_t value)
 {
     uint16_t  Mantissa;
@@ -62,7 +59,7 @@ uint16_t LongToDPT9(int32_t value)
     Mantissa = (uint16_t)value;
 
     if (Sign) {
-        Mantissa   = (COMW(Mantissa)) & (uint16_t)0x07ffU;
+        Mantissa   = (TWOS_COMPLEMENT(Mantissa)) & (uint16_t)0x07ffU;
         Res       |= (uint16_t)0x8000U;
     }
 
@@ -95,7 +92,7 @@ uint16_t FloatToDPT9(float64 value)
     Mantissa = (uint16_t)(value * (float)100.0);
 
     if (Sign) {
-        Mantissa   = (COMW(Mantissa)) & (uint16_t)0x07ffU;
+        Mantissa   = (TWOS_COMPLEMENT(Mantissa)) & (uint16_t)0x07ffU;
         Res       |= (uint16_t)0x8000;
     }
 
@@ -116,7 +113,7 @@ float64 DPT9ToFloat(uint16_t value)
     Mantissa   = value & (uint16_t)0x07ffU;
 
     if (Sign) {
-        Mantissa = (COMW(Mantissa)) & (uint16_t)0x07ffU;
+        Mantissa = (TWOS_COMPLEMENT(Mantissa)) & (uint16_t)0x07ffU;
     }
 
     Exponent = (KNX_HIBYTE(value) & (uint8_t)0x78) >> 3;
@@ -142,7 +139,7 @@ int32_t DPT9ToLong(uint16_t value)
     Mantissa   = value & 0x7ff;
 
     if (Sign) {
-        Mantissa = (COMW(Mantissa)) & (uint16_t)0x07ffU;
+        Mantissa = (TWOS_COMPLEMENT(Mantissa)) & (uint16_t)0x07ffU;
     }
 
     Exponent = (KNX_HIBYTE(value) & (uint8_t)0x78) >> 3;
@@ -155,5 +152,4 @@ int32_t DPT9ToLong(uint16_t value)
 
     return Res;
 }
-
 

@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -134,6 +134,8 @@ uint32_t                      Utl_Swap32(uint32_t * dw);
 #endif
 
 #define Utl_PlainCharIsSigned()         ((int)((char)0x80) < 0)
+
+#define TWOS_COMPLEMENT(w) ((~(w)) + 1)
 
 #if defined(__cplusplus)
 }
