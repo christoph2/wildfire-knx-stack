@@ -142,6 +142,7 @@ extern "C"
 #define KNX_TARGET_POSIX                        (2)
 #define KNX_TARGET_S12                          (3)
 #define KNX_TARGET_ATMEL_ATSAM4                 (4)
+#define KNX_TARGET_ATMEL_ATMEGA                 (5)
 
 
 #if defined(__cplusplus)
