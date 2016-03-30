@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -31,10 +31,9 @@ extern "C"
 
 #include "Wildfire_Config.h"
 
-//#undef KNX_BUILD_TYPE
 
-
-#if (KNX_BUILD_TYPE == KNX_BUILD_DEBUG) && (defined(_MSC_VER) || defined(WIN32) || defined(WIN64) || defined(__CYGWIN32__) || defined(__CYGWIN64__))
+#if (KNX_BUILD_TYPE == KNX_BUILD_DEBUG) && (defined(_MSC_VER) || defined(WIN32) || defined(WIN64) || \
+                                            defined(__CYGWIN32__) || defined(__CYGWIN64__) || defined(__GNUC__))
 
 typedef struct tagDbg_TimerType {
     int64_t start;
