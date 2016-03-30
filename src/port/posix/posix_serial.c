@@ -225,6 +225,11 @@ boolean Port_Serial_Init(uint8_t portNumber)
     return Serial_OpenPort(&ComPort, B19200, PARENB, CS8, 1);
 }
 
+void Port_Serial_Deinit(void)
+{
+    Serial_ClosePort(&ComPort);
+}
+
 boolean Port_Serial_Write(uint8_t const * buffer, uint32_t byteCount)
 {
     return Serial_Write(&ComPort, buffer, byteCount);
