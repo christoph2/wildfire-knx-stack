@@ -36,6 +36,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#include "knx_et.h"
 #include "port/port_serial.h"
 
 #if defined(HAVE_POLL_H)
@@ -45,7 +46,6 @@
 #define FLUSH_TRANSMITTER   1
 
 #if (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__linux__)
-    // Cygwin POSIX under Microsoft Windows.and Linux.
     #define DEVICE_NAME "/dev/ttyS%u"
 #endif
 
@@ -55,13 +55,15 @@ static void Serial_ClosePort(Port_Serial_ComPortType const * port);
 static uint16_t Serial_BytesWaiting(Port_Serial_ComPortType const * port, uint32_t * errors);
 static boolean Serial_Write(Port_Serial_ComPortType * port, uint8_t const * buffer, uint32_t byteCount);
 static boolean Serial_WriteByte(Port_Serial_ComPortType * port, uint8_t byteToWrite);
-static PollingResultType Serial_Poll(Port_Serial_ComPortType * port, boolean writing, uint16_t * events);
-
+static Port_Serial_PollingResultType Serial_Poll(Port_Serial_ComPortType * port, boolean writing, uint16_t * events);
+static void Serial_Flush(Port_Serial_ComPortType const * port);
+static void Serial_FlushTransmitter(Port_Serial_ComPortType const * port);
+static void Serial_FlushReceiver(Port_Serial_ComPortType const * port);
 
 static Port_Serial_ComPortType ComPort;
 
 
-static PollingResultType Serial_Poll(Port_Serial_ComPortType * port, boolean writing, uint16_t * events)
+static Port_Serial_PollingResultType Serial_Poll(Port_Serial_ComPortType * port, boolean writing, uint16_t * events)
 {
     struct pollfd fds[1];
     int result;
@@ -78,7 +80,7 @@ static PollingResultType Serial_Poll(Port_Serial_ComPortType * port, boolean wri
             //printf("<<POLL INTERRUPTED [%u]>>\n");
             return POLLING_INTERRUPTED;
         } else {
-            Win_Error("poll", errno);
+            KnxEt_Error("poll", errno);
             return POLLING_ERROR;
         }
     } else if (result == 0) {
@@ -102,7 +104,7 @@ static uint16_t Serial_BytesWaiting(Port_Serial_ComPortType const * port, uint32
 static boolean Serial_Write(Port_Serial_ComPortType * port, uint8_t const * buffer, uint32_t byteCount)
 {
     int result;
-    PollingResultType pollingResult;
+    Port_Serial_PollingResultType pollingResult;
     uint16_t events;
 
     result = write(port->fd, buffer, byteCount);
@@ -115,7 +117,7 @@ static boolean Serial_Write(Port_Serial_ComPortType * port, uint8_t const * buff
         //printf("Poll-Events: %02x\n", events);
     }
 
-    return TRUE;
+    return result != -1;
 }
 
 
@@ -131,17 +133,17 @@ static boolean Serial_OpenPort(Port_Serial_ComPortType * port, uint16_t nBaudRat
     // O_NDELAY
     port->fd = open(deviceName, O_RDWR | O_NOCTTY | O_NONBLOCK);    /* O_NDELAY | */
     if( port->fd == -1) {
-        Win_Error("open", errno);
+        KnxEt_Error("open", errno);
         return FALSE;
     }
 
     if(!isatty(port->fd)) {
-        Win_Error("isatty", errno);
+        KnxEt_Error("isatty", errno);
         return FALSE;
     }
 
     if (tcgetattr(port->fd, &flags) < 0) {
-        Win_Error("tcgetattr", errno);
+        KnxEt_Error("tcgetattr", errno);
         return FALSE;
     }
 
@@ -185,7 +187,7 @@ flags.c_cflag |= CS8
     tcflush(port->fd, TCIOFLUSH);
 
     if (tcsetattr(port->fd, TCSANOW, &flags) < 0) {
-        Win_Error("tcsetattr", errno);
+        KnxEt_Error("tcsetattr", errno);
         return FALSE;
     }
 #if 0
@@ -207,6 +209,26 @@ PARMRK      Mark parity errors.
     return TRUE;
 }
 
+static void Serial_FlushTransmitter(Port_Serial_ComPortType const * port)
+{
+    if (tcflush(port->fd, TCOFLUSH) == -1) {
+        KnxEt_Error("tcflush", errno);
+    }
+}
+
+static void Serial_FlushReceiver(Port_Serial_ComPortType const * port)
+{
+    if (tcflush(port->fd, TCIFLUSH) == -1) {
+        KnxEt_Error("tcflush", errno);
+    }
+}
+
+static void Serial_Flush(Port_Serial_ComPortType const * port)
+{
+    if (tcflush(port->fd, TCIOFLUSH) == -1) {
+        KnxEt_Error("tcflush", errno);
+    }
+}
 
 static void Serial_ClosePort(Port_Serial_ComPortType const * port)
 {
@@ -235,15 +257,31 @@ boolean Port_Serial_Write(uint8_t const * buffer, uint32_t byteCount)
     return Serial_Write(&ComPort, buffer, byteCount);
 }
 
-PollingResultType Port_Serial_Poll(boolean writing, uint16_t * events)
+void Port_Serial_Flush(void)
+{
+    Serial_Flush(&ComPort);
+}
+
+void Port_Serial_FlushTransmitter(void)
+{
+    Serial_FlushTransmitter(&ComPort);
+}
+
+void Port_Serial_FlushReceiver(void)
+{
+    Serial_FlushReceiver(&ComPort);
+}
+
+
+Port_Serial_PollingResultType Port_Serial_Poll(boolean writing, uint16_t * events)
 {
 
     return Serial_Poll(&ComPort, writing, events);
 }
 
-uint16_t Port_Serial_Read(uint8_t * buffer, uint16_t byteCount)
+boolean Port_Serial_Read(uint8_t * buffer, uint16_t byteCount)
 {
-    return read(ComPort.fd, buffer, byteCount);
+    return read(ComPort.fd, buffer, byteCount) != -1;
 }
 
 uint16_t Port_Serial_BytesWaiting(uint32_t * errors)
@@ -254,7 +292,7 @@ uint16_t Port_Serial_BytesWaiting(uint32_t * errors)
 void Port_Serial_Task(void)
 {
     uint8_t buffer[128];
-    PollingResultType pollingResult;
+    Port_Serial_PollingResultType pollingResult;
     uint16_t events;
     uint32_t errors;
     int result;
@@ -264,7 +302,7 @@ void Port_Serial_Task(void)
     pollingResult = Port_Serial_Poll(FALSE, &events);
 
     if (pollingResult ==  POLLING_ERROR) {
-        Win_Error("read", errno);
+        KnxEt_Error("Port_Serial_Poll", errno);
     } else if (pollingResult == POLLING_OK) {
         printf("Polling events: %04X\n", events);
         byteCount = Port_Serial_BytesWaiting(&errors);
@@ -272,9 +310,9 @@ void Port_Serial_Task(void)
         result = Port_Serial_Read(buffer, byteCount);
         printf("Read-Result: %02x\n", result);
         if (result == -1) {
-            Win_Error("read", errno);
+            KnxEt_Error("read", errno);
         } else {
-            Dbg_DumpHex(buffer, byteCount);
+            KnxEt_DumpHex(buffer, byteCount);
             for (idx = 0; idx < byteCount; ++idx) {
                 KnxLL_FeedReceiver(buffer[idx]);
             }

@@ -44,18 +44,22 @@ typedef struct tagComPort_t {
 #endif
 } Port_Serial_ComPortType;
 
-typedef enum tagPollingResultType {
+typedef enum tagPort_Serial_PollingResultType {
     POLLING_OK,
     POLLING_TIMEOUT,
     POLLING_INTERRUPTED,
     POLLING_ERROR
-} PollingResultType;
+} Port_Serial_PollingResultType;
 
 boolean Port_Serial_Init(uint8_t portNumber);
+void Port_Serial_Deinit(void);
 boolean Port_Serial_Write(uint8_t const * buffer, uint32_t byteCount);
-PollingResultType Port_Serial_Poll(boolean writing, uint16_t * events);
+void Port_Serial_Flush(void);
+void Port_Serial_FlushTransmitter(void);
+void Port_Serial_FlushReceiver(void);
+Port_Serial_PollingResultType Port_Serial_Poll(boolean writing, uint16_t * events);
 uint16_t Port_Serial_BytesWaiting(uint32_t * errors);
-uint16_t Port_Serial_Read(uint8_t * buffer, uint16_t byteCount);
+boolean Port_Serial_Read(uint8_t * buffer, uint16_t byteCount);
 void Port_Serial_Task(void);
 
 #endif /* __PORT_SERIAL_H*/
