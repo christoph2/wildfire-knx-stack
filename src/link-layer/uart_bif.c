@@ -104,24 +104,6 @@ typedef struct tagKnxLL_ExpectationType {
 } KnxLL_ExpectationType;
 
 
-#if 0
-typedef struct tagKnxLL_LayerStateType {
-    #if 0
- KnxLL_StateType KnxLL_State;
- uint8_t KnxLL_SequenceNo;
-
- uint8_t KnxLL_Buffer[KNX_LL_BUF_SIZE];
-
- KnxLL_ExpectationType KnxLL_Expectation = {0};
- uint8_t KnxLL_ReceiverIndex;
- KnxLL_ReceiverStageType KnxLL_ReceiverStage;
- uint8_t KnxLL_RunningFCB;
- KnxLL_LocalConfirmationType KnxLL_LocalConfirmation;
-    #endif
-
-} KnxLL_LayerStateType;
-#endif
-
 typedef enum tagKnxLL_LocalConfirmationType {
     KNX_LL_CONF_NEGATIVE,
     KNX_LL_CONF_POSITIVE
@@ -136,7 +118,6 @@ typedef enum tagKnxLL_LocalConfirmationType {
 STATIC boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxLL_StateType desiredState);
 STATIC boolean KnxLL_InternalCommandUnconfirmed(uint8_t const * frame, uint8_t length);
 STATIC boolean KnxLL_InternalCommandConfirmed(uint8_t const * frame, uint8_t length);
-STATIC uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length);
 STATIC void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount);
 STATIC void Disp_L_Data_Req(void);
 STATIC void Disp_L_PollData_Req(void);
@@ -239,15 +220,15 @@ void KnxLL_FeedReceiver(uint8_t octet)
                 TMR_STOP_DL_TIMER();
                 KnxLL_State = KNX_LL_STATE_IDLE;
                 switch (KnxLL_Expectation.ExpectedService) {
-                case U_RESET_IND:
-                    DBG_PRINTLN("U_Reset_Res");
-                    break;
-                case U_STATE_IND:
-                    DBG_PRINTLN("U_State_Res");
-                    break;
-                default:
-                    printf("Unexpected octet: 0x%02x\n", octet);
-                    break;
+                    case U_RESET_IND:
+                        DBG_PRINTLN("U_Reset_Res");
+                        break;
+                    case U_STATE_IND:
+                        DBG_PRINTLN("U_State_Res");
+                        break;
+                    default:
+                        printf("Unexpected octet: 0x%02x\n", octet);
+                        break;
                 }
             }
         }
@@ -531,7 +512,7 @@ STATIC void KnxLL_Expect(uint8_t service, uint8_t mask, uint8_t byteCount)
     KnxLL_Expectation.ExpectedByteCount = byteCount;
 }
 
-STATIC uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length)
+uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length)
 {
     uint8_t checksum = (uint8_t)0xff;
     uint8_t idx;

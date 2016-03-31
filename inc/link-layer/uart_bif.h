@@ -170,6 +170,7 @@ boolean KnxLL_IsBusy(void);
 void KnxLL_BusyWait(void);
 boolean KnxLL_IsConfirmed(void);
 void KnxLL_TimeoutCB(void);
+uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length);
 
 /**
  *  Local confirmed services.
