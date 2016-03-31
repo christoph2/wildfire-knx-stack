@@ -9,6 +9,7 @@ AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CC	# ([clang gcc])
+AM_PROG_CC_C_O
 AC_PROG_INSTALL
 #AC_PROG_AWK
 #AC_PROG_LEX
