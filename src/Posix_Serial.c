@@ -185,10 +185,8 @@ int main(void)
                 }
 
                 counter++;
-                usleep(5 * 100);
         }
 
-        usleep(3 * 1000);
         Port_Serial_Deinit();
     } else {
         printf("Could not open serial port.\n");
