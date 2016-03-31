@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2015
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -23,12 +23,14 @@
 */
 
 #include <stdio.h>
+#include <string.h>
+
 #include "knx_et.h"
 #include "knx_ffi.h"
 
 /** @file KNX Error Tracker
  *
- *  The Error Tracker ships as an example and should adjusted to your needs. 
+ *  The Error Tracker ships as an example and should adjusted to your needs.
  *
  */
 
@@ -47,4 +49,19 @@ void KnxEt_ReportError(uint8_t ModuleId, uint8_t ApiId, uint8_t ErrorCode)
 void KnxEt_Start(void)
 {
 
+}
+
+void KnxEt_DumpHex(uint8_t const * frame, uint16_t length)
+{
+    uint8_t idx;
+
+    for (idx = 0; idx < length; ++idx) {
+        printf("%02x ", frame[idx]);
+    }
+    printf("\n");
+}
+
+void KnxEt_Error(char * function, uint32_t err)
+{
+    printf("%s failed with error %u: %s\n", function, err, strerror(err));
 }

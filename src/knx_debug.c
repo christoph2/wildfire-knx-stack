@@ -87,7 +87,7 @@ __int64 Dbg_TimerElapsedTime(Dbg_TimerType const * timerContext)
 }
 
 
-void Dbg_DumpHex(uint8_t const * frame, uint16_t length)
+void KnxEt_DumpHex(uint8_t const * frame, uint16_t length)
 {
     uint8_t idx;
 
@@ -103,7 +103,7 @@ void Dbg_TraceFunctionEntry(uint8_t ModuleId, uint8_t ApiId)
     if (ModuleId == 1 && ApiId == 5)
         printf("Dbg_TraceFunctionEntry -- module: %u api: %u\n", ModuleId, ApiId);
     KNX_API_TRACE(0, ModuleId, ApiId);
-    
+
 }
 
 void Dbg_TraceFunctionExit(uint8_t ModuleId, uint8_t ApiId)

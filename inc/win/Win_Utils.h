@@ -37,7 +37,6 @@ extern "C"
 #include <Windows.h>
 
 void Win_Error(char * function);
-
 boolean Port_ExitRequest(void);
 
 #if defined(__cplusplus)

@@ -58,7 +58,7 @@ void Port_SetThreadAffinity(HANDLE thread, DWORD_PTR mask)
     DWORD_PTR resultMask;
 
     if (SetThreadAffinityMask(hMainThread, mask) == 0) {
-        Win_Error("Port_SetThreadAffinity");
+        KnxEt_Error("Port_SetThreadAffinity");
     }
 }
 
@@ -73,7 +73,7 @@ void Port_Lock_TaskLevel(void)
     Port_EnterCriticalSection(&isrCS);
 #if 0
     if (SuspendThread(hMainThread) == -1) {
-        Win_Error("Port_Lock_TaskLevel");
+        KnxEt_Error("Port_Lock_TaskLevel");
     }
 #endif
 }
@@ -89,7 +89,7 @@ void Port_Unlock_TaskLevel(void)
 boolean Port_InitializeCriticalSection(CRITICAL_SECTION * criticalSection)
 {
     if (!InitializeCriticalSectionEx(criticalSection, 4000UL, RTL_CRITICAL_SECTION_FLAG_DYNAMIC_SPIN))  {
-        Win_Error("InitializeCriticalSectionAndSpinCount");
+        KnxEt_Error("InitializeCriticalSectionAndSpinCount");
         return FALSE;
     }
     return TRUE;

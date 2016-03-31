@@ -36,6 +36,10 @@ void KnxEt_Init(void);
 void KnxEt_ReportError(uint8_t ModuleId, uint8_t ApiId, uint8_t ErrorCode);
 void KnxEt_StKNXt(void);
 
+void KnxEt_Error(char * function, uint32_t err);
+void KnxEt_DumpHex(uint8_t const * frame, uint16_t length);
+
+
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */

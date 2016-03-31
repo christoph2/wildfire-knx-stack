@@ -41,7 +41,7 @@ typedef struct tagDbg_TimerType {
     boolean running;
 } Dbg_TimerType;
 
-void Dbg_DumpHex(uint8_t const * frame, uint16_t length);
+void KnxEt_DumpHex(uint8_t const * frame, uint16_t length);
 
 #define DBG_PRINT(msg)      printf("%s", (msg))
 #define DBG_PRINTLN(msg)    printf("%s\n", (msg))
@@ -57,7 +57,7 @@ void Dbg_TraceFunctionExit(uint8_t ModuleId, uint8_t ApiId);
 
 
 #else
-#define Dbg_DumpHex(frame, length)
+#define KnxEt_DumpHex(frame, length)
 #define DBG_PRINT(msg)
 #define DBG_PRINTLN(msg)
 

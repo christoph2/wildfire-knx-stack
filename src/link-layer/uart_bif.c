@@ -386,7 +386,7 @@ STATIC void Disp_L_Data_Req(void)
     
     DBG_PRINTLN("");
     DBG_PRINT("Disp_L_Data_Req: ");
-    Dbg_DumpHex(KnxMsg_ScratchBufferPtr->msg.raw, KnxMsg_ScratchBufferPtr->len);
+    KnxEt_DumpHex(KnxMsg_ScratchBufferPtr->msg.raw, KnxMsg_ScratchBufferPtr->len);
 
     KnxLL_WriteFrame(KnxMsg_ScratchBufferPtr->msg.raw, KnxMsg_ScratchBufferPtr->len);
     (void)KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
@@ -456,7 +456,7 @@ void KnxLL_DataStandard_Ind(uint8_t const * frame)
 
     DBG_PRINT("");
     DBG_PRINT("L_DataStandard_Ind: ");
-    Dbg_DumpHex(frame, length);
+    KnxEt_DumpHex(frame, length);
 }
 
 /**
