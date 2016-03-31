@@ -34,6 +34,8 @@
 #include "port/port_timer.h"
 #endif
 
+#include "Port.h"
+
 #if KSTACK_MEMORY_MAPPING == STD_ON
 STATIC FUNC(boolean, KSTACK_CODE)  KnxSched_PreLinkLayerTest(void);
 STATIC FUNC(boolean, KSTACK_CODE)  KnxSched_PostLinkLayerTest(void);
