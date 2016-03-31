@@ -34,5 +34,12 @@ typedef struct tagPort_Timer_ConfigType {
 } Port_Timer_ConfigType;
 
 
+void Port_Timer_Init(Port_Timer_ConfigType const * const config);
+void Port_Timer_Deinit(void);
+void Port_Timer_Start(long millis);
+void Port_Timer_Stop(void);
+void Port_Timer_Setup(void);
+
+
 #endif /* __PORT_TIMER_H*/
 

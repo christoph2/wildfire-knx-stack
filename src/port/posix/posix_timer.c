@@ -38,14 +38,11 @@
 #include <signal.h>
 #include <fcntl.h>
 
-
+#include "knx_et.h"
 #include "port/port_timer.h"
 
 #define TIMER_SIGNAL    SIGUSR1
 
-void Win_Error(char * function, uint32_t err);
-
-void timerTest(void);
 void TimerISR(int sig, siginfo_t * extra, void * cruft);
 void Port_Timer_Start(long millis);
 
@@ -57,13 +54,10 @@ sig_atomic_t myISRVar = 0;
 
 void TimerISR(int sig, siginfo_t * extra, void * cruft)
 {
-    //int count;
+    KNX_UNREFERENCED_PARAMETER(extra);
+    KNX_UNREFERENCED_PARAMETER(cruft);
+
     if (sig == TIMER_SIGNAL) {
-/*
-        for (count = 0; count < (1 + timer_getoverrun(timerid)); ++count) {
-            timerConfiguration->tickHandler();
-        }
-*/
         timerConfiguration->tickHandler();
     } else {
         printf("Other signal [%u]\n", sig);
@@ -82,7 +76,7 @@ void Port_Timer_Init(Port_Timer_ConfigType const * const config)
     sa.sa_sigaction = TimerISR;
     if(sigaction(TIMER_SIGNAL, &sa, NULL) < 0)
     {
-        Win_Error("sigaction", errno);
+        KnxEt_Error("sigaction", errno);
     }
 
     memset(&evp, 0, sizeof (struct sigevent));
@@ -96,7 +90,7 @@ void Port_Timer_Init(Port_Timer_ConfigType const * const config)
 void Port_Timer_Deinit(void)
 {
     if (timer_delete(timerid) == -1) {
-        Win_Error("timer_delete", errno);
+        KnxEt_Error("timer_delete", errno);
     }
 }
 
@@ -110,7 +104,7 @@ void Port_Timer_Start(long millis)
     value.it_value.tv_nsec = 1000 * millis;
 
     if (timer_settime(timerid, 0, &value, NULL) == -1) {
-        Win_Error("timer_settime", errno);
+        KnxEt_Error("timer_settime", errno);
     }
 }
 
@@ -124,7 +118,7 @@ void Port_Timer_Stop(void)
     value.it_value.tv_nsec = 0;
 
     if (timer_settime(timerid, 0, &value, NULL) == -1) {
-        Win_Error("timer_settime", errno);
+        KnxEt_Error("timer_settime", errno);
     }
 }
 
@@ -140,9 +134,8 @@ cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 #endif
 
 
-void timerTest(void)
+void Port_Timer_Setup(void)
 {
-    int i;
     Port_Timer_Init(&Port_Timer_Configuration);
     Port_Timer_Start(timerConfiguration->tickResolution);
 /*
