@@ -53,6 +53,7 @@
 #include "knx_et.h"
 #include "port/port_serial.h"
 #include "port/port_timer.h"
+#include "link-layer/uart_bif.h"
 
 /*
 __unix__
@@ -143,27 +144,62 @@ void KnxTlc_OnConnectionTimeoutTimer(void)
 
 #define PORT (1)
 
+void connectRequest(uint16_t address)
+{
+    uint8_t buffer[32];
+
+#if 0
+def connectReq(physAddr):
+    prolog = [0xBC, 0xAF, 0xFE]
+    epilog = [0x60, 0x80]
+    request = prolog + helper.wordToBytes(physAddr) + epilog
+    fcs = helper.checksum(request)
+    request.append(fcs)
+    return request
+#endif
+    buffer[0] = 0xBC;
+    buffer[1] = 0xAF;
+    buffer[2] = 0xFE;
+    buffer[3] = KNX_HIBYTE(address);
+    buffer[4] = KNX_LOBYTE(address);
+    buffer[5] = 0x60;
+    buffer[6] = 0x80;
+    buffer[7] = KnxLL_Checksum(buffer, 7);
+    KnxEt_DumpHex(buffer, 8);
+}
+
 int main(void)
 {
     uint16_t events;
     uint16_t counter;
     uint16_t count;
-    uint16_t errors;
+    uint32_t errors;
     Port_Serial_PollingResultType pollingResult;
     uint8_t buffer[128];
     uint8_t idx;
 
+    clock_t start, end;
+    double elapsedTime;
+
+    start = clock();
+
     Port_Timer_Setup();
+    counter = 0;
+
+    //connectRequest(0xbeaf);
+
 
     if (Port_Serial_Init(PORT)) {
-        Port_Serial_Flush();
+        //Port_Serial_Flush();
         KnxLL_Init();
         U_Reset_req();
 
         while (counter < 8) {
 
+            Port_Serial_Task();
+            //printf("pollingResult: %u\n", pollingResult);
+/*
                 pollingResult = Port_Serial_Poll(FALSE, &events);
-                //printf("pollingResult: %u\n", pollingResult);
 
                 if (pollingResult ==  POLLING_ERROR) {
                     KnxEt_Error("read", errno);
@@ -183,6 +219,7 @@ int main(void)
                     printf("Timeout.\n");
                 } else {
                 }
+*/
 
                 counter++;
         }
@@ -191,43 +228,13 @@ int main(void)
     } else {
         printf("Could not open serial port.\n");
     }
-    //Port_Serial_Write();
-/*
-    if (Serial_OpenPort(&port, B19200, PARENB, CS8, 1)) {
-        Serial_Write(&port,buffer, 1);
 
-        //for (counter = 0; counter < 8; counter++) {
-        while (counter < 8) {
-
-                pollingResult = Serial_Poll(&port, FALSE, &events);
-
-                if (pollingResult ==  POLLING_ERROR) {
-                    KnxEt_Error("read", errno);
-                } else if (pollingResult == POLLING_OK) {
-                    counter++;
-                    printf("Polling events: %04X\n", events);
-                    count = Serial_BytesWaiting(&port, &errors);
-                    printf("Bytes waiting: %u\n", count);
-                    result = read(port.fd, buffer, count);
-                    printf("Read-Result: %02x\n", result);
-                    if (result == -1) {
-                        KnxEt_Error("read", errno);
-                    } else {
-                        KnxEt_DumpHex(buffer, count);
-                        for (idx = 0; idx < count; ++idx) {
-                            KnxLL_FeedReceiver(buffer[idx]);
-                        }
-                    }
-                } else if (pollingResult == POLLING_TIMEOUT) {
-                    printf("Timeout.\n");
-                } else {
-                }
-                usleep(5 * 1000);
-        }
-
-        Serial_ClosePort(&port);
+    while (KnxLL_IsBusy()) {
     }
-*/
+
+    end = clock();
+    elapsedTime = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("elapsedTime: %f\n", elapsedTime);
 
     return 0;
 }
