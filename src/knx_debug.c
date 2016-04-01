@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -23,13 +23,11 @@
 */
 
 
-
-
 #include "knx_debug.h"
-#if (KNX_BUILD_TYPE == KNX_BUILD_DEBUG) && (defined(_MSC_VER) || defined(WIN32) || defined(WIN64) || defined(__CYGWIN32__) || defined(__CYGWIN64__))
+#if (KNX_BUILD_TYPE == KNX_BUILD_DEBUG) && (defined(_MSC_VER) || defined(WIN32) || defined(WIN64) || defined(__CYGWIN32__) \
+     || defined(__CYGWIN64__) || defined(__GNUC__))
 #include <stdio.h>
 #include "knx_ffi.h"
-#include <Windows.h>
 
 STATIC LARGE_INTEGER timerFrequency;
 STATIC boolean hrcAvailable;
@@ -87,9 +85,9 @@ __int64 Dbg_TimerElapsedTime(Dbg_TimerType const * timerContext)
 }
 
 
-void KnxEt_DumpHex(uint8_t const * frame, uint16_t length)
+void KnxEt_DumpHex(__uint8_t const * frame, __uint16_t length)
 {
-    uint8_t idx;
+    __uint8_t idx;
 
     for (idx = 0; idx < length; ++idx) {
         printf("%02x ", frame[idx]);
@@ -98,7 +96,7 @@ void KnxEt_DumpHex(uint8_t const * frame, uint16_t length)
 }
 
 
-void Dbg_TraceFunctionEntry(uint8_t ModuleId, uint8_t ApiId)
+void Dbg_TraceFunctionEntry(__uint8_t ModuleId, __uint8_t ApiId)
 {
     if (ModuleId == 1 && ApiId == 5)
         printf("Dbg_TraceFunctionEntry -- module: %u api: %u\n", ModuleId, ApiId);
@@ -106,10 +104,11 @@ void Dbg_TraceFunctionEntry(uint8_t ModuleId, uint8_t ApiId)
 
 }
 
-void Dbg_TraceFunctionExit(uint8_t ModuleId, uint8_t ApiId)
+void Dbg_TraceFunctionExit(__uint8_t ModuleId, __uint8_t ApiId)
 {
     //printf("Dbg_TraceFunctionExit -- module: %u api: %u\n", ModuleId, ApiId);
     KNX_API_TRACE(1, ModuleId, ApiId);
 }
 
 #endif /* defined(WIN32) || defined(WIN64) */
+
