@@ -22,6 +22,7 @@
 *
 */
 #include "knx_messaging.h"
+#include <stdio.h>
 
 #define HOP_COUNT ((uint8_t)6)
 
@@ -34,8 +35,27 @@ STATIC FUNC(Knx_StatusType, KSTACK_CODE) KnxMsg_ClearMessageBuffer(uint8_t buf_n
 STATIC KnxMsg_Buffer * KnxMsg_GetBufferAddress(uint8_t buf_num);
 STATIC uint8_t KnxMsg_GetBufferNumber(const KnxMsg_Buffer * buffer);
 STATIC Knx_StatusType KnxMsg_ClearMessageBuffer(uint8_t buf_num);
-
 #endif /* KSTACK_MEMORY_MAPPING */
+
+/*
+** Debug-API
+*/
+#if defined(KNX_BUILD_DEBUG)
+#define INC_USED_BUFFERS()  KnxMsg_BuffersUsed += 1;
+#define INC_FREE_BUFFERS()  KnxMsg_BuffersFree += 1;
+#define DEC_USED_BUFFERS()  KnxMsg_BuffersUsed -= 1;
+#define DEC_FREE_BUFFERS()  KnxMsg_BuffersFree -= 1;
+
+STATIC uint8_t KnxMsg_BuffersFree = MSG_NUM_BUFFERS;
+STATIC uint8_t KnxMsg_BuffersUsed = 0;
+
+#else
+#define INC_USED_BUFFERS()
+#define INC_FREE_BUFFERS()
+#define DEC_USED_BUFFERS()
+#define DEC_FREE_BUFFERS()
+#endif  /* KNX_BUILD_DEBUG */
+
 
 STATIC const uint8_t KnxMsg_MessageRedirectionTable[16] = {
     TASK_FREE_ID, TASK_LL_ID,   TASK_NL_ID,   TASK_TL_ID,   TASK_TC_ID,     TASK_FREE_ID,     TASK_FREE_ID,   TASK_AL_ID,
@@ -84,8 +104,22 @@ void KnxMsg_Init(void)
     for (idx = (uint8_t)1; idx < MSG_NUM_TASKS; ++idx) {
         KnxMsg_Queues[idx] = MSG_QUEUE_EMPTY;
     }
+#if defined(KNX_BUILD_DEBUG)
+    KnxMsg_BuffersFree = MSG_NUM_BUFFERS;
+    KnxMsg_BuffersUsed = 0;
+#endif
 
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_INIT);
+}
+
+
+#if KSTACK_MEMORY_MAPPING == STD_ON
+FUNC(void, KSTACK_CODE) KnxMsg_Deinit(void)
+#else
+void KnxMsg_Deinit(void)
+#endif /* KSTACK_MEMORY_MAPPING */
+{
+    KNX_MODULE_UNINITIALIZE(MSG);
 }
 
 
@@ -130,6 +164,9 @@ Knx_StatusType KnxMsg_AllocateBuffer(KnxMsg_Buffer ** buffer)
     ENABLE_ALL_INTERRUPTS();
     result = &KnxMsg_Buffers[fp];
     *buffer = result;
+
+    INC_USED_BUFFERS();
+    DEC_FREE_BUFFERS();
 
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_ALLOCATE_BUFFER);
     return KNX_E_OK;
@@ -202,6 +239,10 @@ Knx_StatusType KnxMsg_ReleaseBuffer(KnxMsg_Buffer * ptr)
     ptr = (KnxMsg_Buffer *)NULL;  /* Invalidate Buffer. */
     ENABLE_ALL_INTERRUPTS();
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_RELEASE_BUFFER);
+
+    INC_FREE_BUFFERS();
+    DEC_USED_BUFFERS();
+
     return KNX_E_OK;
 }
 
@@ -483,6 +524,17 @@ STATIC Knx_StatusType KnxMsg_ClearMessageBuffer(uint8_t buf_num)
 //    Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_CLEAR_MESSAGE_BUFFER);
     return KNX_E_OK;
 }
+
+/*
+**  Debugging API.
+*/
+#if defined(KNX_BUILD_DEBUG)
+void KnxMsg_DebugGetBufferCounters(KnxMsg_DebugBufferCounters * counters)
+{
+    counters->free = KnxMsg_BuffersFree;
+    counters->used = KnxMsg_BuffersUsed;
+}
+#endif
 
 /*
    boolean MSG_GetRoutingCtrl(const PMSG_Buffer pBuffer)

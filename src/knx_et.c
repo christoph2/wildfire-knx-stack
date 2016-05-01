@@ -34,16 +34,42 @@
  *
  */
 
+static KnxEt_CallbackType KnxEt_Callback = NULL;
+static KnxEt_ErrorConditionType KnxEt_ErrorCondition = {0};
+
 void KnxEt_Init(void)
 {
 
 }
 
+
+void KnxEt_SetCallback(KnxEt_CallbackType callback)
+{
+    KnxEt_Callback = callback;
+}
+
+void KnxEt_GetErrorCondition(KnxEt_ErrorConditionType * condition)
+{
+    *condition = KnxEt_ErrorCondition;
+/*
+    condition->ApiId = KnxEt_ErrorCondition.ApiId;
+    condition->ModuleId = KnxEt_ErrorCondition.ModuleId;
+    condition->ErrorCode = KnxEt_ErrorCondition.ErrorCode;
+*/
+}
+
 void KnxEt_ReportError(uint8_t ModuleId, uint8_t ApiId, uint8_t ErrorCode)
 {
-    KNX_API_ERROR(ModuleId, ApiId, ErrorCode);
+    //KNX_API_ERROR(ModuleId, ApiId, ErrorCode);
 
-    printf("KnxEt_ReportError -- module: %u api: %u error: %u\n", ModuleId, ApiId, ErrorCode);
+    KnxEt_ErrorCondition.ModuleId = ModuleId;
+    KnxEt_ErrorCondition.ApiId = ApiId;
+    KnxEt_ErrorCondition.ErrorCode = ErrorCode;
+
+    if (KnxEt_Callback) {
+        (KnxEt_Callback)(ModuleId, ApiId, ErrorCode);
+    }
+    //printf("KnxEt_ReportError -- module: %u api: %u error: %u\n", ModuleId, ApiId, ErrorCode);
 }
 
 void KnxEt_Start(void)
@@ -65,3 +91,4 @@ void KnxEt_Error(char * function, uint32_t err)
 {
     printf("%s failed with error %u: %s\n", function, err, strerror(err));
 }
+
