@@ -51,7 +51,6 @@ const uint16_t Utl_ClearBitTab16[16] = {
 
 STATIC uint32_t NextRandomNumber = 1;
 
-#if 0
 boolean Utl_BitGet(uint16_t w, uint8_t num)
 {
     return (w & Utl_SetBitTab16[num]) != (uint16_t)0x0000U;
@@ -74,9 +73,6 @@ uint16_t Utl_BitToggle(uint16_t w, uint8_t num)
 {
     return w ^= Utl_SetBitTab16[num];
 }
-
-
-#endif
 
 uint16_t Utl_BitGetHighest(uint16_t w)
 {
@@ -277,6 +273,10 @@ void Utl_StrRev(uint8_t * str)
 
     ASSERT(str != (void *)NULL);
 
+    if (Utl_StrLen(str) < (uint16_t)2U) {
+        return;
+    }
+
     for (idx = (uint16_t)0, dpos = Utl_StrLen(str) - 1; dpos > idx; idx++, dpos--) {
         ch         = dpos[str];
         dpos[str]  = idx[str];
@@ -408,7 +408,7 @@ uint16_t Utl_Swap16(uint16_t * w)
 
 uint32_t Utl_Swap32(uint32_t * dw)
 {
-    return KNX_MAKEDWORD(KNX_MAKEWORD(KNX_LOBYTE(KNX_LOWORD(*dw)), KNX_HIBYTE(KNX_LOWORD(*dw))), 
+    return KNX_MAKEDWORD(KNX_MAKEWORD(KNX_LOBYTE(KNX_LOWORD(*dw)), KNX_HIBYTE(KNX_LOWORD(*dw))),
         KNX_MAKEWORD(KNX_LOBYTE(KNX_HIWORD(*dw)), KNX_HIBYTE(KNX_HIWORD(*dw)))
     );
 }
