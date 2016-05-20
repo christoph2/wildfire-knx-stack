@@ -257,7 +257,7 @@ Knx_StatusType KnxMsg_ClearBuffer(KnxMsg_Buffer * ptr)
 
 //    Dbg_TraceFunctionEntry(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_CLEAR_BUFFER);
 
-    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_ALLOCATE_BUFFER, KNX_E_NOT_OK);
+    KNX_ASSERT_MODULE_IS_INITIALIZED_RETURN(MSG, AR_SERVICE_MSG_CLEAR_BUFFER, KNX_E_NOT_OK);
     if (ptr == NULL) {
         KNX_RAISE_DEV_ERROR(MSG, AR_SERVICE_MSG_CLEAR_BUFFER, MSG_E_NULL_PTR);
 //        Dbg_TraceFunctionExit(KNX_MODULE_ID_MSG, AR_SERVICE_MSG_CLEAR_BUFFER);
@@ -533,6 +533,11 @@ void KnxMsg_DebugGetBufferCounters(KnxMsg_DebugBufferCounters * counters)
 {
     counters->free = KnxMsg_BuffersFree;
     counters->used = KnxMsg_BuffersUsed;
+}
+
+void KnxMsg_DebugGetBuffers(KnxMsg_Buffer * buffers[])
+{
+    buffers = &KnxMsg_Buffers;
 }
 #endif
 
