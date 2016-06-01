@@ -232,7 +232,7 @@ class Messaging(FFI):
 class BaseTest(unittest.TestCase):
 
     def setUp(self):
-        self.msg = Messaging(ctypes.cdll.LoadLibrary("messaging"))
+        self.msg = Messaging(loadLibrary("messaging"))
 
     def tearDown(self):
         self.msg.deinit()
@@ -391,19 +391,29 @@ import os
 #os.chdir(r"C:\projekte\csProjects\k-ps\test\messaging")
 
 import sys
-print(sys.platform)
 
-dll = None
+def loadLibrary(name):
+  pf = sys.platform
+  if 'win' in pf:
+    ext = "dll"
+  elif 'linux' in pf:
+    ext = "so"
+  elif 'darwin' in pf:
+    ext = "dylib"
+  dll = ctypes.CDLL("./{0}.{1}".format(name, ext))
+  return dll
 
-for ext in ("so", "dll", "dylib"):
-  try:
-    dll = ctypes.CDLL("./messaging.{0}".format(ext))
-  except Exception as e:
-    pass
-  else:
-    print("{0} - [{1}]".format(dll, ext))
+#dll = None
+#
+#for ext in ("so", "dll", "dylib"):
+#  try:
+#    dll = ctypes.CDLL("./messaging.{0}".format(ext))
+#  except Exception as e:
+#    pass
+#  else:
+#    print("{0} - [{1}]".format(dll, ext))
 
-msg = Messaging(dll)
+msg = Messaging(loadLibrary("messaging"))
 
 def main():
     unittest.main()
