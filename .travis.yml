@@ -9,6 +9,7 @@ script:
   - make check
   - cd test
   - make
+  - python test.py
 
 os:
   - linux
