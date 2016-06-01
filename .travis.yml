@@ -4,15 +4,15 @@ sudo: required
 
 script:
   - uname -s && python -V
-  - autoreconf -iv
-  - ./configure
-  - make check
+  # - autoreconf -iv
+  #- ./configure
+  #- make check
   - cd test
   - make
   #- sudo pip install enum
   - sudo pip install -r requirements.txt
   - ls -lA
-  - python test.py
+  - python test.py -v
 
 os:
   - linux

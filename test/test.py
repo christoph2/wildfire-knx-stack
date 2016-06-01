@@ -394,11 +394,11 @@ import sys
 
 def loadLibrary(name):
   pf = sys.platform
-  if 'win' in pf:
+  if pf.startswith("win"):
     ext = "dll"
-  elif 'linux' in pf:
+  elif pf.startswith("linux"):
     ext = "so"
-  elif 'darwin' in pf:
+  elif pf.startswith("darwin"):
     ext = "dylib"
   dll = ctypes.CDLL("./{0}.{1}".format(name, ext))
   return dll
