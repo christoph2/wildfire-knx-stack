@@ -9,7 +9,8 @@ script:
   - make check
   - cd test
   - make
-  - sudo pip install enum
+  #- sudo pip install enum
+  - pip install -r requirements.txt
   - ls -lA
   - python test.py
 
