@@ -6,7 +6,7 @@ OBJ = $(SRC:%.c=%.o)
 ESRC = knx_messaging.c knx_utl.c knx_et.c  mtest.c
 EOBJ = $(ESRC:%.c=%.o)
 
-
+OS = $(uname -s)
 
 INCLUDE= -I . -I ../inc
 CPPFLAGS += $(INCLUDE)
