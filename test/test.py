@@ -390,6 +390,14 @@ import os
 
 #os.chdir(r"C:\projekte\csProjects\k-ps\test\messaging")
 
+for ext in ("so", "dll", "dylib"):
+  try:
+    tst = ctypes.CDLL("./messaging.{0}".format(ext))
+  except Exception as e:
+    pass
+  else:
+    print("{0} - [{1}]".format(tst, ext))
+
 msg = Messaging(ctypes.cdll.LoadLibrary("./messaging"))
 
 def main():
