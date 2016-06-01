@@ -3,7 +3,7 @@ language: c
 sudo: required
 
 script:
-  - uname -s
+  - uname -s && python -V
   - autoreconf -iv
   - ./configure
   - make check
