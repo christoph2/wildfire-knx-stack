@@ -10,7 +10,7 @@ script:
   - cd test
   - make
   #- sudo pip install enum
-  - pip install -r requirements.txt
+  - sudo pip install -r requirements.txt
   - ls -lA
   - python test.py
 
