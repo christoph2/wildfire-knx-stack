@@ -26,7 +26,7 @@ CFLAGS += -g -fprofile-arcs -ftest-coverage --coverage -fPIC
 LDFLAGS= -shared -fPIC #-Wl,-soname,messaging
 
 messaging: $(OBJ)
-	echo Making $(TARGET)
+	echo Linking $(TARGET)
 	$(CC) $(CCFLAGS) $(CFLAGS) -o $(TARGET) $(OBJ) $(LDFLAGS)	
 
 clean:

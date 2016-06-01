@@ -387,9 +387,10 @@ class TestUtlStringFunctions(BaseTest):
 
 
 import os
+
 #os.chdir(r"C:\projekte\csProjects\k-ps\test\messaging")
 
-msg = Messaging(ctypes.cdll.LoadLibrary("messaging"))
+msg = Messaging(ctypes.cdll.LoadLibrary("./messaging"))
 
 def main():
     unittest.main()
