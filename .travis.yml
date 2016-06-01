@@ -9,7 +9,7 @@ script:
   - make check
   - cd test
   - make
-  - pip install enum
+  - sudo pip install enum
   - ls -lA
   - python test.py
 
