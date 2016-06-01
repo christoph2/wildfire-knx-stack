@@ -7,18 +7,18 @@ OBJ = $(SRC:%.c=%.o)
 
 
 ifeq ($(OS),Windows_NT)
-	EXT=.dll
+	TARGET=messaging.dll
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Linux)
-		EXT=.so
+		TARGET=messaging.so
 	endif
 	ifeq ($(UNAME_S),Darwin)
-		EXT=.dylib
+		TARGET=messaging.dylib
 	endif
 endif
 
-TARGET = $(addsuffix $(EXT), messaging)
+# TARGET = $(addsuffix $(EXT), messaging)
 
 INCLUDE= -I . -I ../inc
 CPPFLAGS += $(INCLUDE)
@@ -26,7 +26,7 @@ CFLAGS += -g -fprofile-arcs -ftest-coverage --coverage -fPIC
 LDFLAGS= -shared -fPIC #-Wl,-soname,messaging
 
 messaging: $(OBJ)
-	echo Linking $(TARGET)
+	@echo Linking $(TARGET)
 	$(CC) $(CCFLAGS) $(CFLAGS) -o $(TARGET) $(OBJ) $(LDFLAGS)	
 
 clean:

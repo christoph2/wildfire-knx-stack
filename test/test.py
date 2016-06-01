@@ -390,15 +390,17 @@ import os
 
 #os.chdir(r"C:\projekte\csProjects\k-ps\test\messaging")
 
+dll = None
+
 for ext in ("so", "dll", "dylib"):
   try:
-    tst = ctypes.CDLL("./messaging.{0}".format(ext))
+    dll = ctypes.CDLL("./messaging.{0}".format(ext))
   except Exception as e:
     pass
   else:
-    print("{0} - [{1}]".format(tst, ext))
+    print("{0} - [{1}]".format(dll, ext))
 
-msg = Messaging(ctypes.cdll.LoadLibrary("./messaging"))
+msg = Messaging(dll)
 
 def main():
     unittest.main()
