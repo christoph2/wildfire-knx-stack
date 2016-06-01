@@ -9,6 +9,8 @@ script:
   - make check
   - cd test
   - make
+  - pip install enum
+  - ls -lA
   - python test.py
 
 os:
