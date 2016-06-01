@@ -4,7 +4,7 @@
 from collections import namedtuple
 import ctypes
 import logging
-#import random
+import random
 import unittest
 from ctypes import Structure, Union, c_uint8, c_int32, POINTER, byref, CFUNCTYPE, pointer, ARRAY, create_string_buffer
 import enum

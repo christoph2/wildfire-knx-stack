@@ -25,7 +25,7 @@ compiler:
 notifications:
   email: false
 
-matrix:
-  allow_failures:
-    - os: osx
+#matrix:
+#  allow_failures:
+#    - os: osx
 
