@@ -10,7 +10,7 @@ EOBJ = $(ESRC:%.c=%.o)
 
 INCLUDE= -I . -I ../inc
 CPPFLAGS += $(INCLUDE)
-CFLAGS += -g -fprofile-arcs -ftest-coverage --coverage
+CFLAGS += -g -fprofile-arcs -ftest-coverage --coverage -fPIC
 LDFLAGS= -shared -fPIC #-Wl,-soname,messaging
 
 messaging.dll: $(OBJ)
