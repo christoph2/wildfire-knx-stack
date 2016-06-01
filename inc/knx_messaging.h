@@ -115,14 +115,12 @@ extern "C"
 #define KnxMsg_GetPriority(pBuffer)             ((KNX_PriorityType)(KnxMsg_GetStandardFramePtr((pBuffer)).ctrl & (uint8_t)0x0C) >> 2)
 #define KnxMsg_SetPriority(pBuffer, priority)   (KnxMsg_GetStandardFramePtr((pBuffer)).ctrl |= (((priority) & (uint8_t)0x03) << 2))
 
-/* check: Daf-Type, DestionationAddressType??? */
 #define KnxMsg_GetAddressType(pBuffer)          ((uint8_t)KnxMsg_GetStandardFramePtr((pBuffer)).npci & (uint8_t)0x80)
 #define KnxMsg_SetAddressType(pBuffer, at)      (KnxMsg_GetStandardFramePtr((pBuffer)).npci |= ((at) & (uint8_t)0x80))
 
 #define KnxMsg_IsMulticastAddressed(pBuffer)    (KnxMsg_GetAddressType((pBuffer)) == KNX_ADDR_MULTICAST)
 #define KnxMsg_IsIndividualAddressed(pBuffer)   (KnxMsg_GetAddressType((pBuffer)) == KNX_ADDR_INDIVIDUAL)
 
-/* check: ist 'LSDU' richtig??? */
 #define KnxMsg_GetLSDULen(pBuffer)              (KnxMsg_GetStandardFramePtr((pBuffer).npci & (uint8_t)0x0f)
 #define KnxMsg_SetLSDULen(pBuffer, len_lsdu)    (KnxMsg_GetStandardFramePtr((pBuffer)).npci |= ((len_lsdu) & (uint8_t)0x0f))
 
@@ -132,7 +130,6 @@ extern "C"
 #define KnxMsg_GetSeqNo(pBuffer)                ((uint8_t)((KnxMsg_GetStandardFramePtr((pBuffer)).tpci) & (uint8_t)0x3c) >> 2)
 #define KnxMsg_SetSeqNo(pBuffer, SeqNo)         (KnxMsg_GetStandardFramePtr((pBuffer)).tpci |= (((SeqNo) & (uint8_t)0x0f) << 2))
 
-/* check: geht 'GetAPCI' nicht effizienter??? */
 #define KnxMsg_GetAPCI(pBuffer)                 ((uint16_t)(KnxMsg_GetStandardFramePtr((pBuffer)).tpci << \
                                                           8) | (KnxMsg_GetStandardFramePtr((pBuffer)).apci))
 #define KnxMsg_SetAPCI(pBuffer, apci)           (*(uint16_t *)&(pBuffer)->msg.raw[6] = Utl_Htons((apci)))
@@ -216,6 +213,7 @@ FUNC(void, KSTACK_CODE) KnxMsg_SetRoutingCtrl(KnxMsg_Buffer * pBuffer, boolean o
 FUNC(boolean, KSTACK_CODE) KnxMsg_GetRoutingCtrl(const KnxMsg_Buffer * pBuffer);
 
 FUNC(void, KSTACK_CODE) KnxMsg_DebugGetBufferCounters(KnxMsg_DebugBufferCounters * counters);
+FUNC(void, KSTACK_CODE) KnxMsg_DebugGetBuffers(KnxMsg_Buffer * buffers[]);
 #else
 void KnxMsg_Init(void);
 void KnxMsg_Deinit(void);
@@ -236,6 +234,7 @@ void KnxMsg_SetRoutingCtrl(KnxMsg_Buffer * pBuffer, boolean on);
 boolean KnxMsg_GetRoutingCtrl(const KnxMsg_Buffer * pBuffer);
 
 void KnxMsg_DebugGetBufferCounters(KnxMsg_DebugBufferCounters * counters);
+void KnxMsg_DebugGetBuffers(KnxMsg_Buffer * buffers[]);
 
 #endif /* KSTACK_MEMORY_MAPPING */
 

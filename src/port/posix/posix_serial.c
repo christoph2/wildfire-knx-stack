@@ -295,7 +295,6 @@ void Port_Serial_Task(void)
     Port_Serial_PollingResultType pollingResult;
     uint16_t events;
     uint32_t errors;
-    int result;
     int byteCount;
     int idx;
 
@@ -307,13 +306,12 @@ void Port_Serial_Task(void)
         printf("Polling events: %04X\n", events);
         byteCount = Port_Serial_BytesWaiting(&errors);
         printf("Bytes waiting: %u\n", byteCount);
-        result = Port_Serial_Read(buffer, byteCount);
-        printf("Read-Result: %02x\n", result);
-        if (result == -1) {
+        if (!Port_Serial_Read(buffer, byteCount)) {
             KnxEt_Error("read", errno);
         } else {
-            KnxEt_DumpHex(buffer, byteCount);
+            //KnxEt_DumpHex(buffer, byteCount);
             for (idx = 0; idx < byteCount; ++idx) {
+                printf(" %02x", buffer[idx]);
                 KnxLL_FeedReceiver(buffer[idx]);
             }
         }

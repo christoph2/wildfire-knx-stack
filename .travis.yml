@@ -3,9 +3,12 @@ language: c
 sudo: required
 
 script:
+  - uname -a
   - autoreconf -iv
   - ./configure
-  - make chec
+  - make check
+  - cd test
+  - make
 
 os:
   - linux

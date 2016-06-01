@@ -32,6 +32,7 @@
 #include <time.h>
 #include <signal.h>
 #include <fcntl.h>
+#include <pthread.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -148,15 +149,6 @@ void connectRequest(uint16_t address)
 {
     uint8_t buffer[32];
 
-#if 0
-def connectReq(physAddr):
-    prolog = [0xBC, 0xAF, 0xFE]
-    epilog = [0x60, 0x80]
-    request = prolog + helper.wordToBytes(physAddr) + epilog
-    fcs = helper.checksum(request)
-    request.append(fcs)
-    return request
-#endif
     buffer[0] = 0xBC;
     buffer[1] = 0xAF;
     buffer[2] = 0xFE;
@@ -164,64 +156,64 @@ def connectReq(physAddr):
     buffer[4] = KNX_LOBYTE(address);
     buffer[5] = 0x60;
     buffer[6] = 0x80;
-    buffer[7] = KnxLL_Checksum(buffer, 7);
-    KnxEt_DumpHex(buffer, 8);
+    //buffer[7] = KnxLL_Checksum(buffer, 7);
+    //KnxEt_DumpHex(buffer, 8);
+    KnxLL_WriteFrame(buffer, 7);
 }
+
+#define BUSY_WAIT()             \
+    while (KnxLL_IsBusy()) {    \
+    }
+
+
+#include "knx_messaging.h"
+#include "knx_debug.h"
+#include "port/port_sync.h"
 
 int main(void)
 {
-    uint16_t events;
-    uint16_t counter;
-    uint16_t count;
-    uint32_t errors;
-    Port_Serial_PollingResultType pollingResult;
-    uint8_t buffer[128];
-    uint8_t idx;
-
+    uint16_t address = 0x0000;
     clock_t start, end;
-    double elapsedTime;
-
-    start = clock();
+    //double elapsedTime;
+//    Dbg_TimerType timerCtx;
+    int64_t eta;
 
     Port_Timer_Setup();
-    counter = 0;
+    Sync_Setup();
+//    Dbg_Init();
+    KnxMsg_Init();
+    address = 0;
+
+//    Dbg_TimerInit(&timerCtx);
+//    Dbg_TimerStart(&timerCtx);
 
     //connectRequest(0xbeaf);
 
-
     if (Port_Serial_Init(PORT)) {
-        //Port_Serial_Flush();
+        Port_Serial_Flush();
         KnxLL_Init();
         U_Reset_req();
+        printf("after: [reset]\n");
+        BUSY_WAIT();
+        sleep(1);
+        while (TRUE) {
 
-        while (counter < 8) {
-
+            BUSY_WAIT();
+            //connectRequest(address++);
             Port_Serial_Task();
-            //printf("pollingResult: %u\n", pollingResult);
+//            printf("addr: %u\r", address);
+            if (address > 2) {
+                //break;
+            }
 /*
-                pollingResult = Port_Serial_Poll(FALSE, &events);
+            end = clock();
+            elapsedTime = ((double) (end - start)) / CLOCKS_PER_SEC;
 
-                if (pollingResult ==  POLLING_ERROR) {
-                    KnxEt_Error("read", errno);
-                } else if (pollingResult == POLLING_OK) {
-                    //printf("Polling events: %04X\n", events);
-                    count = Port_Serial_BytesWaiting(&errors);
-                    printf("Bytes waiting: %u\n", count);
-                    if (!Port_Serial_Read(buffer, count)) {
-                        KnxEt_Error("read", errno);
-                    } else {
-                        KnxEt_DumpHex(buffer, count);
-                        for (idx = 0; idx < count; ++idx) {
-                            KnxLL_FeedReceiver(buffer[idx]);
-                        }
-                    }
-                } else if (pollingResult == POLLING_TIMEOUT) {
-                    printf("Timeout.\n");
-                } else {
-                }
+            printf("elapsedTime: %f\n", elapsedTime);
+            if (elapsedTime > 15.0) {
+                break;
+            }
 */
-
-                counter++;
         }
 
         Port_Serial_Deinit();
@@ -232,9 +224,16 @@ int main(void)
     while (KnxLL_IsBusy()) {
     }
 
+
+//    Dbg_TimerStop(&timerCtx);
+//    eta = Dbg_TimerElapsedTime(&timerCtx);
+//    printf("elapsedTime: %lu\n", eta);
+
+/*
     end = clock();
     elapsedTime = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("elapsedTime: %f\n", elapsedTime);
+*/
 
     return 0;
 }

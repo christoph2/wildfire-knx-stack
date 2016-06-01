@@ -26,7 +26,6 @@
 
 #include "knx_types.h"
 #include "knx_macros.h"
-//#include "kdk/common/CPU_Primitives.h"
 
 #if defined(__cplusplus)
 extern "C"
@@ -68,45 +67,45 @@ extern const uint16_t Utl_ClearBitTab16[];
 */
 Utl_EndianessType Utl_CheckEndianess(void);
 
-boolean         Utl_BitGet(uint16_t w, uint8_t num);
-uint16_t          Utl_BitSet(uint16_t w, uint8_t num);
-uint16_t          Utl_BitReset(uint16_t w, uint8_t num);
-uint16_t          Utl_BitToggle(uint16_t w, uint8_t num);
-uint16_t          Utl_BitGetHighest(uint16_t w);
-uint16_t          Utl_BitGetLowest(uint16_t w);
-uint16_t          Utl_BitSetLowest(uint16_t w);
-uint16_t          Utl_BitResetLowest(uint16_t w);
-uint8_t           Utl_Log2(uint16_t num);
-uint16_t          Utl_Sqrt16(uint16_t x);
-uint32_t          Utl_Sqrt32(uint32_t x);
+boolean Utl_BitGet(uint16_t w, uint8_t num);
+uint16_t Utl_BitSet(uint16_t w, uint8_t num);
+uint16_t Utl_BitReset(uint16_t w, uint8_t num);
+uint16_t Utl_BitToggle(uint16_t w, uint8_t num);
+uint16_t Utl_BitGetHighest(uint16_t w);
+uint16_t Utl_BitGetLowest(uint16_t w);
+uint16_t Utl_BitSetLowest(uint16_t w);
+uint16_t Utl_BitResetLowest(uint16_t w);
+uint8_t Utl_Log2(uint16_t num);
+uint16_t Utl_Sqrt16(uint16_t x);
+uint32_t Utl_Sqrt32(uint32_t x);
 
-void            Utl_Itoa(int32_t value, uint8_t base, uint8_t * buf);
-void            Utl_MemCopy(void *  dst, void * src, uint16_t len);
-void            Utl_MemSet(void * dest, uint8_t fill_char, uint16_t len);
-uint16_t        Utl_StrLen(const uint8_t * src);
-void            Utl_StrCat(/*@out@*/ uint8_t * dst, /*@in@*/ const uint8_t * src);
-void            Utl_StrCpy(/*@out@*/ uint8_t * dst, /*@in@*/ const uint8_t * src);
-void            Utl_StrNCpy(/*@out@*/ uint8_t * dst, /*@in@*/ const uint8_t * src, uint16_t maxlen);
-void            Utl_StrRev(/*@in@*//*@out@*/ uint8_t * str);
-const uint8_t *   Utl_StrChr(/*@in@*/ const uint8_t * str, uint8_t ch);
+void Utl_Itoa(int32_t value, uint8_t base, uint8_t * buf);
+void Utl_MemCopy(void *  dst, void * src, uint16_t len);
+void Utl_MemSet(void * dest, uint8_t fill_char, uint16_t len);
+uint16_t Utl_StrLen(const uint8_t * src);
+void Utl_StrCat(/*@out@*/ uint8_t * dst, /*@in@*/ const uint8_t * src);
+void Utl_StrCpy(/*@out@*/ uint8_t * dst, /*@in@*/ const uint8_t * src);
+void Utl_StrNCpy(/*@out@*/ uint8_t * dst, /*@in@*/ const uint8_t * src, uint16_t maxlen);
+void Utl_StrRev(/*@in@*//*@out@*/ uint8_t * str);
+const uint8_t * Utl_StrChr(/*@in@*/ const uint8_t * str, uint8_t ch);
 
 uint16_t Utl_Ntohs(uint16_t value);
 uint16_t Utl_Htons(uint16_t value);
 
 
 /* void const * Utl_BinSearch(void const * key,void const * base,uint16_t num_elems,uint16_t elem_size,Utl_CompareFuncType compare_func); */
-void    Utl_Divrem(uint16_t dividend, uint16_t divisor, /*@out@*/ Utl_DivremType * res);
+void Utl_Divrem(uint16_t dividend, uint16_t divisor, /*@out@*/ Utl_DivremType * res);
 boolean Utl_FloatsAreNearlyEqual(float32 lhs, float32 rhs, int32_t max_difference);
-void    Utl_Randomize(uint16_t seed);
-uint16_t  Utl_Random(void);
+void Utl_Randomize(uint16_t seed);
+uint16_t Utl_Random(void);
 #if 0
 void    Utl_LongJump(Utl_JumpBufType * buf, sint16 val);
 uint16_t  Utl_SetJump(Utl_JumpBufType * buf);
 #endif
 
-/*@nullwhentrue@*/ boolean  Utl_IsNull(void * Ptr);
-uint16_t                      Utl_Swap16(uint16_t * w);
-uint32_t                      Utl_Swap32(uint32_t * dw);
+/*@nullwhentrue@*/ boolean Utl_IsNull(void * Ptr);
+uint16_t Utl_Swap16(uint16_t * w);
+uint32_t Utl_Swap32(uint32_t * dw);
 
 
 /*
@@ -142,3 +141,4 @@ uint32_t                      Utl_Swap32(uint32_t * dw);
 #endif  /* __cplusplus */
 
 #endif  /* __KNX_UTL_H */
+

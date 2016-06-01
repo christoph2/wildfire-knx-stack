@@ -167,7 +167,7 @@ STATIC void T_DataConnected_Ind(void)
 
     printf("\nT_DataConnected_Ind [%04x] *** ", apci_type);
 
-    //Dbg_DumpHex(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
+    //KnxEt_DumpHex(KnxMsg_ScratchBufferPtr->msg, KnxMsg_ScratchBufferPtr->len);
     //printf(" ***\n\n");
 
     switch (apci_type) {

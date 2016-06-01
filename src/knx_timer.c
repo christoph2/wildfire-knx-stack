@@ -31,8 +31,8 @@
 /** Link-Layer Timeout in Milli-Seconds.
 *
 */
-#if defined(_WIN32) || defined(_WIN64)
-#define KNX_LL_TIMEOUT  (5000)
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
+#define KNX_LL_TIMEOUT  (500)
 #else
 #define KNX_LL_TIMEOUT  (25)
 #endif
@@ -217,13 +217,23 @@ Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base)
    }
  */
 
+#include <time.h>
+#include "knx_debug.h"
+
 #if KSTACK_MEMORY_MAPPING == STD_ON
 FUNC(void, KSTACK_CODE) KnxTmr_SecondCallback(void)
 #else
 void KnxTmr_SecondCallback(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    printf("   One second elapsed.\n");
+    clock_t end, start = clock();
+    double elapsedTime;
+
+    end = clock();
+    elapsedTime = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("elapsedTime: %f\n", elapsedTime);
+
+    //printf("   One second elapsed.\n");
 }
 
 /*

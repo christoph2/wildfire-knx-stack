@@ -301,25 +301,25 @@ const uint8_t * Utl_StrChr(const uint8_t * str, uint8_t ch)
 
 void Utl_Itoa(int32_t value, uint8_t base, uint8_t * buf)
 {
-    uint32_t  mod;
-    uint8_t   pos = (uint8_t)0x00, swap_pos = (uint8_t)0x00;
-    uint8_t   ch;
+    uint32_t mod;
+    uint32_t div;
+    uint8_t pos = (uint8_t)0x00;
 
     ASSERT(buf != (void *)NULL);
 
     if (((int32_t)value) < 0L && base == (uint8_t)10) {
         value      = (uint32_t)((int32_t)value * -1L);
         buf[0]     = '-';
-        swap_pos   = 1;
         pos        = 1;
     }
 
     if (value == 0L) {
         buf[pos++] = '0';
+        return;
     }
-
-    while (value) {
-        mod = value % base;
+    div = (uint32_t)value;
+    while (div) {
+        mod = div % base;
 
         if (mod < 10) {
             buf[pos++] = '0' + mod;
@@ -327,18 +327,11 @@ void Utl_Itoa(int32_t value, uint8_t base, uint8_t * buf)
             buf[pos++] = 'A' + mod - (uint8_t)10;
         }
 
-        value /= base;
+        div /= base;
     }
 
     buf[pos--] = '\0';
-
-    while (pos > swap_pos) {
-        ch             = buf[swap_pos];
-        buf[swap_pos]  = buf[pos];
-        buf[pos]       = ch;
-        swap_pos++;
-        pos--;
-    }
+    Utl_StrRev(buf);
 }
 
 

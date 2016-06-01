@@ -138,12 +138,5 @@ void Port_Timer_Setup(void)
 {
     Port_Timer_Init(&Port_Timer_Configuration);
     Port_Timer_Start(timerConfiguration->tickResolution);
-/*
-    for (i = 0; i < 10; ++i) {
-        sleep(1);
-        //nanosleep();
-    }
-*/
-    //Port_Timer_Deinit();
 }
 

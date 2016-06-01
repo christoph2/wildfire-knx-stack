@@ -131,7 +131,7 @@ FUNC(void, KSTACK_CODE) NWPS_Dispatch(KnxMsg_Buffer * pBuffer, uint8_t service /
 void NWPS_Dispatch(KnxMsg_Buffer * pBuffer, uint8_t service /*,boolean connected*/)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    KnxMsg_StandardFrameRefType pmsg;
+    KnxMsg_StandardFrameType pmsg;
     uint8_t len;
     uint8_t pid;
     uint16_t objectType;
@@ -148,7 +148,7 @@ void NWPS_Dispatch(KnxMsg_Buffer * pBuffer, uint8_t service /*,boolean connected
     } else if (service == NWPS_WRITE) {
 
     } else {
-        KnxMsg_ReleaseBuffer(pBuffer);
+        (void)KnxMsg_ReleaseBuffer(pBuffer);
     }
 }
 
