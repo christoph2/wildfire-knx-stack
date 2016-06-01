@@ -390,6 +390,9 @@ import os
 
 #os.chdir(r"C:\projekte\csProjects\k-ps\test\messaging")
 
+import sys
+print(sys.platform)
+
 dll = None
 
 for ext in ("so", "dll", "dylib"):
