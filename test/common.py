@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#from collections import namedtuple
-#import ctypes
-#import logging
-#from ctypes import Structure, Union, c_uint8, c_int32, POINTER, byref, CFUNCTYPE, pointer, ARRAY
+from ctypes import CDLL
+import unittest
+import sys
 import enum
-
-#STATUS_T = ctypes.c_uint16
 
 class ModuleIDs(enum.IntEnum):
     MSG      = 1
@@ -23,11 +20,6 @@ class ModuleIDs(enum.IntEnum):
 
 
 def defaultChecker(result, func, args):
-    #print("Checker - func: {0} args: {1} result: {2} ".format(func.__name__, args, result))
-#    if not result:
-#        errorCode = win32api.GetLastError()
-#        errorMsg = win32api.FormatMessage(errorCode)
-#        raise ctypes.WinError(errorCode, "{0}: {1}".format(func.__name__, errorMsg))
     return args
 
 class FFI(object):
@@ -94,4 +86,28 @@ def nullPointerChecker(result, func, args):
             errorMsg = win32api.FormatMessage(errorCode)
             raise ctypes.WinError(errorCode, "{0}: {1}".format(func.__name__, errorMsg))
     return args
+
+def loadLibrary(name):
+    pf = sys.platform
+    if pf.startswith("win"):
+        ext = "dll"
+    elif pf.startswith("linux"):
+        ext = "so"
+    elif pf.startswith("darwin"):
+        ext = "dylib"
+    dll = CDLL("./{0}.{1}".format(name, ext))
+    return dll
+
+
+class BaseTest(unittest.TestCase):
+
+    CLASS = None
+    DLL = ""
+
+    def setUp(self):
+        self.obj = self.CLASS(loadLibrary(self.DLL))
+
+    def tearDown(self):
+        self.obj.deinit()
+        del self.obj
 
