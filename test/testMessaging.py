@@ -4,8 +4,7 @@
 import unittest
 
 from common import ModuleIDs, BaseTest
-from messaging import Messaging, Services, Errors
-
+from msg import Messaging, Services, Errors
 
 class TestInit(BaseTest):
 

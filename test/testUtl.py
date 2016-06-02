@@ -5,7 +5,7 @@ from ctypes import create_string_buffer
 import unittest
 
 from common import ModuleIDs, BaseTest
-from messaging import Messaging
+from msg import Messaging
 
 class TestUtlStringFunctions(BaseTest):
 
