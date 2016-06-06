@@ -130,6 +130,19 @@ extern "C"
 
 #define L_POLL_DATA_IND         ((uint8_t)0xf0)
 
+/*
+** Global Types.
+*/
+typedef enum tagKnxLL_StateType {
+    KNX_LL_STATE_IDLE,
+    KNX_LL_STATE_RECEIVING,
+    KNX_LL_STATE_SENDING,
+    KNX_LL_STATE_AWAITING_RESPONSE_LOCAL,
+    KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION,
+    KNX_LL_STATE_AWAITING_RECEIPTION,
+    KNX_LL_STATE_TIMED_OUT
+} KnxLL_StateType;
+
 
 /**
  *  Local unconfirmed services.
@@ -167,6 +180,7 @@ void KnxLL_Init(void);
 void KnxLL_Task(void);
 void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length);
 boolean KnxLL_IsBusy(void);
+KnxLL_StateType KnxLL_GetState(void);
 void KnxLL_BusyWait(void);
 boolean KnxLL_IsConfirmed(void);
 void KnxLL_TimeoutCB(void);

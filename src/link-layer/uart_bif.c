@@ -77,17 +77,6 @@
  *  Local Types.
  *
  */
-
-typedef enum tagKnxLL_StateType {
-    KNX_LL_STATE_IDLE,
-    KNX_LL_STATE_RECEIVING,
-    KNX_LL_STATE_SENDING,
-    KNX_LL_STATE_AWAITING_RESPONSE_LOCAL,
-    KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION,
-    KNX_LL_STATE_AWAITING_RECEIPTION,
-    KNX_LL_STATE_TIMED_OUT
-} KnxLL_StateType;
-
 typedef enum tagKnxLL_ReceiverStageType {
   KNX_LL_RECEIVER_STAGE_HEADER,
   KNX_LL_RECEIVER_STAGE_TRAILER
@@ -294,11 +283,11 @@ void KnxLL_FeedReceiver(uint8_t octet)
         KnxLL_State = KNX_LL_STATE_IDLE;
     } else if (KnxLL_State == KNX_LL_STATE_IDLE) {
         if ((octet & U_STATE_IND) == U_STATE_IND) {
-            printf("U_State_Ind [0x%02x]\n", octet);
+            //printf("U_State_Ind [0x%02x]\n", octet);
         } else if ((octet & 0x7f) == L_DATA_CON) {
-            DBG_PRINTLN("L_Data_Con");    // ???
+            //DBG_PRINTLN("L_Data_Con");    // ???
         } else if ((octet & 0xd3) == L_DATA_EXTENDED_IND) { // #if defined()
-            DBG_PRINTLN("L_DataExtended_Ind");
+            //DBG_PRINTLN("L_DataExtended_Ind");
         } else if ((octet & 0xd3) == L_DATA_STANDARD_IND)  {
             //DBG_PRINTLN("L_DataStandard_Ind");
             //printf("CTRL[%02x]\n", octet);
@@ -310,9 +299,9 @@ void KnxLL_FeedReceiver(uint8_t octet)
             KnxLL_Repeated = (octet & 0x20) == 0x00;
             TMR_START_DL_TIMER();
         } else if (octet == U_RESET_IND) {
-            DBG_PRINTLN("U_Reset_Ind");
+            //DBG_PRINTLN("U_Reset_Ind");
         } else if (octet == L_POLL_DATA_IND) { // #if defined()
-            DBG_PRINTLN("L_PollData_Ind");
+            //DBG_PRINTLN("L_PollData_Ind");
         }
 #if 0
     MASK: 0x00
@@ -431,6 +420,11 @@ void KnxLL_BusyWait(void)
 {   
     while (KnxLL_IsBusy()) {
     };
+}
+
+KnxLL_StateType KnxLL_GetState(void)
+{
+    return KnxLL_State;
 }
 
 boolean KnxLL_IsConfirmed(void)
