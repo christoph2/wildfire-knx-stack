@@ -4,7 +4,7 @@
 from collections import namedtuple
 import ctypes
 from ctypes import Structure, Union, c_uint8, c_uint16, c_int32, c_uint32, c_void_p, c_float, c_char_p
-from ctypes import create_string_buffer, POINTER, byref, CFUNCTYPE, pointer, ARRAY
+from ctypes import create_string_buffer, POINTER, byref, CFUNCTYPE, pointer, ARRAY, c_bool
 import enum
 
 from common import ModuleIDs, FFI
@@ -28,7 +28,7 @@ class Utl(FFI):
 
     _functions_ = (
         ("Utl_CheckEndianess", c_uint16, []),
-        ("Utl_BitGet", c_uint16, [c_uint16, c_uint8]),
+        ("Utl_BitGet", c_bool, [c_uint16, c_uint8]),
         ("Utl_BitSet", c_uint16, [c_uint16, c_uint8]),
         ("Utl_BitReset", c_uint16, [c_uint16, c_uint8]),
         ("Utl_BitToggle", c_uint16, [c_uint16, c_uint8]),

@@ -68,6 +68,39 @@ class TestUtlStringFunctions(BaseTest):
                                   14151, 8486]
         )
 
+class TestUtlBitFunctions(BaseTest):
+
+    CLASS = Messaging
+    DLL = "messaging"
+
+    """
+        ("Utl_BitReset", c_uint16, [c_uint16, c_uint8]),
+        ("Utl_BitToggle", c_uint16, [c_uint16, c_uint8]),
+        ("Utl_BitGetHighest", c_uint16, [c_uint16]),
+        ("Utl_BitGetLowest", c_uint16, [c_uint16]),
+        ("Utl_BitSetLowest", c_uint16, [c_uint16]),
+        ("Utl_BitResetLowest", c_uint16, [c_uint16]),
+
+        self.obj.utl.
+    """
+    def testBitGetFalse(self):
+        self.assertFalse(self.obj.utl.bitGet(0x0000, 3))
+
+    def testBitGetTrue(self):
+        self.assertTrue(self.obj.utl.bitGet(0x0008, 3))
+
+    def testBitGetAllSet(self):
+        self.assertTrue(self.obj.utl.bitGet(0xffff, 5))
+
+    def testBitSetLowest(self):
+        self.assertEqual(self.obj.utl.bitSet(0x0000, 0), 0x00001)
+
+    def testBitSetHighest(self):
+        self.assertEqual(self.obj.utl.bitSet(0x0000, 15), 0x8000)
+
+    def testBitSetOutOfRange(self):
+        self.assertEqual(self.obj.utl.bitSet(0x0000, 16), 0x0000)
+
 def main():
     unittest.main()
 
