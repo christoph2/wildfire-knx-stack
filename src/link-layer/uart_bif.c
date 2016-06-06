@@ -341,7 +341,7 @@ void KnxLL_Task(void)
     KnxDisp_DispatchLayer(TASK_LL_ID, KnxLl_ServiceTable);
 }
 
-STATIC KnxMsg_Buffer * txBuffer;
+//STATIC KnxMsg_Buffer * txBuffer;
 
 /*
 **
@@ -388,7 +388,7 @@ STATIC void Disp_L_PollData_Req(void)
 
 STATIC void KnxLl_Data_Con(Knx_StatusType status)
 {
-    //KnxMsg_Buffer * txBuffer;
+    KnxMsg_Buffer * txBuffer;
     uint16_t length;
 
     if (KnxMsg_AllocateBuffer(&txBuffer) == KNX_E_OK) {
