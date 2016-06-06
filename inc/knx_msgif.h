@@ -21,30 +21,24 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
+#if !defined(__KNX_MSGIF_H)
+#define __KNX_MSGIF_H
+
 #include "Wildfire_Config.h"
-#include "knx_timer.h"
-#include "knx_defs.h"
+#include "knx_messaging.h"
 
-void KnxTlc_OnConnectionTimeoutTimer(void);
+#if defined(__cplusplus)
+extern "C"
+{
+#endif  /* __cplusplus */
 
-KnxTmr_CallbackFunctionType KnxTmr_Callbacks[TMR_NUM_TIMERS] = {
-    (KnxTmr_CallbackFunctionType)NULL,
-#if KNX_STACK_TYPE == KNX_FULL_STACK
-    (KnxTmr_CallbackFunctionType)KnxTlc_OnConnectionTimeoutTimer,
-#else
-    (KnxTmr_CallbackFunctionType)NULL,
-#endif
-    (KnxTmr_CallbackFunctionType)NULL,
-    (KnxTmr_CallbackFunctionType)NULL,
-};
 
-#if KNX_TARGET_TYPE == KNX_TARGET_POSIX
-#include "port/port_timer.h"
+void KnxMsgIf_Post(uint8_t const * const frame, Knx_ServiceTypeType service, Knx_StatusType status);
 
-Port_Timer_ConfigType Port_Timer_Configuration = {
-    KnxTmr_SystemTickHandler,
-    (uint16_t)10
-};
 
-#endif
+#if defined(__cplusplus)
+}
+#endif  /* __cplusplus */
+
+#endif  /*__KNX_MSGIF_H */
 

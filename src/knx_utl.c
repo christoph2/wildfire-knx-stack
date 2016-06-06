@@ -59,6 +59,9 @@ boolean Utl_BitGet(uint16_t w, uint8_t num)
 
 uint16_t Utl_BitSet(uint16_t w, uint8_t num)
 {
+    if (num > 15) {
+        return w;
+    }
     return w |= Utl_SetBitTab16[num];
 }
 

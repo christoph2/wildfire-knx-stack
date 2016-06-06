@@ -1,3 +1,4 @@
+
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
@@ -21,30 +22,23 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
-#include "Wildfire_Config.h"
-#include "knx_timer.h"
-#include "knx_defs.h"
 
-void KnxTlc_OnConnectionTimeoutTimer(void);
+#include "knx_msgif.h"
 
-KnxTmr_CallbackFunctionType KnxTmr_Callbacks[TMR_NUM_TIMERS] = {
-    (KnxTmr_CallbackFunctionType)NULL,
-#if KNX_STACK_TYPE == KNX_FULL_STACK
-    (KnxTmr_CallbackFunctionType)KnxTlc_OnConnectionTimeoutTimer,
-#else
-    (KnxTmr_CallbackFunctionType)NULL,
-#endif
-    (KnxTmr_CallbackFunctionType)NULL,
-    (KnxTmr_CallbackFunctionType)NULL,
-};
+void KnxMsgIf_Post(uint8_t const * const frame, Knx_ServiceTypeType service, Knx_StatusType status)
+{
+    KnxMsg_Buffer * txBuffer;
+    uint16_t length;
 
-#if KNX_TARGET_TYPE == KNX_TARGET_POSIX
-#include "port/port_timer.h"
+    if (KnxMsg_AllocateBuffer(&txBuffer) == KNX_E_OK) {
+        txBuffer->service = service;
+        txBuffer->status = status;
 
-Port_Timer_ConfigType Port_Timer_Configuration = {
-    KnxTmr_SystemTickHandler,
-    (uint16_t)10
-};
+        txBuffer->len = length = (frame[5] & (uint8_t)0x0f) + (uint8_t)7;
+        Utl_MemCopy((void *)txBuffer->msg.raw, (void *)frame, length);
 
-#endif
-
+        (void)KnxMsg_Post(txBuffer);
+    } else {
+        ASSERT(FALSE);
+    }
+}

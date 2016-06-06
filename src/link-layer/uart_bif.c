@@ -35,6 +35,8 @@
 #include "knx_timer.h"
 #include "knx_disp.h"
 #include "knx_messaging.h"
+#include "knx_msgif.h"
+
 #include "port/port_serial.h"
 
 #include <stdio.h>
@@ -336,12 +338,18 @@ void KnxLL_FeedReceiver(uint8_t octet)
 
 }
 
+#if KNX_STACK_TYPE == KNX_FULL_STACK
 void KnxLL_Task(void)
 {
     KnxDisp_DispatchLayer(TASK_LL_ID, KnxLl_ServiceTable);
 }
+#endif /* KNX_STACK_TYPE */
 
-//STATIC KnxMsg_Buffer * txBuffer;
+/*
+ *
+ * Basic configuration: KNX_LINK_LAYER_ONLY | KNX_FULL_STACK
+ *
+ */
 
 /*
 **
@@ -388,20 +396,7 @@ STATIC void Disp_L_PollData_Req(void)
 
 STATIC void KnxLl_Data_Con(Knx_StatusType status)
 {
-    KnxMsg_Buffer * txBuffer;
-    uint16_t length;
-
-    if (KnxMsg_AllocateBuffer(&txBuffer) == KNX_E_OK) {
-        txBuffer->service = KNX_SERVICE_L_DATA_CON;
-        txBuffer->status = status;
-
-        txBuffer->len = length = (KnxLL_Buffer[5] & (uint8_t)0x0f) + (uint8_t)7;
-        Utl_MemCopy((void *)txBuffer->msg.raw, (void *)KnxLL_Buffer, length);
-
-        (void)KnxMsg_Post(txBuffer);
-    } else {
-        ASSERT(FALSE);
-    }
+    KnxMsgIf_Post(&KnxLL_Buffer, KNX_SERVICE_L_DATA_CON, status);
 }
 
 boolean KnxLL_IsBusy(void)
@@ -424,20 +419,7 @@ void KnxLL_DataStandard_Ind(uint8_t const * frame)
         return;     /* Don't route duplicates for now. */
     }
 
-    (void)KnxMsg_AllocateBuffer(&pBuffer);
-
-    if (pBuffer != (KnxMsg_Buffer *)NULL) {
-        pBuffer->service = KNX_SERVICE_L_DATA_IND;
-//        pBuffer->sap = tsap;
-        pBuffer->len = length = (frame[5] & (uint8_t)0x0f) + (uint8_t)7;    // TODO: Refactor to function-like macro.
-
-        Utl_MemCopy((void *)pBuffer->msg.raw, (void *)frame, (uint16_t)length);
-        (void)KnxMsg_Post(pBuffer);
-    }
-
-    DBG_PRINT("");
-    DBG_PRINT("L_DataStandard_Ind: ");
-    KnxEt_DumpHex(frame, length);
+    KnxMsgIf_Post(frame, KNX_SERVICE_L_DATA_IND, KNX_E_OK);
 }
 
 /**
