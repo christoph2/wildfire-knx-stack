@@ -39,6 +39,7 @@
 #define KNX_BUS_INTERFACE           KNX_BIF_TPUART_1
 #define KNX_BUILD_TYPE              KNX_BUILD_DEBUG
 #define KNX_TARGET_TYPE             KNX_TARGET_POSIX  //KNX_TARGET_ATMEL_ATMEGA
+#define KNX_STACK_TYPE		    KNX_LINK_LAYER_ONLY	// KNX_FULL_STACK
 
 #define Port_Lock_TaskLevel()
 #define Port_Unlock_TaskLevel()

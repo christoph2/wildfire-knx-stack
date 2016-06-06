@@ -144,6 +144,12 @@ extern "C"
 #define KNX_TARGET_ATMEL_ATSAM4                 (4)
 #define KNX_TARGET_ATMEL_ATMEGA                 (5)
 
+/** Stack Types.
+ *
+ */
+#define KNX_LINK_LAYER_ONLY			(1)
+#define KNX_FULL_STACK				(2)
+
 
 #if defined(__cplusplus)
 }
