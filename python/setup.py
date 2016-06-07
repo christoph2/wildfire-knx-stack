@@ -26,7 +26,8 @@ setup(
     ],
 
     keywords = 'microcontroller [development]',
-    packages = find_packages(exclude = ['contrib', 'docs', 'tests']),
+#    packages = find_packages(exclude = ['contrib', 'docs', 'tests']),
+    packages = ['wildfire'],
     install_requires = [u'enum34'],
 
     extras_require = {
