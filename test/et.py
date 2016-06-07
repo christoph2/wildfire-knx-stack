@@ -8,7 +8,7 @@ from ctypes import Structure, Union, c_uint8, c_int32, POINTER, byref, CFUNCTYPE
 import enum
 
 from common import ModuleIDs
-from ffi import FFI
+from wildfire.ffi import FFI
 
 ErrorType = namedtuple("ErrorType", "moduleId apiId errorCode")
 

@@ -8,7 +8,7 @@ from ctypes import create_string_buffer, POINTER, byref, CFUNCTYPE, pointer, ARR
 import enum
 
 from common import ModuleIDs
-from ffi import FFI
+from wildfire.ffi import FFI
 
 
 class Utl_EndianessType(enum.IntEnum):

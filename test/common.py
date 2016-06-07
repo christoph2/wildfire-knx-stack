@@ -5,7 +5,7 @@ import unittest
 import sys
 import enum
 
-from ffi import loadLibrary
+from wildfire.ffi import loadLibrary
 
 class ModuleIDs(enum.IntEnum):
     MSG      = 1
