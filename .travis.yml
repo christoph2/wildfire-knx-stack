@@ -7,12 +7,13 @@ script:
   # - autoreconf -iv
   #- ./configure
   #- make check
-  - sudo python python/setup.py install
+  - ls -lA
+  - sudo python ./python/setup.py install
   - cd test
   - make
   #- sudo pip install enum
   - sudo pip install -r requirements.txt
-  - ls -lA
+  #- ls -lA
   - python -m unittest discover -v
 
 os:
