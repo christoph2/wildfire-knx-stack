@@ -131,11 +131,11 @@ class UartBif(FFI):
         #("KnxLL_Task", None, []),
         ("KnxLL_FeedReceiver", None, [c_uint8]),
         ("KnxLL_GetState", c_uint32, []),
-        ("KnxLL_WriteFrame", None, [c_char_p, c_uint8])
-        ("KnxLL_Checksum", c_uint8, [c_char_p, c_uint8])
-        ("KnxLL_IsBusy", c_bool, [])
-        ("KnxLL_IsConfirmed", c_bool, [])
-        ("KnxLL_BusyWait", None, [])
+        ("KnxLL_WriteFrame", None, [c_char_p, c_uint8]),
+        ("KnxLL_Checksum", c_uint8, [c_char_p, c_uint8]),
+        ("KnxLL_IsBusy", c_bool, []),
+        ("KnxLL_IsConfirmed", c_bool, []),
+        ("KnxLL_BusyWait", None, []),
     )
 
     def init(self):
