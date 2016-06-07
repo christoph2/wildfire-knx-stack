@@ -8,7 +8,9 @@ script:
   #- ./configure
   #- make check
   #- ls python -lRA
-  - sudo python ./python/setup.py install
+  - cd ./python
+  - sudo python setup.py install
+  - cd ..
   - cd test
   - make
   #- sudo pip install enum
