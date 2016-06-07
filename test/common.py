@@ -18,6 +18,7 @@ class ModuleIDs(enum.IntEnum):
     NL       = 8
     DL       = 9
     UART_BIF = 48
+    SERIAL   = 49
 
 
 class BaseTest(unittest.TestCase):

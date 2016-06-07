@@ -1,7 +1,7 @@
 /*
 *   Wildfire - The Open Source KNX/EIB-Protocol Stack.
 *
-*  (C) 2007-2014 by Christoph Schueler <github.com/Christoph2,
+*  (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
 *                                       cpu12.gems@googlemail.com>
 *
 *   All Rights Reserved
@@ -53,6 +53,7 @@ extern "C"
 //#define KNX_MODULE_ID_
 
 #define KNX_MODULE_ID_UART_BIF      (48)
+#define KNX_MODULE_ID_SERIAL	    (49)
 
 #if 0
 KNXConv.c
