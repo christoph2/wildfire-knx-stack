@@ -7,7 +7,8 @@ import logging
 from ctypes import Structure, Union, c_uint8, c_int32, POINTER, byref, CFUNCTYPE, pointer, ARRAY, create_string_buffer
 import enum
 
-from common import ModuleIDs, FFI
+from common import ModuleIDs
+from ffi import FFI
 from et import Et
 from utl import Utl
 

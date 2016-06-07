@@ -1,7 +1,7 @@
 vpath %.c ../src
 
 #OBJDIR=.
-PROGRAMS = uart
+PROGRAMS = uart messaging
 
 SRC = knx_messaging.c knx_utl.c knx_et.c
 OBJ = $(SRC:%.c=%.o)
@@ -37,10 +37,11 @@ CFLAGS += -g -fPIC #TODO: conditional: -fprofile-arcs -ftest-coverage --coverage
 LDFLAGS= -shared -fPIC
 
 
+all: $(PROGRAMS)
+
 %.o: %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $(notdir $@)
 
-all: $(PROGRAMS)
 
 messaging: $(OBJ)
 	@echo Linking $(TARGET)

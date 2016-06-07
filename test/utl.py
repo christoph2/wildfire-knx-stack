@@ -7,7 +7,8 @@ from ctypes import Structure, Union, c_uint8, c_uint16, c_int32, c_uint32, c_voi
 from ctypes import create_string_buffer, POINTER, byref, CFUNCTYPE, pointer, ARRAY, c_bool
 import enum
 
-from common import ModuleIDs, FFI
+from common import ModuleIDs
+from ffi import FFI
 
 
 class Utl_EndianessType(enum.IntEnum):
