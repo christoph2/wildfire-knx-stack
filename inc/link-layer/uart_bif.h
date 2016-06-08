@@ -181,6 +181,7 @@ void KnxLL_Task(void);
 void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length);
 boolean KnxLL_IsBusy(void);
 KnxLL_StateType KnxLL_GetState(void);
+void KnxLL_SetState(KnxLL_StateType state);
 void KnxLL_BusyWait(void);
 boolean KnxLL_IsConfirmed(void);
 void KnxLL_TimeoutCB(void);

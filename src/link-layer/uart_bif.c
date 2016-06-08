@@ -168,7 +168,7 @@ void KnxLL_Init(void)
 {
     KNX_MODULE_INITIALIZE(UART_BIF);
 
-    KnxLL_State = KNX_LL_STATE_IDLE;
+    KnxLL_SetState(KNX_LL_STATE_IDLE);
     KnxLL_SequenceNo = (uint8_t)0x00;
     KnxLL_ReceiverIndex = (uint8_t)0x00;
     KnxLL_RunningFCB = (uint8_t)0x00;
@@ -185,7 +185,7 @@ void KnxLL_Init(void)
 void KnxLL_TimeoutCB(void)
 {
     DBG_PRINTLN("L2 TIMEOUT.");
-    KnxLL_State = KNX_LL_STATE_TIMED_OUT;
+    KnxLL_SetState(KNX_LL_STATE_TIMED_OUT);
     KnxLL_FeedReceiver((uint8_t)0x00);
 }
 
@@ -204,12 +204,12 @@ boolean KnxLL_IsAddressed(uint8_t daf, uint16_t address)
 // This constitutes the link-layer statemachine.
 void KnxLL_FeedReceiver(uint8_t octet)
 {
-    if (KnxLL_State == KNX_LL_STATE_AWAITING_RESPONSE_LOCAL) {
+    if (KnxLL_GetState() == KNX_LL_STATE_AWAITING_RESPONSE_LOCAL) {
         if (KnxLL_Expectation.ExpectedService == (octet & KnxLL_Expectation.ExpectedMask)) {
             if (KnxLL_Expectation.ExpectedByteCount == 1) {
                 //printf("fo: 0x%02x\n", octet);
                 TMR_STOP_DL_TIMER();
-                KnxLL_State = KNX_LL_STATE_IDLE;
+                KnxLL_SetState(KNX_LL_STATE_IDLE);
                 switch (KnxLL_Expectation.ExpectedService) {
                     case U_RESET_IND:
                         DBG_PRINTLN("U_Reset_Res");
@@ -224,7 +224,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
             }
         }
         // KnxLL_Buffer[0] = octet;
-    } else if (KnxLL_State == KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION) {
+    } else if (KnxLL_GetState() == KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION) {
         TMR_STOP_DL_TIMER();
         KnxLL_Buffer[KnxLL_ReceiverIndex] = octet;
         KnxLL_ReceiverIndex++;
@@ -242,7 +242,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
                 }
                 //KNX_CALLBACK_L_CON((octet & 0x80) == 0x80);
                 KnxLl_Data_Con( ((octet & 0x80) == 0x80) ? KNX_E_OK : KNX_E_NOT_OK );
-                KnxLL_State = KNX_LL_STATE_IDLE;
+                KnxLL_SetState(KNX_LL_STATE_IDLE);
             }
             else if ((octet & 0x10) == 0x10) {    /* Weak check. */
                 //KnxLL_Repeated = (octet & 0x20) == 0x00;
@@ -252,7 +252,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
             //printf("Finished. [0x%02x]\n", octet);
             KnxLL_ReceiverIndex = (uint8_t)0x00;
         }
-    } else if (KnxLL_State == KNX_LL_STATE_AWAITING_RECEIPTION) {
+    } else if (KnxLL_GetState() == KNX_LL_STATE_AWAITING_RECEIPTION) {
         TMR_STOP_DL_TIMER();
         KnxLL_ReceiverIndex++;
         KnxLL_Buffer[KnxLL_ReceiverIndex] = octet;
@@ -271,17 +271,17 @@ void KnxLL_FeedReceiver(uint8_t octet)
             }
         } else if (KnxLL_ReceiverStage == KNX_LL_RECEIVER_STAGE_TRAILER) {
             if (KnxLL_ReceiverIndex == KnxLL_Expectation.ExpectedByteCount + OFFS_NPCI) {
-                KnxLL_State = KNX_LL_STATE_IDLE;
+                KnxLL_SetState(KNX_LL_STATE_IDLE);
                 /* TODO: Check FCB. */
                 /* TODO: Callback. */
                 KnxLL_DataStandard_Ind(KnxLL_Buffer);
             }
         }
 
-    } else if (KnxLL_State == KNX_LL_STATE_TIMED_OUT) {
+    } else if (KnxLL_GetState() == KNX_LL_STATE_TIMED_OUT) {
         // TODO: Callback/Callout.
-        KnxLL_State = KNX_LL_STATE_IDLE;
-    } else if (KnxLL_State == KNX_LL_STATE_IDLE) {
+        KnxLL_SetState(KNX_LL_STATE_IDLE);
+    } else if (KnxLL_GetState() == KNX_LL_STATE_IDLE) {
         if ((octet & U_STATE_IND) == U_STATE_IND) {
             //printf("U_State_Ind [0x%02x]\n", octet);
         } else if ((octet & 0x7f) == L_DATA_CON) {
@@ -291,7 +291,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
         } else if ((octet & 0xd3) == L_DATA_STANDARD_IND)  {
             //DBG_PRINTLN("L_DataStandard_Ind");
             //printf("CTRL[%02x]\n", octet);
-            KnxLL_State = KNX_LL_STATE_AWAITING_RECEIPTION; /* TODO: Distiguish Standard/Extendend Frames */
+            KnxLL_SetState(KNX_LL_STATE_AWAITING_RECEIPTION); /* TODO: Distiguish Standard/Extendend Frames */
             KnxLL_ReceiverStage = KNX_LL_RECEIVER_STAGE_HEADER;
             KnxLL_ReceiverIndex = (uint8_t)0;
             KnxLL_RunningFCB = (uint8_t)0xff ^ octet;
@@ -393,7 +393,7 @@ boolean KnxLL_IsBusy(void)
     boolean result;
 
     PORT_LOCK_TASK_LEVEL();
-    result = (KnxLL_State != KNX_LL_STATE_IDLE);
+    result = (KnxLL_GetState() != KNX_LL_STATE_IDLE);
     PORT_UNLOCK_TASK_LEVEL();
     return result;
 }
@@ -422,6 +422,12 @@ void KnxLL_BusyWait(void)
 KnxLL_StateType KnxLL_GetState(void)
 {
     return KnxLL_State;
+}
+
+
+void KnxLL_SetState(KnxLL_StateType state)
+{
+    KnxLL_State = state;
 }
 
 boolean KnxLL_IsConfirmed(void)
@@ -455,16 +461,14 @@ STATIC boolean KnxLL_InternalCommand(uint8_t const * frame, uint8_t length, KnxL
     boolean result;
 
     PORT_LOCK_TASK_LEVEL();
-    if (KnxLL_State != KNX_LL_STATE_IDLE) {
+    if (KnxLL_GetState() != KNX_LL_STATE_IDLE) {
         PORT_UNLOCK_TASK_LEVEL();
         return FALSE;
     }
-    //KnxLL_State = KNX_LL_STATE_SENDING;
-    KnxLL_State = desiredState;
+    KnxLL_SetState(desiredState);
     result = Port_Serial_Write(frame, (uint32_t)length);
     PORT_UNLOCK_TASK_LEVEL();
     TMR_START_DL_TIMER();
-    //KnxLL_State = desiredState;
     return result;
 }
 
@@ -517,7 +521,7 @@ void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length)
     buffer[idx + 1] = checksum;
     (void)Port_Serial_Write((uint8_t *)buffer, (uint32_t)(idx + (uint8_t)2));
     KnxLL_Expect((uint8_t)0x00, (uint8_t)0x00, length + (uint8_t)1);
-    KnxLL_State = KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION;
+    KnxLL_SetState(KNX_LL_STATE_AWAITING_RESPONSE_TRANSMISSION);
     KnxLL_ReceiverIndex = (uint8_t)0x00;
     TMR_START_DL_TIMER();
 }
