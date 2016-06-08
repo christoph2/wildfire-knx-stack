@@ -385,7 +385,7 @@ STATIC void Disp_L_PollData_Req(void)
 
 STATIC void KnxLl_Data_Con(Knx_StatusType status)
 {
-    KnxMsgIf_Post(&KnxLL_Buffer, KNX_SERVICE_L_DATA_CON, status);
+    KnxMsgIf_Post(KnxLL_Buffer, KNX_SERVICE_L_DATA_CON, status);
 }
 
 boolean KnxLL_IsBusy(void)
@@ -401,9 +401,6 @@ boolean KnxLL_IsBusy(void)
 
 void KnxLL_DataStandard_Ind(uint8_t const * frame)
 {
-    KnxMsg_Buffer * pBuffer;
-    uint8_t length = (uint8_t)0x00;
-
     if (KnxLL_Repeated) {
         return;     /* Don't route duplicates for now. */
     }
@@ -501,6 +498,7 @@ uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length)
 }
 
 void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length)
+
 {
     uint8_t idx;
     uint8_t checksum;
