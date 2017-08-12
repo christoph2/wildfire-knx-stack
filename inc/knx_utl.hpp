@@ -64,7 +64,7 @@ extern const uint16_t Utl_ClearBitTab16[];
 */
 Utl_EndianessType Utl_CheckEndianess(void);
 
-boolean Utl_BitGet(uint16_t w, uint8_t num);
+bool Utl_BitGet(uint16_t w, uint8_t num);
 uint16_t Utl_BitSet(uint16_t w, uint8_t num);
 uint16_t Utl_BitReset(uint16_t w, uint8_t num);
 uint16_t Utl_BitToggle(uint16_t w, uint8_t num);
@@ -92,7 +92,7 @@ uint16_t Utl_Htons(uint16_t value);
 
 /* void const * Utl_BinSearch(void const * key,void const * base,uint16_t num_elems,uint16_t elem_size,Utl_CompareFuncType compare_func); */
 void Utl_Divrem(uint16_t dividend, uint16_t divisor, /*@out@*/ Utl_DivremType * res);
-boolean Utl_FloatsAreNearlyEqual(float32 lhs, float32 rhs, int32_t max_difference);
+bool Utl_FloatsAreNearlyEqual(float32 lhs, float32 rhs, int32_t max_difference);
 void Utl_Randomize(uint16_t seed);
 uint16_t Utl_Random(void);
 #if 0
@@ -100,7 +100,7 @@ void    Utl_LongJump(Utl_JumpBufType * buf, sint16 val);
 uint16_t  Utl_SetJump(Utl_JumpBufType * buf);
 #endif
 
-/*@nullwhentrue@*/ boolean Utl_IsNull(void * Ptr);
+/*@nullwhentrue@*/ bool Utl_IsNull(void * Ptr);
 uint16_t Utl_Swap16(uint16_t * w);
 uint32_t Utl_Swap32(uint32_t * dw);
 
