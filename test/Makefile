@@ -34,7 +34,7 @@ endif
 INCLUDE= -I . -I ../inc
 CPPFLAGS += $(INCLUDE)
 CFLAGS += -g -fPIC #TODO: conditional: -fprofile-arcs -ftest-coverage --coverage
-LDFLAGS= -shared -fPIC
+LDFLAGS= -shared -fPIC -Wl,-Map=uart.map
 
 
 all: $(PROGRAMS)
