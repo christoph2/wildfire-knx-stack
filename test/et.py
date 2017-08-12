@@ -12,7 +12,7 @@ from wildfire.ffi import FFI
 
 ErrorType = namedtuple("ErrorType", "moduleId apiId errorCode")
 
-EtCallback = CFUNCTYPE(None, c_uint8, c_uint8, c_uint8)
+ET_CALLBACK_TYPE = CFUNCTYPE(None, c_uint8, c_uint8, c_uint8)
 
 class KnxEt_ErrorConditionType(Structure):
 
@@ -37,8 +37,7 @@ class Et(FFI):
         return ErrorType(cond.ModuleId, cond.ApiId, cond.ErrorCode)
 
     def setCallback(self, callback):
-        ptr = EtCallback(callback)
-        print("setCallback: {0}".format(ptr))
-        self.KnxEt_SetCallback(ptr)
-        #self.KnxEt_SetCallback(CFUNCTYPE(callback))
+        callback = ET_CALLBACK_TYPE(callback)
+        print("setCallback: {0}".format(callback))
+        self.KnxEt_SetCallback(callback)
 
