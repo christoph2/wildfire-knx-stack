@@ -35,6 +35,7 @@ extern "C"
 #if (KNX_BUILD_TYPE == KNX_BUILD_DEBUG) && (defined(_MSC_VER) || defined(WIN32) || defined(WIN64) || \
                                             defined(__CYGWIN32__) || defined(__CYGWIN64__) || defined(__GNUC__))
 
+#include "knx_types.h"
 
 void KnxEt_DumpHex(uint8_t const * frame, uint16_t length);
 
