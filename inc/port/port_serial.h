@@ -29,16 +29,38 @@
 
 #include "Wildfire_Config.h"
 
-#if KNX_TARGET_TYPE == KNX_TARGET_POSIX
+#if KNX_TARGET_TYPE == KNX_TARGET_POSIX && KNX_MOCK_DRIVERS == STD_OFF
 #include <termios.h>
 #endif
 
+#include "knx_et.h"
 #include "knx_defs.h"
+
+/*
+**  Service-IDs.
+*/
+#define AR_SERVICE_SERIAL_INIT                     ((uint8_t)0x00)
+#define AR_SERVICE_SERIAL_DEINIT                   ((uint8_t)0x01)
+
+#if 0
+#define AR_SERVICE_SERIAL_     ((uint8_t)0x)
+#define AR_SERVICE_SERIAL_     ((uint8_t)0x)
+#define AR_SERVICE_SERIAL_     ((uint8_t)0x)
+#define AR_SERVICE_SERIAL_     ((uint8_t)0x)
+#define AR_SERVICE_SERIAL_     ((uint8_t)0x)
+#endif
+
+/*
+**  Module-Errors.
+*/
+#define MSG_E_UNINIT                            ((uint8_t)0x01)
+#define MSG_E_NULL_PTR                          ((uint8_t)0x02)
+
 
 typedef struct tagComPort_t {
     uint8_t portNumber;
 
-#if KNX_TARGET_TYPE == KNX_TARGET_POSIX
+#if KNX_TARGET_TYPE == KNX_TARGET_POSIX && KNX_MOCK_DRIVERS == STD_OFF
     int fd;
     struct termios savedFlags;
 #endif
