@@ -354,6 +354,20 @@ typedef void(*VoidFunctionType)(void);
 #define KNX_SAVE_CONFIG_PTR(module)             module ## _Config = ConfigPtr
 #define KNX_GET_CONFIG_PTR(module)              module ## _Config
 
+
+#define KNX_CALLBACK_NAME(name)                                     GLUE2(KnxCallback_, name)
+
+#if KNX_DYNAMIC_CALLBACKS == STD_ON
+#define KNX_CALLBACK(name, ...)                     \
+    _BEGIN_BLOCK                                    \
+    if (KNX_CALLBACK_NAME(name)) {                  \
+        KNX_CALLBACK_NAME(name)(__VA_ARGS__);       \
+    }                                               \
+    _END_BLOCK
+#else
+#define KNX_CALLBACK(name, ...) 
+#endif  /* KNX_DYNAMIC_CALLBACKS*/
+
 #if defined(__cplusplus)
 }
 #endif  /* __cplusplus */
