@@ -120,6 +120,14 @@ class Errors(enum.IntEnum):
 #KnxMsg_Buffer_Ptr = POINTER(KnxMsg_Buffer)
 #CounterType = namedtuple("CounterType", "free used")
 
+# typedef *(void WriterCallout)(uint8_t const * const frame, uint8_t length);
+WRITER_FUNC = CFUNCTYPE(None, c_char_p, c_uint8)
+
+def writer(frame, length):
+    print("Frame: {0} Length: {1}".format(frame, length))
+
+writer_func = WRITER_FUNC(writer)
+
 class UartBif(FFI):
     """
     void U_Reset_req(void);
@@ -136,6 +144,8 @@ class UartBif(FFI):
         ("KnxLL_IsBusy", c_bool, []),
         ("KnxLL_IsConfirmed", c_bool, []),
         ("KnxLL_BusyWait", None, []),
+        ("KnxLL_Set_U_Reset_Ind_Callback", None, []),
+        ("KnxLL_Set_U_State_Ind_Callback", None, []),
     )
 
     def init(self):
