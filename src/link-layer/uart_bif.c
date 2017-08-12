@@ -39,8 +39,6 @@
 
 #include "port/port_serial.h"
 
-#include <stdio.h>
-
 #define KNX_LL_BUF_SIZE     (0xff)
 
 /*
@@ -153,6 +151,18 @@ STATIC boolean KnxLL_Repeated = FALSE;
 
 KNX_IMPLEMENT_MODULE_STATE_VAR(UART_BIF);
 
+/**!
+  *
+  * Dynamic Callbacks.
+  *
+  */
+#if KNX_DYNAMIC_CALLBACKS == STD_ON
+STATIC KnxCallback_U_Timeout_Ind_Type KnxCallback_U_Timeout_Ind;
+STATIC KnxCallback_U_Reset_Ind_Type KnxCallback_U_Reset_Ind;
+STATIC KnxCallback_U_State_Ind_Type KnxCallback_U_State_Ind;
+#endif  /* KNX_DYNAMIC_CALLBACKS */
+
+
 /*!
  *
  *  Global Functions.
@@ -212,13 +222,13 @@ void KnxLL_FeedReceiver(uint8_t octet)
                 KnxLL_SetState(KNX_LL_STATE_IDLE);
                 switch (KnxLL_Expectation.ExpectedService) {
                     case U_RESET_IND:
-                        DBG_PRINTLN("U_Reset_Res");
+                        KNX_CALLBACK(U_Reset_Ind);
                         break;
                     case U_STATE_IND:
-                        DBG_PRINTLN("U_State_Res");
+                        KNX_CALLBACK(U_State_Ind, octet);
                         break;
                     default:
-                        printf("Unexpected octet: 0x%02x\n", octet);
+                        //printf("Unexpected octet: 0x%02x\n", octet);
                         break;
                 }
             }
@@ -231,7 +241,8 @@ void KnxLL_FeedReceiver(uint8_t octet)
         TMR_START_DL_TIMER();
         if (KnxLL_ReceiverIndex == 0x01) {
             if ((octet & U_STATE_IND) == U_STATE_IND) {
-                DBG_PRINTLN("Receiver Error!\n");
+                //DBG_PRINTLN("Receiver Error!\n");
+                KNX_CALLBACK(U_State_Ind, octet);
             }
             else if ((octet & L_DATA_CON) == L_DATA_CON) {
                 TMR_STOP_DL_TIMER();
@@ -277,13 +288,13 @@ void KnxLL_FeedReceiver(uint8_t octet)
                 KnxLL_DataStandard_Ind(KnxLL_Buffer);
             }
         }
-
     } else if (KnxLL_GetState() == KNX_LL_STATE_TIMED_OUT) {
-        // TODO: Callback/Callout.
+        KNX_CALLBACK(U_Timeout_Ind);
         KnxLL_SetState(KNX_LL_STATE_IDLE);
     } else if (KnxLL_GetState() == KNX_LL_STATE_IDLE) {
         if ((octet & U_STATE_IND) == U_STATE_IND) {
             //printf("U_State_Ind [0x%02x]\n", octet);
+            KNX_CALLBACK(U_State_Ind, octet);
         } else if ((octet & 0x7f) == L_DATA_CON) {
             //DBG_PRINTLN("L_Data_Con");    // ???
         } else if ((octet & 0xd3) == L_DATA_EXTENDED_IND) { // #if defined()
@@ -299,7 +310,7 @@ void KnxLL_FeedReceiver(uint8_t octet)
             KnxLL_Repeated = (octet & 0x20) == 0x00;
             TMR_START_DL_TIMER();
         } else if (octet == U_RESET_IND) {
-            //DBG_PRINTLN("U_Reset_Ind");
+            KNX_CALLBACK(U_Reset_Ind);
         } else if (octet == L_POLL_DATA_IND) { // #if defined()
             //DBG_PRINTLN("L_PollData_Ind");
         }
@@ -351,7 +362,7 @@ STATIC FUNC(void, KSTACK_CODE) Disp_L_Data_Req(void)
 STATIC void Disp_L_Data_Req(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
-    uint8_t chk;
+    //uint8_t chk;
 
     KnxMsg_SetFrameType(KnxMsg_ScratchBufferPtr, KNX_FRAME_STANDARD);
 
@@ -359,11 +370,9 @@ STATIC void Disp_L_Data_Req(void)
     KnxMsg_ScratchBufferPtr->msg.raw[0] |= (uint8_t)0x30;   /* fixed one bit + repeated. */
     KnxMsg_ScratchBufferPtr->msg.raw[0] &= (~(uint8_t)3);   /* clear two LSBs. */
     /**/
-
-    chk = KnxLL_Checksum(KnxMsg_ScratchBufferPtr->msg.raw, KnxMsg_ScratchBufferPtr->len);
     
-    DBG_PRINTLN("");
-    DBG_PRINT("Disp_L_Data_Req: ");
+    //DBG_PRINTLN("");
+    //DBG_PRINT("Disp_L_Data_Req: ");
     KnxEt_DumpHex(KnxMsg_ScratchBufferPtr->msg.raw, KnxMsg_ScratchBufferPtr->len);
 
     KnxLL_WriteFrame(KnxMsg_ScratchBufferPtr->msg.raw, KnxMsg_ScratchBufferPtr->len);
@@ -715,4 +724,26 @@ void U_IntRegRd_req(uint8_t addr)
     KnxLL_Expect((uint8_t)0x00, (uint8_t)0x00, (uint8_t)1);
 }
 #endif
+
+/*!
+  *
+  * Callback Setters.
+  *
+  */
+#if KNX_DYNAMIC_CALLBACKS == STD_ON
+void KnxLL_Set_U_Timeout_Ind_Callback(KnxCallback_U_Timeout_Ind_Type const * const callback)
+{
+    KnxCallback_U_Timeout_Ind = *callback;
+}
+
+void KnxLL_Set_U_Reset_Ind_Callback(KnxCallback_U_Reset_Ind_Type const * const callback)
+{
+    KnxCallback_U_Reset_Ind = *callback;
+}
+
+void KnxLL_Set_U_State_Ind_Callback(KnxCallback_U_State_Ind_Type const * const callback)
+{
+    KnxCallback_U_State_Ind = *callback;
+}
+#endif  /* KNX_DYNAMIC_CALLBACKS */
 

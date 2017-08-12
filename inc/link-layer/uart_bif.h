@@ -206,6 +206,19 @@ void U_SetAddress_req(uint16_t address);
 
 #endif /* KNX_BUS_INTERFACE */
 
+/**
+ *  Callback stuff.
+ */
+#if KNX_DYNAMIC_CALLBACKS == STD_ON
+typedef void (*KnxCallback_U_Timeout_Ind_Type)(void);
+typedef void (*KnxCallback_U_Reset_Ind_Type)(void);
+typedef void (*KnxCallback_U_State_Ind_Type)(uint8_t state);
+
+void KnxLL_Set_U_Timeout_Ind_Callback(KnxCallback_U_Timeout_Ind_Type const * const callback);
+void KnxLL_Set_U_Reset_Ind_Callback(KnxCallback_U_Reset_Ind_Type const * const callback);
+void KnxLL_Set_U_State_Ind_Callback(KnxCallback_U_State_Ind_Type const * const callback);
+#endif /* KNX_DYNAMIC_CALLBACKS */
+
 
 /**
  *  Transmission services.
