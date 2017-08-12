@@ -49,6 +49,7 @@
     #define DEVICE_NAME "/dev/ttyS%u"
 #endif
 
+
 /* Function Prototypes. */
 static boolean Serial_OpenPort(Port_Serial_ComPortType * port, uint16_t nBaudRate,uint8_t nParity, uint8_t nDataBits, uint8_t nStopBits);
 static void Serial_ClosePort(Port_Serial_ComPortType const * port);
@@ -123,12 +124,10 @@ static boolean Serial_Write(Port_Serial_ComPortType * port, uint8_t const * buff
 
 static boolean Serial_OpenPort(Port_Serial_ComPortType * port, uint16_t nBaudRate,uint8_t nParity, uint8_t nDataBits, uint8_t nStopBits)
 {
-    //int fd;
-    //int cflag, lflag, iflag, oflag;
     struct termios flags;
     char deviceName[128];
 
-    sprintf(deviceName, DEVICE_NAME, port->portNumber);
+    printf(deviceName, DEVICE_NAME, port->portNumber);
 
     // O_NDELAY
     port->fd = open(deviceName, O_RDWR | O_NOCTTY | O_NONBLOCK);    /* O_NDELAY | */

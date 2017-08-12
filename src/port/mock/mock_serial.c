@@ -22,17 +22,27 @@
 *
 */
 
+#include "knx_types.h"
 #include <stdint.h>
 
 typedef struct tagPort_Serial_PollingResultType {
   int dummy;
 } Port_Serial_PollingResultType;
 
+typedef void (*WriterCalloutType)(uint8_t const * const frame, uint32_t length);
+
+static WriterCalloutType Serial_WriterCallout = 0UL;
+
 /*
 **
 ** Global Functions.
 **
 */
+
+void Port_Serial_SetCallback(WriterCalloutType * cb)
+{
+    Serial_WriterCallout = *cb;
+}
 
 _Bool Port_Serial_Init(uint8_t portNumber)
 {
@@ -44,6 +54,11 @@ void Port_Serial_Deinit(void)
 
 _Bool Port_Serial_Write(uint8_t const * buffer, uint32_t byteCount)
 {
+    if (Serial_WriterCallout) {
+        Serial_WriterCallout(buffer, byteCount);
+        return FALSE;
+    }
+    return TRUE;
 }
 
 void Port_Serial_Flush(void)
