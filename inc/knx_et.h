@@ -46,7 +46,7 @@ void KnxEt_Init(void);
 void KnxEt_ReportError(uint8_t ModuleId, uint8_t ApiId, uint8_t ErrorCode);
 void KnxEt_Start(void);
 
-void KnxEt_SetCallback(KnxEt_CallbackType callback);
+void KnxEt_SetCallback(KnxEt_CallbackType const * const callback);
 void KnxEt_GetErrorCondition(KnxEt_ErrorConditionType * condition);
 
 void KnxEt_Error(char * function, uint32_t err);
