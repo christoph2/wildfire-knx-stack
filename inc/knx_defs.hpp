@@ -24,11 +24,11 @@
 #if !defined(__KNX_DEFS_HPP)
 #define __KNX_DEFS_HPP
 
-#include "knx_types.h"
-#include "knx_macros.h"
-#include "knx_utl.h"
-#include "knx_tracelog.h"
-#include "knx_moduleids.h"
+#include "knx_types.hpp"
+#include "knx_macros.hpp"
+#include "knx_utl.hpp"
+#include "knx_tracelog.hpp"
+#include "knx_moduleids.hpp"
 
 namespace knx {
 
