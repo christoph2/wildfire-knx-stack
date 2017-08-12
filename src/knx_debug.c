@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include "knx_ffi.h"
 
-STATIC LARGE_INTEGER timerFrequency;
+STATIC /* LARGE_INTEGER */ uint64_t timerFrequency;
 STATIC boolean hrcAvailable;
 
 void Dbg_Init(void)
@@ -47,6 +47,7 @@ boolean Dbg_IsHRTAvailable(void)
     return hrcAvailable;
 }
 
+#if 0
 void Dbg_TimerInit(Dbg_TimerType * timerContext)
 {
     if (!hrcAvailable) {
@@ -83,8 +84,9 @@ __int64 Dbg_TimerElapsedTime(Dbg_TimerType const * timerContext)
     }
     return (timerContext->stop - timerContext->start) / (timerFrequency.QuadPart / 1000);
 }
+#endif
 
-
+#if 0
 void KnxEt_DumpHex(__uint8_t const * frame, __uint16_t length)
 {
     __uint8_t idx;
@@ -94,6 +96,7 @@ void KnxEt_DumpHex(__uint8_t const * frame, __uint16_t length)
     }
     printf("\n");
 }
+#endif
 
 
 void Dbg_TraceFunctionEntry(__uint8_t ModuleId, __uint8_t ApiId)
