@@ -43,9 +43,9 @@ void KnxEt_Init(void)
 }
 
 
-void KnxEt_SetCallback(KnxEt_CallbackType callback)
+void KnxEt_SetCallback(KnxEt_CallbackType const * const callback)
 {
-    KnxEt_Callback = callback;
+    KnxEt_Callback = *callback;
 }
 
 void KnxEt_GetErrorCondition(KnxEt_ErrorConditionType * condition)
@@ -67,7 +67,7 @@ void KnxEt_ReportError(uint8_t ModuleId, uint8_t ApiId, uint8_t ErrorCode)
     KnxEt_ErrorCondition.ErrorCode = ErrorCode;
 
     if (KnxEt_Callback) {
-        (KnxEt_Callback)(ModuleId, ApiId, ErrorCode);
+        KnxEt_Callback(ModuleId, ApiId, ErrorCode);
     }
     //printf("KnxEt_ReportError -- module: %u api: %u error: %u\n", ModuleId, ApiId, ErrorCode);
 }

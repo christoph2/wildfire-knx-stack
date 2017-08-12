@@ -24,6 +24,7 @@
 
 #include "knx_msgif.h"
 
+//typedef *(void WriterCallout)(uint8_t const * const frame, uint8_t length);
 
 void KnxMsgIf_Post(uint8_t const * const frame, Knx_ServiceTypeType service, Knx_StatusType status)
 {
