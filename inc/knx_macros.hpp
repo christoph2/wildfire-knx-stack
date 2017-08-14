@@ -213,7 +213,7 @@ struct  GLUE2(__NEVER_USED_BY_ISO_C_, __LINE__) {   \
 #define _BEGIN_BLOCK    do {
 #define _END_BLOCK      } while (0)
 
-typedef void(*VoidFunctionType)(void);
+using VoidFunctionType = void(*)(void);
 
 #define TO_STRING_2(s)          # s
 #define TO_STRING(s)            TO_STRING_2(s)
