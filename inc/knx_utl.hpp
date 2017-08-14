@@ -42,15 +42,6 @@ struct Utl_DivremType {
     uint16_t rem;
 };
 
-#if 0
-typedef struct tagUtl_JumpBufType {
-    SizeType    pc;
-    SizeType    sp;
-} Utl_JumpBufType;
-#endif
-
-/* typedef sint8 (*Utl_CompareFuncType)(void const * lhs,void const * rhs); */
-
 /*
 **  Global Constants.
 */
