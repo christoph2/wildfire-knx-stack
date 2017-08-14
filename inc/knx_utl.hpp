@@ -32,7 +32,7 @@ namespace knx {
 /*
 **  Global Types.
 */
-enum Utl_EndianessType {
+enum class Utl_EndianessType {
     UTL_BIG_ENDIAN,
     UTL_LITTLE_ENDIAN
 };

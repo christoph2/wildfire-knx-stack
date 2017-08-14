@@ -51,7 +51,7 @@ namespace knx {
 /*
 ** Global types.
 */
-enum Knx_ServiceTypeType {
+enum class Knx_ServiceTypeType {
 /*
 **      Link-Layer.
 */
