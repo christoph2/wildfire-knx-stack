@@ -21,8 +21,8 @@
 *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 *
 */
-#if !defined(__KNX_AIL_H)
-#define __KNX_AIL_H
+#if !defined(__KNX_AIL_HPP)
+#define __KNX_AIL_HPP
 
 #include "knx_alg.hpp"
 #include "knx_layer_application.hpp"
@@ -108,5 +108,5 @@ bool KnxAil_GetRAMFlags(uint16_t objectNr, uint8_t * flags);
 
 }// namespace knx
 
-#endif  /* __KNX_AIL_H */
+#endif  /* __KNX_AIL_HPP */
 
