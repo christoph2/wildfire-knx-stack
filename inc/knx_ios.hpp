@@ -180,8 +180,8 @@ struct Knx_PropertyType {
     void const * const  property_var;
 };
 
-struct KNX_InterfaceObjectType {
-    uint8_t access_level; /* access per object. */
+struct Knx_InterfaceObjectType {
+    uint8_t access_level;
     uint8_t property_count;
     const Knx_PropertyType * properties;
 };
