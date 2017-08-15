@@ -65,28 +65,28 @@ FUNC(void, KSTACK_CODE) DEV_ChkOwnPhysAddrRcvd(bool on);
 FUNC(void, KSTACK_CODE) DEV_PhysAddrWriteEnable(bool on);
 FUNC(void, KSTACK_CODE) KnxALM_Task(void);
 FUNC(void, KSTACK_CODE) KnxALG_PollCycle(void);
-FUNC(Knx_APCITypeType, KSTACK_CODE) KnxAl_GetAPCIType(const KnxMsg_StandardFrameRefType pmsg);
-FUNC(void, KSTACK_CODE) KnxAl_GetAPDUData(const KnxMsg_StandardFrameRefType pmsg, uint8_t offset,
+FUNC(Knx_APCITypeType, KSTACK_CODE) KnxAl_GetAPCIType(const KnxMsg_StandardFrameType & pmsg);
+FUNC(void, KSTACK_CODE) KnxAl_GetAPDUData(const KnxMsg_StandardFrameType & pmsg, uint8_t offset,
                                               P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) data
                                               uint8_t len
                                               );
-FUNC(void, KSTACK_CODE) KnxAl_SetAPDUData(const KnxMsg_StandardFrameRefType pmsg, uint8_t offset,
+FUNC(void, KSTACK_CODE) KnxAl_SetAPDUData(const KnxMsg_StandardFrameType & pmsg, uint8_t offset,
                                               P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) data
                                               uint8_t len
                                               );
-FUNC(uint8_t, KSTACK_CODE) KnxAl_GetAPDUDataByte(const KnxMsg_StandardFrameRefType pmsg, uint8_t offset);
-FUNC(void, KSTACK_CODE) KnxAl_SetAPDUDataByte(const KnxMsg_StandardFrameRefType pmsg, uint8_t offset, uint8_t value);
+FUNC(uint8_t, KSTACK_CODE) KnxAl_GetAPDUDataByte(const KnxMsg_StandardFrameType & pmsg, uint8_t offset);
+FUNC(void, KSTACK_CODE) KnxAl_SetAPDUDataByte(const KnxMsg_StandardFrameType & pmsg, uint8_t offset, uint8_t value);
 #else
 void DEV_SetVerifyMode(bool on);
 void DEV_ChkOwnPhysAddrRcvd(bool on);
 void DEV_PhysAddrWriteEnable(bool on);
 void KnxALM_Task(void);
 void KnxALG_PollCycle(void);
-Knx_APCITypeType KnxAl_GetAPCIType(const KnxMsg_StandardFrameRefType pmsg);
-void KnxAl_GetAPDUData(const KnxMsg_StandardFrameRefType pmsg, uint8_t offset, uint8_t * data, uint8_t len);
-void KnxAl_SetAPDUData(const KnxMsg_StandardFrameRefType pmsg, uint8_t offset, uint8_t * data, uint8_t len);
-uint8_t KnxAl_GetAPDUDataByte(const KnxMsg_StandardFrameRefType pmsg, uint8_t offset);
-void KnxAl_SetAPDUDataByte(const KnxMsg_StandardFrameRefType pmsg, uint8_t offset, const uint8_t value);
+Knx_APCITypeType KnxAl_GetAPCIType(const KnxMsg_StandardFrameType & pmsg);
+void KnxAl_GetAPDUData(const KnxMsg_StandardFrameType & pmsg, uint8_t offset, uint8_t * data, uint8_t len);
+void KnxAl_SetAPDUData(const KnxMsg_StandardFrameType & pmsg, uint8_t offset, uint8_t * data, uint8_t len);
+uint8_t KnxAl_GetAPDUDataByte(const KnxMsg_StandardFrameType & pmsg, uint8_t offset);
+void KnxAl_SetAPDUDataByte(const KnxMsg_StandardFrameType & pmsg, uint8_t offset, const uint8_t value);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
