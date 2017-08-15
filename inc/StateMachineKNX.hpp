@@ -66,7 +66,7 @@ enum class KnxTlc_StateType {
 };
 
 
-using ypedef KnxTlc_ActionFuncType = void (*)();
+using KnxTlc_ActionFuncType = void (*)();
 
 struct KnxTlc_ActionType {
     KnxTlc_ActionFuncType Function;
