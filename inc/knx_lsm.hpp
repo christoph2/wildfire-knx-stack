@@ -51,22 +51,22 @@ extern KNX_LSCType KNX_SystemLSC[];
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE)    LSM_Init(void);
-FUNC(void, KSTACK_CODE)    LSM_Dispatch(
+FUNC(void, KSTACK_CODE) LSM_Init();
+FUNC(void, KSTACK_CODE) LSM_Dispatch(
     P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) record,
     /*LSM_State*/ P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) ls_var
     );
-FUNC(boolean, KSTACK_CODE) LSM_IsAppLoaded(void);
-FUNC(boolean, KSTACK_CODE) LSM_IsGrATLoaded(void);
-FUNC(boolean, KSTACK_CODE) LSM_IsGrOATLoaded(void);
-FUNC(void, KSTACK_CODE)    LSM_Test(void);
+FUNC(bool, KSTACK_CODE) LSM_IsAppLoaded();
+FUNC(bool, KSTACK_CODE) LSM_IsGrATLoaded();
+FUNC(bool, KSTACK_CODE) LSM_IsGrOATLoaded();
+FUNC(void, KSTACK_CODE) LSM_Test();
 #else
-void    LSM_Init(void);
-void    LSM_Dispatch(uint8_t * record, /*LSM_State*/ uint8_t * ls_var);
-boolean LSM_IsAppLoaded(void);
-boolean LSM_IsGrATLoaded(void);
-boolean LSM_IsGrOATLoaded(void);
-void    LSM_Test(void);
+void LSM_Init();
+void LSM_Dispatch(uint8_t * record, /*LSM_State*/ uint8_t * ls_var);
+bool LSM_IsAppLoaded();
+bool LSM_IsGrATLoaded();
+bool LSM_IsGrOATLoaded();
+void LSM_Test();
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
