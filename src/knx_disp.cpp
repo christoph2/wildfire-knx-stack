@@ -23,6 +23,8 @@
 */
 #include "knx_disp.hpp"
 
+using namespace knx;
+
 /*
 ** Global variables.
 */
@@ -36,30 +38,24 @@ KnxMsg_Buffer * KnxMsg_ScratchBufferPtr = nullptr;
 /*
 ** Global functions.
 */
-#if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxDisp_DispatchLayer(const uint8_t LayerID,
-    CONSTP2CONST(Knx_LayerServicesType, AUTOMATIC, KSTACK_APPL_DATA) ServiceTable
-);
-#else
-void KnxDisp_DispatchLayer(const uint8_t LayerID, const Knx_LayerServicesType * ServiceTable)
-#endif /* KSTACK_MEMORY_MAPPING */
+void KnxDisp_DispatchLayer(uint8_t layerID, const Knx_LayerServicesType & serviceTable)
 {
     uint8_t entry;
 
     do {
-        KnxMsg_ScratchBufferPtr = KnxMsg_Get(LayerID);
+        knx::KnxMsg_ScratchBufferPtr = KnxMsg_Get(layerID);
 
-        if (KnxMsg_ScratchBufferPtr != nullptr) {
-            entry = KnxMsg_ScratchBufferPtr->service - ServiceTable->LayerOffset;
+        if (knx::KnxMsg_ScratchBufferPtr != nullptr) {
+            entry = static_cast<const uint8_t>(knx::KnxMsg_ScratchBufferPtr->service) - serviceTable.LayerOffset;
 
-            if (entry < ServiceTable->NumServices) {
+            if (entry < serviceTable.NumServices) {
                 /* todo: _ASSERT() Function-Pointer!=nullptr !!! */
-                ServiceTable->Functions[entry]();
+                serviceTable.Functions[entry]();
             } else {
-                (void)KnxMsg_ReleaseBuffer(KnxMsg_ScratchBufferPtr);
+                (void)KnxMsg_ReleaseBuffer(knx::KnxMsg_ScratchBufferPtr);
             }
         }
-    } while (KnxMsg_ScratchBufferPtr != nullptr);
+    } while (knx::KnxMsg_ScratchBufferPtr != nullptr);
 }
 
 

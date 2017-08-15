@@ -36,15 +36,9 @@ extern KnxMsg_Buffer * KnxMsg_ScratchBufferPtr;
 /*
 ** Global functions.
 */
-#if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxDisp_DispatchLayer(const uint8_t LayerID,
-                                              CONSTP2CONST(Knx_LayerServicesType, AUTOMATIC, KSTACK_APPL_DATA) ServiceTable
-                                              );
-#else
-void KnxDisp_DispatchLayer(const uint8_t LayerID, const Knx_LayerServicesType * ServiceTable);
 
+void KnxDisp_DispatchLayer(uint8_t layerID, const Knx_LayerServicesType & serviceTable);
 
-#endif /* KSTACK_MEMORY_MAPPING */
 
 } // namespace knx
 
