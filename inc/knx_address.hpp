@@ -99,21 +99,21 @@ const uint8_t APP_CommObjTab[]={      \
 **  Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(boolean, KSTACK_CODE)      KnxADR_InProgrammingMode(void);
-FUNC(boolean, KSTACK_CODE)      KnxADR_IsAddressed(Knx_AddressType searched_addr,
-                                                   P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) tsap
-                                                   );
-FUNC(boolean, KSTACK_CODE)      KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr);
-FUNC(Knx_AddressType, KSTACK_CODE)  KnxADR_GetPhysAddr(void);
-FUNC(void, KSTACK_CODE)         KnxADR_SetPhysAddr(Knx_AddressType addr);
-FUNC(void, KSTACK_CODE)         KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number);
+FUNC(bool, KSTACK_CODE) KnxADR_InProgrammingMode();
+FUNC(bool, KSTACK_CODE) KnxADR_IsAddressed(Knx_AddressType searched_addr,
+                                              P2VAR(uint8_t, AUTOMATIC, KSTACK_APPL_DATA) tsap
+                                              );
+FUNC(bool, KSTACK_CODE) KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr);
+FUNC(Knx_AddressType, KSTACK_CODE)  KnxADR_GetPhysAddr();
+FUNC(void, KSTACK_CODE) KnxADR_SetPhysAddr(Knx_AddressType addr);
+FUNC(void, KSTACK_CODE) KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number);
 #else
-boolean         KnxADR_InProgrammingMode(void);
-boolean         KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8_t * tsap);
-boolean         KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr);
-Knx_AddressType KnxADR_GetPhysAddr(void);
-void            KnxADR_SetPhysAddr(Knx_AddressType addr);
-void            KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number);
+bool KnxADR_InProgrammingMode();
+bool KnxADR_IsAddressed(Knx_AddressType searched_addr, uint8_t * tsap);
+bool KnxADR_IsOwnPhysicalAddr(Knx_AddressType addr);
+Knx_AddressType KnxADR_GetPhysAddr();
+void KnxADR_SetPhysAddr(Knx_AddressType addr);
+void KnxADR_GetSerialNumber(Knx_SerialNumberType serial_number);
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
