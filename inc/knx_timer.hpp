@@ -80,7 +80,7 @@ FUNC(bool, KSTACK_CODE) KnxTmr_Stop(uint8_t timer);
 FUNC(bool, KSTACK_CODE) KnxTmr_IsExpired(uint8_t timer);
 FUNC(bool, KSTACK_CODE) KnxTmr_IsRunning(uint8_t timer);
 
-FUNC(bool, KSTACK_CODE) KnxTmr_GetRemainder(uint8_t timer, Tmr_TickRefType remainder);
+FUNC(bool, KSTACK_CODE) KnxTmr_GetRemainder(uint8_t timer, Tmr_TickType & remainder);
 
 FUNC(Tmr_TickType, KSTACK_CODE) Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base);
 
@@ -101,7 +101,7 @@ bool KnxTmr_Stop(uint8_t timer);
 bool KnxTmr_IsExpired(uint8_t timer);
 bool KnxTmr_IsRunning(uint8_t timer);
 
-bool KnxTmr_GetRemainder(uint8_t timer, Tmr_TickRefType remainder);
+bool KnxTmr_GetRemainder(uint8_t timer, Tmr_TickType & remainder);
 
 Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base);
 
