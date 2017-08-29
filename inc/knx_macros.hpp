@@ -163,17 +163,6 @@ while (!(cond))                                     \
 #define ASSERT(cond)
 #endif  /* NDEBUG */
 
-
-/* Static  (compile time) Assertion. */
-#if defined(_C1x_COMPILER)
-#define STATIC_ASSERT(cond, msg) _Static_assert((cond), (msg))
-#else
-#define STATIC_ASSERT(cond, msg)                    \
-struct  GLUE2(__NEVER_USED_BY_ISO_C_, __LINE__) {   \
-    uint8_t x[(cond) ? 1 : -1];                     \
-}
-#endif
-
 #define RETURN_VALUE_IF_FALSE(expr, value)          \
     _BEGIN_BLOCK                                    \
         if (!(expr)) {                              \

@@ -60,8 +60,8 @@ DPT9::DPT9(int value)
 
 DPT9::DPT9(double value)
 {
-    uint16_t  mantissa;
-    uint8_t   exponent;
+    uint16_t mantissa;
+    uint8_t exponent;
     bool sign;
     uint16_t res;
 
