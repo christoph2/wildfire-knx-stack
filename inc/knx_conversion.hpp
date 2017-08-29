@@ -31,17 +31,27 @@
 
 namespace knx {
 
-/*
-** Global functions.
-*/
-uint16_t  LongToDPT9(int32_t value);
-uint16_t  FloatToDPT9(float64 value);
-float64 DPT9ToFloat(uint16_t value);
-int32_t  DPT9ToLong(uint16_t value);
-uint16_t  btohs(uint16_t w);
+class DPT9 {
+public:
 
+    DPT9(double value);
+    DPT9(int value);
+
+    inline uint16_t getValue() const { return _raw_value; }
+    operator double() const;
+
+    DPT9() = delete;
+    DPT9(const DPT9&) = default;
+    DPT9& operator=(const DPT9&) = default;
+    DPT9(DPT9&&) = delete;
+    DPT9& operator=(DPT9&&) = delete;
+private:
+    double _fp_value;
+    uint16_t _raw_value;
+};
+
+using EIS5 = DPT9;
 
 } // namespace knx
 
 #endif  /* __KNXCONV_HPP */
-
