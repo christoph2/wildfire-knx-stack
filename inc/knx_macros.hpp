@@ -105,34 +105,6 @@ namespace knx {
         (a) = (a) ^ (b);    \
     _END_BLOCK
 
-#if !defined(KNX_LOBYTE)
-    #define KNX_LOBYTE(w)               ((uint8_t)((uint16_t)((uint16_t)(w) & 0x00ffU)))
-#endif
-
-#if !defined(KNX_HIBYTE)
-    #define KNX_HIBYTE(w)               ((uint8_t)((uint16_t)(((uint16_t)(w ) >> 8) & 0x00ffU)))
-#endif
-
-#if !defined(KNX_LOWORD)
-    #define KNX_LOWORD(dw)              ((uint16_t)((uint32_t)((uint32_t)(dw) & 0xffffU)))
-#endif
-
-#if !defined(KNX_HIWORD)
-    #define KNX_HIWORD(dw)              ((uint16_t)((uint32_t)(((uint32_t)(dw) >> 16) & 0xffffU)))
-#endif
-
-#if !defined(KNX_MAKEWORD)
-    #define KNX_MAKEWORD(h, l)          ((((uint16_t)((h) & ((uint8_t)0xff))) <<  (uint16_t)8) | ((uint16_t)((l) & ((uint8_t)0xff))))
-#endif
-
-#if !defined(KNX_MAKEDWORD)
-    #define KNX_MAKEDWORD(h, l)         ((((uint32_t)((h) & ((uint16_t)0xffffu))) << (uint32_t)16) | ((uint32_t)((l) & ((uint16_t)0xffffu))))
-#endif
-
-#if !defined(INVERT_NIBBLE)
-    #define INVERT_NIBBLE(b)            ((uint8_t)(((uint8_t) ~(b)) & ((uint8_t)0x0f)))
-#endif
-
 #if !defined(SIZEOF_ARRAY)
     #define SIZEOF_ARRAY(arr)           (sizeof((arr)) / sizeof((arr[0])))
 #endif
@@ -361,7 +333,7 @@ using VoidFunctionType = void(*)(void);
     }                                               \
     _END_BLOCK
 #else
-#define KNX_CALLBACK(name, ...) 
+#define KNX_CALLBACK(name, ...)
 #endif  /* KNX_DYNAMIC_CALLBACKS*/
 
 } // namespace knx
