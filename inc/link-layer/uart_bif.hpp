@@ -175,11 +175,11 @@ void KnxLL_FeedReceiver(uint8_t byte);
 void KnxLL_Init();
 void KnxLL_Task();
 void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length);
-boolean KnxLL_IsBusy();
+bool KnxLL_IsBusy();
 KnxLL_StateType KnxLL_GetState();
 void KnxLL_SetState(KnxLL_StateType state);
 void KnxLL_BusyWait();
-boolean KnxLL_IsConfirmed();
+bool KnxLL_IsConfirmed();
 void KnxLL_TimeoutCB();
 uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length);
 
@@ -223,4 +223,3 @@ void KnxLL_Set_U_State_Ind_Callback(KnxCallback_U_State_Ind_Type const * const c
 } // namespace knx
 
 #endif  /* __UART_BIF_HPP */
-
