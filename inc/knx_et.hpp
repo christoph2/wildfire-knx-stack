@@ -38,7 +38,7 @@ struct KnxEt_ErrorConditionType {
 };
 
 
-void KnxEt_Init(void);
+void KnxEt_Init();
 void KnxEt_ReportError(uint8_t ModuleId, uint8_t ApiId, uint8_t ErrorCode);
 void KnxEt_Start(void);
 
