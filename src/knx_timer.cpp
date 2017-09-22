@@ -54,7 +54,7 @@ STATIC bool       Tmr_DataLinkTimerRunning;
 /*
 ** Required Interfaces.
 */
-void KnxLL_TimeoutCB(void);
+void LL_TimeoutCB(void);
 
 /*
 ** Global functions.
@@ -65,9 +65,9 @@ void KnxLL_TimeoutCB(void);
 #endif /* KSTACK_MEMORY_MAPPING */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxTmr_Init(void)
+FUNC(void, KSTACK_CODE) Tmr_Init(void)
 #else
-void KnxTmr_Init(void)
+void Tmr_Init(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     uint8_t idx;
@@ -86,9 +86,9 @@ void KnxTmr_Init(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(bool, KSTACK_CODE) KnxTmr_Start(uint8_t timer, Tmr_ResolutionType base, Tmr_TickType ticks)
+FUNC(bool, KSTACK_CODE) Tmr_Start(uint8_t timer, Tmr_ResolutionType base, Tmr_TickType ticks)
 #else
-bool KnxTmr_Start(uint8_t timer, Tmr_ResolutionType base, Tmr_TickType ticks)
+bool Tmr_Start(uint8_t timer, Tmr_ResolutionType base, Tmr_TickType ticks)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TMR_NUM_TIMERS) {
@@ -109,9 +109,9 @@ bool KnxTmr_Start(uint8_t timer, Tmr_ResolutionType base, Tmr_TickType ticks)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(bool, KSTACK_CODE) KnxTmr_Stop(uint8_t timer)
+FUNC(bool, KSTACK_CODE) Tmr_Stop(uint8_t timer)
 #else
-bool KnxTmr_Stop(uint8_t timer)
+bool Tmr_Stop(uint8_t timer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TMR_NUM_TIMERS) {
@@ -126,9 +126,9 @@ bool KnxTmr_Stop(uint8_t timer)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(bool, KSTACK_CODE) KnxTmr_IsExpired(uint8_t timer)
+FUNC(bool, KSTACK_CODE) Tmr_IsExpired(uint8_t timer)
 #else
-bool KnxTmr_IsExpired(uint8_t timer)
+bool Tmr_IsExpired(uint8_t timer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     Tmr_StateType state;
@@ -145,9 +145,9 @@ bool KnxTmr_IsExpired(uint8_t timer)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(bool, KSTACK_CODE) KnxTmr_IsRunning(uint8_t timer)
+FUNC(bool, KSTACK_CODE) Tmr_IsRunning(uint8_t timer)
 #else
-bool KnxTmr_IsRunning(uint8_t timer)
+bool Tmr_IsRunning(uint8_t timer)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TMR_NUM_TIMERS) {
@@ -159,9 +159,9 @@ bool KnxTmr_IsRunning(uint8_t timer)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(bool, KSTACK_CODE) KnxTmr_GetRemainder(uint8_t timer, Tmr_TickType& remainder)
+FUNC(bool, KSTACK_CODE) Tmr_GetRemainder(uint8_t timer, Tmr_TickType& remainder)
 #else
-bool KnxTmr_GetRemainder(uint8_t timer, Tmr_TickType& remainder)
+bool Tmr_GetRemainder(uint8_t timer, Tmr_TickType& remainder)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     if (timer < TMR_NUM_TIMERS) {
@@ -180,9 +180,9 @@ bool KnxTmr_GetRemainder(uint8_t timer, Tmr_TickType& remainder)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(Tmr_TickType, KSTACK_CODE) KnxTmr_GetSystemTime(Tmr_ResolutionType base)
+FUNC(Tmr_TickType, KSTACK_CODE) Tmr_GetSystemTime(Tmr_ResolutionType base)
 #else
-Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base)
+Tmr_TickType Tmr_GetSystemTime(Tmr_ResolutionType base)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     Tmr_TickType timerValue = (Tmr_TickType)0UL;
@@ -222,9 +222,9 @@ Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base)
  */
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxTmr_SecondCallback(void)
+FUNC(void, KSTACK_CODE) Tmr_SecondCallback(void)
 #else
-void KnxTmr_SecondCallback(void)
+void Tmr_SecondCallback(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     clock_t end, start = clock();
@@ -242,26 +242,26 @@ void KnxTmr_SecondCallback(void)
 ** Functions related to Data-Link Timer.
 **
 */
-void KnxTmr_DataLinkTimerStart(void)
+void Tmr_DataLinkTimerStart(void)
 {
     TMR_LOCK_DL_TIMER();
-    if (!KnxTmr_DataLinkTimerIsRunning()) {
+    if (!Tmr_DataLinkTimerIsRunning()) {
         Tmr_DataLinkCounter = (uint16_t)0U;
         Tmr_DataLinkTimerRunning = true;
     }
     TMR_UNLOCK_DL_TIMER();
 }
 
-void KnxTmr_DataLinkTimerStop(void)
+void Tmr_DataLinkTimerStop(void)
 {
     TMR_LOCK_DL_TIMER();
-    if (KnxTmr_DataLinkTimerIsRunning()) {
+    if (Tmr_DataLinkTimerIsRunning()) {
         Tmr_DataLinkTimerRunning = false;
     }
     TMR_UNLOCK_DL_TIMER();
 }
 
-bool KnxTmr_DataLinkTimerIsRunning(void)
+bool Tmr_DataLinkTimerIsRunning(void)
 {
     bool result;
 
@@ -273,9 +273,9 @@ bool KnxTmr_DataLinkTimerIsRunning(void)
 
 
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxTmr_SystemTickHandler(void)
+FUNC(void, KSTACK_CODE) Tmr_SystemTickHandler(void)
 #else
-void KnxTmr_SystemTickHandler(void)
+void Tmr_SystemTickHandler(void)
 #endif /* KSTACK_MEMORY_MAPPING */
 {
     Tmr_TimerType * tm;
@@ -284,12 +284,12 @@ void KnxTmr_SystemTickHandler(void)
 
     Tmr_SysMsCounter += TMR_TICK_RESOLUTION;
 
-    if (KnxTmr_DataLinkTimerIsRunning()) {
+    if (Tmr_DataLinkTimerIsRunning()) {
         TMR_LOCK_DL_TIMER();
         Tmr_DataLinkCounter += TMR_TICK_RESOLUTION;
         if (Tmr_DataLinkCounter >= KNX_LL_TIMEOUT) {
-            KnxLL_TimeoutCB();  // Link-Layer timed out.
-            KnxTmr_DataLinkTimerStop();
+            LL_TimeoutCB();  // Link-Layer timed out.
+            Tmr_DataLinkTimerStop();
         }
         TMR_UNLOCK_DL_TIMER();
     }
@@ -297,7 +297,7 @@ void KnxTmr_SystemTickHandler(void)
     if ((Tmr_SysMsCounter % (uint32_t)1000UL) == (uint32_t)0UL) {
         Tmr_SysSecondCounter++;
         SecondChanged = true;
-        KnxTmr_SecondCallback();
+        Tmr_SecondCallback();
     }
 
     for (idx = (uint8_t)0; idx < TMR_NUM_TIMERS; idx++) {
@@ -314,8 +314,8 @@ void KnxTmr_SystemTickHandler(void)
                     tm->expire_counter -= (uint32_t)1UL;
                     if (tm->expire_counter == (uint32_t)0UL) {
                         tm->state = Tmr_StateType::EXPIRED;
-                        if (KnxTmr_Callbacks[idx] != NULL) {
-                            KnxTmr_Callbacks[idx]();
+                        if (Tmr_Callbacks[idx] != NULL) {
+                            Tmr_Callbacks[idx]();
                         }
                     }
                 }

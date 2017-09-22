@@ -27,6 +27,7 @@
 #include "Wildfire_Config.hpp"
 #include "knx_types.hpp"
 #include "knx_macros.hpp"
+#include <functional>
 
 namespace knx {
 
@@ -48,8 +49,8 @@ constexpr uint8_t TMR_TIMER_USER0              = 3;
 */
 using Tmr_TickType = uint32_t;
 
-using KnxTmr_CallbackFunctionType = void (*)(void);
-using KnxTmr_TickHandlerType = void (*)(void);
+using Tmr_CallbackFunctionType = std::function<void()>;
+using Tmr_TickHandlerType = std::function<void()>;
 
 enum class Tmr_ResolutionType {
     MS,
@@ -68,57 +69,64 @@ struct Tmr_TimerType {
     Tmr_TickType expire_counter;
 };
 
+class Timer {
+public:
+
+private:
+
+};
+
 /*
 ** Global functions.
 */
 #if KSTACK_MEMORY_MAPPING == STD_ON
-FUNC(void, KSTACK_CODE) KnxTmr_Init(void);
+FUNC(void, KSTACK_CODE) Tmr_Init();
 
-FUNC(bool, KSTACK_CODE) KnxTmr_Start(uint8_t timer, Tmr_ResolutionType base, Tmr_TickType ticks);
-FUNC(bool, KSTACK_CODE) KnxTmr_Stop(uint8_t timer);
+FUNC(bool, KSTACK_CODE) Tmr_Start(uint8_t timer, Tmr_ResolutionType base, Tmr_TickType ticks);
+FUNC(bool, KSTACK_CODE) Tmr_Stop(uint8_t timer);
 
-FUNC(bool, KSTACK_CODE) KnxTmr_IsExpired(uint8_t timer);
-FUNC(bool, KSTACK_CODE) KnxTmr_IsRunning(uint8_t timer);
+FUNC(bool, KSTACK_CODE) Tmr_IsExpired(uint8_t timer);
+FUNC(bool, KSTACK_CODE) Tmr_IsRunning(uint8_t timer);
 
-FUNC(bool, KSTACK_CODE) KnxTmr_GetRemainder(uint8_t timer, Tmr_TickType& remainder);
+FUNC(bool, KSTACK_CODE) Tmr_GetRemainder(uint8_t timer, Tmr_TickType& remainder);
 
-FUNC(Tmr_TickType, KSTACK_CODE) Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base);
+FUNC(Tmr_TickType, KSTACK_CODE) Tmr_TickType Tmr_GetSystemTime(Tmr_ResolutionType base);
 
 
-FUNC(void, KSTACK_CODE) KnxTmr_Delay(Tmr_TickType ms);
-FUNC(void, KSTACK_CODE) KnxTmr_DelayHMS(uint16_t H, uint16_t M, uint16_t S);
+FUNC(void, KSTACK_CODE) Tmr_Delay(Tmr_TickType ms);
+FUNC(void, KSTACK_CODE) Tmr_DelayHMS(uint16_t H, uint16_t M, uint16_t S);
 
-FUNC(void, KSTACK_CODE) KnxTmr_SystemTickHandler(void);
-FUNC(void, KSTACK_CODE) KnxTmr_SecondCallback(void);
+FUNC(void, KSTACK_CODE) Tmr_SystemTickHandler();
+FUNC(void, KSTACK_CODE) Tmr_SecondCallback();
 
 
 #else
-void KnxTmr_Init(void);
+void Tmr_Init();
 
-bool KnxTmr_Start(uint8_t timer, Tmr_ResolutionType base, Tmr_TickType ticks);
-bool KnxTmr_Stop(uint8_t timer);
+bool Tmr_Start(uint8_t timer, Tmr_ResolutionType base, Tmr_TickType ticks);
+bool Tmr_Stop(uint8_t timer);
 
-bool KnxTmr_IsExpired(uint8_t timer);
-bool KnxTmr_IsRunning(uint8_t timer);
+bool Tmr_IsExpired(uint8_t timer);
+bool Tmr_IsRunning(uint8_t timer);
 
-bool KnxTmr_GetRemainder(uint8_t timer, Tmr_TickType& remainder);
+bool Tmr_GetRemainder(uint8_t timer, Tmr_TickType& remainder);
 
-Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base);
+Tmr_TickType Tmr_GetSystemTime(Tmr_ResolutionType base);
 
-bool KnxTmr_DataLinkTimerIsRunning(void);
-void KnxTmr_DataLinkTimerStart(void);
-void KnxTmr_DataLinkTimerStop(void);
+bool Tmr_DataLinkTimerIsRunning();
+void Tmr_DataLinkTimerStart();
+void Tmr_DataLinkTimerStop();
 
-void KnxTmr_Delay(Tmr_TickType ms);
-void KnxTmr_DelayHMS(uint16_t H, uint16_t M, uint16_t S);
+void Tmr_Delay(Tmr_TickType ms);
+void Tmr_DelayHMS(uint16_t H, uint16_t M, uint16_t S);
 
-void KnxTmr_SystemTickHandler(void);
-void KnxTmr_SecondCallback(void);
+void Tmr_SystemTickHandler(void);
+void Tmr_SecondCallback(void);
 
 /*
 ** Global Variables.
 */
-extern KnxTmr_CallbackFunctionType KnxTmr_Callbacks[TMR_NUM_TIMERS];
+extern Tmr_CallbackFunctionType Tmr_Callbacks[TMR_NUM_TIMERS];
 
 
 #endif /* KSTACK_MEMORY_MAPPING */
