@@ -102,7 +102,7 @@ namespace knx{
 
 /**************/
 #define KnxMsg_GetFrameType(pBuffer)            ((KNX_FrameTypeType)(KnxMsg_GetStandardFramePtr((pBuffer)).ctrl) & (uint8_t)0xc0)
-#define KnxMsg_SetFrameType(pBuffer, type)      (KnxMsg_GetStandardFramePtr((pBuffer)).ctrl |= ((type) & (uint8_t)0xc0))
+#define KnxMsg_SetFrameType(pBuffer, ty)        (KnxMsg_GetStandardFramePtr((pBuffer)).ctrl |= (static_cast<uint8_t>(ty) & (uint8_t)0xc0))
 
 #define KnxMsg_GetSourceAddress(pBuffer)        ((Knx_AddressType)btohs(*(uint16_t *)KnxMsg_GetStandardFramePtr((pBuffer)).source))
 #define KnxMsg_GetDestAddress(pBuffer)          ((Knx_AddressType)btohs(*(uint16_t *)KnxMsg_GetStandardFramePtr((pBuffer)).dest))
@@ -158,7 +158,7 @@ struct KnxMsg_PropertyFrameType {
     uint8_t   num_elems;
     uint8_t   start_index;
     uint8_t   data[MAX_PROP_DATA_LEN];
-}; 
+};
 
 struct KnxMsg_PollingFrameType {
     uint8_t   ctrl;
@@ -171,7 +171,7 @@ struct KnxMsg_PollingFrameType {
 struct KnxMsg_Buffer {
     uint8_t next;
     uint8_t len;
-    Knx_ServiceTypeType service;
+    Knx_ServiceType service;
     uint8_t sap;
     Knx_StatusType status;
     union {

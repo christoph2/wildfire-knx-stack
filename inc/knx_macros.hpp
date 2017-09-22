@@ -141,7 +141,7 @@ namespace knx {
     + ((uint32)BIN8(db3) << 8)                      \
     + BIN8(dlsb))
 
-#define FOREVER                         while(TRUE)
+#define FOREVER                         while(true)
 
 #define NOT_ADDRESSABLE                 register
 
@@ -257,19 +257,19 @@ using VoidFunctionType = void(*)(void);
     KnxEt_ReportError(KNX_MODULE_ID_ ## module, api, error)
 
 #define KNX_IMPLEMENT_MODULE_STATE_VAR(module)                      \
-    STATIC KnxModule_StateType module ## _State = KNX_MODULE_UNINIT
+    STATIC KnxModule_StateType module ## _State = KnxModule_StateType::KNX_MODULE_UNINIT
 
 #define KNX_GET_MODULE_STATE_VAR(module)                            \
     GLUE2(module, _State)
 
 #define KNX_MODULE_INITIALIZE(module)                               \
-    KNX_GET_MODULE_STATE_VAR(module) = KNX_MODULE_READY
+    KNX_GET_MODULE_STATE_VAR(module) = KnxModule_StateType::KNX_MODULE_READY
 
 #define KNX_MODULE_UNINITIALIZE(module)                             \
-    KNX_GET_MODULE_STATE_VAR(module) = KNX_MODULE_UNINIT
+    KNX_GET_MODULE_STATE_VAR(module) = KnxModule_StateType::KNX_MODULE_UNINIT
 
 #define KNX_MODULE_IS_INITIALIZED(module)                           \
-    ((KNX_GET_MODULE_STATE_VAR(module) == KNX_MODULE_READY) ? TRUE : FALSE)
+    ((KNX_GET_MODULE_STATE_VAR(module) == KnxModule_StateType::KNX_MODULE_READY) ? true : false)
 
 #define KNX_ASSERT_MODULE_IS_INITIALIZED(module, fkt)               \
     _BEGIN_BLOCK                                                    \
@@ -298,7 +298,7 @@ using VoidFunctionType = void(*)(void);
 
 #define KNX_MODULE_UNINITIALIZE(module)
 
-#define KNX_MODULE_IS_INITIALIZED(module)                           (TRUE)
+#define KNX_MODULE_IS_INITIALIZED(module)                           (true)
 
 #define KNX_ASSERT_MODULE_IS_INITIALIZED(ml, mu, fkt)
 
