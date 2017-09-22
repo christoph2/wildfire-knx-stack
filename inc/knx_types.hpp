@@ -67,7 +67,7 @@ enum class Knx_DafType : uint8_t {
     KNX_ADDR_MULTICAST  = 0x80
 };
 
-enum class Knx_FrameTypeType : uint8_t {
+enum class Knx_FrameType : uint8_t {
     KNX_FRAME_EXTENDED  = 0x00,
     KNX_FRAME_STANDARD  = 0x80,
     KNX_FRAME_POLLING   = 0xC0
@@ -100,7 +100,7 @@ using Knx_PriorityType = uint8_t;
 using Knx_LayerServiceFunctionType  = void (*)();
 
 struct Knx_ServiceEntryType {
-    Knx_ServiceTypeType Service;
+    Knx_ServiceType Service;
     Knx_LayerServiceFunctionType Function;
 };
 

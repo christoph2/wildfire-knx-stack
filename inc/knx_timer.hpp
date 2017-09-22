@@ -24,19 +24,19 @@
 #if !defined(__KNX_TIMER_HPP)
 #define __KNX_TIMER_HPP
 
-namespace knx {
-
 #include "Wildfire_Config.hpp"
 #include "knx_types.hpp"
 #include "knx_macros.hpp"
 
+namespace knx {
+
 /*
 ** Global defines.
 */
-#define TMR_TIMER_LLC_TIMEOUT       ((uint8_t)0)
-#define TMR_TIMER_TLC_CON_TIMEOUT   ((uint8_t)1)
-#define TMR_TIMER_TLC_ACK_TIMEOUT   ((uint8_t)2)
-#define TMR_TIMER_USER0             ((uint8_t)3)
+constexpr uint8_t TMR_TIMER_LLC_TIMEOUT        = 0;
+constexpr uint8_t TMR_TIMER_TLC_CON_TIMEOUT    = 1;
+constexpr uint8_t TMR_TIMER_TLC_ACK_TIMEOUT    = 2;
+constexpr uint8_t TMR_TIMER_USER0              = 3;
 
 
 #if TMR_NUM_TIMERS < 4
@@ -52,14 +52,14 @@ using KnxTmr_CallbackFunctionType = void (*)(void);
 using KnxTmr_TickHandlerType = void (*)(void);
 
 enum class Tmr_ResolutionType {
-    TMR_RESOLUTION_MS,
-    TMR_RESOLUTION_SEC
+    MS,
+    SEC
 };
 
 enum class Tmr_StateType {              /* Constants for Timer-State-Machines. */
-    TMR_STATE_STOPPED,
-    TMR_STATE_RUNNING,
-    TMR_STATE_EXPIRED
+    STOPPED,
+    RUNNING,
+    EXPIRED
 };
 
 struct Tmr_TimerType {
@@ -80,7 +80,7 @@ FUNC(bool, KSTACK_CODE) KnxTmr_Stop(uint8_t timer);
 FUNC(bool, KSTACK_CODE) KnxTmr_IsExpired(uint8_t timer);
 FUNC(bool, KSTACK_CODE) KnxTmr_IsRunning(uint8_t timer);
 
-FUNC(bool, KSTACK_CODE) KnxTmr_GetRemainder(uint8_t timer, Tmr_TickType & remainder);
+FUNC(bool, KSTACK_CODE) KnxTmr_GetRemainder(uint8_t timer, Tmr_TickType& remainder);
 
 FUNC(Tmr_TickType, KSTACK_CODE) Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base);
 
@@ -101,7 +101,7 @@ bool KnxTmr_Stop(uint8_t timer);
 bool KnxTmr_IsExpired(uint8_t timer);
 bool KnxTmr_IsRunning(uint8_t timer);
 
-bool KnxTmr_GetRemainder(uint8_t timer, Tmr_TickType & remainder);
+bool KnxTmr_GetRemainder(uint8_t timer, Tmr_TickType& remainder);
 
 Tmr_TickType KnxTmr_GetSystemTime(Tmr_ResolutionType base);
 

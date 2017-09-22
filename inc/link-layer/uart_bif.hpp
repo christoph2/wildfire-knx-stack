@@ -24,28 +24,21 @@
 #if !defined(__UART_BIF_HPP)
 #define __UART_BIF_HPP
 
-namespace knx {
-
 #include "knx_types.hpp"
 #include "knx_defs.hpp"
 #include "Wildfire_Config.hpp"
 
+namespace knx {
+
 /*
 **  Service-IDs.
 */
-#define KNX_SERVICE_LL_WRITE_FRAME              ((uint8_t)0x01)
+constexpr uint8_t KNX_SERVICE_LL_WRITE_FRAME = 0x01;
 
 /*
 **  Module Errors.
 */
-#define UART_BIF_E_UNINIT                       ((uint8_t)0x01)
-
-#if 0
-#define SPI_E_UNINIT                            ((uint8)0x1a)
-#define SPI_E_SEQ_PENDING                       ((uint8)0x2a)
-#define SPI_E_SEQ_IN_PROCESS                    ((uint8)0x3a)
-#define SPI_E_ALREADY_INITIALIZED               ((uint8)0x4a)
-#endif
+constexpr uint8_t UART_BIF_E_UNINIT                        = 0x01;
 
 
 /**
@@ -54,51 +47,51 @@ namespace knx {
  *
  */
 /* INTERNAL COMMANDS – DEVICE SPECIFIC */
-#define U_RESET_REQ             ((uint8_t)0x01)
-#define U_STATE_REQ             ((uint8_t)0x02)
+constexpr uint8_t U_RESET_REQ              = 0x01;
+constexpr uint8_t U_STATE_REQ              = 0x02;
 
 #if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
-#define U_SETBUSY_REQ           ((uint8_t)0x03)
-#define U_QUITBUSY_REQ          ((uint8_t)0x04)
+constexpr uint8_t U_SETBUSY_REQ            = 0x03;
+constexpr uint8_t U_QUITBUSY_REQ           = 0x04;
 #endif /* KNX_BUS_INTERFACE */
 
-#define U_BUSMON_REQ            ((uint8_t)0x05)
+constexpr uint8_t U_BUSMON_REQ             = 0x05;
 
 #if KNX_BUS_INTERFACE == KNX_BIF_TPUART_2
-#define U_PRODUCTID_REQUEST     ((uint8_t)0x14)
-#define U_ACTIVATEBUSYMODE_REQ  ((uint8_t)0x15)
-#define U_RESETBUSYMODE_REQ     ((uint8_t)0x16)
-#define U_MXRSTCNT_REQ          ((uint8_t)0x18)
-#define U_ACTIVATECRC_REQ       ((uint8_t)0x19)
-#define U_SETADDRESS_REQ        ((uint8_t)0x1C)
+constexpr uint8_t U_PRODUCTID_REQUEST      = 0x14;
+constexpr uint8_t U_ACTIVATEBUSYMODE_REQ   = 0x15;
+constexpr uint8_t U_RESETBUSYMODE_REQ      = 0x16;
+constexpr uint8_t U_MXRSTCNT_REQ           = 0x18;
+constexpr uint8_t U_ACTIVATECRC_REQ        = 0x19;
+constexpr uint8_t U_SETADDRESS_REQ         = 0x1C;
 #endif /* KNX_BUS_INTERFACE */
 
 #if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
-#define U_L_DATAOFFSET_REQ      ((uint8_t)0x08) /* 08 - 0C */
-#define U_SYSTEMSTAT_REQ        ((uint8_t)0x0D)
-#define U_STOPMODE_REQ          ((uint8_t)0x0E)
-#define U_EXITSTOPMODE_REQ      ((uint8_t)0x0F)
+constexpr uint8_t U_L_DATAOFFSET_REQ       = 0x08; /* 08 - 0C */
+constexpr uint8_t U_SYSTEMSTAT_REQ         = 0x0D;
+constexpr uint8_t U_STOPMODE_REQ           = 0x0E;
+constexpr uint8_t U_EXITSTOPMODE_REQ       = 0x0F;
 #endif /* KNX_BUS_INTERFACE */
 
-#define U_ACKN_REQ              ((uint8_t)0x10) /* 10 - 17 */
+constexpr uint8_t U_ACKN_REQ               = 0x10; /* 10 - 17 */
 
 #if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
-#define U_CONFIGURE_REQ         ((uint8_t)0x18) /* 18 - 1F */
-#define U_INTREGWR_REQ          ((uint8_t)0x28) /* 28 - 2B */
-#define U_INTREGRD_REQ          ((uint8_t)0x38) /* 38 - 3B */
+constexpr uint8_t U_CONFIGURE_REQ          = 0x18; /* 18 - 1F */
+constexpr uint8_t U_INTREGWR_REQ           = 0x28; /* 28 - 2B */
+constexpr uint8_t U_INTREGRD_REQ           = 0x38; /* 38 - 3B */
 #endif /* KNX_BUS_INTERFACE */
 
-#define U_POLLINGSTATE_REQ      ((uint8_t)0xE0) /* E0 - EE */
+constexpr uint8_t U_POLLINGSTATE_REQ       = 0xE0; /* E0 - EE */
 
 
 /* KNX TRANSMIT DATA COMMANDS */
-#define U_L_DATASTART_REQ       ((uint8_t)0x80)
-#define U_L_DATACONT_REQ        ((uint8_t)0x80) /* 81 - BF */
-#define U_L_DATAEND_REQ         ((uint8_t)0x40) /* 47 - 7F */
+constexpr uint8_t U_L_DATASTART_REQ        = 0x80;
+constexpr uint8_t U_L_DATACONT_REQ         = 0x80; /* 81 - BF */
+constexpr uint8_t U_L_DATAEND_REQ          = 0x40; /* 47 - 7F */
 
 #if KNX_BUS_INTERFACE == KNX_BIF_NCN5120 /* TODO: Überprüfen!!!*/
-#define U_SETADDRESS_REQ        ((uint8_t)0xF1)
-#define U_SETREPETITION_REQ     ((uint8_t)0xF2)
+constexpr uint8_t U_SETADDRESS_REQ         = 0xF1;
+constexpr uint8_t U_SETREPETITION_REQ      = 0xF2;
 #endif
 
 
@@ -107,24 +100,24 @@ namespace knx {
  * Services to Host-Controller.
  *
  */
-#define L_ACKN_IND              ((uint8_t)0x00)
+constexpr uint8_t L_ACKN_IND               = 0x00;
 
-#define U_CONFIGURE_IND         ((uint8_t)0x01)
+constexpr uint8_t U_CONFIGURE_IND          = 0x01;
 
-#define U_RESET_IND             ((uint8_t)0x03)
-#define U_STATE_IND             ((uint8_t)0x07)
-#define L_DATA_CON              ((uint8_t)0x0b)
-#define L_DATA_EXTENDED_IND     ((uint8_t)0x10)
+constexpr uint8_t U_RESET_IND              = 0x03;
+constexpr uint8_t U_STATE_IND              = 0x07;
+constexpr uint8_t L_DATA_CON               = 0x0b;
+constexpr uint8_t L_DATA_EXTENDED_IND      = 0x10;
 
-#define U_FRAMESTATE_IND        ((uint8_t)0x13)
-#define U_STOPMODE_IND          ((uint8_t)0x2b)
-#define U_SYSTEMSTAT_IND        ((uint8_t)0x4b)
+constexpr uint8_t U_FRAMESTATE_IND         = 0x13;
+constexpr uint8_t U_STOPMODE_IND           = 0x2b;
+constexpr uint8_t U_SYSTEMSTAT_IND         = 0x4b;
 
-#define L_DATA_STANDARD_IND     ((uint8_t)0x90)
+constexpr uint8_t L_DATA_STANDARD_IND      = 0x90;
 
-#define U_FRAMEEND_IND          ((uint8_t)0xcb)
+constexpr uint8_t U_FRAMEEND_IND           = 0xcb;
 
-#define L_POLL_DATA_IND         ((uint8_t)0xf0)
+constexpr uint8_t L_POLL_DATA_IND          = 0xf0;
 
 /*
 ** Global Types.
@@ -223,3 +216,4 @@ void KnxLL_Set_U_State_Ind_Callback(KnxCallback_U_State_Ind_Type const * const c
 } // namespace knx
 
 #endif  /* __UART_BIF_HPP */
+
