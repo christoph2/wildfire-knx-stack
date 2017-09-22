@@ -35,8 +35,8 @@ namespace knx {
 /*
 ** Global defines.
 */
-#define IAK_OK                  ((uint8_t)0x00)
-#define IAK_NOT_OK              ((uint8_t)0x01)
+constexpr uint8_t IAK_OK                   = 0x00;
+constexpr uint8_t IAK_NOT_OK               = 0x01;
 
 /*
    #define MSG_NO_ROUTING_CTRL ((BYTE)7)
@@ -44,32 +44,32 @@ namespace knx {
  */
 
 /* RunError-Codes. */
-#define KNX_RUNERROR_SYS3_ERR   ((uint8_t)0x40) /* internal system error (not for each default MCB [ROM] an. */
-                                                /* MCB [EEPROM] exists with the same start address). */
-#define KNX_RUNERROR_SYS2_ERR   ((uint8_t)0x20) /* internal system error (stuck/ overheat detection). */
-#define KNX_RUNERROR_OBJ_ERR    ((uint8_t)0x10) /* RAM flag table error (*PTR not in ZPAGE range). */
-#define KNX_RUNERROR_STK_OVL    ((uint8_t)0x08) /* stack overflow was detected. */
-#define KNX_RUNERROR_EEPROM_ERR ((uint8_t)0x04) /* EEPROM check detected an CRC error. */
-#define KNX_RUNERROR_SYS1_ERR   ((uint8_t)0x02) /* internal system error (parity bit in SystemState is corrupt). */
-#define KNX_RUNERROR_SYS0_ERR   ((uint8_t)0x01) /* internal system error (msg buffer offset corrupt). */
+constexpr uint8_t KNX_RUNERROR_SYS3_ERR    = 0x40;   /* internal system error (not for each default MCB [ROM] an. */
+                                                     /* MCB [EEPROM] exists with the same start address). */
+constexpr uint8_t KNX_RUNERROR_SYS2_ERR    = 0x20;   /* internal system error (stuck/ overheat detection). */
+constexpr uint8_t KNX_RUNERROR_OBJ_ERR     = 0x10;   /* RAM flag table error (*PTR not in ZPAGE range). */
+constexpr uint8_t KNX_RUNERROR_STK_OVL     = 0x08;   /* stack overflow was detected. */
+constexpr uint8_t KNX_RUNERROR_EEPROM_ERR  = 0x04;   /* EEPROM check detected an CRC error. */
+constexpr uint8_t KNX_RUNERROR_SYS1_ERR    = 0x02;   /* internal system error (parity bit in SystemState is corrupt). */
+constexpr uint8_t KNX_RUNERROR_SYS0_ERR    = 0x01;   /* internal system error (msg buffer offset corrupt). */
 
 /*
 ** Config-Byte / Object-Descriptor.
 */
-#define KNX_OBJ_UPDATE_ENABLE   ((uint8_t)0x80) /* GroupValueRead()_Res wird verarbeitet - nur Mask 0020h, 0021h. */
-#define KNX_OBJ_TRANSMIT_ENABLE ((uint8_t)0x40) /* Lese- und Schreib-Anforderungen (Requests) vom App.-Layer werden verarbeitet. */
-#define KNX_OBJ_EEPROM_VALUE    ((uint8_t)0x20) /* Objektwert steht im EEPROM (statt im RAM). */
-#define KNX_OBJ_WRITE_ENABLE    ((uint8_t)0x10) /* Objektwert kann über den Bus geschrieben werden. */
-#define KNX_OBJ_READ_ENABLE     ((uint8_t)0x08) /* Objektwert kann über den Bus gelesen werden. */
-#define KNX_OBJ_COMM_ENABLE     ((uint8_t)0x04) /* "Mainswitch" for Communikation. */
+constexpr uint8_t KNX_OBJ_UPDATE_ENABLE    = 0x80;  /* GroupValueRead()_Res wird verarbeitet - nur Mask 0020h, 0021h. */
+constexpr uint8_t KNX_OBJ_TRANSMIT_ENABLE  = 0x40;  /* Lese- und Schreib-Anforderungen (Requests) vom App.-Layer werden verarbeitet. */
+constexpr uint8_t KNX_OBJ_EEPROM_VALUE     = 0x20;  /* Objektwert steht im EEPROM (statt im RAM). */
+constexpr uint8_t KNX_OBJ_WRITE_ENABLE     = 0x10;  /* Objektwert kann über den Bus geschrieben werden. */
+constexpr uint8_t KNX_OBJ_READ_ENABLE      = 0x08;  /* Objektwert kann über den Bus gelesen werden. */
+constexpr uint8_t KNX_OBJ_COMM_ENABLE      = 0x04;  /* "Mainswitch" for Communikation. */
 
 /*
 **  Config-Byte / Priorities.
 */
-#define KNX_OBJ_PRIO_SYSTEM     ((uint8_t)0)
-#define KNX_OBJ_PRIO_URGENT     ((uint8_t)2)
-#define KNX_OBJ_PRIO_NORMAL     ((uint8_t)1)
-#define KNX_OBJ_PRIO_LOW        ((uint8_t)3)
+constexpr uint8_t KNX_OBJ_PRIO_SYSTEM      = 0;
+constexpr uint8_t KNX_OBJ_PRIO_URGENT      = 2;
+constexpr uint8_t KNX_OBJ_PRIO_NORMAL      = 1;
+constexpr uint8_t KNX_OBJ_PRIO_LOW         = 3;
 
 /*
     Transmission Priorities
@@ -84,67 +84,67 @@ namespace knx {
 ** Comm-Flags.
 */
 
-#define KNX_OBJ_UPDATED                 ((uint8_t)0x08)
-#define KNX_OBJ_DATA_REQUEST            ((uint8_t)0x04)
+constexpr uint8_t KNX_OBJ_UPDATED                  = 0x08;
+constexpr uint8_t KNX_OBJ_DATA_REQUEST             = 0x04;
 
 /*
 ** Transmission-Status
 */
-#define KNX_OBJ_IDLE_OK                 ((uint8_t)0x00)
-#define KNX_OBJ_IDLE_ERROR              ((uint8_t)0x01)
-#define KNX_OBJ_TRANSMITTING            ((uint8_t)0x02)
-#define KNX_OBJ_TRANSMIT_REQ            ((uint8_t)0x03)
+constexpr uint8_t KNX_OBJ_IDLE_OK                  = 0x00;
+constexpr uint8_t KNX_OBJ_IDLE_ERROR               = 0x01;
+constexpr uint8_t KNX_OBJ_TRANSMITTING             = 0x02;
+constexpr uint8_t KNX_OBJ_TRANSMIT_REQ             = 0x03;
 
-#define BCU20_PRIVILEGE_CONFIGURATION   ((uint8_t)0)
-#define BCU20_PRIVILEGE_SERVICE         ((uint8_t)1)
-#define BCU20_PRIVILEGE_USER            ((uint8_t)2)
-#define BCU20_PRIVILEGE_NO              ((uint8_t)3)
+constexpr uint8_t BCU20_PRIVILEGE_CONFIGURATION    = 0;
+constexpr uint8_t BCU20_PRIVILEGE_SERVICE          = 1;
+constexpr uint8_t BCU20_PRIVILEGE_USER             = 2;
+constexpr uint8_t BCU20_PRIVILEGE_NO               = 3;
 
-#define KNX_UNUSED_TSAP                 ((uint8_t)0xfe)
-#define KNX_INVALID_TSAP                ((uint8_t)0x00)
+constexpr uint8_t KNX_UNUSED_TSAP                  = 0xfe;
+constexpr uint8_t KNX_INVALID_TSAP                 = 0x00;
 
 
 /**
  * Supported Bus Interfaces.
  */
-#define KNX_BIF_TPUART_1                        (0)
-#define KNX_BIF_TPUART_2                        (1)
-#define KNX_BIF_NCN5120                         (2)
+#define KNX_BIF_TPUART_1                  (0)
+#define KNX_BIF_TPUART_2                  (1)
+#define KNX_BIF_NCN5120                   (2)
 
 
 /** Power supply of controller module.
  *
  */
-#define KNX_MODULE_POWER_BY_BUS                 (0)
-#define KNX_MODULE_POWER_BY_AUXILIARY_SUPPLY    (1)
+#define KNX_MODULE_POWER_BY_BUS               (0)
+#define KNX_MODULE_POWER_BY_AUXILIARY_SUPPLY  (1)
 
 /** Endianess
  *
  */
-#define KNX_LITTLE_ENDIAN                       (0)
-#define KNX_BIG_ENDIAN                          (1)
+#define KNX_LITTLE_ENDIAN                     (0)
+#define KNX_BIG_ENDIAN                        (1)
 
 
 /** Build types.
  *
  */
-#define KNX_BUILD_DEBUG                         (0)
-#define KNX_BUILD_RELEASE                       (1)
+#define KNX_BUILD_DEBUG                       (0)
+#define KNX_BUILD_RELEASE                     (1)
 
 /** Target Types.
  *
  */
-#define KNX_TARGET_WINDOWS                      (1)
-#define KNX_TARGET_POSIX                        (2)
-#define KNX_TARGET_S12                          (3)
-#define KNX_TARGET_ATMEL_ATSAM4                 (4)
-#define KNX_TARGET_ATMEL_ATMEGA                 (5)
+#define KNX_TARGET_WINDOWS                    (1)
+#define KNX_TARGET_POSIX                      (2)
+#define KNX_TARGET_S12                        (3)
+#define KNX_TARGET_ATMEL_ATSAM4               (4)
+#define KNX_TARGET_ATMEL_ATMEGA               (5)
 
 /** Stack Types.
  *
  */
-#define KNX_LINK_LAYER_ONLY			(1)
-#define KNX_FULL_STACK				(2)
+#define KNX_LINK_LAYER_ONLY                   (1)
+#define KNX_FULL_STACK                        (2)
 
 } // namespace knx
 

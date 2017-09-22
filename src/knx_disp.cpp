@@ -23,7 +23,7 @@
 */
 #include "knx_disp.hpp"
 
-using namespace knx;
+namespace knx {
 
 /*
 ** Global variables.
@@ -63,4 +63,6 @@ void KnxDisp_DispatchLayer(uint8_t layerID, const Knx_LayerServicesType & servic
     #define KSTACK_STOP_SEC_CODE
     #include "MemMap.h"
 #endif /* KSTACK_MEMORY_MAPPING */
+
+} // namespace knx
 
