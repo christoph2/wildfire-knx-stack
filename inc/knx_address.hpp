@@ -30,6 +30,7 @@
 
 namespace knx {
 
+
 /*
 **  Global variables.
 */

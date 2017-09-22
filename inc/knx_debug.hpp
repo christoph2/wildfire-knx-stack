@@ -24,9 +24,11 @@
 #if !defined(__KNX_DEBUG_HPP)
 #define __KNX_DEBUG_HPP
 
-namespace knx {
 
 #include "Wildfire_Config.hpp"
+#include <iostream>
+
+namespace knx {
 
 
 #if (KNX_BUILD_TYPE == KNX_BUILD_DEBUG) && (defined(_MSC_VER) || defined(WIN32) || defined(WIN64) || \
@@ -36,8 +38,8 @@ namespace knx {
 
 void KnxEt_DumpHex(uint8_t const * frame, uint16_t length);
 
-#define DBG_PRINT(msg)      printf("%s", (msg))
-#define DBG_PRINTLN(msg)    printf("%s\n", (msg))
+#define DBG_PRINT(msg)      std::cerr << msg
+#define DBG_PRINTLN(msg)    std::cerr << msg << std::endl
 
 void Dbg_Init(void);
 
