@@ -25,7 +25,6 @@
 #define __KNX_TYPES_HPP
 
 #include <cstdint>
-#include "knx_imi.hpp"
 
 namespace knx {
 
@@ -93,6 +92,95 @@ enum class Knx_ObjectType : uint8_t {
 };
 
 using Knx_PriorityType = uint8_t;
+/*
+**
+**  Service Codes for Konnex/EIB Internal-Message-Interface.
+**
+**  Own coding of services permits usage of jump-tables.
+**
+*/
+
+/*
+** Global defines.
+*/
+constexpr uint8_t KNX_LL_SERVICES     = 0x10;
+constexpr uint8_t KNX_NL_SERVICES     = 0x20;
+
+constexpr uint8_t KNX_TLG_SERVICES    = 0x30;
+constexpr uint8_t KNX_TLC_SERVICES    = 0x40;
+
+constexpr uint8_t KNX_ALG_SERVICES    = 0x70;
+constexpr uint8_t KNX_ALM_SERVICES    = 0x80;
+
+/*
+** Global types.
+*/
+enum class Knx_ServiceType {
+/*
+**      Link-Layer.
+*/
+
+    KNX_SERVICE_L_DATA_REQ = KNX_LL_SERVICES,
+    KNX_SERVICE_L_POLL_DATA_REQ,
+
+/*
+**      Network-Layer.
+*/
+    KNX_SERVICE_L_DATA_IND = KNX_NL_SERVICES,
+    KNX_SERVICE_L_DATA_CON,
+    KNX_SERVICE_L_POLL_DATA_CON,
+    KNX_SERVICE_L_BUSMON_IND,
+    KNX_SERVICE_N_DATA_INDIVIDUAL_REQ,
+    KNX_SERVICE_N_DATA_GROUP_REQ,
+    KNX_SERVICE_N_DATA_BROADCAST_REQ,
+    KNX_SERVICE_N_POLL_DATA_REQ,
+
+/*
+**      Transport-Layer/group-oriented.
+*/
+    KNX_SERVICE_N_DATA_GROUP_IND = KNX_TLG_SERVICES,
+    KNX_SERVICE_N_DATA_GROUP_CON,
+    KNX_SERVICE_N_POLL_DATA_CON,
+    KNX_SERVICE_T_DATA_GROUP_REQ,
+    KNX_SERVICE_T_POLL_DATA_REQ,
+
+/*
+**      Transport-Layer/connection-oriented.
+*/
+    KNX_SERVICE_N_DATA_INDIVIDUAL_IND = KNX_TLC_SERVICES,
+    KNX_SERVICE_N_DATA_INDIVIDUAL_CON,
+    KNX_SERVICE_N_DATA_BROADCAST_IND,
+    KNX_SERVICE_N_DATA_BROADCAST_CON,
+    KNX_SERVICE_T_CONNECT_REQ,
+    KNX_SERVICE_T_DISCONNECT_REQ,
+    KNX_SERVICE_T_DATA_CONNECTED_REQ,
+    KNX_SERVICE_T_DATA_INDIVIDUAL_REQ,
+    KNX_SERVICE_T_DATA_BROADCAST_REQ,
+
+/*
+**      Application-Layer/group-oriented.
+*/
+    KNX_SERVICE_T_DATA_GROUP_IND = KNX_ALG_SERVICES,
+    KNX_SERVICE_T_DATA_GROUP_CON,
+    KNX_SERVICE_T_POLL_DATA_CON,
+    KNX_SERVICE_A_DATA_GROUP_REQ,
+    KNX_SERVICE_A_POLL_DATA_REQ,
+
+/*
+**      Application-Layer/managment-part.
+*/
+    KNX_SERVICE_T_CONNECT_IND = KNX_ALM_SERVICES,
+    KNX_SERVICE_T_CONNECT_CON,
+    KNX_SERVICE_T_DISCONNECT_IND,
+    KNX_SERVICE_T_DISCONNECT_CON,
+    KNX_SERVICE_T_DATA_CONNECTED_IND,
+    KNX_SERVICE_T_DATA_CONNECTED_CON,
+    KNX_SERVICE_T_DATA_INDIVIDUAL_IND,
+    KNX_SERVICE_T_DATA_INDIVIDUAL_CON,
+    KNX_SERVICE_T_DATA_BROADCAST_IND,
+    KNX_SERVICE_T_DATA_BROADCAST_CON
+
+};
 
 /*
 **  START: LAYER-Dispatching-Functions.

@@ -69,12 +69,14 @@ struct Tmr_TimerType {
     Tmr_TickType expire_counter;
 };
 
+#if 0
 class Timer {
 public:
 
 private:
 
 };
+#endif
 
 /*
 ** Global functions.

@@ -33,16 +33,16 @@ namespace knx {
 /*
 ** Global defines.
 */
-#define KNX_SET_TX_STATUS_IDLE_OK       ((uint8_t)0x00)
-#define KNX_SET_TX_STATUS_IDLE_ERROR    ((uint8_t)0x01)
-#define KNX_SET_TX_STATUS_TRANSMITTING  ((uint8_t)0x02)
-#define KNX_SET_TX_STATUS_TRANSMIT_REQ  ((uint8_t)0x03)
+constexpr uint8_t KNX_SET_TX_STATUS_IDLE_OK       = 0x00;
+constexpr uint8_t KNX_SET_TX_STATUS_IDLE_ERROR    = 0x01;
+constexpr uint8_t KNX_SET_TX_STATUS_TRANSMITTING  = 0x02;
+constexpr uint8_t KNX_SET_TX_STATUS_TRANSMIT_REQ  = 0x03;
+                                                  =
+constexpr uint8_t KNX_SET_FLG_DATA_REQUEST        = 0x44;
+constexpr uint8_t KNX_RESET_FLG_DATA_REQUEST      = 0x40;
 
-#define KNX_SET_FLG_DATA_REQUEST        ((uint8_t)0x44)
-#define KNX_RESET_FLG_DATA_REQUEST      ((uint8_t)0x40)
-
-#define KNX_SET_FLG_UPDATED             ((uint8_t)0x88)
-#define KNX_RESET_FLG_UPDATED           ((uint8_t)0x80)
+constexpr uint8_t KNX_SET_FLG_UPDATED             = 0x88;
+constexpr uint8_t KNX_RESET_FLG_UPDATED           = 0x80;
 
 /*
 ** Global function-like macros.

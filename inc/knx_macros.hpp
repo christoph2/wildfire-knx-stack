@@ -113,8 +113,6 @@ namespace knx {
     #define BEYOND_ARRAY(arr)           ((arr) + SIZE_OF_ARRAY((arr)))
 #endif
 
-#define STATIC  static
-
 #define _BEGIN_BLOCK                    do {
 #define _END_BLOCK                      } while (0)
 
@@ -257,7 +255,7 @@ using VoidFunctionType = void(*)(void);
     KnxEt_ReportError(KNX_MODULE_ID_ ## module, api, error)
 
 #define KNX_IMPLEMENT_MODULE_STATE_VAR(module)                      \
-    STATIC KnxModule_StateType module ## _State = KnxModule_StateType::KNX_MODULE_UNINIT
+    static KnxModule_StateType module ## _State = KnxModule_StateType::KNX_MODULE_UNINIT
 
 #define KNX_GET_MODULE_STATE_VAR(module)                            \
     GLUE2(module, _State)
@@ -306,7 +304,7 @@ using VoidFunctionType = void(*)(void);
 #endif
 
 
-#define KNX_DEFINE_LOCAL_CONFIG_VAR(u, l)   P2CONST(l ## _ConfigType, STATIC, u ## _VAR)  l ## _Config
+#define KNX_DEFINE_LOCAL_CONFIG_VAR(u, l)   P2CONST(l ## _ConfigType, static, u ## _VAR)  l ## _Config
 
 #define KNX_SAVE_CONFIG_PTR(module)             module ## _Config = ConfigPtr
 #define KNX_GET_CONFIG_PTR(module)              module ## _Config

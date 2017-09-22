@@ -34,14 +34,14 @@ namespace knx {
 ** Global defines.
 **
 */
-#define PROP_RO                             ((uint8_t)0)
-#define PROP_RW                             ((uint8_t)1)
-#define PROP_NO_ARR                         ((uint8_t)0)
-#define PROP_ARR                            ((uint8_t)1)
-#define PROP_VALUE                          ((uint8_t)0)
-#define PROP_PTR                            ((uint8_t)1)
-#define PROP_NO_FUNC                        ((uint8_t)0)
-#define PROP_FUNC                           ((uint8_t)1)
+constexpr uint8_t PROP_RO                             = 0;
+constexpr uint8_t PROP_RW                             = 1;
+constexpr uint8_t PROP_NO_ARR                         = 0;
+constexpr uint8_t PROP_ARR                            = 1;
+constexpr uint8_t PROP_VALUE                          = 0;
+constexpr uint8_t PROP_PTR                            = 1;
+constexpr uint8_t PROP_NO_FUNC                        = 0;
+constexpr uint8_t PROP_FUNC                           = 1;
 
 /*
 **  System Interface Objects.
@@ -55,7 +55,7 @@ enum class Knx_ObjectTypeType : uint16_t {
     KNX_OT_POLLING_MASTER               = 10
 };
 
-#define KNX_OT_USER_OBJECT0                 ((uint16_t)50001)
+constexpr uint16_t KNX_OT_USER_OBJECT0 = 50001;
 
 /*
 ** Interface Object Type independent Standardized Property Identifiers.

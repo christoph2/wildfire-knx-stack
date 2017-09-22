@@ -36,19 +36,19 @@ namespace knx {
 *
 */
 #if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
-#define KNX_LL_TIMEOUT  (500)
+constexpr uint16_t KNX_LL_TIMEOUT = 500;
 #else
-#define KNX_LL_TIMEOUT  (25)
+constexpr uint16_t KNX_LL_TIMEOUT = 25;
 #endif
 
 /*
 ** Local variables.
 */
-STATIC Tmr_TimerType KNX_Timer[TMR_NUM_TIMERS];
-STATIC Tmr_TickType  Tmr_SysMsCounter;
-STATIC Tmr_TickType  Tmr_SysSecondCounter;
-STATIC uint16_t      Tmr_DataLinkCounter;
-STATIC bool       Tmr_DataLinkTimerRunning;
+static Tmr_TimerType KNX_Timer[TMR_NUM_TIMERS];
+static Tmr_TickType Tmr_SysMsCounter;
+static Tmr_TickType Tmr_SysSecondCounter;
+static uint16_t Tmr_DataLinkCounter;
+static bool Tmr_DataLinkTimerRunning;
 
 
 /*
