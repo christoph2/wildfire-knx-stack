@@ -33,8 +33,8 @@ namespace knx {
 **  Global Types.
 */
 enum class Utl_EndianessType {
-    UTL_BIG_ENDIAN,
-    UTL_LITTLE_ENDIAN
+    BIG,
+    LITTLE
 };
 
 struct Utl_DivremType {
