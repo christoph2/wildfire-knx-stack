@@ -123,37 +123,37 @@ uint32_t Utl_Swap32(uint32_t * dw);
 #define Utl_PlainCharIsSigned()         ((int)((char)0x80) < 0)
 
 template<typename T>
-inline T twosComplement(T value)
+constexpr T twosComplement(T value)
 {
     return (~value) + 1;
 }
 
-inline uint8_t loByte(uint16_t value)
+constexpr uint8_t loByte(uint16_t value)
 {
     return (uint8_t)((uint16_t)((uint16_t)value & 0x00ffU));
 }
 
-inline uint8_t hiByte(uint16_t value)
+constexpr uint8_t hiByte(uint16_t value)
 {
     return (uint8_t)((uint16_t)(((uint16_t)value >> 8) & 0x00ffU));
 }
 
-inline uint16_t loWord(uint32_t value)
+constexpr uint16_t loWord(uint32_t value)
 {
     return (uint16_t)((uint32_t)((uint32_t)value & 0xffffU));
 }
 
-inline uint16_t hiWord(uint32_t value)
+constexpr uint16_t hiWord(uint32_t value)
 {
     return (uint16_t)((uint32_t)(((uint32_t)value >> 16) & 0xffffU));
 }
 
-inline uint16_t makeWord(uint8_t h, uint8_t l)
+constexpr uint16_t makeWord(uint8_t h, uint8_t l)
 {
     return (((uint32_t)(h & ((uint16_t)0xffffu))) << (uint32_t)16) | ((uint32_t)(l & ((uint16_t)0xffffu)));
 }
 
-inline uint8_t invertNibble(uint8_t value)
+constexpr uint8_t invertNibble(uint8_t value)
 {
     return (uint8_t)(((uint8_t) ~value & ((uint8_t)0x0f)));
 }
