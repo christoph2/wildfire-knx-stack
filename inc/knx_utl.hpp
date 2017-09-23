@@ -128,6 +128,12 @@ constexpr T twosComplement(T value)
     return (~value) + 1;
 }
 
+template <typename T, size_t N>
+constexpr size_t arraySize(T (&)[N])
+{
+    return N;
+}
+
 constexpr uint8_t loByte(uint16_t value)
 {
     return (uint8_t)((uint16_t)((uint16_t)value & 0x00ffU));
