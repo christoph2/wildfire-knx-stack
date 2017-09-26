@@ -27,6 +27,8 @@
 #include "knx_types.hpp"
 #include "knx_macros.hpp"
 
+#include <utility>
+
 namespace knx {
 
 /*
@@ -162,6 +164,14 @@ constexpr uint16_t makeWord(uint8_t h, uint8_t l)
 constexpr uint8_t invertNibble(uint8_t value)
 {
     return (uint8_t)(((uint8_t) ~value & ((uint8_t)0x0f)));
+}
+
+template <typename Fun, typename... Args>
+void functionCaller(Fun&& fun, Args&&... args)
+{
+    if (fun != nullptr) {
+        fun(std::forward<Args>(args)...);
+    }
 }
 
 
