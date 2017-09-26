@@ -312,16 +312,10 @@ using VoidFunctionType = void(*)(void);
 
 #define KNX_CALLBACK_NAME(name)                                     GLUE2(KnxCallback_, name)
 
-#if KNX_DYNAMIC_CALLBACKS == STD_ON
-#define KNX_CALLBACK(name, ...)                     \
-    _BEGIN_BLOCK                                    \
-    if (KNX_CALLBACK_NAME(name)) {                  \
-        KNX_CALLBACK_NAME(name)(__VA_ARGS__);       \
-    }                                               \
-    _END_BLOCK
-#else
-#define KNX_CALLBACK(name, ...)
-#endif  /* KNX_DYNAMIC_CALLBACKS*/
+#define KNX_CALLBACK(name, ...) functionCaller( \
+    KNX_CALLBACK_NAME(name), \
+    __VA_ARGS__ \
+    )
 
 } // namespace knx
 
