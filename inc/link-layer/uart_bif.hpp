@@ -26,7 +26,11 @@
 
 #include "knx_types.hpp"
 #include "knx_defs.hpp"
+#include "knx_serialport.hpp"
 #include "Wildfire_Config.hpp"
+
+#include <atomic>
+#include <functional>
 
 namespace knx {
 
@@ -132,17 +136,61 @@ enum class KnxLL_StateType {
     KNX_LL_STATE_TIMED_OUT
 };
 
+typedef struct tagKnxLL_ExpectationType {
+    uint8_t ExpectedByteCount;
+    uint8_t ExpectedService;
+    uint8_t ExpectedMask;
+} KnxLL_ExpectationType;
 
-/**
- *  Local unconfirmed services.
- */
-void U_ActivateBusmon_req();
+
+typedef enum tagKnxLL_LocalConfirmationType {
+    KNX_LL_CONF_NEGATIVE,
+    KNX_LL_CONF_POSITIVE
+} KnxLL_LocalConfirmationType;
+
+
+typedef enum tagKnxLL_ReceiverStageType {
+    KNX_LL_RECEIVER_STAGE_NONE,
+    KNX_LL_RECEIVER_STAGE_HEADER,
+    KNX_LL_RECEIVER_STAGE_TRAILER
+} KnxLL_ReceiverStageType;
+
+
+constexpr uint8_t KNX_LL_BUF_SIZE = 0xff;
+
+class LinkLayer {
+public:
+    explicit LinkLayer(ISerialPort * port);
+
+    KnxLL_StateType getState() const;
+    void setState(KnxLL_StateType state);
+    void feedReceiver(uint8_t byte);
+    void timeoutCB();
+
+    bool isAddressed(uint8_t daf, uint16_t address);
+    bool isBusy();
+    void busyWait();
+    bool isConfirmed();
+
+    bool internalCommand(uint8_t const * frame, uint8_t length, KnxLL_StateType desiredState);
+    bool internalCommandUnconfirmed(uint8_t const * frame, uint8_t length);
+    bool internalCommandConfirmed(uint8_t const * frame, uint8_t length);
+
+    void expect(uint8_t service, uint8_t mask, uint8_t byteCount);
+    void writeFrame(uint8_t const * frame, uint8_t length);
+
+/*
+**
+**  Services.
+**
+*/
+    void U_ActivateBusmon_req();
 
 #if KNX_BUS_INTERFACE == KNX_BIF_TPUART_2
-void U_ActivateBusyMode_req();
-void U_ResetBusyMode_req();
-void U_SetRepetition_req(uint8_t rst);
-void U_ActivateCRC_req();
+    void U_ActivateBusyMode_req();
+    void U_ResetBusyMode_req();
+    void U_SetRepetition_req(uint8_t rst);
+    void U_ActivateCRC_req();
 #endif /* KNX_BUS_INTERFACE */
 
 #if KNX_BUS_INTERFACE == KNX_BIF_TPUART_2 || KNX_BUS_INTERFACE == KNX_BIF_NCN5120
@@ -153,47 +201,64 @@ void U_SetRepetition_req(uint8_t rst);
 
 #endif /* KNX_BUS_INTERFACE */
 
-void U_Ackn_req(uint8_t what);
-
-/**
- *  Global Function-like Macros.
- */
-
-
-
-/**
- *  Global Functions.
- */
-void KnxLL_FeedReceiver(uint8_t byte);
-void KnxLL_Init();
-void KnxLL_Task();
-void KnxLL_WriteFrame(uint8_t const * frame, uint8_t length);
-bool KnxLL_IsBusy();
-KnxLL_StateType KnxLL_GetState();
-void KnxLL_SetState(KnxLL_StateType state);
-void KnxLL_BusyWait();
-bool KnxLL_IsConfirmed();
-void KnxLL_TimeoutCB();
-uint8_t KnxLL_Checksum(uint8_t const * frame, uint8_t length);
-
-/**
- *  Local confirmed services.
- */
-
-void U_Reset_req();
-void U_State_req();
+    void U_Ackn_req(uint8_t what);
+    void U_Reset_req();
+    void U_State_req();
 
 #if KNX_BUS_INTERFACE == KNX_BIF_TPUART_2
-void U_ProductID_req();
+    void U_ProductID_req();
 #endif /* KNX_BUS_INTERFACE */
 
 #if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
-void U_SetAddress_req(uint16_t address);
+    void U_SetAddress_req(uint16_t address);
 #endif /* KNX_BUS_INTERFACE */
 
 #if KNX_BUS_INTERFACE == KNX_BIF_NCN5120
 
 #endif /* KNX_BUS_INTERFACE */
+
+
+/*
+**
+**
+**
+*/
+
+    void KnxLL_Task();
+
+    void disp_L_Data_Req(void);
+    void disp_L_PollData_Req(void);
+
+    void KnxLl_Data_Con(Knx_StatusType status);
+    void KnxLL_DataStandard_Ind(uint8_t const * frame);
+
+    static uint8_t checksum(uint8_t const* frame, uint8_t length);
+private:
+
+    void stateLock() const;
+    void stateUnlock() const;
+
+    ISerialPort * port_;
+
+    volatile KnxLL_StateType state_;
+    mutable std::atomic_flag stateFlag_ = ATOMIC_FLAG_INIT;
+
+    uint8_t sequenceNo_;
+    uint8_t runningFCB_;
+    KnxLL_LocalConfirmationType localConfirmation_;
+    bool repeated_;
+    KnxLL_ExpectationType expectation_;
+    uint8_t receiverIndex_;
+    uint8_t buffer_[KNX_LL_BUF_SIZE];
+    KnxLL_ReceiverStageType receiverStage_;
+    static const Knx_LayerServiceFunctionType KnxLl_Services[];
+    static const Knx_LayerServicesType KnxLl_ServiceTable[];
+};
+
+
+/**
+ *  Local unconfirmed services.
+ */
 
 /**
  *  Callback stuff.
@@ -203,9 +268,15 @@ using KnxCallback_U_Timeout_Ind_Type = void (*)();
 using KnxCallback_U_Reset_Ind_Type = void (*)();
 using KnxCallback_U_State_Ind_Type = void (*)(uint8_t state);
 
+//using KnxCallback_L_Data_Con_Type = std::function<void(KnxLL_StateType state)>;
+using KnxCallback_L_Data_Con_Type = void (*)(Knx_StatusType state);
+
 void KnxLL_Set_U_Timeout_Ind_Callback(KnxCallback_U_Timeout_Ind_Type const * const callback);
 void KnxLL_Set_U_Reset_Ind_Callback(KnxCallback_U_Reset_Ind_Type const * const callback);
 void KnxLL_Set_U_State_Ind_Callback(KnxCallback_U_State_Ind_Type const * const callback);
+
+void KnxLL_Set_L_Data_Con_Callback(KnxCallback_L_Data_Con_Type& callback);
+
 #endif /* KNX_DYNAMIC_CALLBACKS */
 
 
